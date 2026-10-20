@@ -29,7 +29,38 @@ class MainActivity : Activity() {
         Triple("Sa është 12 + 15?", listOf("25", "26", "27", "28"), 2),
         Triple("Cila gjuhë flitet kryesisht në Brazil?", listOf("Spanjisht", "Portugalisht", "Italisht", "Frëngjisht"), 1)
     )
-    override fun onCreate(savedInstanceState: Bundle?) { super.onCreate(savedInstanceState); home() }
+    private val profile by lazy { getSharedPreferences("wet_guest_profile", MODE_PRIVATE) }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (profile.contains("guest_id")) home() else welcome()
+    }
+    private fun welcome() {
+        layout("Mirë se vjen!")
+        text("Lojëra, sfida dhe progres në një vend.", 21, gold)
+        text("Fillo pa regjistrim. Profili provizor ruhet vetëm në këtë pajisje dhe nuk është llogari online.")
+        button("Vazhdo si mysafir") {
+            profile.edit().putString("guest_id", java.util.UUID.randomUUID().toString())
+                .putLong("created_at", System.currentTimeMillis()).apply()
+            home()
+        }
+        text("Regjistrimi me email dhe rikthimi i llogarisë në pajisje tjetër do të aktivizohen vetëm pasi të lidhet shërbimi i sigurt i identifikimit.", 15)
+    }
+    private fun account() {
+        layout("Profili im")
+        val id = profile.getString("guest_id", "") ?: ""
+        text("Llogari provizore në këtë telefon", 19, gold)
+        text("ID lokale: " + id.take(8).uppercase())
+        text("Progresi i lojërave ruhet në këtë pajisje. Nuk ka ende sinkronizim online, bilanc apo pagesa.")
+        button("Kthehu te lojërat") { home() }
+        button("Dil nga profili provizor") {
+            android.app.AlertDialog.Builder(this)
+                .setTitle("Dil nga profili?")
+                .setMessage("Do të hiqet identifikuesi lokal. Progresi i lojërave nuk fshihet.")
+                .setNegativeButton("Anulo", null)
+                .setPositiveButton("Dil") { _, _ -> profile.edit().clear().apply(); welcome() }
+                .show()
+        }
+    }
     private fun layout(title: String) {
         root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(32, 50, 32, 24); setBackgroundColor(navy) }
         val scroll = ScrollView(this).apply { isFillViewport = true; addView(root) }
@@ -51,6 +82,7 @@ class MainActivity : Activity() {
     private fun home() {
         layout("Play. Learn. Earn Together.")
         text("🎮 Lojëra • Sfida • Kuiz", 21)
+        button("Profili im • Mysafir") { account() }
         text("Version privat testues. Nuk ka reklama ose fitime reale.")
         button("▶ Luaj kuizin – 10 pyetje") { round = 0; correct = 0; question() }
         button("🫧 Bubble Shooter – qëllo flluskat") { bubbleShooter() }
@@ -59,8 +91,8 @@ class MainActivity : Activity() {
         button("🧠 Memory – gjej çiftet") { memory() }
         button("🔢 Numrat – sfida matematikore") { mathGame() }
         button("📺 Unity Ads – vetëm test") { adsTest() }
-        button("◈ Provo ndarjen 50/50") { demo() }
-        text("Modeli: çdo përdorues merr 50% të të ardhurave të veta të verifikuara, vetëm pasi të miratohen partnerët reklamues.")
+
+
     }
     private fun question() {
         if (round >= questions.size) { result(); return }
