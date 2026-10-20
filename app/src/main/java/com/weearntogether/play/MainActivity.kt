@@ -53,6 +53,8 @@ class MainActivity : Activity() {
         text("🎮 Lojëra • Sfida • Kuiz", 21)
         text("Version privat testues. Nuk ka reklama ose fitime reale.")
         button("▶ Luaj kuizin – 10 pyetje") { round = 0; correct = 0; question() }
+        button("🧠 Memory – gjej çiftet") { memory() }
+        button("🔢 Numrat – sfida matematikore") { mathGame() }
         button("◈ Provo ndarjen 50/50") { demo() }
         text("Modeli: çdo përdorues merr 50% të të ardhurave të veta të verifikuara, vetëm pasi të miratohen partnerët reklamues.")
     }
@@ -76,6 +78,93 @@ class MainActivity : Activity() {
         text("Këtu mund të vendoset një reklamë vetëm pas miratimit të modelit monetar nga partneri. Aktualisht nuk shfaqet reklamë.")
         button("Luaj përsëri") { round = 0; correct = 0; question() }
         button("Ballina") { home() }
+    }
+
+    private var memoryCards = mutableListOf<String>()
+    private var memoryOpened = mutableListOf<Int>()
+    private var memoryMatched = mutableSetOf<Int>()
+    private var memoryMoves = 0
+    private fun memory() {
+        memoryCards = (listOf("★","♥","◆","●","☀","♣") + listOf("★","♥","◆","●","☀","♣")).shuffled().toMutableList()
+        memoryOpened.clear(); memoryMatched.clear(); memoryMoves = 0
+        renderMemory()
+    }
+    private fun renderMemory() {
+        layout("Memory • Gjej çiftet")
+        text("Lëvizje: $memoryMoves • Çifte: ${memoryMatched.size / 2}/6", 18, gold)
+        if (memoryMatched.size == memoryCards.size) {
+            text("Urime! I gjete të gjitha çiftet.", 24, gold)
+            button("Luaj përsëri") { memory() }
+            button("Ballina") { home() }
+            return
+        }
+        for (rowIndex in 0 until 3) {
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            root.addView(row)
+            for (col in 0 until 4) {
+                val index = rowIndex * 4 + col
+                val revealed = index in memoryOpened || index in memoryMatched
+                val card = Button(this).apply {
+                    text = if (revealed) memoryCards[index] else "?"
+                    textSize = 26f
+                    setTextColor(Color.WHITE)
+                    isAllCaps = false
+                    setBackgroundColor(if (revealed) purple else Color.rgb(28, 49, 95))
+                    isEnabled = index !in memoryMatched
+                    setOnClickListener {
+                        if (index in memoryOpened || memoryOpened.size >= 2) return@setOnClickListener
+                        memoryOpened.add(index)
+                        if (memoryOpened.size == 2) {
+                            memoryMoves++
+                            val a = memoryOpened[0]; val b = memoryOpened[1]
+                            if (memoryCards[a] == memoryCards[b]) {
+                                memoryMatched.add(a); memoryMatched.add(b)
+                                memoryOpened.clear()
+                                renderMemory()
+                            } else {
+                                renderMemory()
+                                android.os.Handler(mainLooper).postDelayed({
+                                    memoryOpened.clear()
+                                    renderMemory()
+                                }, 850)
+                            }
+                        } else renderMemory()
+                    }
+                }
+                row.addView(card, LinearLayout.LayoutParams(0, 125, 1f).apply { setMargins(3, 3, 3, 3) })
+            }
+        }
+        button("Ballina") { home() }
+    }
+    private var mathRound = 0
+    private var mathScore = 0
+    private fun mathGame() {
+        mathRound = 0; mathScore = 0
+        nextMath()
+    }
+    private fun nextMath() {
+        if (mathRound == 10) {
+            layout("Sfida përfundoi!")
+            text("Rezultati: $mathScore / 10", 26, gold)
+            button("Luaj përsëri") { mathGame() }
+            button("Ballina") { home() }
+            return
+        }
+        val a = Random.nextInt(2, 21)
+        val b = Random.nextInt(2, 13)
+        val answer = a * b
+        val choices = (listOf(answer) + generateSequence { answer + Random.nextInt(-20, 21) }
+            .filter { it > 0 && it != answer }.distinct().take(3).toList()).shuffled()
+        layout("Numrat • ${mathRound + 1}/10")
+        text("Sa është $a × $b ?", 27, gold)
+        text("Pikë: $mathScore")
+        choices.forEach { value ->
+            button(value.toString()) {
+                if (value == answer) mathScore++
+                mathRound++
+                nextMath()
+            }
+        }
     }
     private fun demo() {
         layout("Simulim 50/50")
