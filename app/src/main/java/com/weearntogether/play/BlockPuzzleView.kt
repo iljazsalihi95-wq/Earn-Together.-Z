@@ -29,6 +29,28 @@ class BlockPuzzleView(context: Context) : View(context) {
     private var score = 0
     private var best = context.getSharedPreferences("block_puzzle",Context.MODE_PRIVATE).getInt("best",0)
     private var gameOver = false
+    private val prefs = context.getSharedPreferences("block_puzzle",Context.MODE_PRIVATE)
+    init {
+        val saved = prefs.getString("board", null)
+        val savedOffers = prefs.getString("offers", null)
+        if (saved != null && saved.length == 64 && saved.all { it in '0'..'4' } &&
+            savedOffers != null && savedOffers.split(",").size == 3) {
+            for (r in 0..7) for (c in 0..7) board[r][c] = saved[r * 8 + c].digitToInt()
+            val parsed = savedOffers.split(",").mapNotNull { it.toIntOrNull() }
+            if (parsed.size == 3 && parsed.all { it in -1 until shapes.size }) {
+                offers = parsed.toMutableList()
+                score = prefs.getInt("score", 0)
+                gameOver = !anyMoves()
+            }
+        }
+    }
+    private fun saveGame() {
+        prefs.edit()
+            .putString("board", board.joinToString("") { row -> row.joinToString("") })
+            .putString("offers", offers.joinToString(","))
+            .putInt("score", score)
+            .apply()
+    }
     private fun paint(c: Canvas, color: Int, size: Float, x: Float, y: Float) {
         p.color=color; c.drawRoundRect(x,y,x+size,y+size,7f,7f,p)
     }
@@ -73,6 +95,7 @@ class BlockPuzzleView(context: Context) : View(context) {
             selected=((e.x-ox)/(width/3f)).toInt().coerceIn(0,2)
             invalidate();return true
         }
+        if (e.x < ox || e.x >= ox + cell * 8 || e.y < oy || e.y >= oy + cell * 8) return true
         val x=((e.x-ox)/cell).toInt()
         val y=((e.y-oy)/cell).toInt()
         val id=offers[selected]
@@ -93,6 +116,7 @@ class BlockPuzzleView(context: Context) : View(context) {
         }
         if(offers.all { it<0 })offers=MutableList(3){Random.nextInt(shapes.size)}
         gameOver=!anyMoves()
+        saveGame()
         invalidate()
         return true
     }
