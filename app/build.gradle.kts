@@ -11,15 +11,13 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "0.1.0"
+        buildConfigField("String", "LEVELPLAY_APP_KEY", "\"\"")
+        buildConfigField("String", "LEVELPLAY_REWARDED_AD_UNIT", "\"\"")
+        buildConfigField("String", "LEVELPLAY_INTERSTITIAL_AD_UNIT", "\"\"")
+        buildConfigField("String", "LEVELPLAY_BANNER_AD_UNIT", "\"\"")
     }
     buildTypes { release { isMinifyEnabled = false } }
     buildFeatures { buildConfig = true }
-    defaultConfig {
-        buildConfigField("String", "UNITY_ANDROID_GAME_ID", "\"6209382\"")
-        buildConfigField("String", "UNITY_REWARDED_AD_UNIT", "\"Rewarded_Android\"")
-        buildConfigField("String", "UNITY_INTERSTITIAL_AD_UNIT", "\"Interstitial_Android\"")
-        buildConfigField("String", "UNITY_BANNER_AD_UNIT", "\"Banner_Android\"")
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -28,5 +26,5 @@ android {
 }
 
 dependencies {
-    implementation("com.unity3d.ads:unity-ads:4.19.0")
+    implementation("com.unity3d.ads-mediation:mediation-sdk:9.5.0")
 }
