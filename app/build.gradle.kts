@@ -11,10 +11,10 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "0.1.0"
-        buildConfigField("String", "LEVELPLAY_APP_KEY", "\"\"")
-        buildConfigField("String", "LEVELPLAY_REWARDED_AD_UNIT", "\"\"")
-        buildConfigField("String", "LEVELPLAY_INTERSTITIAL_AD_UNIT", "\"\"")
-        buildConfigField("String", "LEVELPLAY_BANNER_AD_UNIT", "\"\"")
+        buildConfigField("String", "LEVELPLAY_APP_KEY", "\"28e1c919d\"")
+        buildConfigField("String", "LEVELPLAY_REWARDED_AD_UNIT", "\"ui8a3ve6ggugacuo\"")
+        buildConfigField("String", "LEVELPLAY_INTERSTITIAL_AD_UNIT", "\"onmeefn82676cjk8\"")
+        buildConfigField("String", "LEVELPLAY_BANNER_AD_UNIT", "\"3z9a2p5o88cx61ls\"")
     }
     buildTypes { release { isMinifyEnabled = false } }
     buildFeatures { buildConfig = true }
