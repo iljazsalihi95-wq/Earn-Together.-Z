@@ -53,6 +53,7 @@ class MainActivity : Activity() {
         text("🎮 Lojëra • Sfida • Kuiz", 21)
         text("Version privat testues. Nuk ka reklama ose fitime reale.")
         button("▶ Luaj kuizin – 10 pyetje") { round = 0; correct = 0; question() }
+        button("🫧 Bubble Shooter – qëllo flluskat") { bubbleShooter() }
         button("🧩 Block Puzzle – vendos blloqet") { blockPuzzle() }
         button("🧠 Memory – gjej çiftet") { memory() }
         button("🔢 Numrat – sfida matematikore") { mathGame() }
@@ -81,6 +82,13 @@ class MainActivity : Activity() {
         button("Ballina") { home() }
     }
 
+    private fun bubbleShooter() {
+        layout("Bubble Shooter")
+        text("Prek ekranin për të drejtuar dhe qëlluar.", 16, gold)
+        root.addView(BubbleShooterView(this), LinearLayout.LayoutParams(-1, 1250))
+        button("Rifillo lojën") { bubbleShooter() }
+        button("Ballina") { home() }
+    }
     private fun blockPuzzle() {
         layout("Block Puzzle")
         text("Prek një formë, pastaj katrorin ku dëshiron ta vendosësh.", 16, gold)
