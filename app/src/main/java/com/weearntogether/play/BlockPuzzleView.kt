@@ -44,6 +44,15 @@ class BlockPuzzleView(context: Context) : View(context) {
             }
         }
     }
+    fun restart() {
+        for (row in board) row.fill(0)
+        offers = MutableList(3) { Random.nextInt(shapes.size) }
+        selected = 0
+        score = 0
+        gameOver = false
+        saveGame()
+        invalidate()
+    }
     private fun saveGame() {
         prefs.edit()
             .putString("board", board.joinToString("") { row -> row.joinToString("") })
