@@ -128,7 +128,8 @@ class BlockPuzzleView(context: Context) : View(context) {
     private fun placeSelected(x: Int, y: Int) {
         val id = offers[selected]
         if (id < 0 || !fits(id, x, y)) return
-        shapes[id].forEach { (dx, dy) -> board[y + dy][x + dx] = selected + 1 }
+        val placedColor = selected + 1
+        shapes[id].forEach { (dx, dy) -> board[y + dy][x + dx] = placedColor }
         score += shapes[id].size
         offers[selected] = -1
         val rows = (0..7).filter { row -> board[row].all { it != 0 } }
@@ -144,6 +145,7 @@ class BlockPuzzleView(context: Context) : View(context) {
         } else performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
         if (score > best) best = score
         if (offers.all { it < 0 }) offers = MutableList(3) { Random.nextInt(shapes.size) }
+        selected = offers.indexOfFirst { it >= 0 }.let { if (it >= 0) it else 0 }
         gameOver = !anyMoves()
         saveGame()
     }
