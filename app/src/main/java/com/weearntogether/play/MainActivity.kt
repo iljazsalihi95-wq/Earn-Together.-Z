@@ -1,0 +1,89 @@
+package com.weearntogether.play
+
+import android.app.Activity
+import android.os.Bundle
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
+import android.view.Gravity
+import android.view.View
+import android.widget.*
+import kotlin.random.Random
+
+class MainActivity : Activity() {
+    private val navy = Color.rgb(10, 16, 39)
+    private val purple = Color.rgb(101, 71, 224)
+    private val gold = Color.rgb(255, 197, 77)
+    private lateinit var root: LinearLayout
+    private var round = 0
+    private var correct = 0
+    private val questions = listOf(
+        Triple("Sa ditë ka një javë?", listOf("5", "7", "9", "10"), 1),
+        Triple("Sa është 6 × 7?", listOf("36", "42", "48", "56"), 1),
+        Triple("Cili planet quhet Planeti i Kuq?", listOf("Venusi", "Marsi", "Jupiteri", "Saturni"), 1),
+        Triple("Cili është oqeani më i madh?", listOf("Atlantiku", "Indian", "Paqësori", "Arktiku"), 2),
+        Triple("Sa brinjë ka trekëndëshi?", listOf("3", "4", "5", "6"), 0),
+        Triple("Cila është kryeqyteti i Francës?", listOf("Roma", "Parisi", "Berlini", "Vjena"), 1),
+        Triple("Sa minuta ka një orë?", listOf("30", "45", "60", "90"), 2),
+        Triple("Cili është simboli kimik i ujit?", listOf("CO2", "O2", "H2O", "NaCl"), 2),
+        Triple("Sa është 12 + 15?", listOf("25", "26", "27", "28"), 2),
+        Triple("Cila gjuhë flitet kryesisht në Brazil?", listOf("Spanjisht", "Portugalisht", "Italisht", "Frëngjisht"), 1)
+    )
+    override fun onCreate(savedInstanceState: Bundle?) { super.onCreate(savedInstanceState); home() }
+    private fun layout(title: String) {
+        root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(32, 50, 32, 24); setBackgroundColor(navy) }
+        val scroll = ScrollView(this).apply { fillViewport = true; addView(root) }
+        setContentView(scroll)
+        text("✦ WE EARN TOGETHER", 16, gold)
+        text(title, 29, Color.WHITE)
+    }
+    private fun text(s: String, size: Int = 17, color: Int = Color.WHITE) {
+        root.addView(TextView(this).apply { text = s; textSize = size.toFloat(); setTextColor(color); setPadding(4, 16, 4, 16); if(size >= 25) setTypeface(null, Typeface.BOLD) })
+    }
+    private fun button(label: String, action: () -> Unit) {
+        val b = Button(this).apply {
+            text = label; textSize = 17f; isAllCaps = false; setTextColor(Color.WHITE)
+            background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(purple, Color.rgb(39, 117, 225))).apply { cornerRadius = 32f }
+            setOnClickListener { action() }
+        }
+        root.addView(b, LinearLayout.LayoutParams(-1, 124).apply { bottomMargin = 18 })
+    }
+    private fun home() {
+        layout("Play. Learn. Earn Together.")
+        text("🎮 Lojëra • Sfida • Kuiz", 21)
+        text("Version privat testues. Nuk ka reklama ose fitime reale.")
+        button("▶ Luaj kuizin – 10 pyetje") { round = 0; correct = 0; question() }
+        button("◈ Provo ndarjen 50/50") { demo() }
+        text("Modeli: çdo përdorues merr 50% të të ardhurave të veta të verifikuara, vetëm pasi të miratohen partnerët reklamues.")
+    }
+    private fun question() {
+        if (round >= questions.size) { result(); return }
+        layout("Kuiz • Pyetja ${round + 1}/10")
+        text("Pikë: $correct", 17, gold)
+        val q = questions[round]
+        text(q.first, 23)
+        q.second.forEachIndexed { index, answer ->
+            button(answer) {
+                if (index == q.third) correct++
+                round++
+                question()
+            }
+        }
+    }
+    private fun result() {
+        layout("Raundi përfundoi!")
+        text("Përgjigje të sakta: $correct / 10", 23, gold)
+        text("Këtu mund të vendoset një reklamë vetëm pas miratimit të modelit monetar nga partneri. Aktualisht nuk shfaqet reklamë.")
+        button("Luaj përsëri") { round = 0; correct = 0; question() }
+        button("Ballina") { home() }
+    }
+    private fun demo() {
+        layout("Simulim 50/50")
+        text("Shembull matematikor, JO fitime reale.", 19, gold)
+        text("Nëse një reklamë e lejuar gjeneron 0,10 € të ardhura të konfirmuara:")
+        text("Lojtari: 0,05 €", 25, gold)
+        text("Platforma: 0,05 €", 25)
+        text("Bilanci real: 0,00 €. Nuk ka lidhje PayPal ose reklama.")
+        button("Kthehu") { home() }
+    }
+}
