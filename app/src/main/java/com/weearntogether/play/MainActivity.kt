@@ -38,7 +38,18 @@ class MainActivity : Activity() {
         layout("Mirë se vjen!")
         text("Lojëra, sfida dhe progres në një vend.", 21, gold)
         text("Fillo pa regjistrim. Profili provizor ruhet vetëm në këtë pajisje dhe nuk është llogari online.")
+        text("Emri në lojë (opsional)", 16)
+        val nickname = EditText(this).apply {
+            hint = "P.sh. Player82"
+            setSingleLine(true)
+            setTextColor(Color.WHITE)
+            setHintTextColor(Color.LTGRAY)
+            filters = arrayOf(android.text.InputFilter.LengthFilter(24))
+        }
+        root.addView(nickname)
         button("Vazhdo si mysafir") {
+            val displayName = nickname.text.toString().trim().ifBlank { "Lojtar" }
+            profile.edit().putString("display_name", displayName).apply()
             profile.edit().putString("guest_id", java.util.UUID.randomUUID().toString())
                 .putLong("created_at", System.currentTimeMillis()).apply()
             home()
@@ -49,7 +60,22 @@ class MainActivity : Activity() {
         layout("Profili im")
         val id = profile.getString("guest_id", "") ?: ""
         text("Llogari provizore në këtë telefon", 19, gold)
+        text("Mirë se erdhe, " + profile.getString("display_name", "Lojtar"), 22, gold)
         text("ID lokale: " + id.take(8).uppercase())
+        val editName = EditText(this).apply {
+            setText(profile.getString("display_name", "Lojtar"))
+            setTextColor(Color.WHITE)
+            setSingleLine(true)
+            filters = arrayOf(android.text.InputFilter.LengthFilter(24))
+        }
+        root.addView(editName)
+        button("Ruaj emrin") {
+            val updated = editName.text.toString().trim()
+            if (updated.isNotEmpty()) {
+                profile.edit().putString("display_name", updated).apply()
+                account()
+            } else Toast.makeText(this, "Shkruaj emrin", Toast.LENGTH_SHORT).show()
+        }
         text("Progresi i lojërave ruhet në këtë pajisje. Nuk ka ende sinkronizim online, bilanc apo pagesa.")
         button("Kthehu te lojërat") { home() }
         button("Dil nga profili provizor") {
@@ -82,7 +108,7 @@ class MainActivity : Activity() {
     private fun home() {
         layout("Play. Learn. Earn Together.")
         text("🎮 Lojëra • Sfida • Kuiz", 21)
-        button("Profili im • Mysafir") { account() }
+        button("Profili • " + profile.getString("display_name", "Lojtar")) { account() }
         text("Version privat testues. Nuk ka reklama ose fitime reale.")
         button("▶ Luaj kuizin – 10 pyetje") { round = 0; correct = 0; question() }
         button("🫧 Bubble Shooter – qëllo flluskat") { bubbleShooter() }
