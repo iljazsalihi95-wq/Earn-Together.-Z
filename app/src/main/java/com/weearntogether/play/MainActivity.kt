@@ -53,6 +53,7 @@ class MainActivity : Activity() {
         text("🎮 Lojëra • Sfida • Kuiz", 21)
         text("Version privat testues. Nuk ka reklama ose fitime reale.")
         button("▶ Luaj kuizin – 10 pyetje") { round = 0; correct = 0; question() }
+        button("🧩 Block Puzzle – vendos blloqet") { blockPuzzle() }
         button("🧠 Memory – gjej çiftet") { memory() }
         button("🔢 Numrat – sfida matematikore") { mathGame() }
         button("◈ Provo ndarjen 50/50") { demo() }
@@ -80,6 +81,14 @@ class MainActivity : Activity() {
         button("Ballina") { home() }
     }
 
+    private fun blockPuzzle() {
+        layout("Block Puzzle")
+        text("Prek një formë, pastaj katrorin ku dëshiron ta vendosësh.", 16, gold)
+        val game = BlockPuzzleView(this)
+        root.addView(game, LinearLayout.LayoutParams(-1, 1250))
+        button("Rifillo lojën") { blockPuzzle() }
+        button("Ballina") { home() }
+    }
     private var memoryCards = mutableListOf<String>()
     private var memoryOpened = mutableListOf<Int>()
     private var memoryMatched = mutableSetOf<Int>()
