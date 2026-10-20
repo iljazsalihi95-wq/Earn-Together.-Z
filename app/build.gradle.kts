@@ -26,3 +26,7 @@ android {
     }
     kotlinOptions { jvmTarget = "17" }
 }
+
+dependencies {
+    implementation("com.unity3d.ads:unity-ads:4.19.0")
+}
