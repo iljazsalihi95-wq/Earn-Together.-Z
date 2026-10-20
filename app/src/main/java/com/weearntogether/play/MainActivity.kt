@@ -57,6 +57,7 @@ class MainActivity : Activity() {
         button("🧩 Block Puzzle – vendos blloqet") { blockPuzzle() }
         button("🧠 Memory – gjej çiftet") { memory() }
         button("🔢 Numrat – sfida matematikore") { mathGame() }
+        button("📺 Unity Ads – vetëm test") { adsTest() }
         button("◈ Provo ndarjen 50/50") { demo() }
         text("Modeli: çdo përdorues merr 50% të të ardhurave të veta të verifikuara, vetëm pasi të miratohen partnerët reklamues.")
     }
@@ -182,6 +183,20 @@ class MainActivity : Activity() {
                 nextMath()
             }
         }
+    }
+    private fun adsTest() {
+        layout("Unity Ads • Test privat")
+        text("Reklamat janë vetëm për testim. Nuk krijojnë fitime apo pagesa reale.", 17, gold)
+        text("SDK mund të komunikojë me Unity. Përpara aktivizimit kërkohet pëlqimi yt dhe një zgjidhje e plotë privatësie për publikim.")
+        val status = TextView(this).apply { text = "SDK joaktiv"; textSize = 16f; setTextColor(gold) }
+        root.addView(status)
+        val manager = UnityAdsTestManager(this) { status.text = it }
+        button("Pranoj testimin dhe aktivizo Unity Ads") { manager.initializeAfterConsent() }
+        button("Ngarko Rewarded TEST") { manager.loadRewarded() }
+        button("Shfaq Rewarded TEST") { manager.showRewarded() }
+        button("Ngarko Interstitial TEST") { manager.loadInterstitial() }
+        button("Shfaq Interstitial TEST") { manager.showInterstitial() }
+        button("Ballina") { home() }
     }
     private fun demo() {
         layout("Simulim 50/50")
