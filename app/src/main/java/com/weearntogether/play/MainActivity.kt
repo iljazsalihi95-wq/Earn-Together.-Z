@@ -55,6 +55,7 @@ class MainActivity : Activity() {
         button("▶ Luaj kuizin – 10 pyetje") { round = 0; correct = 0; question() }
         button("🫧 Bubble Shooter – qëllo flluskat") { bubbleShooter() }
         button("🧩 Block Puzzle – vendos blloqet") { blockPuzzle() }
+        button("🔢 2048 – bashko numrat") { merge2048() }
         button("🧠 Memory – gjej çiftet") { memory() }
         button("🔢 Numrat – sfida matematikore") { mathGame() }
         button("📺 Unity Ads – vetëm test") { adsTest() }
@@ -88,6 +89,14 @@ class MainActivity : Activity() {
         text("Prek ekranin për të drejtuar dhe qëlluar.", 16, gold)
         root.addView(BubbleShooterView(this), LinearLayout.LayoutParams(-1, 1250))
         button("Rifillo lojën") { bubbleShooter() }
+        button("Ballina") { home() }
+    }
+    private fun merge2048() {
+        layout("2048 • Bashko numrat")
+        text("Bashko dy numra të njëjtë duke rrëshqitur tabelën.",16,gold)
+        val game = Merge2048View(this)
+        root.addView(game, LinearLayout.LayoutParams(-1, 1050))
+        button("Rifillo 2048") { game.restart() }
         button("Ballina") { home() }
     }
     private fun blockPuzzle() {
