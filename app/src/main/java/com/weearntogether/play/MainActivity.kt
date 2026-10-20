@@ -95,7 +95,7 @@ class MainActivity : Activity() {
         text("Prek një formë, pastaj katrorin ku dëshiron ta vendosësh.", 16, gold)
         val game = BlockPuzzleView(this)
         root.addView(game, LinearLayout.LayoutParams(-1, 1250))
-        button("Rifillo lojën") { blockPuzzle() }
+        button("Rifillo lojën") { game.restart() }
         button("Ballina") { home() }
     }
     private var memoryCards = mutableListOf<String>()
