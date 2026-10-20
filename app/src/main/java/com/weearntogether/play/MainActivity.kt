@@ -32,7 +32,7 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) { super.onCreate(savedInstanceState); home() }
     private fun layout(title: String) {
         root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(32, 50, 32, 24); setBackgroundColor(navy) }
-        val scroll = ScrollView(this).apply { fillViewport = true; addView(root) }
+        val scroll = ScrollView(this).apply { isFillViewport = true; addView(root) }
         setContentView(scroll)
         text("✦ WE EARN TOGETHER", 16, gold)
         text(title, 29, Color.WHITE)
