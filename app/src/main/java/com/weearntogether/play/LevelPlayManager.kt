@@ -7,9 +7,9 @@ import com.unity3d.mediation.LevelPlayConfiguration
 import com.unity3d.mediation.LevelPlayInitError
 import com.unity3d.mediation.LevelPlayInitListener
 import com.unity3d.mediation.LevelPlayInitRequest
-import com.unity3d.mediation.LevelPlayReward
 import com.unity3d.mediation.interstitial.LevelPlayInterstitialAd
 import com.unity3d.mediation.interstitial.LevelPlayInterstitialAdListener
+import com.unity3d.mediation.rewarded.LevelPlayReward
 import com.unity3d.mediation.rewarded.LevelPlayRewardedAd
 import com.unity3d.mediation.rewarded.LevelPlayRewardedAdListener
 import com.unity3d.mediation.LevelPlayAdError
