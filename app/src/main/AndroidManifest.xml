@@ -8,6 +8,10 @@
     android:roundIcon="@drawable/ic_launcher_wet"
     android:theme="@android:style/Theme.Material.Light.NoActionBar"
     android:usesCleartextTraffic="false">
+<activity
+    android:name="com.weearntogether.lazygarden.LazyGardenActivity"
+    android:screenOrientation="portrait"
+    android:exported="false"/>
 <activity android:name=".MainActivity" android:exported="true">
 <intent-filter>
 <action android:name="android.intent.action.MAIN"/>
