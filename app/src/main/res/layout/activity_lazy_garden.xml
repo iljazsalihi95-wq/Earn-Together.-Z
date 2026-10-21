@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:background="#081421">
- <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/lazygarden_panel" android:padding="16dp">
-  <TextView android:id="@+id/lgTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/lg_title" android:textColor="#F6E4A8" android:textSize="28sp" android:textStyle="bold"/>
-  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="10dp">
-   <TextView android:id="@+id/lgLevel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textColor="#FFFFFF" android:textSize="16sp"/>
-   <TextView android:id="@+id/lgMoves" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:textColor="#FFFFFF" android:textSize="16sp"/>
-   <TextView android:id="@+id/lgCoins" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="end" android:textColor="#F6D36F" android:textSize="16sp" android:textStyle="bold"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="12dp" android:background="#081421">
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/lazygarden_panel" android:padding="14dp">
+  <TextView android:id="@+id/lgTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/lg_title" android:textColor="#F6E4A8" android:textSize="26sp" android:textStyle="bold"/>
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
+   <TextView android:id="@+id/lgLevel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:textColor="#FFFFFF" android:textSize="15sp"/>
+   <TextView android:id="@+id/lgMoves" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:textColor="#FFFFFF" android:textSize="15sp"/>
+   <TextView android:id="@+id/lgCoins" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="end" android:textColor="#F6D36F" android:textSize="15sp" android:textStyle="bold"/>
   </LinearLayout>
  </LinearLayout>
- <FrameLayout android:id="@+id/lgBoardHost" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_marginTop="12dp" android:layout_marginBottom="12dp" android:background="@drawable/lazygarden_board" android:padding="10dp"/>
- <TextView android:id="@+id/lgGoals" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/lazygarden_panel" android:padding="12dp" android:textColor="#FFFFFF" android:textSize="15sp"/>
- <TextView android:id="@+id/lgBuildTask" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:background="@drawable/lazygarden_panel" android:padding="12dp" android:textColor="#F6E4A8" android:textSize="15sp" android:textStyle="bold"/>
- <Button android:id="@+id/lgAction" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Play" android:textAllCaps="false"/>
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal" android:gravity="center_vertical" android:background="@drawable/lazygarden_panel" android:padding="10dp">
+  <TextView android:id="@+id/lgAvatar" android:layout_width="48dp" android:layout_height="48dp" android:gravity="center" android:text="A" android:textColor="#081421" android:textSize="22sp" android:textStyle="bold" android:background="#F6D36F"/>
+  <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:orientation="vertical">
+   <TextView android:id="@+id/lgSpeaker" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#F6D36F" android:textStyle="bold" android:textSize="15sp"/>
+   <TextView android:id="@+id/lgDialogue" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:textColor="#FFFFFF" android:textSize="14sp"/>
+  </LinearLayout>
+ </LinearLayout>
+ <FrameLayout android:id="@+id/lgBoardHost" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_marginTop="8dp" android:layout_marginBottom="8dp" android:background="@drawable/lazygarden_board" android:padding="8dp"/>
+ <TextView android:id="@+id/lgGoals" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@drawable/lazygarden_panel" android:padding="10dp" android:textColor="#FFFFFF" android:textSize="14sp"/>
+ <TextView android:id="@+id/lgBuildTask" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:background="@drawable/lazygarden_panel" android:padding="10dp" android:textColor="#F6E4A8" android:textSize="14sp" android:textStyle="bold"/>
+ <Button android:id="@+id/lgAction" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Play" android:textAllCaps="false"/>
 </LinearLayout>
