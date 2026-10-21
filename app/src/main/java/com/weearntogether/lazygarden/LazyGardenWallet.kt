@@ -2,11 +2,18 @@ package com.weearntogether.lazygarden
 
 import android.content.Context
 
-/** Persistent in-game currency. No timestamp or expiry is stored by design. */
+/** Persistent in-game currency used only inside LazyGarden. No expiry. */
 class LazyGardenWallet(context: Context) {
     private val prefs = context.getSharedPreferences("lazy_garden_wallet", Context.MODE_PRIVATE)
 
-    val coins: Int get() = prefs.getInt(KEY_COINS, 0)
+    val coins: Int
+        get() {
+            if (!prefs.contains(KEY_COINS)) {
+                prefs.edit().putInt(KEY_COINS, STARTING_COINS).apply()
+                return STARTING_COINS
+            }
+            return prefs.getInt(KEY_COINS, STARTING_COINS)
+        }
 
     fun credit(amount: Int): Int {
         require(amount >= 0)
@@ -22,5 +29,8 @@ class LazyGardenWallet(context: Context) {
         return true
     }
 
-    private companion object { const val KEY_COINS = "coins" }
+    private companion object {
+        const val KEY_COINS = "coins"
+        const val STARTING_COINS = 9_999
+    }
 }
