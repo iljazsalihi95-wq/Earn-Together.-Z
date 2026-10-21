@@ -8,16 +8,25 @@ import android.view.View
 import kotlin.math.min
 import kotlin.random.Random
 
-/** Premium native 8x8 block puzzle with drag placement, combos and persistent progress. */
+/** Premium native 8x8 block puzzle with drag placement, fair offers, combos and persistent progress. */
 class BlockPuzzleView(context: Context) : View(context) {
     private val p=Paint(Paint.ANTI_ALIAS_FLAG); private val board=Array(8){IntArray(8)}
     private val palette=intArrayOf(0xff35c6fa.toInt(),0xffa478ff.toInt(),0xffffc857.toInt(),0xff49e1aa.toInt())
     private val shapes=listOf(arrayOf(0 to 0),arrayOf(0 to 0,1 to 0),arrayOf(0 to 0,1 to 0,2 to 0),arrayOf(0 to 0,0 to 1),arrayOf(0 to 0,1 to 0,0 to 1),arrayOf(0 to 0,1 to 0,0 to 1,1 to 1),arrayOf(0 to 0,1 to 0,2 to 0,1 to 1),arrayOf(0 to 0,0 to 1,0 to 2),arrayOf(0 to 0,1 to 0,2 to 0,0 to 1),arrayOf(0 to 0,1 to 0,2 to 0,3 to 0),arrayOf(0 to 0,0 to 1,0 to 2,1 to 2))
     private val prefs=context.getSharedPreferences("block_puzzle",Context.MODE_PRIVATE)
     private var offers=MutableList(3){Random.nextInt(shapes.size)};private var selected=0;private var score=0;private var best=prefs.getInt("best",0);private var level=prefs.getInt("level",1).coerceAtLeast(1);private var totalLines=prefs.getInt("total_lines",0);private var combo=prefs.getInt("combo",0);private var bestCombo=prefs.getInt("best_combo",0);private var gameOver=false;private var dragging=false;private var previewX=-1;private var previewY=-1
-    init{val s=prefs.getString("board",null);val o=prefs.getString("offers",null);if(s!=null&&s.length==64&&s.all{it in '0'..'4'}&&o!=null){val a=o.split(",").mapNotNull{it.toIntOrNull()};if(a.size==3&&a.all{it in -1 until shapes.size}){for(r in 0..7)for(c in 0..7)board[r][c]=s[r*8+c].digitToInt();offers=a.toMutableList();score=prefs.getInt("score",0);gameOver=!anyMoves()}}}
+    init{val s=prefs.getString("board",null);val o=prefs.getString("offers",null);if(s!=null&&s.length==64&&s.all{it in '0'..'4'}&&o!=null){val a=o.split(",").mapNotNull{it.toIntOrNull()};if(a.size==3&&a.all{it in -1 until shapes.size}){for(r in 0..7)for(c in 0..7)board[r][c]=s[r*8+c].digitToInt();offers=a.toMutableList();score=prefs.getInt("score",0);gameOver=!anyMoves()}}else offers=freshOffers()}
     fun restart(){for(row in board)row.fill(0);offers=freshOffers();selected=0;score=0;level=1;totalLines=0;combo=0;gameOver=false;dragging=false;previewX=-1;previewY=-1;save();invalidate()}
-    private fun freshOffers():MutableList<Int>{val easy=shapes.indices.filter{i->shapes[i].size<=3};val out=mutableListOf<Int>();out+=easy.random();while(out.size<3)out+=Random.nextInt(shapes.size);return out.shuffled().toMutableList()}
+    private fun canFitAnywhere(id:Int)=(0..7).any{y->(0..7).any{x->fits(id,x,y)}}
+    private fun freshOffers():MutableList<Int>{
+        val fitting=shapes.indices.filter{canFitAnywhere(it)}
+        if(fitting.isEmpty()) return mutableListOf(-1,-1,-1)
+        val easy=fitting.filter{shapes[it].size<=3}
+        val out=mutableListOf<Int>()
+        out+=(easy.ifEmpty{fitting}).random()
+        while(out.size<3) out+=fitting.random()
+        return out.shuffled().toMutableList()
+    }
     private fun save(){prefs.edit().putString("board",board.joinToString(""){it.joinToString("")}).putString("offers",offers.joinToString(",")).putInt("score",score).putInt("best",best).putInt("level",level).putInt("total_lines",totalLines).putInt("combo",combo).putInt("best_combo",bestCombo).apply()}
     private fun block(c:Canvas,color:Int,size:Float,x:Float,y:Float,alpha:Int=255){p.shader=LinearGradient(x,y,x+size,y+size,lighten(color),color,Shader.TileMode.CLAMP);p.alpha=alpha;c.drawRoundRect(x,y,x+size,y+size,12f,12f,p);p.shader=null;p.style=Paint.Style.STROKE;p.strokeWidth=2f;p.color=0x55ffffff;p.alpha=alpha;c.drawRoundRect(x+2,y+2,x+size-2,y+size-2,10f,10f,p);p.style=Paint.Style.FILL;p.alpha=255}
     private fun lighten(color:Int)=Color.rgb((Color.red(color)+55).coerceAtMost(255),(Color.green(color)+55).coerceAtMost(255),(Color.blue(color)+55).coerceAtMost(255))
@@ -30,7 +39,7 @@ class BlockPuzzleView(context: Context) : View(context) {
         val sy=oy+8*cell+34;p.color=0xff9caad0.toInt();p.textSize=16f;c.drawText("CHOOSE • DRAG • CLEAR",ox,sy-8,p);offers.forEachIndexed{idx,sid->val ow=(width-ox*2)/3f;val bx=ox+idx*ow;p.color=if(selected==idx)0xff4932a8.toInt() else 0xff111f3d.toInt();c.drawRoundRect(bx,sy,bx+ow-9,sy+132,24f,24f,p);if(selected==idx){p.style=Paint.Style.STROKE;p.strokeWidth=3f;p.color=0xffa478ff.toInt();c.drawRoundRect(bx+1,sy+1,bx+ow-10,sy+131,23f,23f,p);p.style=Paint.Style.FILL};if(sid>=0)shapes[sid].forEach{(dx,dy)->block(c,palette[idx%palette.size],24f,bx+13+dx*28,sy+26+dy*28)}}
         if(gameOver){p.color=0xee080f24.toInt();c.drawRoundRect(ox+8,oy+90,ox+cell*8-8,oy+350,30f,30f,p);p.color=0xffffc857.toInt();p.textSize=38f;c.drawText("GAME OVER",ox+34,oy+158,p);p.color=Color.WHITE;p.textSize=22f;c.drawText("Score $score  •  Best $best",ox+34,oy+207,p);c.drawText("Best combo x$bestCombo",ox+34,oy+247,p);p.color=0xff9caad0.toInt();p.textSize=18f;c.drawText("Restart to begin a new run",ox+34,oy+294,p)}}
     private fun fits(id:Int,bx:Int,by:Int)=id in shapes.indices&&shapes[id].all{(dx,dy)->bx+dx in 0..7&&by+dy in 0..7&&board[by+dy][bx+dx]==0}
-    private fun anyMoves()=offers.any{id->id>=0&&(0..7).any{y->(0..7).any{x->fits(id,x,y)}}}
+    private fun anyMoves()=offers.any{id->id>=0&&canFitAnywhere(id)}
     private fun boardPos(x:Float,y:Float):Pair<Int,Int>?{val(cell,ox,oy)=geo();if(x<ox||x>=ox+cell*8||y<oy||y>=oy+cell*8)return null;return ((x-ox)/cell).toInt() to ((y-oy)/cell).toInt()}
     private fun place(x:Int,y:Int){val id=offers[selected];if(id<0||!fits(id,x,y))return;shapes[id].forEach{(dx,dy)->board[y+dy][x+dx]=selected+1};score+=shapes[id].size*level;offers[selected]=-1;val rows=(0..7).filter{r->board[r].all{it!=0}};val cols=(0..7).filter{col->(0..7).all{r->board[r][col]!=0}};rows.forEach{board[it].fill(0)};cols.forEach{col->(0..7).forEach{r->board[r][col]=0}};val lines=rows.size+cols.size;if(lines>0){combo++;bestCombo=maxOf(bestCombo,combo);totalLines+=lines;score+=lines*25*level+combo*15;level=1+totalLines/10;performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)}else{combo=0;performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)};best=maxOf(best,score);if(offers.all{it<0})offers=freshOffers();selected=offers.indexOfFirst{it>=0}.let{if(it>=0)it else 0};gameOver=!anyMoves();save()}
     override fun onTouchEvent(e:MotionEvent):Boolean{if(gameOver)return true;val(cell,ox,oy)=geo();val sy=oy+8*cell+34;val w=(width-ox*2)/3f;when(e.actionMasked){MotionEvent.ACTION_DOWN->{if(e.y in sy..sy+136&&e.x>=ox){selected=((e.x-ox)/w).toInt().coerceIn(0,2);if(offers[selected]>=0){dragging=true;performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)};invalidate();return true};boardPos(e.x,e.y)?.let{(x,y)->previewX=x;previewY=y}};MotionEvent.ACTION_MOVE->if(dragging){boardPos(e.x,e.y-cell*1.25f)?.let{(x,y)->previewX=x;previewY=y}?:run{previewX=-1;previewY=-1};invalidate()};MotionEvent.ACTION_UP->{if(dragging&&previewX>=0&&previewY>=0)place(previewX,previewY)else boardPos(e.x,e.y)?.let{(x,y)->place(x,y)};dragging=false;previewX=-1;previewY=-1;invalidate();return true};MotionEvent.ACTION_CANCEL->{dragging=false;previewX=-1;previewY=-1;invalidate()}};return true}
