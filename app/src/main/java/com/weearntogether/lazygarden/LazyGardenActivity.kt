@@ -11,6 +11,7 @@ import com.weearntogether.play.R
 class LazyGardenActivity : Activity() {
     private val collected = mutableMapOf<GardenTile, Int>()
     private lateinit var board: LazyGardenBoardView
+    private lateinit var scene: LazyGardenSceneView
     private lateinit var wallet: LazyGardenWallet
     private lateinit var progressStore: LazyGardenProgressStore
     private var currentLevel = 1
@@ -25,6 +26,8 @@ class LazyGardenActivity : Activity() {
         val saved = progressStore.load()
         currentLevel = saved.level
         unlockedLevel = saved.unlockedLevel
+        scene = LazyGardenSceneView(this)
+        findViewById<FrameLayout>(R.id.lgSceneHost).addView(scene, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
         board = LazyGardenBoardView(this)
         findViewById<FrameLayout>(R.id.lgBoardHost).addView(board, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
         startLevel(currentLevel, saved.collected)
@@ -66,10 +69,7 @@ class LazyGardenActivity : Activity() {
         if (!goalsComplete()) { startLevel(currentLevel); saveProgress(); return }
         val story = LazyGardenStory.get(currentLevel)
         if (!progressStore.isBuildTaskCompleted(currentLevel)) {
-            if (wallet.spend(story.cost)) {
-                progressStore.markBuildTaskCompleted(currentLevel)
-                updateHud()
-            }
+            if (wallet.spend(story.cost)) { progressStore.markBuildTaskCompleted(currentLevel); updateHud() }
             return
         }
         if (currentLevel < LazyGardenLevels.count) { startLevel(currentLevel + 1); saveProgress() }
@@ -82,6 +82,7 @@ class LazyGardenActivity : Activity() {
         val level = LazyGardenLevels.get(currentLevel)
         val story = LazyGardenStory.get(currentLevel)
         val taskDone = progressStore.isBuildTaskCompleted(currentLevel)
+        scene.setCompletedTasks((1..LazyGardenLevels.count).filter { progressStore.isBuildTaskCompleted(it) }.toSet())
         findViewById<TextView>(R.id.lgLevel).text = getString(R.string.lg_level, currentLevel)
         findViewById<TextView>(R.id.lgMoves).text = "${getString(R.string.lg_moves)}: ${board.engine.movesLeft}"
         findViewById<TextView>(R.id.lgCoins).text = "${getString(R.string.lg_coins)}: ${wallet.coins}"
