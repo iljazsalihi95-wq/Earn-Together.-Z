@@ -27,6 +27,9 @@ class LevelPlayManager(
     private var rewarded: LevelPlayRewardedAd? = null
     private var interstitial: LevelPlayInterstitialAd? = null
     private var pendingGameplayReward: (() -> Unit)? = null
+    private var naturalBreaks = 0
+    private var lastInterstitialAt = 0L
+    private val minInterstitialGapMs = 120_000L
 
     fun initialize() {
         if (initialized) return
@@ -40,10 +43,7 @@ class LevelPlayManager(
                 createInterstitial()
                 status("LevelPlay ready")
             }
-
-            override fun onInitFailed(error: LevelPlayInitError) {
-                status("LevelPlay unavailable")
-            }
+            override fun onInitFailed(error: LevelPlayInitError) { status("LevelPlay unavailable") }
         })
     }
 
@@ -53,17 +53,11 @@ class LevelPlayManager(
                 override fun onAdLoaded(adInfo: LevelPlayAdInfo) { status("Rewarded ready") }
                 override fun onAdLoadFailed(error: LevelPlayAdError) { status("Rewarded unavailable") }
                 override fun onAdDisplayed(adInfo: LevelPlayAdInfo) {}
-                override fun onAdDisplayFailed(error: LevelPlayAdError, adInfo: LevelPlayAdInfo) {
-                    pendingGameplayReward = null
-                    ad.loadAd()
-                }
+                override fun onAdDisplayFailed(error: LevelPlayAdError, adInfo: LevelPlayAdInfo) { pendingGameplayReward=null; ad.loadAd() }
                 override fun onAdClicked(adInfo: LevelPlayAdInfo) {}
                 override fun onAdClosed(adInfo: LevelPlayAdInfo) { ad.loadAd() }
                 override fun onAdInfoChanged(adInfo: LevelPlayAdInfo) {}
-                override fun onAdRewarded(reward: LevelPlayReward, adInfo: LevelPlayAdInfo) {
-                    pendingGameplayReward?.invoke()
-                    pendingGameplayReward = null
-                }
+                override fun onAdRewarded(reward: LevelPlayReward, adInfo: LevelPlayAdInfo) { pendingGameplayReward?.invoke(); pendingGameplayReward=null }
             })
             ad.loadAd()
         }
@@ -74,7 +68,7 @@ class LevelPlayManager(
             ad.setListener(object : LevelPlayInterstitialAdListener {
                 override fun onAdLoaded(adInfo: LevelPlayAdInfo) { status("Interstitial ready") }
                 override fun onAdLoadFailed(error: LevelPlayAdError) { status("Interstitial unavailable") }
-                override fun onAdDisplayed(adInfo: LevelPlayAdInfo) {}
+                override fun onAdDisplayed(adInfo: LevelPlayAdInfo) { lastInterstitialAt=System.currentTimeMillis() }
                 override fun onAdDisplayFailed(error: LevelPlayAdError, adInfo: LevelPlayAdInfo) { ad.loadAd() }
                 override fun onAdClicked(adInfo: LevelPlayAdInfo) {}
                 override fun onAdClosed(adInfo: LevelPlayAdInfo) { ad.loadAd() }
@@ -85,16 +79,20 @@ class LevelPlayManager(
     }
 
     fun showRewardedForGameplay(onReward: () -> Unit): Boolean {
-        val ad = rewarded ?: return false
-        if (!ad.isAdReady) return false
-        pendingGameplayReward = onReward
+        val ad=rewarded ?: return false
+        if(!ad.isAdReady) return false
+        pendingGameplayReward=onReward
         ad.showAd(activity)
         return true
     }
 
+    /** Interstitials are limited to natural breaks, every second break and at least two minutes apart. */
     fun showInterstitialAtNaturalBreak(): Boolean {
-        val ad = interstitial ?: return false
-        if (!ad.isAdReady) return false
+        naturalBreaks++
+        if(naturalBreaks % 2 != 0) return false
+        if(System.currentTimeMillis()-lastInterstitialAt < minInterstitialGapMs) return false
+        val ad=interstitial ?: return false
+        if(!ad.isAdReady) return false
         ad.showAd(activity)
         return true
     }
