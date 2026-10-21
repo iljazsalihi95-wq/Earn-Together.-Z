@@ -11,7 +11,9 @@ class LazyGardenActivity : Activity() {
     private lateinit var board: LazyGardenBoardView
     private lateinit var wallet: LazyGardenWallet
     private lateinit var progressStore: LazyGardenProgressStore
+    private lateinit var milestone: LazyGardenMilestone
     private var rewardGranted = false
+    private var levelCompletionCounted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +21,7 @@ class LazyGardenActivity : Activity() {
 
         wallet = LazyGardenWallet(this)
         progressStore = LazyGardenProgressStore(this)
+        milestone = LazyGardenMilestone(this)
         val saved = progressStore.load()
         collected[GardenTile.LEAF] = saved.collectedLeaf
         collected[GardenTile.FLOWER] = saved.collectedFlower
@@ -41,9 +44,15 @@ class LazyGardenActivity : Activity() {
                     collectedFlower = collected[GardenTile.FLOWER] ?: 0
                 )
             )
-            if (goalsComplete() && !rewardGranted) {
-                wallet.credit(LazyGardenLevels.level1.coinReward)
-                rewardGranted = true
+            if (goalsComplete()) {
+                if (!rewardGranted) {
+                    wallet.credit(LazyGardenLevels.level1.coinReward)
+                    rewardGranted = true
+                }
+                if (!levelCompletionCounted) {
+                    milestone.markLevelCompleted(1)
+                    levelCompletionCounted = true
+                }
             }
             updateHud()
         }
@@ -57,7 +66,8 @@ class LazyGardenActivity : Activity() {
         findViewById<TextView>(R.id.lgLevel).text = getString(R.string.lg_level, 1)
         findViewById<TextView>(R.id.lgMoves).text = "${getString(R.string.lg_moves)}: ${board.engine.movesLeft}"
         findViewById<TextView>(R.id.lgCoins).text = "${getString(R.string.lg_coins)}: ${wallet.coins}"
+        val demoProgress = "Demo reward ${milestone.completedLevels}/${milestone.targetLevels} • €1.00 pending verification"
         findViewById<TextView>(R.id.lgGoals).text =
-            "${getString(R.string.lg_goal)}  •  Leaf ${collected[GardenTile.LEAF] ?: 0}/20  •  Flower ${collected[GardenTile.FLOWER] ?: 0}/20"
+            "${getString(R.string.lg_goal)}  •  Leaf ${collected[GardenTile.LEAF] ?: 0}/20  •  Flower ${collected[GardenTile.FLOWER] ?: 0}/20\n$demoProgress"
     }
 }
