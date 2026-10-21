@@ -11,10 +11,21 @@ import kotlin.math.min
 
 class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
     var engine = LazyGardenEngine(LazyGardenLevels.level1)
+        private set
     var onMove: ((MatchResult) -> Unit)? = null
     private var selected: Cell? = null
+    private var inputEnabled = true
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val colors = intArrayOf(0xFF55A96B.toInt(), 0xFFD968A0.toInt(), 0xFFB9475F.toInt(), 0xFF714BC7.toInt(), 0xFFE6B84F.toInt(), 0xFF4EA9CF.toInt())
+
+    fun loadLevel(level: LazyGardenLevel) {
+        engine = LazyGardenEngine(level)
+        selected = null
+        inputEnabled = true
+        invalidate()
+    }
+
+    fun setInputEnabled(enabled: Boolean) { inputEnabled = enabled; selected = null; invalidate() }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -42,6 +53,7 @@ class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!inputEnabled) return true
         if (event.action != MotionEvent.ACTION_UP) return true
         val size = min(width.toFloat() / engine.level.columns, height.toFloat() / engine.level.rows)
         val ox = (width - size * engine.level.columns) / 2f
@@ -55,10 +67,7 @@ class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: Att
         else if (previous == cell) selected = null
         else {
             val result = engine.swap(previous, cell)
-            if (result != null) {
-                selected = null
-                onMove?.invoke(result)
-            } else selected = cell
+            if (result != null) { selected = null; onMove?.invoke(result) } else selected = cell
         }
         invalidate()
         return true
