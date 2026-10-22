@@ -11,7 +11,7 @@ import kotlin.random.Random
 class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Unit)? = null): View(context) {
     private val colors=intArrayOf(0xffff4f8b.toInt(),0xff36c9ff.toInt(),0xffffc83d.toInt(),0xff9b6cff.toInt())
     private val grid=Array(12){IntArray(8){-1}}; private val p=Paint(Paint.ANTI_ALIAS_FLAG)
-    private val prefs=context.getSharedPreferences("bubble_shooter",Context.MODE_PRIVATE)
+    private val prefs=ProgressPreferences.open(context,"bubble_shooter")
     private var current=0; private var next=0; private var shots=0; private var misses=0; private var points=0; private var level=1; private var streak=0
     private var best=prefs.getInt("best",0); private var bestLevel=prefs.getInt("best_level",1); private var ended=false; private var moving=false
     private var aimX=0f; private var aimY=0f; private var px=0f; private var py=0f; private var vx=0f; private var vy=0f; private var lastFrame=0L

@@ -11,7 +11,7 @@ import kotlin.math.abs
 class NeonStackView(context: Context) : View(context) {
     private data class Layer(val x: Float, val w: Float, val y: Float, val color: Int)
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG)
-    private val prefs=context.getSharedPreferences("neon_stack",Context.MODE_PRIVATE)
+    private val prefs=ProgressPreferences.open(context,"neon_stack")
     private val layers=mutableListOf<Layer>()
     private val palette=intArrayOf(0xff35c6fa.toInt(),0xff8b6cff.toInt(),0xffffc857.toInt(),0xff48e0b2.toInt())
     private var best=prefs.getInt("best",0)

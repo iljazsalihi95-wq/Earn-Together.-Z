@@ -3,8 +3,8 @@ package com.weearntogether.play
 import android.content.Context
 
 /** Local gameplay history used only for resume and non-monetary mission progress. */
-class PlayHistory(context: Context) {
-    private val prefs = context.getSharedPreferences("wet_play_history", Context.MODE_PRIVATE)
+class PlayHistory(private val context: Context) {
+    private val prefs get() = ProgressPreferences.open(context,"wet_play_history")
 
     val lastGame: String? get() = prefs.getString("last_game", null)
     val lastPlayedAt: Long get() = prefs.getLong("last_played_at", 0L)

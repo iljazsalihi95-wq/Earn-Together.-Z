@@ -13,7 +13,7 @@ import kotlin.random.Random
 /** Native swipe-based 2048 game with persistent score and board. */
 class Merge2048View(context: Context): View(context) {
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG)
-    private val prefs=context.getSharedPreferences("merge2048",Context.MODE_PRIVATE)
+    private val prefs=ProgressPreferences.open(context,"merge2048")
     private val board=Array(4){IntArray(4)}
     private var score=0
     private var best=prefs.getInt("best",0)

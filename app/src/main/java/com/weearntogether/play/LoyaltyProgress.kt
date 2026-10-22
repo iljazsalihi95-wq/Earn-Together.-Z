@@ -6,8 +6,8 @@ import java.util.Date
 import java.util.Locale
 
 /** Local non-monetary loyalty progress. Never represents cash or withdrawable balance. */
-class LoyaltyProgress(context: Context) {
-    private val prefs = context.getSharedPreferences("wet_loyalty_progress", Context.MODE_PRIVATE)
+class LoyaltyProgress(private val context: Context) {
+    private val prefs get() = ProgressPreferences.open(context,"wet_loyalty_progress")
     val points: Int get() = prefs.getInt("points", 0)
     val gamesPlayed: Int get() = prefs.getInt("games_played", 0)
     val bestStreak: Int get() = prefs.getInt("best_streak", 0)

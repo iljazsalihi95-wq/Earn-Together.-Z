@@ -26,5 +26,6 @@ android {
 }
 
 dependencies {
+    testImplementation("junit:junit:4.13.2")
     implementation("com.unity3d.ads-mediation:mediation-sdk:9.5.0")
 }

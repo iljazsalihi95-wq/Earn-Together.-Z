@@ -1,13 +1,14 @@
 package com.weearntogether.lazygarden
 
 import android.content.Context
+import com.weearntogether.play.ProgressPreferences
 
 /**
  * Tracks the first reward milestone without creating a real-money balance.
  * The €1 value is presentation-only until the ad/reward model is verified.
  */
 class LazyGardenMilestone(context: Context) {
-    private val prefs = context.getSharedPreferences("lazy_garden_milestone", Context.MODE_PRIVATE)
+    private val prefs = ProgressPreferences.open(context,"lazy_garden_milestone")
 
     val completedLevels: Int
         get() = prefs.getInt(KEY_COMPLETED_LEVELS, 0)

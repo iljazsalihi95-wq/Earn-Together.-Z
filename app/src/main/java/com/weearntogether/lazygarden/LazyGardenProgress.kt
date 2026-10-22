@@ -1,6 +1,7 @@
 package com.weearntogether.lazygarden
 
 import android.content.Context
+import com.weearntogether.play.ProgressPreferences
 
 data class LazyGardenProgress(
     val level: Int,
@@ -14,7 +15,7 @@ data class LazyGardenProgress(
 )
 
 class LazyGardenProgressStore(context: Context) {
-    private val prefs = context.getSharedPreferences("lazy_garden_progress", Context.MODE_PRIVATE)
+    private val prefs = ProgressPreferences.open(context,"lazy_garden_progress")
 
     fun save(progress: LazyGardenProgress) {
         val editor = prefs.edit()

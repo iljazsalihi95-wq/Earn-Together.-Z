@@ -1,10 +1,11 @@
 package com.weearntogether.lazygarden
 
 import android.content.Context
+import com.weearntogether.play.ProgressPreferences
 
 /** Persistent soft currency used only for LazyGarden restoration progression. */
 class LazyGardenWallet(context: Context) {
-    private val prefs = context.getSharedPreferences("lazy_garden_wallet", Context.MODE_PRIVATE)
+    private val prefs = ProgressPreferences.open(context,"lazy_garden_wallet")
 
     val coins: Int
         get() {

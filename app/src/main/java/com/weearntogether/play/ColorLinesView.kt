@@ -13,7 +13,7 @@ class ColorLinesView(context: Context) : View(context) {
     private val n=9
     private val board=IntArray(n*n)
     private val paint=Paint(Paint.ANTI_ALIAS_FLAG)
-    private val prefs=context.getSharedPreferences("color_lines",Context.MODE_PRIVATE)
+    private val prefs=ProgressPreferences.open(context,"color_lines")
     private val colors=intArrayOf(0xff35c6fa.toInt(),0xff9a72ff.toInt(),0xffffc857.toInt(),0xffff648a.toInt(),0xff45dfaa.toInt())
     private var next=IntArray(3){Random.nextInt(1,colors.size+1)}
     private var selected=-1
