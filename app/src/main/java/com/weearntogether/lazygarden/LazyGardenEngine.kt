@@ -13,6 +13,14 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
     init{fillPlayableBoard();seedObstacles()}
 
     fun restoreMoves(savedMoves:Int){movesLeft=savedMoves.coerceIn(0,level.moves)}
+    fun shuffleBoard():Boolean{
+        if(movesLeft<=0)return false
+        val old=encodeBoard()
+        var attempts=0
+        do{fillBoardWithoutImmediateMatches();attempts++}while((!hasValidMove()||encodeBoard()==old)&&attempts<MAX_RESHUFFLE_ATTEMPTS)
+        if(!hasValidMove())seedGuaranteedMove()
+        return hasValidMove()
+    }
     fun obstacleAt(cell:Cell):GardenObstacle?=if(inside(cell))obstacles[cell.row][cell.col]else null
     fun encodeBoard():String=board.joinToString(""){row->row.joinToString(""){it.ordinal.toString()}}
     fun encodeObstacles():String=obstacles.joinToString(""){row->row.joinToString(""){cell->when(cell){null->"0";GardenObstacle.CRATE->"1";GardenObstacle.IVY->"2";GardenObstacle.STONE->"3"}}}
