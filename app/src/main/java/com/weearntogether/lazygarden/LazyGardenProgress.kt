@@ -6,7 +6,8 @@ data class LazyGardenProgress(
     val level: Int,
     val unlockedLevel: Int,
     val movesLeft: Int,
-    val collected: Map<GardenTile, Int>
+    val collected: Map<GardenTile, Int>,
+    val clearedObstacles: Map<GardenObstacle, Int> = emptyMap()
 )
 
 class LazyGardenProgressStore(context: Context) {
@@ -18,6 +19,7 @@ class LazyGardenProgressStore(context: Context) {
             .putInt("unlocked_level", progress.unlockedLevel)
             .putInt("moves", progress.movesLeft)
         GardenTile.entries.forEach { tile -> editor.putInt("tile_${tile.name}", progress.collected[tile] ?: 0) }
+        GardenObstacle.entries.forEach { obstacle -> editor.putInt("obstacle_${obstacle.name}", progress.clearedObstacles[obstacle] ?: 0) }
         editor.apply()
     }
 
@@ -29,7 +31,8 @@ class LazyGardenProgressStore(context: Context) {
             movesLeft = prefs.getInt("moves", LazyGardenLevels.get(level).moves),
             collected = GardenTile.entries.associateWith { tile ->
                 prefs.getInt("tile_${tile.name}", if (tile == GardenTile.LEAF) prefs.getInt("leaf", 0) else if (tile == GardenTile.FLOWER) prefs.getInt("flower", 0) else 0)
-            }
+            },
+            clearedObstacles = GardenObstacle.entries.associateWith { obstacle -> prefs.getInt("obstacle_${obstacle.name}", 0) }
         )
     }
 
@@ -40,9 +43,6 @@ class LazyGardenProgressStore(context: Context) {
         return true
     }
 
-    fun markBuildTaskCompleted(level: Int) {
-        prefs.edit().putBoolean("build_task_$level", true).apply()
-    }
-
+    fun markBuildTaskCompleted(level: Int) { prefs.edit().putBoolean("build_task_$level", true).apply() }
     fun isBuildTaskCompleted(level: Int): Boolean = prefs.getBoolean("build_task_$level", false)
 }
