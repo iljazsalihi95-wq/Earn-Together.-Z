@@ -36,7 +36,22 @@ object LazyGardenStory {
         GardenStoryStep(22,"Mia","Let's turn it into a real collection.","Plant the greenhouse collection","This feels like a tiny botanical garden.",1080,"Plant collection"),
         GardenStoryStep(23,"Alex","The upper lawn still feels unfinished.","Build the upper lawn seating area","We finally have a place to enjoy the whole view.",1140,"Upper lawn"),
         GardenStoryStep(24,"Mia","One dark corner remains near the greenhouse.","Add decorative lights and flowers","The whole garden now glows after sunset.",1200,"Evening garden"),
-        GardenStoryStep(25,"Alex","We've restored every area we opened so far.","Complete the grand garden vista","What a transformation. The next chapter can begin beyond the estate wall.",1300,"Grand vista")
+        GardenStoryStep(25,"Alex","We've restored every area we opened so far.","Complete the grand garden vista","What a transformation. The next chapter can begin beyond the estate wall.",1300,"Grand vista"),
+        GardenStoryStep(26,"Mia","Beyond the wall is an old courtyard no one has used in years.","Open and clean the hidden courtyard","The hidden courtyard finally belongs to the garden again.",1360,"Hidden courtyard"),
+        GardenStoryStep(27,"Alex","These stone stairs are too damaged to use safely.","Rebuild the courtyard stairs","Now the upper terrace is connected again.",1420,"Courtyard stairs"),
+        GardenStoryStep(28,"Mia","The terrace needs shade before anyone can enjoy it.","Restore the canvas pavilion","This is going to be perfect on warm afternoons.",1480,"Garden pavilion"),
+        GardenStoryStep(29,"Alex","An empty pavilion needs a reason to stay awhile.","Create the pavilion lounge","Now this feels like a real outdoor room.",1540,"Pavilion lounge"),
+        GardenStoryStep(30,"Mia","I found an old plan showing a herb garden here.","Plant the heritage herb garden","The scents make this corner feel alive.",1620,"Herb garden"),
+        GardenStoryStep(31,"Alex","The service path behind the herbs is almost gone.","Restore the brick service path","We can move through the whole estate again.",1700,"Brick path"),
+        GardenStoryStep(32,"Mia","This wall was once covered in climbing flowers.","Build a flowering trellis wall","The bare wall has become a feature instead of an eyesore.",1780,"Trellis wall"),
+        GardenStoryStep(33,"Alex","There's room here for a small place to gather.","Create the garden dining corner","Dinner outside just became an option.",1860,"Dining corner"),
+        GardenStoryStep(34,"Mia","The old sundial is still here, just buried under ivy.","Restore the stone sundial","The sundial gives the courtyard its character back.",1940,"Stone sundial"),
+        GardenStoryStep(35,"Alex","This long border could tie the whole courtyard together.","Plant the grand flower border","Color now runs from one end of the courtyard to the other.",2040,"Flower border"),
+        GardenStoryStep(36,"Mia","We can hear water behind those overgrown shrubs.","Clear the stream overlook","The stream view was worth uncovering.",2140,"Stream overlook"),
+        GardenStoryStep(37,"Alex","The overlook needs a safe edge and somewhere to stop.","Build the overlook railing and bench","Now everyone can enjoy the stream safely.",2240,"Overlook bench"),
+        GardenStoryStep(38,"Mia","The old steps down to the water have disappeared.","Restore the riverside steps","The lower garden is open again.",2340,"Riverside steps"),
+        GardenStoryStep(39,"Alex","One final dark stretch separates the courtyard from the stream.","Install the riverside lantern walk","The route now shines all the way to the water.",2440,"Lantern walk"),
+        GardenStoryStep(40,"Mia","Look how far we've come. Let's finish this chapter with a real landmark.","Complete the courtyard and stream panorama","The estate has a new heart. Another chapter is ready to begin.",2580,"Courtyard panorama")
     )
 
     fun get(level: Int): GardenStoryStep = steps[(level - 1).coerceIn(0, steps.lastIndex)]
