@@ -35,14 +35,13 @@ class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: Att
         GardenTile.PEAR to drawable(R.drawable.lg_tile_pear),
         GardenTile.WATER to drawable(R.drawable.lg_tile_water)
     )
+    private val obstacleArt: Map<GardenObstacle, Drawable> = mapOf(
+        GardenObstacle.CRATE to drawable(R.drawable.lg_obstacle_crate),
+        GardenObstacle.IVY to drawable(R.drawable.lg_obstacle_ivy),
+        GardenObstacle.STONE to drawable(R.drawable.lg_obstacle_stone)
+    )
 
-    fun loadLevel(level:LazyGardenLevel){
-        // A campaign level must be a designed, repeatable challenge rather than a different random
-        // board every retry. The level number gives every one of the 250 levels its own stable seed;
-        // saved boards still restore over this initial state in LazyGardenActivity.
-        engine=LazyGardenEngine(level,Random(levelSeed(level.number)))
-        selected=null;downCell=null;inputEnabled=true;invalidate()
-    }
+    fun loadLevel(level:LazyGardenLevel){engine=LazyGardenEngine(level,Random(levelSeed(level.number)));selected=null;downCell=null;inputEnabled=true;invalidate()}
     fun setInputEnabled(enabled:Boolean){ inputEnabled=enabled; selected=null; downCell=null; invalidate() }
 
     override fun onDraw(canvas:Canvas){
@@ -59,11 +58,11 @@ class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: Att
         }
     }
 
-    private fun drawObstacle(canvas:Canvas, obstacle:GardenObstacle?, left:Float, top:Float, size:Float){when(obstacle){
-        GardenObstacle.CRATE->{paint.color=0xE6D69A55.toInt();canvas.drawRoundRect(RectF(left+size*.14f,top+size*.14f,left+size*.86f,top+size*.86f),size*.08f,size*.08f,paint);paint.style=Paint.Style.STROKE;paint.strokeWidth=size*.08f;paint.color=0xFF8A572F.toInt();canvas.drawLine(left+size*.25f,top+size*.25f,left+size*.75f,top+size*.75f,paint);canvas.drawLine(left+size*.75f,top+size*.25f,left+size*.25f,top+size*.75f,paint);paint.style=Paint.Style.FILL}
-        GardenObstacle.IVY->{paint.color=0xCC277A4A.toInt();canvas.drawCircle(left+size*.34f,top+size*.38f,size*.18f,paint);canvas.drawCircle(left+size*.62f,top+size*.55f,size*.21f,paint);canvas.drawCircle(left+size*.43f,top+size*.70f,size*.16f,paint)}
-        GardenObstacle.STONE->{paint.color=0xF06F7488.toInt();canvas.drawRoundRect(RectF(left+size*.12f,top+size*.18f,left+size*.88f,top+size*.82f),size*.22f,size*.22f,paint);paint.color=0x559FFFFF;canvas.drawCircle(left+size*.38f,top+size*.38f,size*.10f,paint)}
-        null->Unit}}
+    private fun drawObstacle(canvas:Canvas, obstacle:GardenObstacle?, left:Float, top:Float, size:Float){
+        if(obstacle==null)return
+        val inset=(size*.06f).toInt()
+        obstacleArt.getValue(obstacle).apply{setBounds((left+inset).toInt(),(top+inset).toInt(),(left+size-inset).toInt(),(top+size-inset).toInt());draw(canvas)}
+    }
 
     override fun onTouchEvent(event:MotionEvent):Boolean{if(!inputEnabled)return true;when(event.actionMasked){
         MotionEvent.ACTION_DOWN->{downX=event.x;downY=event.y;downCell=cellAt(event.x,event.y);downCell?.let{if(engine.obstacleAt(it)!=GardenObstacle.STONE)selected=it};invalidate();return true}
@@ -75,7 +74,5 @@ class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: Att
     private fun cellSize():Float=min(width.toFloat()/engine.level.columns,height.toFloat()/engine.level.rows)
     private fun cellAt(x:Float,y:Float):Cell?{val size=cellSize();if(size<=0f)return null;val ox=(width-size*engine.level.columns)/2f;val oy=(height-size*engine.level.rows)/2f;val c=((x-ox)/size).toInt();val r=((y-oy)/size).toInt();return if(r in 0 until engine.level.rows&&c in 0 until engine.level.columns)Cell(r,c)else null}
 
-    companion object {
-        private fun levelSeed(level:Int):Int = 0x4C475244 xor (level * 1103515245)
-    }
+    companion object { private fun levelSeed(level:Int):Int = 0x4C475244 xor (level * 1103515245) }
 }
