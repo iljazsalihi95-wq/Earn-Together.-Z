@@ -9,7 +9,8 @@ data class LazyGardenProgress(
     val collected: Map<GardenTile, Int>,
     val clearedObstacles: Map<GardenObstacle, Int> = emptyMap(),
     val boardState: String = "",
-    val obstacleState: String = ""
+    val obstacleState: String = "",
+    val shuffleBoosters: Int = 3
 )
 
 class LazyGardenProgressStore(context: Context) {
@@ -22,6 +23,7 @@ class LazyGardenProgressStore(context: Context) {
             .putInt("moves", progress.movesLeft)
             .putString("board_state", progress.boardState)
             .putString("obstacle_state", progress.obstacleState)
+            .putInt("shuffle_boosters", progress.shuffleBoosters.coerceAtLeast(0))
         GardenTile.entries.forEach { tile -> editor.putInt("tile_${tile.name}", progress.collected[tile] ?: 0) }
         GardenObstacle.entries.forEach { obstacle -> editor.putInt("obstacle_${obstacle.name}", progress.clearedObstacles[obstacle] ?: 0) }
         editor.apply()
@@ -38,7 +40,8 @@ class LazyGardenProgressStore(context: Context) {
             },
             clearedObstacles = GardenObstacle.entries.associateWith { obstacle -> prefs.getInt("obstacle_${obstacle.name}", 0) },
             boardState = prefs.getString("board_state", "") ?: "",
-            obstacleState = prefs.getString("obstacle_state", "") ?: ""
+            obstacleState = prefs.getString("obstacle_state", "") ?: "",
+            shuffleBoosters = prefs.getInt("shuffle_boosters", 3).coerceAtLeast(0)
         )
     }
 
