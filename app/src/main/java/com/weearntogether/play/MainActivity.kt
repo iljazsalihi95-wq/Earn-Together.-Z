@@ -18,6 +18,7 @@ class MainActivity : Activity() {
     private lateinit var root:LinearLayout
     private val loyalty by lazy{LoyaltyProgress(this)}; private val playHistory by lazy{PlayHistory(this)}; private val profile by lazy{getSharedPreferences("wet_guest_profile",MODE_PRIVATE)}; private val accounts by lazy{AccountStore(this)}
     private var levelPlay:LevelPlayManager?=null; private var atHome=false
+    private val googleIdentity by lazy { GoogleIdentity(this) }; private var googleInFlight=false
     private var busy=false; private var firstResume=true
     private var cloudMessage=""; private var pendingConflicts=listOf<CloudProgress.Conflict>()
     private fun dp(n:Int)=(n*resources.displayMetrics.density).toInt()
@@ -73,8 +74,35 @@ class MainActivity : Activity() {
     private fun section(title:String){heading(title,15,gold)}
     private fun authHeader(subtitle:String){heading("WE EARN TOGETHER",30,gold);label(subtitle,17);label("Your account. Your games. Your progress, synced.",14,0xff9cadd8.toInt())}
     private fun welcome(){screen();authHeader("PLAY • PROGRESS • TOGETHER");val card=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;gravity=Gravity.CENTER;setPadding(26,28,26,28);background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff25104f.toInt(),0xff102d65.toInt())).apply{cornerRadius=38f}};card.addView(TextView(this).apply{text="PLAYER ACCOUNT";textSize=14f;setTextColor(gold);setTypeface(null,Typeface.BOLD);gravity=Gravity.CENTER});card.addView(TextView(this).apply{text="Create your player account and keep your game saves in the cloud.";textSize=18f;setTextColor(Color.WHITE);gravity=Gravity.CENTER;setPadding(0,12,0,12)});root.addView(card,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=24});button("CREATE ACCOUNT"){registerScreen()};button("SIGN IN"){loginScreen()}}
-    private fun registerScreen(){screen();authHeader("CREATE ACCOUNT");val name=field("Full name");val email=field("Email").apply{inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS};val pass=field("Password (8+ characters)",true);val confirm=field("Confirm password",true);addField(name);addField(email);addField(pass);addField(confirm);val status=TextView(this).apply{setTextColor(0xffff9c9c.toInt());textSize=14f;gravity=Gravity.CENTER;setPadding(8,0,8,14)};root.addView(status);button("CREATE ACCOUNT"){val n=name.text.toString();val e=email.text.toString();val p=pass.text.toString();val c=confirm.text.toString();request(status,{accounts.register(n,e,p,c)}){pass.text.clear();confirm.text.clear();syncAndHome()}};button("I ALREADY HAVE AN ACCOUNT"){loginScreen()}}
-    private fun loginScreen(){screen();authHeader("SIGN IN");val email=field("Email").apply{inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS};val pass=field("Password",true);addField(email);addField(pass);val status=TextView(this).apply{setTextColor(0xffff9c9c.toInt());textSize=14f;gravity=Gravity.CENTER;setPadding(8,0,8,14)};root.addView(status);button("SIGN IN"){val e=email.text.toString();val p=pass.text.toString();request(status,{accounts.login(e,p)}){pass.text.clear();syncAndHome()}};button("CREATE NEW ACCOUNT"){registerScreen()}}
+    private fun registerScreen(){screen();authHeader("CREATE ACCOUNT");val name=field("Full name");val email=field("Email").apply{inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS};val pass=field("Password (8+ characters)",true);val confirm=field("Confirm password",true);addField(name);addField(email);addField(pass);addField(confirm);val status=TextView(this).apply{setTextColor(0xffff9c9c.toInt());textSize=14f;gravity=Gravity.CENTER;setPadding(8,0,8,14)};root.addView(status);button("CREATE ACCOUNT"){val n=name.text.toString();val e=email.text.toString();val p=pass.text.toString();val c=confirm.text.toString();request(status,{accounts.register(n,e,p,c)}){pass.text.clear();confirm.text.clear();syncAndHome()}};googleButton(status);button("I ALREADY HAVE AN ACCOUNT"){loginScreen()}}
+    private fun loginScreen(){screen();authHeader("SIGN IN");val email=field("Email").apply{inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS};val pass=field("Password",true);addField(email);addField(pass);val status=TextView(this).apply{setTextColor(0xffff9c9c.toInt());textSize=14f;gravity=Gravity.CENTER;setPadding(8,0,8,14)};root.addView(status);button("SIGN IN"){val e=email.text.toString();val p=pass.text.toString();request(status,{accounts.login(e,p)}){pass.text.clear();syncAndHome()}};googleButton(status);button("CREATE NEW ACCOUNT"){registerScreen()}}
+    private fun googleButton(status:TextView){
+        root.addView(Button(this).apply{text="CONTINUE WITH GOOGLE";isAllCaps=false;textSize=15f;setTypeface(null,Typeface.BOLD);setTextColor(navy);background=rounded(Color.WHITE,30f);setOnClickListener{googleLogin(status)}},LinearLayout.LayoutParams(-1,dp(54)).apply{bottomMargin=dp(16)})
+    }
+    private fun googleLogin(status:TextView?=null,link:Boolean=false){
+        if(busy)return
+        busy=true;googleInFlight=true;enabled(root,false);status?.text="Connecting to Google…"
+        fun failed(message:String){busy=false;googleInFlight=false;enabled(root,true);status?.text=message;Toast.makeText(this,message,Toast.LENGTH_LONG).show()}
+        CloudWorker.executor.execute {
+            val challenge=try{accounts.googleChallenge()}catch(_:Exception){null}
+            runOnUiThread {
+                if(isFinishing||isDestroyed)return@runOnUiThread
+                if(challenge==null){failed("Could not connect. Check your connection and try again.");return@runOnUiThread}
+                googleIdentity.signIn(challenge){token,error->
+                    if(isFinishing||isDestroyed)return@signIn
+                    if(token==null){failed(error?:"Google sign-in failed")}else{
+                        CloudWorker.executor.execute {
+                            val result=try{accounts.googleSignIn(token,link)}catch(_:Exception){AccountStore.Result(false,"Google sign-in could not be completed")}
+                            runOnUiThread {
+                                if(!isFinishing&&!isDestroyed){busy=false;googleInFlight=false;enabled(root,true);if(result.ok)syncAndHome()else failed(result.message)}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    override fun onDestroy(){if(googleInFlight)googleIdentity.cancel();super.onDestroy()}
     private fun hero(){val h=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;gravity=Gravity.CENTER_HORIZONTAL;setPadding(28,28,28,28);background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff4b2398.toInt(),0xff0d7bd8.toInt(),0xff071b42.toInt())).apply{cornerRadius=42f}};h.addView(TextView(this).apply{text="🌿  LAZYGARDEN";textSize=15f;setTextColor(gold);setTypeface(null,Typeface.BOLD)});h.addView(TextView(this).apply{text="RESTORE. MATCH. BUILD.";textSize=26f;setTextColor(Color.WHITE);setTypeface(null,Typeface.BOLD);gravity=Gravity.CENTER;setPadding(0,10,0,8)});h.addView(TextView(this).apply{text="250 progressive garden levels, restoration missions and challenges.";textSize=15f;setTextColor(0xffd7e5ff.toInt());gravity=Gravity.CENTER});h.addView(Button(this).apply{text="PLAY LAZYGARDEN";isAllCaps=false;setTypeface(null,Typeface.BOLD);setTextColor(navy);background=rounded(gold,26f);setOnClickListener{lazyGarden()}},LinearLayout.LayoutParams(-1,104).apply{topMargin=20});root.addView(h,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=20})}
     private fun stats(){val box=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER;background=rounded(panel,32f);setPadding(10,17,10,17)};fun add(v:String,l:String,c:Int){box.addView(TextView(this).apply{text="$v\n${tr(l)}";gravity=Gravity.CENTER;textSize=15f;setTextColor(c);setTypeface(null,Typeface.BOLD)},LinearLayout.LayoutParams(0,86,1f))};add(loyalty.points.toString(),"LOYALTY",gold);add(loyalty.currentStreak.toString(),"STREAK",Color.WHITE);add("${loyalty.todayGames}/${loyalty.dailyGoal}","TODAY",Color.WHITE);root.addView(box,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=20})}
     private fun missionCard(icon:String,title:String,desc:String,category:String,progress:Int,target:Int,action:()->Unit){val q=progress.coerceIn(0,target);val box=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(24,20,24,20);background=rounded(panel,34f)};val top=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL};top.addView(TextView(this).apply{text=icon;textSize=34f;gravity=Gravity.CENTER},LinearLayout.LayoutParams(78,92));val words=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL};words.addView(TextView(this).apply{text=category;textSize=12f;setTextColor(gold);setTypeface(null,Typeface.BOLD)});words.addView(TextView(this).apply{text=title;textSize=21f;setTextColor(Color.WHITE);setTypeface(null,Typeface.BOLD)});words.addView(TextView(this).apply{text=tr(desc);textSize=13f;setTextColor(0xffc5d1ef.toInt());maxLines=2});top.addView(words,LinearLayout.LayoutParams(0,-2,1f));top.addView(Button(this).apply{text=tr("PLAY");isAllCaps=false;setTypeface(null,Typeface.BOLD);setTextColor(Color.WHITE);background=gradient();minHeight=0;minimumHeight=0;setOnClickListener{action()}},LinearLayout.LayoutParams(160,88));box.addView(top);box.addView(ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal).apply{max=target;this.progress=q},LinearLayout.LayoutParams(-1,18).apply{topMargin=12});box.addView(TextView(this).apply{text="$q/$target";gravity=Gravity.END;textSize=12f;setTextColor(0xffaab8dc.toInt())});root.addView(box,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=14})}
@@ -92,7 +120,8 @@ class MainActivity : Activity() {
         val name=field("Full name").apply{setText(accounts.currentName())};addField(name)
         button("UPDATE NAME"){val value=name.text.toString();request(work={accounts.updateName(value)}){account()}}
         button("REFRESH PROFILE"){request(work={accounts.refreshProfile()}){account()}}
-        button("LOG OUT"){request(work={accounts.logout()}){levelPlay=null;pendingConflicts=emptyList();welcome()}}
+        button("LINK GOOGLE ACCOUNT"){googleLogin(link=true)}
+        button("LOG OUT"){request(work={accounts.logout()}){googleIdentity.clear{levelPlay=null;pendingConflicts=emptyList();welcome()}}}
         nav()
     }
     private fun progressDashboard(){screen(tr("QUESTS"));heading("${loyalty.points} ${tr("LOYALTY")}",30,gold);label("${tr("GAMES")}: ${loyalty.gamesPlayed}   •   ${tr("STREAK")}: ${loyalty.currentStreak}",16);section(tr("GAME MISSIONS"));missionCard("🌿","LazyGarden","Complete garden play sessions.","FEATURED",progress("garden"),10){lazyGarden()};missionCard("🫧","Bubble Shooter","Complete 10 play sessions.","ARCADE",progress("bubble"),10){bubbleShooter()};missionCard("🧩","Block Puzzle","Complete 10 play sessions.","PUZZLE",progress("block"),10){blockPuzzle()};nav()}

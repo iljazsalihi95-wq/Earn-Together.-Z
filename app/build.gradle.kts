@@ -4,6 +4,17 @@ plugins {
 }
 android {
     namespace = "com.weearntogether.play"
+    val ciKey = System.getenv("WET_SIGNING_KEYSTORE")
+    if (!ciKey.isNullOrBlank()) {
+        signingConfigs {
+            getByName("debug") {
+                storeFile = file(ciKey)
+                storePassword = System.getenv("WET_SIGNING_STORE_PASSWORD")
+                keyAlias = System.getenv("WET_SIGNING_KEY_ALIAS")
+                keyPassword = System.getenv("WET_SIGNING_KEY_PASSWORD")
+            }
+        }
+    }
     compileSdk = 35
     defaultConfig {
         applicationId = "com.weearntogether.play"
@@ -26,6 +37,9 @@ android {
 }
 
 dependencies {
+    implementation("androidx.credentials:credentials:1.5.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     testImplementation("junit:junit:4.13.2")
     implementation("com.unity3d.ads-mediation:mediation-sdk:9.5.0")
 }

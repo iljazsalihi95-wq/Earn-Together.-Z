@@ -17,10 +17,32 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
+      - name: Test Google token verification and account linking
+        run: node backend/tests/google-auth.test.cjs
+      - name: Restore persistent Android signing key when configured
+        env:
+          KEYSTORE_BASE64: ${{ secrets.WET_SIGNING_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.WET_SIGNING_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.WET_SIGNING_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.WET_SIGNING_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            umask 077
+            printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/wet-signing.jks"
+            printf 'WET_SIGNING_KEYSTORE=%s\n' "$RUNNER_TEMP/wet-signing.jks" >> "$GITHUB_ENV"
+            printf 'WET_SIGNING_STORE_PASSWORD=%s\n' "$STORE_PASSWORD" >> "$GITHUB_ENV"
+            printf 'WET_SIGNING_KEY_ALIAS=%s\n' "$KEY_ALIAS" >> "$GITHUB_ENV"
+            printf 'WET_SIGNING_KEY_PASSWORD=%s\n' "$KEY_PASSWORD" >> "$GITHUB_ENV"
+          else
+            echo '::warning::Persistent signing key is not configured. Register the exact artifact certificate with Android OAuth before Google Sign-In testing.'
+          fi
       - name: Test cloud save conflict policy
         run: gradle --no-daemon testDebugUnitTest
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
+      - name: Record public signing certificate fingerprints
+        run: gradle --no-daemon signingReport
       - uses: actions/upload-artifact@v4
         with:
           name: We-Earn-Together-debug-APK

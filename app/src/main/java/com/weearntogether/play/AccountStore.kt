@@ -41,6 +41,12 @@ class AccountStore(context: Context) {
         ProgressPreferences.migrateLegacy(context,r.getString("user_id"))
         Result(true,"Signed in")
     }catch(e:Exception){Result(false,message(e))}
+    fun googleChallenge():String=api.request("googleChallenge").getString("nonce")
+    fun googleSignIn(idToken:String,link:Boolean=false):Result {
+        val data=JSONObject().put("id_token",idToken)
+        if(link)data.put("session_token",requireToken())
+        return authenticate(if(link)"linkGoogle" else "googleSignIn",data)
+    }
     private fun saveProfile(r:JSONObject){
         val expires=SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.US).apply { timeZone=TimeZone.getTimeZone("UTC") }.parse(r.getString("expires_at"))!!.time
         check(prefs.edit().putString("user_id",r.getString("user_id")).putString("name",r.getString("name"))
