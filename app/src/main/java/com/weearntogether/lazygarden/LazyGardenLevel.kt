@@ -25,9 +25,10 @@ object LazyGardenLevels {
     private fun obstacle(type: GardenObstacle, target: Int) = LazyGardenObstacleGoal(type, target)
 
     /**
-     * The opening ten levels are intentionally authored as onboarding rather than generated filler.
-     * Levels 1-5 teach matching and mixed collection goals, 6-7 introduce adjacent crate clearing,
-     * 8-9 teach matching through ivy, and level 10 combines both before the generated campaign starts.
+     * The opening twenty levels are authored campaign content rather than generated filler.
+     * Levels 1-5 teach matching, 6-7 introduce crates, 8-9 ivy and 10 combines them.
+     * Chapter two (11-20) then builds deliberate mixed-objective pacing: recovery levels,
+     * blocker-focused challenges and a three-goal chapter finale before procedural chapters begin.
      */
     private val early = listOf(
         level(1,24,50,GardenTile.LEAF to 20,GardenTile.FLOWER to 20),
@@ -49,6 +50,36 @@ object LazyGardenLevels {
         ),
         level(10,23,100,GardenTile.ROSE to 24,GardenTile.PEAR to 24,GardenTile.WATER to 14).copy(
             obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,4),obstacle(GardenObstacle.IVY,3))
+        ),
+        level(11,24,105,GardenTile.LEAF to 24,GardenTile.PEAR to 20).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,4))
+        ),
+        level(12,23,110,GardenTile.FLOWER to 24,GardenTile.WATER to 20).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.IVY,4))
+        ),
+        level(13,22,115,GardenTile.ROSE to 25,GardenTile.BERRY to 22).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,5))
+        ),
+        level(14,22,120,GardenTile.PEAR to 24,GardenTile.LEAF to 24).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,3),obstacle(GardenObstacle.IVY,3))
+        ),
+        level(15,24,125,GardenTile.WATER to 26,GardenTile.FLOWER to 22).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.IVY,5))
+        ),
+        level(16,22,130,GardenTile.BERRY to 26,GardenTile.ROSE to 22).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,5),obstacle(GardenObstacle.IVY,3))
+        ),
+        level(17,21,135,GardenTile.LEAF to 27,GardenTile.WATER to 23).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,6))
+        ),
+        level(18,22,145,GardenTile.FLOWER to 26,GardenTile.PEAR to 24,GardenTile.BERRY to 14).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.IVY,5))
+        ),
+        level(19,21,150,GardenTile.ROSE to 27,GardenTile.LEAF to 24).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,5),obstacle(GardenObstacle.IVY,4))
+        ),
+        level(20,23,175,GardenTile.WATER to 26,GardenTile.BERRY to 24,GardenTile.FLOWER to 16).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,6),obstacle(GardenObstacle.IVY,5))
         )
     )
 
@@ -84,7 +115,7 @@ object LazyGardenLevels {
         if (challenge || finale) goals += tertiary to (14 + chapterGrowth / 2 + step / 2)
 
         val obstacles = mutableListOf<LazyGardenObstacleGoal>()
-        if (number >= 11) obstacles += LazyGardenObstacleGoal(GardenObstacle.CRATE, (4 + chapter / 3 + step / 4).coerceAtMost(12))
+        obstacles += LazyGardenObstacleGoal(GardenObstacle.CRATE, (4 + chapter / 3 + step / 4).coerceAtMost(12))
         if (number >= 31 && (challenge || finale || step == 2 || step == 6)) obstacles += LazyGardenObstacleGoal(GardenObstacle.IVY, (3 + chapter / 4).coerceAtMost(9))
         if (number >= 61 && (finale || step == 3 || step == 7)) obstacles += LazyGardenObstacleGoal(GardenObstacle.STONE, (2 + chapter / 5).coerceAtMost(7))
 
@@ -92,7 +123,7 @@ object LazyGardenLevels {
         return LazyGardenLevel(number, 8, 8, moves, goals.map { LazyGardenGoal(it.first, it.second) }, reward, obstacles)
     }
 
-    private val levels: List<LazyGardenLevel> = early + (11..CAMPAIGN_LEVELS).map(::generated)
+    private val levels: List<LazyGardenLevel> = early + (21..CAMPAIGN_LEVELS).map(::generated)
     fun get(number: Int): LazyGardenLevel = levels[(number - 1).coerceIn(0, levels.lastIndex)]
     val count: Int get() = levels.size
 }
