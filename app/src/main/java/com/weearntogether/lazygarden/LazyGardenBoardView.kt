@@ -12,9 +12,10 @@ import android.view.View
 import com.weearntogether.play.R
 import kotlin.math.abs
 import kotlin.math.min
+import kotlin.random.Random
 
 class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
-    var engine = LazyGardenEngine(LazyGardenLevels.get(1)); private set
+    var engine = LazyGardenEngine(LazyGardenLevels.get(1), Random(levelSeed(1))); private set
     var onMove: ((MatchResult) -> Unit)? = null
     private var selected: Cell? = null
     private var inputEnabled = true
@@ -35,7 +36,13 @@ class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: Att
         GardenTile.WATER to drawable(R.drawable.lg_tile_water)
     )
 
-    fun loadLevel(level:LazyGardenLevel){ engine=LazyGardenEngine(level); selected=null; downCell=null; inputEnabled=true; invalidate() }
+    fun loadLevel(level:LazyGardenLevel){
+        // A campaign level must be a designed, repeatable challenge rather than a different random
+        // board every retry. The level number gives every one of the 250 levels its own stable seed;
+        // saved boards still restore over this initial state in LazyGardenActivity.
+        engine=LazyGardenEngine(level,Random(levelSeed(level.number)))
+        selected=null;downCell=null;inputEnabled=true;invalidate()
+    }
     fun setInputEnabled(enabled:Boolean){ inputEnabled=enabled; selected=null; downCell=null; invalidate() }
 
     override fun onDraw(canvas:Canvas){
@@ -67,4 +74,8 @@ class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: Att
     private fun trySwap(a:Cell,b:Cell){val result=engine.swap(a,b);if(result!=null){selected=null;performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);onMove?.invoke(result)}else{selected=a;performHapticFeedback(HapticFeedbackConstants.REJECT)}}
     private fun cellSize():Float=min(width.toFloat()/engine.level.columns,height.toFloat()/engine.level.rows)
     private fun cellAt(x:Float,y:Float):Cell?{val size=cellSize();if(size<=0f)return null;val ox=(width-size*engine.level.columns)/2f;val oy=(height-size*engine.level.rows)/2f;val c=((x-ox)/size).toInt();val r=((y-oy)/size).toInt();return if(r in 0 until engine.level.rows&&c in 0 until engine.level.columns)Cell(r,c)else null}
+
+    companion object {
+        private fun levelSeed(level:Int):Int = 0x4C475244 xor (level * 1103515245)
+    }
 }
