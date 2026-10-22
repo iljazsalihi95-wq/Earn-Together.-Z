@@ -58,7 +58,10 @@ object LazyGardenStory {
             8 -> "The new retreat gives $area a character of its own."
             else -> "Chapter $chapter is restored. $area now feels like a finished part of the estate."
         }
-        val cost = 120 + (level - 1) * 55 + if (beat == 9) 120 else 0
+        // Restoration is part of campaign progression, so one successful level must always fund its
+        // own mandatory build task. Costs rise more slowly than level rewards and chapter finales
+        // remain slightly more expensive without ever turning progression into a paywall.
+        val cost = 35 + (level - 1) * 4 + if (beat == 9) 20 else 0
         GardenStoryStep(level,speaker,before,task,after,cost,area)
     }
 
