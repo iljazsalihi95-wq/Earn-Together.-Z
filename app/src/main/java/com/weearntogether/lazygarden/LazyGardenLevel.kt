@@ -30,8 +30,8 @@ object LazyGardenLevels {
         level(9,19,90,GardenTile.BERRY to 30,GardenTile.LEAF to 30), level(10,18,100,GardenTile.ROSE to 30,GardenTile.PEAR to 30,GardenTile.WATER to 20)
     )
 
-    /** Original campaign pacing. Obstacles are introduced gradually instead of making later levels
-     * harder only by inflating collection targets. */
+    /** Original campaign pacing. Later chapters become harder through move pressure, mixed goals and
+     * obstacles, while collection targets stay inside a realistically playable range. */
     private fun generated(number: Int): LazyGardenLevel {
         val chapter = (number - 1) / 10
         val step = (number - 1) % 10
@@ -42,26 +42,29 @@ object LazyGardenLevels {
         var tertiary = tiles[(number * 5 + chapter + 2) % tiles.size]
         if (tertiary == primary || tertiary == secondary) tertiary = tiles[(tiles.indexOf(secondary) + 2) % tiles.size]
 
-        val lateGamePressure = (chapter / 4).coerceAtMost(5)
+        val pressure = (chapter / 5).coerceAtMost(4)
         val recovery = step == 0 || step == 5
         val challenge = step == 4 || step == 7
         val finale = step == 9
         val moves = when {
-            recovery -> 24 - lateGamePressure
-            finale -> 20 - lateGamePressure
-            challenge -> 21 - lateGamePressure
-            else -> 23 - lateGamePressure
-        }.coerceAtLeast(14)
+            recovery -> 24 - pressure
+            finale -> 21 - pressure
+            challenge -> 22 - pressure
+            else -> 23 - pressure
+        }.coerceAtLeast(17)
 
-        val chapterGrowth = (chapter * 3).coerceAtMost(54)
-        val base = 24 + chapterGrowth + step * 2
-        val goals = mutableListOf(primary to base, secondary to (base - if (recovery) 8 else 4).coerceAtLeast(18))
-        if (challenge || finale) goals += tertiary to (20 + chapterGrowth / 2 + step)
+        // Keep goals achievable: difficulty comes from combining targets with blockers rather than
+        // asking for hundreds of specific tiles in fewer than twenty moves.
+        val chapterGrowth = (chapter / 3).coerceAtMost(8)
+        val primaryTarget = 24 + chapterGrowth + step / 2
+        val secondaryTarget = 20 + chapterGrowth + if (challenge || finale) 4 else step / 3
+        val goals = mutableListOf(primary to primaryTarget, secondary to secondaryTarget)
+        if (challenge || finale) goals += tertiary to (14 + chapterGrowth / 2 + step / 2)
 
         val obstacles = mutableListOf<LazyGardenObstacleGoal>()
-        if (number >= 11) obstacles += LazyGardenObstacleGoal(GardenObstacle.CRATE, (4 + chapter / 2 + step / 3).coerceAtMost(14))
-        if (number >= 31 && (challenge || finale || step == 2 || step == 6)) obstacles += LazyGardenObstacleGoal(GardenObstacle.IVY, (3 + chapter / 3).coerceAtMost(10))
-        if (number >= 61 && (finale || step == 3 || step == 7)) obstacles += LazyGardenObstacleGoal(GardenObstacle.STONE, (2 + chapter / 4).coerceAtMost(8))
+        if (number >= 11) obstacles += LazyGardenObstacleGoal(GardenObstacle.CRATE, (4 + chapter / 3 + step / 4).coerceAtMost(12))
+        if (number >= 31 && (challenge || finale || step == 2 || step == 6)) obstacles += LazyGardenObstacleGoal(GardenObstacle.IVY, (3 + chapter / 4).coerceAtMost(9))
+        if (number >= 61 && (finale || step == 3 || step == 7)) obstacles += LazyGardenObstacleGoal(GardenObstacle.STONE, (2 + chapter / 5).coerceAtMost(7))
 
         val reward = 55 + (number - 1) * 8 + when { finale -> 80; challenge -> 35; else -> 0 }
         return LazyGardenLevel(number, 8, 8, moves, goals.map { LazyGardenGoal(it.first, it.second) }, reward, obstacles)
