@@ -6,7 +6,7 @@ import kotlin.random.Random
 data class Cell(val row:Int,val col:Int)
 data class MatchResult(val cells:Set<Cell>,val tiles:Map<GardenTile,Int>,val obstacles:Map<GardenObstacle,Int> = emptyMap())
 
-class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Random.Default){
+class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Random(level.number.toLong()*104729L+0x57455447L)){
     val board:Array<Array<GardenTile>> = Array(level.rows){Array(level.columns){GardenTile.LEAF}}
     val obstacles:Array<Array<GardenObstacle?>> = Array(level.rows){arrayOfNulls(level.columns)}
     var movesLeft:Int=level.moves;private set
