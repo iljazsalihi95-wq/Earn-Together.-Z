@@ -22,6 +22,7 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
         return hasValidMove()
     }
     fun obstacleAt(cell:Cell):GardenObstacle?=if(inside(cell))obstacles[cell.row][cell.col]else null
+    private fun blocksSwap(cell:Cell):Boolean=when(obstacleAt(cell)){GardenObstacle.CRATE,GardenObstacle.STONE->true;else->false}
     fun encodeBoard():String=board.joinToString(""){row->row.joinToString(""){it.ordinal.toString()}}
     fun encodeObstacles():String=obstacles.joinToString(""){row->row.joinToString(""){cell->when(cell){null->"0";GardenObstacle.CRATE->"1";GardenObstacle.IVY->"2";GardenObstacle.STONE->"3"}}}
     fun restoreState(boardState:String,obstacleState:String):Boolean{
@@ -39,12 +40,12 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
 
     fun swap(a:Cell,b:Cell):MatchResult?{
         if(movesLeft<=0||!inside(a)||!inside(b)||abs(a.row-b.row)+abs(a.col-b.col)!=1)return null
-        if(obstacleAt(a)==GardenObstacle.STONE||obstacleAt(b)==GardenObstacle.STONE)return null
+        if(blocksSwap(a)||blocksSwap(b))return null
         swapTiles(a,b);var matches=findMatches();if(matches.cells.isEmpty()){swapTiles(a,b);return null};movesLeft--
         val collected=mutableMapOf<GardenTile,Int>();val cleared=mutableMapOf<GardenObstacle,Int>()
         while(matches.cells.isNotEmpty()){
             matches.tiles.forEach{(t,n)->collected[t]=(collected[t]?:0)+n}
-            clearAdjacentObstacles(matches.cells).forEach{(o,n)->cleared[o]=(cleared[o]?:0)+n}
+            clearObstaclesForMatch(matches.cells).forEach{(o,n)->cleared[o]=(cleared[o]?:0)+n}
             collapseAndRefill(matches.cells);matches=findMatches()
         }
         ensurePlayableBoard();return MatchResult(emptySet(),collected,cleared)
@@ -52,19 +53,28 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
 
     fun findMatches():MatchResult{
         val cells=linkedSetOf<Cell>()
-        for(r in board.indices){var start=0;while(start<level.columns){var end=start+1;while(end<level.columns&&board[r][end]==board[r][start])end++;if(end-start>=3)for(c in start until end)if(obstacles[r][c]!=GardenObstacle.STONE)cells+=Cell(r,c);start=end}}
-        for(c in 0 until level.columns){var start=0;while(start<level.rows){var end=start+1;while(end<level.rows&&board[end][c]==board[start][c])end++;if(end-start>=3)for(r in start until end)if(obstacles[r][c]!=GardenObstacle.STONE)cells+=Cell(r,c);start=end}}
+        for(r in board.indices){var start=0;while(start<level.columns){var end=start+1;while(end<level.columns&&board[r][end]==board[r][start])end++;if(end-start>=3)for(c in start until end)if(obstacles[r][c]!=GardenObstacle.STONE&&obstacles[r][c]!=GardenObstacle.CRATE)cells+=Cell(r,c);start=end}}
+        for(c in 0 until level.columns){var start=0;while(start<level.rows){var end=start+1;while(end<level.rows&&board[end][c]==board[start][c])end++;if(end-start>=3)for(r in start until end)if(obstacles[r][c]!=GardenObstacle.STONE&&obstacles[r][c]!=GardenObstacle.CRATE)cells+=Cell(r,c);start=end}}
         return MatchResult(cells,cells.groupingBy{board[it.row][it.col]}.eachCount())
     }
-    fun hasValidMove():Boolean{for(r in 0 until level.rows)for(c in 0 until level.columns){val h=Cell(r,c);if(obstacleAt(h)==GardenObstacle.STONE)continue;if(c+1<level.columns&&obstacleAt(Cell(r,c+1))!=GardenObstacle.STONE&&createsMatch(h,Cell(r,c+1)))return true;if(r+1<level.rows&&obstacleAt(Cell(r+1,c))!=GardenObstacle.STONE&&createsMatch(h,Cell(r+1,c)))return true};return false}
+    fun hasValidMove():Boolean{for(r in 0 until level.rows)for(c in 0 until level.columns){val h=Cell(r,c);if(blocksSwap(h))continue;if(c+1<level.columns&&!blocksSwap(Cell(r,c+1))&&createsMatch(h,Cell(r,c+1)))return true;if(r+1<level.rows&&!blocksSwap(Cell(r+1,c))&&createsMatch(h,Cell(r+1,c)))return true};return false}
     private fun seedObstacles(){val candidates=mutableListOf<Cell>();for(r in 1 until level.rows-1)for(c in 1 until level.columns-1)candidates+=Cell(r,c);candidates.shuffle(random);var cursor=0;level.obstacleGoals.forEach{goal->repeat(goal.target.coerceAtMost(candidates.size-cursor)){val x=candidates[cursor++];obstacles[x.row][x.col]=goal.obstacle}};for(r in 0..1)for(c in 0..2)obstacles[r][c]=null;ensurePlayableBoard()}
-    private fun clearAdjacentObstacles(matched:Set<Cell>):Map<GardenObstacle,Int>{val cleared=mutableMapOf<GardenObstacle,Int>();val targets=linkedSetOf<Cell>();matched.forEach{x->targets+=x;targets+=Cell(x.row-1,x.col);targets+=Cell(x.row+1,x.col);targets+=Cell(x.row,x.col-1);targets+=Cell(x.row,x.col+1)};targets.filter(::inside).forEach{x->val o=obstacles[x.row][x.col]?:return@forEach;obstacles[x.row][x.col]=null;cleared[o]=(cleared[o]?:0)+1};return cleared}
+    /** Ivy is removed by matching the tile under it. Crates and stones occupy a cell and are
+     * removed by a match next to them. This gives the three obstacle families different tactics. */
+    private fun clearObstaclesForMatch(matched:Set<Cell>):Map<GardenObstacle,Int>{
+        val cleared=mutableMapOf<GardenObstacle,Int>()
+        val adjacent=linkedSetOf<Cell>()
+        matched.forEach{x->adjacent+=Cell(x.row-1,x.col);adjacent+=Cell(x.row+1,x.col);adjacent+=Cell(x.row,x.col-1);adjacent+=Cell(x.row,x.col+1)}
+        matched.filter(::inside).forEach{x->if(obstacles[x.row][x.col]==GardenObstacle.IVY){obstacles[x.row][x.col]=null;cleared[GardenObstacle.IVY]=(cleared[GardenObstacle.IVY]?:0)+1}}
+        adjacent.filter(::inside).forEach{x->val o=obstacles[x.row][x.col]?:return@forEach;if(o==GardenObstacle.CRATE||o==GardenObstacle.STONE){obstacles[x.row][x.col]=null;cleared[o]=(cleared[o]?:0)+1}}
+        return cleared
+    }
     private fun createsMatch(a:Cell,b:Cell):Boolean{swapTiles(a,b);val v=findMatches().cells.isNotEmpty();swapTiles(a,b);return v}
     private fun swapTiles(a:Cell,b:Cell){val x=board[a.row][a.col];board[a.row][a.col]=board[b.row][b.col];board[b.row][b.col]=x}
     private fun fillPlayableBoard(){var attempts=0;do{fillBoardWithoutImmediateMatches();attempts++}while(!hasValidMove()&&attempts<MAX_RESHUFFLE_ATTEMPTS);if(!hasValidMove())seedGuaranteedMove()}
     private fun fillBoardWithoutImmediateMatches(){for(r in board.indices)for(c in board[r].indices){do{board[r][c]=GardenTile.entries[random.nextInt(GardenTile.entries.size)]}while((c>=2&&board[r][c]==board[r][c-1]&&board[r][c]==board[r][c-2])||(r>=2&&board[r][c]==board[r-1][c]&&board[r][c]==board[r-2][c]))}}
     private fun ensurePlayableBoard(){if(hasValidMove())return;var attempts=0;do{fillBoardWithoutImmediateMatches();attempts++}while(!hasValidMove()&&attempts<MAX_RESHUFFLE_ATTEMPTS);if(!hasValidMove())seedGuaranteedMove()}
-    private fun seedGuaranteedMove(){if(level.rows<2||level.columns<3)return;board[0][0]=GardenTile.LEAF;board[0][1]=GardenTile.FLOWER;board[0][2]=GardenTile.LEAF;board[1][0]=GardenTile.ROSE;board[1][1]=GardenTile.LEAF;board[1][2]=GardenTile.BERRY}
+    private fun seedGuaranteedMove(){if(level.rows<2||level.columns<3)return;for(r in 0..1)for(c in 0..2)obstacles[r][c]=null;board[0][0]=GardenTile.LEAF;board[0][1]=GardenTile.FLOWER;board[0][2]=GardenTile.LEAF;board[1][0]=GardenTile.ROSE;board[1][1]=GardenTile.LEAF;board[1][2]=GardenTile.BERRY}
     private fun collapseAndRefill(matched:Set<Cell>){for(c in 0 until level.columns){val survivors=(level.rows-1 downTo 0).filter{Cell(it,c)!in matched}.map{board[it][c]};var i=0;for(r in level.rows-1 downTo 0)board[r][c]=if(i<survivors.size)survivors[i++]else GardenTile.entries[random.nextInt(GardenTile.entries.size)]}}
     private fun inside(cell:Cell)=cell.row in 0 until level.rows&&cell.col in 0 until level.columns
     companion object{private const val MAX_RESHUFFLE_ATTEMPTS=40}
