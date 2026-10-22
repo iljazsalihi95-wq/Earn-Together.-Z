@@ -9,7 +9,6 @@ import android.util.AttributeSet
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
 import android.view.View
-import androidx.core.content.ContextCompat
 import com.weearntogether.play.R
 import kotlin.math.abs
 import kotlin.math.min
@@ -23,13 +22,17 @@ class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: Att
     private var downX = 0f
     private var downY = 0f
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    @Suppress("DEPRECATION")
+    private fun drawable(id: Int): Drawable = requireNotNull(resources.getDrawable(id, context.theme))
+
     private val tileArt: Map<GardenTile, Drawable> = mapOf(
-        GardenTile.LEAF to requireNotNull(ContextCompat.getDrawable(context, R.drawable.lg_tile_leaf)),
-        GardenTile.FLOWER to requireNotNull(ContextCompat.getDrawable(context, R.drawable.lg_tile_flower)),
-        GardenTile.ROSE to requireNotNull(ContextCompat.getDrawable(context, R.drawable.lg_tile_rose)),
-        GardenTile.BERRY to requireNotNull(ContextCompat.getDrawable(context, R.drawable.lg_tile_berry)),
-        GardenTile.PEAR to requireNotNull(ContextCompat.getDrawable(context, R.drawable.lg_tile_pear)),
-        GardenTile.WATER to requireNotNull(ContextCompat.getDrawable(context, R.drawable.lg_tile_water))
+        GardenTile.LEAF to drawable(R.drawable.lg_tile_leaf),
+        GardenTile.FLOWER to drawable(R.drawable.lg_tile_flower),
+        GardenTile.ROSE to drawable(R.drawable.lg_tile_rose),
+        GardenTile.BERRY to drawable(R.drawable.lg_tile_berry),
+        GardenTile.PEAR to drawable(R.drawable.lg_tile_pear),
+        GardenTile.WATER to drawable(R.drawable.lg_tile_water)
     )
 
     fun loadLevel(level:LazyGardenLevel){ engine=LazyGardenEngine(level); selected=null; downCell=null; inputEnabled=true; invalidate() }
