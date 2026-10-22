@@ -57,8 +57,6 @@ object LazyGardenLevels {
     val level38 = level(38,16,310,GardenTile.PEAR to 46,GardenTile.WATER to 42)
     val level39 = level(39,16,325,GardenTile.FLOWER to 48,GardenTile.BERRY to 46,GardenTile.ROSE to 32)
     val level40 = level(40,15,350,GardenTile.LEAF to 48,GardenTile.PEAR to 48,GardenTile.WATER to 36)
-
-    // Chapters 8-9: alternating pressure levels reward planning instead of simply inflating every target.
     val level41 = level(41,18,355,GardenTile.ROSE to 48,GardenTile.FLOWER to 46)
     val level42 = level(42,17,360,GardenTile.WATER to 44,GardenTile.LEAF to 48,GardenTile.BERRY to 28)
     val level43 = level(43,17,370,GardenTile.PEAR to 48,GardenTile.BERRY to 46)
@@ -69,8 +67,6 @@ object LazyGardenLevels {
     val level48 = level(48,16,425,GardenTile.PEAR to 50,GardenTile.WATER to 46)
     val level49 = level(49,16,440,GardenTile.ROSE to 50,GardenTile.LEAF to 50,GardenTile.BERRY to 34)
     val level50 = level(50,15,470,GardenTile.FLOWER to 52,GardenTile.PEAR to 50,GardenTile.WATER to 38)
-
-    // Chapters 10-11: milestone boards tighten moves while keeping targets achievable through cascades.
     val level51 = level(51,18,475,GardenTile.LEAF to 52,GardenTile.BERRY to 48)
     val level52 = level(52,17,485,GardenTile.ROSE to 52,GardenTile.WATER to 48,GardenTile.FLOWER to 30)
     val level53 = level(53,17,495,GardenTile.PEAR to 52,GardenTile.FLOWER to 50)
@@ -82,13 +78,39 @@ object LazyGardenLevels {
     val level59 = level(59,15,580,GardenTile.BERRY to 54,GardenTile.ROSE to 52,GardenTile.LEAF to 38)
     val level60 = level(60,15,620,GardenTile.FLOWER to 56,GardenTile.PEAR to 54,GardenTile.WATER to 40)
 
+    // Chapters 12-13: recovery boards alternate with tighter three-goal challenges.
+    val level61 = level(61,18,625,GardenTile.LEAF to 54,GardenTile.ROSE to 52)
+    val level62 = level(62,17,635,GardenTile.WATER to 52,GardenTile.BERRY to 54,GardenTile.PEAR to 30)
+    val level63 = level(63,17,645,GardenTile.FLOWER to 56,GardenTile.PEAR to 52)
+    val level64 = level(64,16,660,GardenTile.ROSE to 56,GardenTile.LEAF to 54,GardenTile.WATER to 36)
+    val level65 = level(65,16,680,GardenTile.BERRY to 56,GardenTile.FLOWER to 54,GardenTile.PEAR to 38)
+    val level66 = level(66,18,690,GardenTile.WATER to 54,GardenTile.LEAF to 56)
+    val level67 = level(67,17,705,GardenTile.PEAR to 56,GardenTile.ROSE to 54,GardenTile.BERRY to 38)
+    val level68 = level(68,16,720,GardenTile.FLOWER to 58,GardenTile.WATER to 54)
+    val level69 = level(69,16,740,GardenTile.LEAF to 58,GardenTile.BERRY to 56,GardenTile.ROSE to 40)
+    val level70 = level(70,15,780,GardenTile.PEAR to 58,GardenTile.FLOWER to 56,GardenTile.WATER to 42)
+
+    // Chapters 14-15: late-game boards demand stronger cascade planning without impossible target inflation.
+    val level71 = level(71,18,790,GardenTile.ROSE to 58,GardenTile.LEAF to 56)
+    val level72 = level(72,17,805,GardenTile.WATER to 56,GardenTile.FLOWER to 58,GardenTile.BERRY to 36)
+    val level73 = level(73,17,820,GardenTile.PEAR to 58,GardenTile.BERRY to 56)
+    val level74 = level(74,16,840,GardenTile.LEAF to 60,GardenTile.ROSE to 58,GardenTile.WATER to 40)
+    val level75 = level(75,16,865,GardenTile.FLOWER to 60,GardenTile.PEAR to 58,GardenTile.BERRY to 42)
+    val level76 = level(76,18,880,GardenTile.WATER to 58,GardenTile.ROSE to 60)
+    val level77 = level(77,17,900,GardenTile.BERRY to 60,GardenTile.LEAF to 58,GardenTile.FLOWER to 42)
+    val level78 = level(78,16,925,GardenTile.PEAR to 60,GardenTile.WATER to 58)
+    val level79 = level(79,16,950,GardenTile.ROSE to 62,GardenTile.FLOWER to 60,GardenTile.LEAF to 44)
+    val level80 = level(80,15,1000,GardenTile.LEAF to 62,GardenTile.PEAR to 60,GardenTile.WATER to 46)
+
     private val levels = listOf(
         level1,level2,level3,level4,level5,level6,level7,level8,level9,level10,
         level11,level12,level13,level14,level15,level16,level17,level18,level19,level20,
         level21,level22,level23,level24,level25,level26,level27,level28,level29,level30,
         level31,level32,level33,level34,level35,level36,level37,level38,level39,level40,
         level41,level42,level43,level44,level45,level46,level47,level48,level49,level50,
-        level51,level52,level53,level54,level55,level56,level57,level58,level59,level60
+        level51,level52,level53,level54,level55,level56,level57,level58,level59,level60,
+        level61,level62,level63,level64,level65,level66,level67,level68,level69,level70,
+        level71,level72,level73,level74,level75,level76,level77,level78,level79,level80
     )
 
     fun get(number: Int): LazyGardenLevel = levels[(number - 1).coerceIn(0, levels.lastIndex)]
