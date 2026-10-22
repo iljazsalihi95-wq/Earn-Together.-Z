@@ -50,7 +50,7 @@ class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: Att
             }
             GardenObstacle.STONE -> {
                 paint.color=0xFF6F7488.toInt(); canvas.drawRoundRect(RectF(left+size*.12f,top+size*.18f,left+size*.88f,top+size*.82f),size*.22f,size*.22f,paint)
-                paint.color=0x559FFFFFF; canvas.drawCircle(left+size*.38f,top+size*.38f,size*.10f,paint)
+                paint.color=0x559FFFFF; canvas.drawCircle(left+size*.38f,top+size*.38f,size*.10f,paint)
             }
             null -> Unit
         }
