@@ -16,6 +16,11 @@ class LazyGardenEngine(
 
     init { fillPlayableBoard() }
 
+    /** Restores the move budget for a saved run without allowing values outside this level. */
+    fun restoreMoves(savedMoves: Int) {
+        movesLeft = savedMoves.coerceIn(0, level.moves)
+    }
+
     fun swap(a: Cell, b: Cell): MatchResult? {
         if (movesLeft <= 0 || !inside(a) || !inside(b) || abs(a.row-b.row)+abs(a.col-b.col) != 1) return null
         val first = board[a.row][a.col]
