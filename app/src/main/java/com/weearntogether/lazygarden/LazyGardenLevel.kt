@@ -1,6 +1,7 @@
 package com.weearntogether.lazygarden
 
 data class LazyGardenGoal(val tile: GardenTile, val target: Int)
+data class LazyGardenObstacleGoal(val obstacle: GardenObstacle, val target: Int)
 
 data class LazyGardenLevel(
     val number: Int,
@@ -8,10 +9,12 @@ data class LazyGardenLevel(
     val columns: Int,
     val moves: Int,
     val goals: List<LazyGardenGoal>,
-    val coinReward: Int
+    val coinReward: Int,
+    val obstacleGoals: List<LazyGardenObstacleGoal> = emptyList()
 )
 
 enum class GardenTile { LEAF, FLOWER, ROSE, BERRY, PEAR, WATER }
+enum class GardenObstacle { CRATE, IVY, STONE }
 
 object LazyGardenLevels {
     private const val CAMPAIGN_LEVELS = 250
@@ -27,12 +30,8 @@ object LazyGardenLevels {
         level(9,19,90,GardenTile.BERRY to 30,GardenTile.LEAF to 30), level(10,18,100,GardenTile.ROSE to 30,GardenTile.PEAR to 30,GardenTile.WATER to 20)
     )
 
-    /**
-     * Original chapter progression inspired by the pacing of premium match-3 campaigns without
-     * reproducing proprietary boards. Every ten levels form a chapter: recovery boards give the
-     * player breathing room, challenge boards tighten the move budget, and chapter finales combine
-     * three goals. Targets rise gradually instead of jumping only because the level number is higher.
-     */
+    /** Original campaign pacing. Obstacles are introduced gradually instead of making later levels
+     * harder only by inflating collection targets. */
     private fun generated(number: Int): LazyGardenLevel {
         val chapter = (number - 1) / 10
         val step = (number - 1) % 10
@@ -56,22 +55,19 @@ object LazyGardenLevels {
 
         val chapterGrowth = (chapter * 3).coerceAtMost(54)
         val base = 24 + chapterGrowth + step * 2
-        val goals = mutableListOf(
-            primary to base,
-            secondary to (base - if (recovery) 8 else 4).coerceAtLeast(18)
-        )
+        val goals = mutableListOf(primary to base, secondary to (base - if (recovery) 8 else 4).coerceAtLeast(18))
         if (challenge || finale) goals += tertiary to (20 + chapterGrowth / 2 + step)
 
-        val reward = 55 + (number - 1) * 8 + when {
-            finale -> 80
-            challenge -> 35
-            else -> 0
-        }
-        return level(number, moves, reward, *goals.toTypedArray())
+        val obstacles = mutableListOf<LazyGardenObstacleGoal>()
+        if (number >= 11) obstacles += LazyGardenObstacleGoal(GardenObstacle.CRATE, (4 + chapter / 2 + step / 3).coerceAtMost(14))
+        if (number >= 31 && (challenge || finale || step == 2 || step == 6)) obstacles += LazyGardenObstacleGoal(GardenObstacle.IVY, (3 + chapter / 3).coerceAtMost(10))
+        if (number >= 61 && (finale || step == 3 || step == 7)) obstacles += LazyGardenObstacleGoal(GardenObstacle.STONE, (2 + chapter / 4).coerceAtMost(8))
+
+        val reward = 55 + (number - 1) * 8 + when { finale -> 80; challenge -> 35; else -> 0 }
+        return LazyGardenLevel(number, 8, 8, moves, goals.map { LazyGardenGoal(it.first, it.second) }, reward, obstacles)
     }
 
     private val levels: List<LazyGardenLevel> = early + (11..CAMPAIGN_LEVELS).map(::generated)
-
     fun get(number: Int): LazyGardenLevel = levels[(number - 1).coerceIn(0, levels.lastIndex)]
     val count: Int get() = levels.size
 }
