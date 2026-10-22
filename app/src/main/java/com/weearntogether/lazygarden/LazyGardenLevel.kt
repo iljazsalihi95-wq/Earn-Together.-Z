@@ -22,12 +22,34 @@ object LazyGardenLevels {
     private fun level(number: Int, moves: Int, reward: Int, vararg goals: Pair<GardenTile, Int>) =
         LazyGardenLevel(number, 8, 8, moves, goals.map { LazyGardenGoal(it.first, it.second) }, reward)
 
+    private fun obstacle(type: GardenObstacle, target: Int) = LazyGardenObstacleGoal(type, target)
+
+    /**
+     * The opening ten levels are intentionally authored as onboarding rather than generated filler.
+     * Levels 1-5 teach matching and mixed collection goals, 6-7 introduce adjacent crate clearing,
+     * 8-9 teach matching through ivy, and level 10 combines both before the generated campaign starts.
+     */
     private val early = listOf(
-        level(1,24,50,GardenTile.LEAF to 20,GardenTile.FLOWER to 20), level(2,23,55,GardenTile.ROSE to 18,GardenTile.LEAF to 22),
-        level(3,22,60,GardenTile.BERRY to 20,GardenTile.FLOWER to 24), level(4,22,65,GardenTile.PEAR to 22,GardenTile.ROSE to 22),
-        level(5,21,70,GardenTile.WATER to 20,GardenTile.LEAF to 28), level(6,21,75,GardenTile.FLOWER to 26,GardenTile.BERRY to 26),
-        level(7,20,80,GardenTile.ROSE to 28,GardenTile.PEAR to 24), level(8,20,85,GardenTile.WATER to 24,GardenTile.FLOWER to 30),
-        level(9,19,90,GardenTile.BERRY to 30,GardenTile.LEAF to 30), level(10,18,100,GardenTile.ROSE to 30,GardenTile.PEAR to 30,GardenTile.WATER to 20)
+        level(1,24,50,GardenTile.LEAF to 20,GardenTile.FLOWER to 20),
+        level(2,23,55,GardenTile.ROSE to 18,GardenTile.LEAF to 22),
+        level(3,22,60,GardenTile.BERRY to 20,GardenTile.FLOWER to 24),
+        level(4,22,65,GardenTile.PEAR to 22,GardenTile.ROSE to 22),
+        level(5,21,70,GardenTile.WATER to 20,GardenTile.LEAF to 28),
+        level(6,23,75,GardenTile.FLOWER to 22,GardenTile.BERRY to 22).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,3))
+        ),
+        level(7,22,80,GardenTile.ROSE to 24,GardenTile.PEAR to 22).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,4))
+        ),
+        level(8,23,85,GardenTile.WATER to 22,GardenTile.FLOWER to 24).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.IVY,3))
+        ),
+        level(9,22,90,GardenTile.BERRY to 24,GardenTile.LEAF to 24).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.IVY,4))
+        ),
+        level(10,23,100,GardenTile.ROSE to 24,GardenTile.PEAR to 24,GardenTile.WATER to 14).copy(
+            obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,4),obstacle(GardenObstacle.IVY,3))
+        )
     )
 
     /** Original campaign pacing. Later chapters become harder through move pressure, mixed goals and
@@ -37,10 +59,10 @@ object LazyGardenLevels {
         val step = (number - 1) % 10
         val tiles = GardenTile.entries
         val primary = tiles[(number + chapter) % tiles.size]
-        var secondary = tiles[(number * 3 + chapter + 1) % tiles.size]
-        if (secondary == primary) secondary = tiles[(tiles.indexOf(primary) + 2) % tiles.size]
-        var tertiary = tiles[(number * 5 + chapter + 2) % tiles.size]
-        if (tertiary == primary || tertiary == secondary) tertiary = tiles[(tiles.indexOf(secondary) + 2) % tiles.size]
+        val remainingAfterPrimary = tiles.filter { it != primary }
+        val secondary = remainingAfterPrimary[(number * 3 + chapter + 1) % remainingAfterPrimary.size]
+        val remainingAfterSecondary = remainingAfterPrimary.filter { it != secondary }
+        val tertiary = remainingAfterSecondary[(number * 5 + chapter + 2) % remainingAfterSecondary.size]
 
         val pressure = (chapter / 5).coerceAtMost(4)
         val recovery = step == 0 || step == 5
