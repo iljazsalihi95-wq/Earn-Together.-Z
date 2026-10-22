@@ -16,10 +16,24 @@ class BlockPuzzleView(context: Context, private val onNaturalBreak: (() -> Unit)
     private val prefs=ProgressPreferences.open(context,"block_puzzle")
     private var offers=MutableList(3){Random.nextInt(shapes.size)};private var selected=0;private var score=0;private var best=prefs.getInt("best",0);private var level=prefs.getInt("level",1).coerceIn(1,250);private var totalLines=prefs.getInt("total_lines",0);private var levelLines=prefs.getInt("level_lines",0);private var combo=prefs.getInt("combo",0);private var bestCombo=prefs.getInt("best_combo",0);private var reshuffles=prefs.getInt("reshuffles",1).coerceAtLeast(0);private var gameOver=false;private var dragging=false;private var previewX=-1;private var previewY=-1
     private fun goal()=min(6+level/5,24)
+    private fun campaignShapeIds():List<Int>{
+        val maxSize=when{level<15->2;level<45->3;level<100->4;else->5}
+        return shapes.indices.filter{shapes[it].size<=maxSize}
+    }
     init{val s=prefs.getString("board",null);val o=prefs.getString("offers",null);if(s!=null&&s.length==64&&s.all{it in '0'..'4'}&&o!=null){val a=o.split(",").mapNotNull{it.toIntOrNull()};if(a.size==3&&a.all{it in -1 until shapes.size}){for(r in 0..7)for(c in 0..7)board[r][c]=s[r*8+c].digitToInt();offers=a.toMutableList();score=prefs.getInt("score",0);gameOver=!anyMoves()}}else offers=freshOffers()}
     fun restart(){for(row in board)row.fill(0);offers=freshOffers();selected=0;score=0;levelLines=0;combo=0;gameOver=false;dragging=false;previewX=-1;previewY=-1;save();invalidate()}
     private fun canFitAnywhere(id:Int)=(0..7).any{y->(0..7).any{x->fits(id,x,y)}}
-    private fun freshOffers():MutableList<Int>{val fitting=shapes.indices.filter{canFitAnywhere(it)};if(fitting.isEmpty())return mutableListOf(-1,-1,-1);val easy=fitting.filter{shapes[it].size<=3};val out=mutableListOf<Int>();out+=(easy.ifEmpty{fitting}).random();while(out.size<3)out+=fitting.random();return out.shuffled().toMutableList()}
+    private fun freshOffers():MutableList<Int>{
+        val campaignPool=campaignShapeIds()
+        val fitting=campaignPool.filter{canFitAnywhere(it)}
+        if(fitting.isEmpty())return mutableListOf(-1,-1,-1)
+        val small=fitting.filter{shapes[it].size<=2}
+        val out=mutableListOf<Int>()
+        // Always keep one compact piece when possible so campaign difficulty grows without unfair dead hands.
+        out+=(small.ifEmpty{fitting}).random()
+        while(out.size<3)out+=fitting.random()
+        return out.shuffled().toMutableList()
+    }
     private fun save(){prefs.edit().putString("board",board.joinToString(""){it.joinToString("")}).putString("offers",offers.joinToString(",")).putInt("score",score).putInt("best",best).putInt("level",level).putInt("total_lines",totalLines).putInt("level_lines",levelLines).putInt("combo",combo).putInt("best_combo",bestCombo).putInt("reshuffles",reshuffles).apply()}
     private fun block(c:Canvas,color:Int,size:Float,x:Float,y:Float,alpha:Int=255){p.shader=LinearGradient(x,y,x+size,y+size,lighten(color),color,Shader.TileMode.CLAMP);p.alpha=alpha;c.drawRoundRect(x,y,x+size,y+size,12f,12f,p);p.shader=null;p.style=Paint.Style.STROKE;p.strokeWidth=2f;p.color=0x55ffffff;p.alpha=alpha;c.drawRoundRect(x+2,y+2,x+size-2,y+size-2,10f,10f,p);p.style=Paint.Style.FILL;p.alpha=255}
     private fun lighten(color:Int)=Color.rgb((Color.red(color)+55).coerceAtMost(255),(Color.green(color)+55).coerceAtMost(255),(Color.blue(color)+55).coerceAtMost(255))
