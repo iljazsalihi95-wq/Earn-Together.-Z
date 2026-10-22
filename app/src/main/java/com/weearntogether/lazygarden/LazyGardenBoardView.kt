@@ -10,7 +10,7 @@ import android.view.View
 import kotlin.math.min
 
 class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
-    var engine = LazyGardenEngine(LazyGardenLevels.level1)
+    var engine = LazyGardenEngine(LazyGardenLevels.get(1))
         private set
     var onMove: ((MatchResult) -> Unit)? = null
     private var selected: Cell? = null
