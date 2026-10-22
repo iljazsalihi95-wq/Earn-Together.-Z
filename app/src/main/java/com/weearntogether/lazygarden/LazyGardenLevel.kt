@@ -14,6 +14,8 @@ data class LazyGardenLevel(
 enum class GardenTile { LEAF, FLOWER, ROSE, BERRY, PEAR, WATER }
 
 object LazyGardenLevels {
+    private const val CAMPAIGN_LEVELS = 250
+
     private fun level(number: Int, moves: Int, reward: Int, vararg goals: Pair<GardenTile, Int>) =
         LazyGardenLevel(number, 8, 8, moves, goals.map { LazyGardenGoal(it.first, it.second) }, reward)
 
@@ -25,27 +27,50 @@ object LazyGardenLevels {
         level(9,19,90,GardenTile.BERRY to 30,GardenTile.LEAF to 30), level(10,18,100,GardenTile.ROSE to 30,GardenTile.PEAR to 30,GardenTile.WATER to 20)
     )
 
+    /**
+     * Original chapter progression inspired by the pacing of premium match-3 campaigns without
+     * reproducing proprietary boards. Every ten levels form a chapter: recovery boards give the
+     * player breathing room, challenge boards tighten the move budget, and chapter finales combine
+     * three goals. Targets rise gradually instead of jumping only because the level number is higher.
+     */
     private fun generated(number: Int): LazyGardenLevel {
         val chapter = (number - 1) / 10
         val step = (number - 1) % 10
         val tiles = GardenTile.entries
         val primary = tiles[(number + chapter) % tiles.size]
-        val secondary = tiles[(number * 3 + 1) % tiles.size]
-        val tertiary = tiles[(number * 5 + 2) % tiles.size]
-        val moves = (23 - chapter - if (step >= 7) 1 else 0).coerceAtLeast(14)
-        val base = 24 + chapter * 4 + step * 2
-        val goals = mutableListOf(primary to base, secondary to (base - 4).coerceAtLeast(18))
-        if (step in setOf(4, 7, 9)) goals += tertiary to (18 + chapter * 2 + step)
-        val reward = 55 + (number - 1) * 10 + if (step == 9) 30 else 0
+        var secondary = tiles[(number * 3 + chapter + 1) % tiles.size]
+        if (secondary == primary) secondary = tiles[(tiles.indexOf(primary) + 2) % tiles.size]
+        var tertiary = tiles[(number * 5 + chapter + 2) % tiles.size]
+        if (tertiary == primary || tertiary == secondary) tertiary = tiles[(tiles.indexOf(secondary) + 2) % tiles.size]
+
+        val lateGamePressure = (chapter / 4).coerceAtMost(5)
+        val recovery = step == 0 || step == 5
+        val challenge = step == 4 || step == 7
+        val finale = step == 9
+        val moves = when {
+            recovery -> 24 - lateGamePressure
+            finale -> 20 - lateGamePressure
+            challenge -> 21 - lateGamePressure
+            else -> 23 - lateGamePressure
+        }.coerceAtLeast(14)
+
+        val chapterGrowth = (chapter * 3).coerceAtMost(54)
+        val base = 24 + chapterGrowth + step * 2
+        val goals = mutableListOf(
+            primary to base,
+            secondary to (base - if (recovery) 8 else 4).coerceAtLeast(18)
+        )
+        if (challenge || finale) goals += tertiary to (20 + chapterGrowth / 2 + step)
+
+        val reward = 55 + (number - 1) * 8 + when {
+            finale -> 80
+            challenge -> 35
+            else -> 0
+        }
         return level(number, moves, reward, *goals.toTypedArray())
     }
 
-    /**
-     * 100-level campaign. Levels 1-10 are hand tuned onboarding boards; 11-100 use a
-     * deterministic chapter curve so every board has its own targets, move budget and reward.
-     * Recovery boards alternate with tighter 3-goal challenge boards instead of only inflating targets.
-     */
-    private val levels: List<LazyGardenLevel> = early + (11..100).map(::generated)
+    private val levels: List<LazyGardenLevel> = early + (11..CAMPAIGN_LEVELS).map(::generated)
 
     fun get(number: Int): LazyGardenLevel = levels[(number - 1).coerceIn(0, levels.lastIndex)]
     val count: Int get() = levels.size
