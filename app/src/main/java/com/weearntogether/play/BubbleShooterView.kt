@@ -20,7 +20,17 @@ class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Un
     private fun playableColor()=activeColors().random()
     private fun sanitizeQueue(){val active=activeColors();if(current !in active)current=playableColor();if(next !in active)next=playableColor();save()}
     private fun missLimit()=(6-(level-1)/5).coerceAtLeast(3)
-    private fun fillLevelBoard(){for(r in grid)r.fill(-1);val rows=(3+(level-1)/2).coerceAtMost(6);val colorCount=(3+(level-1)/3).coerceAtMost(colors.size);for(r in 0 until rows)for(c in 0..7)grid[r][c]=Random.nextInt(colorCount)}
+    private fun levelSeed()=0x57455442L + level.toLong()*104729L
+    private fun fillLevelBoard(){
+        for(r in grid)r.fill(-1)
+        val rows=(3+(level-1)/2).coerceAtMost(6)
+        val colorCount=(3+(level-1)/3).coerceAtMost(colors.size)
+        val rng=Random(levelSeed())
+        for(r in 0 until rows)for(c in 0..7){
+            val edgeGap=level>=8 && r==rows-1 && (c+level)%5==0
+            grid[r][c]=if(edgeGap)-1 else rng.nextInt(colorCount)
+        }
+    }
     private fun newBoard(){level=1;fillLevelBoard();current=playableColor();next=playableColor();shots=0;misses=0;points=0;streak=0;ended=false;moving=false;aimX=0f;aimY=0f;save()}
     fun restart(){newBoard();invalidate()}
     fun swapBubble(){if(moving||ended)return;val t=current;current=next;next=t;save();performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);invalidate()}
