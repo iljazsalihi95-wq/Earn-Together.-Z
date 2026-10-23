@@ -38,11 +38,10 @@ jobs:
             echo '::warning::Persistent signing key is not configured. Register the exact artifact certificate with Android OAuth before Google Sign-In testing.'
           fi
       - name: Test cloud save conflict policy
-        # Kotlin/JUnit method names are compiled with Kotlin's method-name suffix,
-        # so Gradle's exact class filter can report "No tests found". Match the
-        # generated methods explicitly while keeping this CI gate scoped only to
-        # the conflict-policy suite.
-        run: gradle --no-daemon testDebugUnitTest --tests 'com.weearntogether.play.ProgressSyncPolicyTest.*'
+        # Run the Android unit-test task normally. ProgressSyncPolicyTest is part of
+        # src/test and remains a regression gate, while avoiding brittle Gradle
+        # --tests filtering that previously stopped CI before APK compilation.
+        run: gradle --no-daemon testDebugUnitTest
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
       - name: Record public signing certificate fingerprints
