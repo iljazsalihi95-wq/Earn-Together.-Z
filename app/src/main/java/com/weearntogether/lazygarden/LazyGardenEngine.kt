@@ -57,7 +57,16 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
         for(c in 0 until level.columns){var start=0;while(start<level.rows){var end=start+1;while(end<level.rows&&board[end][c]==board[start][c])end++;if(end-start>=3)for(r in start until end)if(obstacles[r][c]!=GardenObstacle.STONE&&obstacles[r][c]!=GardenObstacle.CRATE)cells+=Cell(r,c);start=end}}
         return MatchResult(cells,cells.groupingBy{board[it.row][it.col]}.eachCount())
     }
-    fun hasValidMove():Boolean{for(r in 0 until level.rows)for(c in 0 until level.columns){val h=Cell(r,c);if(blocksSwap(h))continue;if(c+1<level.columns&&!blocksSwap(Cell(r,c+1))&&createsMatch(h,Cell(r,c+1)))return true;if(r+1<level.rows&&!blocksSwap(Cell(r+1,c))&&createsMatch(h,Cell(r+1,c)))return true};return false}
+    fun findHint():Pair<Cell,Cell>?{
+        if(movesLeft<=0)return null
+        for(r in 0 until level.rows)for(c in 0 until level.columns){
+            val a=Cell(r,c);if(blocksSwap(a))continue
+            if(c+1<level.columns){val b=Cell(r,c+1);if(!blocksSwap(b)&&createsMatch(a,b))return a to b}
+            if(r+1<level.rows){val b=Cell(r+1,c);if(!blocksSwap(b)&&createsMatch(a,b))return a to b}
+        }
+        return null
+    }
+    fun hasValidMove():Boolean=findHint()!=null
     private fun seedObstacles(){val candidates=mutableListOf<Cell>();for(r in 1 until level.rows-1)for(c in 1 until level.columns-1)candidates+=Cell(r,c);candidates.shuffle(random);var cursor=0;level.obstacleGoals.forEach{goal->repeat(goal.target.coerceAtMost(candidates.size-cursor)){val x=candidates[cursor++];obstacles[x.row][x.col]=goal.obstacle}};for(r in 0..1)for(c in 0..2)obstacles[r][c]=null;ensurePlayableBoard()}
     /** Ivy is removed by matching the tile under it. Crates and stones occupy a cell and are
      * removed by a match next to them. This gives the three obstacle families different tactics. */
