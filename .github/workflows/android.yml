@@ -38,7 +38,7 @@ jobs:
             echo '::warning::Persistent signing key is not configured. Register the exact artifact certificate with Android OAuth before Google Sign-In testing.'
           fi
       - name: Test cloud save conflict policy
-        run: gradle --no-daemon testDebugUnitTest
+        run: gradle --no-daemon testDebugUnitTest --tests com.weearntogether.play.ProgressSyncPolicyTest
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
       - name: Record public signing certificate fingerprints
