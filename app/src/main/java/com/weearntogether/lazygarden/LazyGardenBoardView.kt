@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
+import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.HapticFeedbackConstants
 import android.view.MotionEvent
@@ -12,6 +13,7 @@ import android.view.View
 import com.weearntogether.play.R
 import kotlin.math.abs
 import kotlin.math.min
+import kotlin.math.sin
 import kotlin.random.Random
 
 class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
@@ -22,6 +24,10 @@ class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: Att
     private var downCell: Cell? = null
     private var downX = 0f
     private var downY = 0f
+    private var swapPulse: Set<Cell> = emptySet()
+    private var swapPulseUntil = 0L
+    private var invalidCell: Cell? = null
+    private var invalidPulseUntil = 0L
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     @Suppress("DEPRECATION")
@@ -41,38 +47,52 @@ class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: Att
         GardenObstacle.STONE to drawable(R.drawable.lg_obstacle_stone)
     )
 
-    fun loadLevel(level:LazyGardenLevel){engine=LazyGardenEngine(level,Random(levelSeed(level.number)));selected=null;downCell=null;inputEnabled=true;invalidate()}
-    fun setInputEnabled(enabled:Boolean){ inputEnabled=enabled; selected=null; downCell=null; invalidate() }
+    fun loadLevel(level:LazyGardenLevel){engine=LazyGardenEngine(level,Random(levelSeed(level.number)));selected=null;downCell=null;swapPulse=emptySet();invalidCell=null;inputEnabled=true;invalidate()}
+    fun setInputEnabled(enabled:Boolean){inputEnabled=enabled;selected=null;downCell=null;invalidate()}
 
     override fun onDraw(canvas:Canvas){
         super.onDraw(canvas)
-        val size=cellSize(); val ox=(width-size*engine.level.columns)/2f; val oy=(height-size*engine.level.rows)/2f
-        for(r in 0 until engine.level.rows) for(c in 0 until engine.level.columns){
-            val left=ox+c*size; val top=oy+r*size
+        val now=SystemClock.uptimeMillis()
+        val animating=now<swapPulseUntil||now<invalidPulseUntil
+        val size=cellSize();val ox=(width-size*engine.level.columns)/2f;val oy=(height-size*engine.level.rows)/2f
+        for(r in 0 until engine.level.rows)for(c in 0 until engine.level.columns){
+            val cell=Cell(r,c);val left=ox+c*size;val top=oy+r*size
             paint.color=if((r+c)%2==0)0x283C2C72 else 0x28305AA0
             canvas.drawRoundRect(RectF(left+3,top+3,left+size-3,top+size-3),size*.20f,size*.20f,paint)
-            val inset=(size*.08f).toInt()
-            tileArt.getValue(engine.board[r][c]).apply { setBounds((left+inset).toInt(),(top+inset).toInt(),(left+size-inset).toInt(),(top+size-inset).toInt()); draw(canvas) }
-            drawObstacle(canvas,engine.obstacleAt(Cell(r,c)),left,top,size)
-            if(selected==Cell(r,c)){paint.style=Paint.Style.STROKE;paint.strokeWidth=5f;paint.color=0xFFF6D36F.toInt();canvas.drawRoundRect(RectF(left+2,top+2,left+size-2,top+size-2),size*.2f,size*.2f,paint);paint.style=Paint.Style.FILL}
+            val pulseScale=if(cell in swapPulse&&now<swapPulseUntil){
+                val p=((swapPulseUntil-now).coerceIn(0L,SWAP_PULSE_MS).toFloat()/SWAP_PULSE_MS)
+                1f+0.10f*sin((1f-p)*Math.PI).toFloat()
+            }else 1f
+            val baseInset=size*.08f
+            val pulseInset=(size*(1f-pulseScale)/2f)
+            val inset=baseInset+pulseInset
+            tileArt.getValue(engine.board[r][c]).apply{setBounds((left+inset).toInt(),(top+inset).toInt(),(left+size-inset).toInt(),(top+size-inset).toInt());draw(canvas)}
+            drawObstacle(canvas,engine.obstacleAt(cell),left,top,size)
+            if(selected==cell){paint.style=Paint.Style.STROKE;paint.strokeWidth=5f;paint.color=0xFFF6D36F.toInt();canvas.drawRoundRect(RectF(left+2,top+2,left+size-2,top+size-2),size*.2f,size*.2f,paint);paint.style=Paint.Style.FILL}
+            if(invalidCell==cell&&now<invalidPulseUntil){
+                val remaining=((invalidPulseUntil-now).coerceAtLeast(0L).toFloat()/INVALID_PULSE_MS).coerceIn(0f,1f)
+                paint.style=Paint.Style.STROKE;paint.strokeWidth=4f+2f*remaining;paint.color=0xFFE95C6B.toInt();canvas.drawRoundRect(RectF(left+4,top+4,left+size-4,top+size-4),size*.2f,size*.2f,paint);paint.style=Paint.Style.FILL
+            }
         }
+        if(animating)postInvalidateOnAnimation()else{if(now>=swapPulseUntil)swapPulse=emptySet();if(now>=invalidPulseUntil)invalidCell=null}
     }
 
-    private fun drawObstacle(canvas:Canvas, obstacle:GardenObstacle?, left:Float, top:Float, size:Float){
-        if(obstacle==null)return
-        val inset=(size*.06f).toInt()
-        obstacleArt.getValue(obstacle).apply{setBounds((left+inset).toInt(),(top+inset).toInt(),(left+size-inset).toInt(),(top+size-inset).toInt());draw(canvas)}
-    }
+    private fun drawObstacle(canvas:Canvas,obstacle:GardenObstacle?,left:Float,top:Float,size:Float){if(obstacle==null)return;val inset=(size*.06f).toInt();obstacleArt.getValue(obstacle).apply{setBounds((left+inset).toInt(),(top+inset).toInt(),(left+size-inset).toInt(),(top+size-inset).toInt());draw(canvas)}}
 
     override fun onTouchEvent(event:MotionEvent):Boolean{if(!inputEnabled)return true;when(event.actionMasked){
         MotionEvent.ACTION_DOWN->{downX=event.x;downY=event.y;downCell=cellAt(event.x,event.y);downCell?.let{if(engine.obstacleAt(it)!=GardenObstacle.STONE)selected=it};invalidate();return true}
         MotionEvent.ACTION_CANCEL->{downCell=null;selected=null;invalidate();return true}
-        MotionEvent.ACTION_UP->{val start=downCell;downCell=null;if(start==null){selected=null;invalidate();return true};if(engine.obstacleAt(start)==GardenObstacle.STONE){selected=null;invalidate();return true};val dx=event.x-downX;val dy=event.y-downY;val threshold=cellSize()*.22f;if(abs(dx)>=threshold||abs(dy)>=threshold){val target=if(abs(dx)>abs(dy))Cell(start.row,start.col+if(dx>0)1 else -1)else Cell(start.row+if(dy>0)1 else -1,start.col);trySwap(start,target)}else{val tapped=cellAt(event.x,event.y);if(tapped==null||engine.obstacleAt(tapped)==GardenObstacle.STONE)selected=null else{val previous=selected;if(previous!=null&&previous!=tapped&&abs(previous.row-tapped.row)+abs(previous.col-tapped.col)==1)trySwap(previous,tapped)else selected=tapped}};invalidate();return true}}
+        MotionEvent.ACTION_UP->{val start=downCell;downCell=null;if(start==null){selected=null;invalidate();return true};if(engine.obstacleAt(start)==GardenObstacle.STONE){selected=null;showInvalid(start);return true};val dx=event.x-downX;val dy=event.y-downY;val threshold=cellSize()*.22f;if(abs(dx)>=threshold||abs(dy)>=threshold){val target=if(abs(dx)>abs(dy))Cell(start.row,start.col+if(dx>0)1 else -1)else Cell(start.row+if(dy>0)1 else -1,start.col);trySwap(start,target)}else{val tapped=cellAt(event.x,event.y);if(tapped==null||engine.obstacleAt(tapped)==GardenObstacle.STONE){selected=null;tapped?.let(::showInvalid)}else{val previous=selected;if(previous!=null&&previous!=tapped&&abs(previous.row-tapped.row)+abs(previous.col-tapped.col)==1)trySwap(previous,tapped)else selected=tapped}};invalidate();return true}}
         return true}
 
-    private fun trySwap(a:Cell,b:Cell){val result=engine.swap(a,b);if(result!=null){selected=null;performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);onMove?.invoke(result)}else{selected=a;performHapticFeedback(HapticFeedbackConstants.REJECT)}}
+    private fun trySwap(a:Cell,b:Cell){val result=engine.swap(a,b);if(result!=null){selected=null;invalidCell=null;swapPulse=setOf(a,b);swapPulseUntil=SystemClock.uptimeMillis()+SWAP_PULSE_MS;performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);onMove?.invoke(result);postInvalidateOnAnimation()}else{selected=a;showInvalid(a)}}
+    private fun showInvalid(cell:Cell){invalidCell=cell;invalidPulseUntil=SystemClock.uptimeMillis()+INVALID_PULSE_MS;performHapticFeedback(HapticFeedbackConstants.REJECT);postInvalidateOnAnimation()}
     private fun cellSize():Float=min(width.toFloat()/engine.level.columns,height.toFloat()/engine.level.rows)
     private fun cellAt(x:Float,y:Float):Cell?{val size=cellSize();if(size<=0f)return null;val ox=(width-size*engine.level.columns)/2f;val oy=(height-size*engine.level.rows)/2f;val c=((x-ox)/size).toInt();val r=((y-oy)/size).toInt();return if(r in 0 until engine.level.rows&&c in 0 until engine.level.columns)Cell(r,c)else null}
 
-    companion object { private fun levelSeed(level:Int):Int = 0x4C475244 xor (level * 1103515245) }
+    companion object{
+        private const val SWAP_PULSE_MS=190L
+        private const val INVALID_PULSE_MS=230L
+        private fun levelSeed(level:Int):Int=0x4C475244 xor(level*1103515245)
+    }
 }
