@@ -51,9 +51,6 @@ object LazyGardenLevels {
         level(28,22,225,GardenTile.FLOWER to 28,GardenTile.BERRY to 25).copy(obstacleGoals=listOf(obstacle(GardenObstacle.IVY,6),obstacle(GardenObstacle.CRATE,4))),
         level(29,21,235,GardenTile.ROSE to 29,GardenTile.PEAR to 25,GardenTile.LEAF to 15).copy(obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,6),obstacle(GardenObstacle.IVY,5))),
         level(30,23,260,GardenTile.WATER to 30,GardenTile.FLOWER to 26,GardenTile.BERRY to 16).copy(obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,7),obstacle(GardenObstacle.IVY,6))),
-
-        // Chapter 4: ivy mastery. Recovery stages alternate with compact mixed-blocker challenges,
-        // preparing the player for Stone without introducing three blockers at once.
         level(31,24,265,GardenTile.LEAF to 28,GardenTile.FLOWER to 24).copy(obstacleGoals=listOf(obstacle(GardenObstacle.IVY,6))),
         level(32,23,270,GardenTile.ROSE to 27,GardenTile.WATER to 25).copy(obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,5),obstacle(GardenObstacle.IVY,4))),
         level(33,22,275,GardenTile.BERRY to 29,GardenTile.PEAR to 24).copy(obstacleGoals=listOf(obstacle(GardenObstacle.IVY,7))),
@@ -63,11 +60,22 @@ object LazyGardenLevels {
         level(37,21,305,GardenTile.LEAF to 30,GardenTile.WATER to 25,GardenTile.BERRY to 15).copy(obstacleGoals=listOf(obstacle(GardenObstacle.IVY,8))),
         level(38,22,315,GardenTile.FLOWER to 30,GardenTile.PEAR to 26).copy(obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,6),obstacle(GardenObstacle.IVY,6))),
         level(39,21,325,GardenTile.ROSE to 30,GardenTile.BERRY to 26,GardenTile.LEAF to 15).copy(obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,7),obstacle(GardenObstacle.IVY,6))),
-        level(40,23,350,GardenTile.WATER to 30,GardenTile.FLOWER to 27,GardenTile.PEAR to 16).copy(obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,8),obstacle(GardenObstacle.IVY,7)))
+        level(40,23,350,GardenTile.WATER to 30,GardenTile.FLOWER to 27,GardenTile.PEAR to 16).copy(obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,8),obstacle(GardenObstacle.IVY,7))),
+
+        // Chapter 5: first Stone encounters. Stone is introduced alone, then paired carefully with
+        // familiar blockers so the new rule is learned before the chapter finale mixes all three.
+        level(41,24,355,GardenTile.LEAF to 27,GardenTile.ROSE to 24).copy(obstacleGoals=listOf(obstacle(GardenObstacle.STONE,2))),
+        level(42,23,360,GardenTile.FLOWER to 28,GardenTile.WATER to 24).copy(obstacleGoals=listOf(obstacle(GardenObstacle.STONE,3))),
+        level(43,23,370,GardenTile.BERRY to 28,GardenTile.PEAR to 25).copy(obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,5),obstacle(GardenObstacle.STONE,2))),
+        level(44,22,380,GardenTile.ROSE to 29,GardenTile.LEAF to 25).copy(obstacleGoals=listOf(obstacle(GardenObstacle.IVY,5),obstacle(GardenObstacle.STONE,2))),
+        level(45,24,390,GardenTile.WATER to 28,GardenTile.FLOWER to 25,GardenTile.BERRY to 14).copy(obstacleGoals=listOf(obstacle(GardenObstacle.STONE,3))),
+        level(46,22,400,GardenTile.PEAR to 29,GardenTile.ROSE to 26).copy(obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,6),obstacle(GardenObstacle.STONE,3))),
+        level(47,21,410,GardenTile.LEAF to 30,GardenTile.WATER to 26,GardenTile.FLOWER to 14).copy(obstacleGoals=listOf(obstacle(GardenObstacle.IVY,6),obstacle(GardenObstacle.STONE,3))),
+        level(48,22,425,GardenTile.BERRY to 30,GardenTile.PEAR to 26).copy(obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,6),obstacle(GardenObstacle.IVY,4),obstacle(GardenObstacle.STONE,2))),
+        level(49,21,440,GardenTile.ROSE to 30,GardenTile.FLOWER to 27,GardenTile.LEAF to 15).copy(obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,7),obstacle(GardenObstacle.STONE,4))),
+        level(50,23,475,GardenTile.WATER to 31,GardenTile.BERRY to 27,GardenTile.PEAR to 16).copy(obstacleGoals=listOf(obstacle(GardenObstacle.CRATE,7),obstacle(GardenObstacle.IVY,6),obstacle(GardenObstacle.STONE,4)))
     )
 
-    /** Later chapters use deterministic pacing. Targets remain achievable; difficulty comes from
-     * mixed objectives, blockers and move pressure instead of inflated collection counts. */
     private fun generated(number:Int):LazyGardenLevel {
         val chapter=(number-1)/10
         val step=(number-1)%10
@@ -88,12 +96,12 @@ object LazyGardenLevels {
         val obstacles=mutableListOf<LazyGardenObstacleGoal>()
         obstacles+=obstacle(GardenObstacle.CRATE,(4+chapter/3+step/4).coerceAtMost(12))
         if(challenge||finale||step==2||step==6) obstacles+=obstacle(GardenObstacle.IVY,(3+chapter/4).coerceAtMost(9))
-        if(number>=61&&(finale||step==3||step==7)) obstacles+=obstacle(GardenObstacle.STONE,(2+chapter/5).coerceAtMost(7))
+        if(number>=51&&(finale||step==3||step==7)) obstacles+=obstacle(GardenObstacle.STONE,(2+chapter/5).coerceAtMost(7))
         val reward=55+(number-1)*8+when { finale->80; challenge->35; else->0 }
         return LazyGardenLevel(number,8,8,moves,goals.map { LazyGardenGoal(it.first,it.second) },reward,obstacles)
     }
 
-    private val levels:List<LazyGardenLevel> = authored + (41..CAMPAIGN_LEVELS).map(::generated)
+    private val levels:List<LazyGardenLevel> = authored + (51..CAMPAIGN_LEVELS).map(::generated)
     fun get(number:Int):LazyGardenLevel=levels[(number-1).coerceIn(0,levels.lastIndex)]
     val count:Int get()=levels.size
 }
