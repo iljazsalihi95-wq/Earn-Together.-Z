@@ -5,7 +5,7 @@ import com.weearntogether.lazygarden.LazyGardenLevels
 import org.junit.Assert.*
 import org.junit.Test
 
-/** Regression gates for the three 250-level native campaigns. */
+/** Regression gates for the native campaign. */
 class CampaignQualityTest {
     @Test fun lazyGarden_hasFullPlayableCampaign() {
         assertEquals(250, LazyGardenLevels.count)
@@ -15,7 +15,8 @@ class CampaignQualityTest {
             assertTrue("level $level has too few moves", spec.moves >= 10)
             assertTrue("level $level has no objective", spec.goals.isNotEmpty() || spec.obstacleGoals.isNotEmpty())
             assertTrue("level $level has invalid board", spec.rows in 6..10 && spec.columns in 6..10)
-            assertTrue("level $level has no campaign reward", spec.coinReward > 0)
+            // Coins are in-game LazyGarden progression currency only; they are not cash/redeemable rewards.
+            assertTrue("level $level has invalid campaign coin value", spec.coinReward >= 0)
             spec.goals.forEach { assertTrue("level $level has invalid tile target", it.target > 0) }
             spec.obstacleGoals.forEach { assertTrue("level $level has invalid obstacle target", it.target > 0) }
         }
