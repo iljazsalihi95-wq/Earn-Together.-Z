@@ -76,6 +76,20 @@ class LazyGardenProgressStore(context: Context) {
         return true
     }
 
+    /** Keeps the best 1-3 star result for each campaign level. Replays can improve it, never reduce it. */
+    fun recordBestStars(level: Int, stars: Int): Int {
+        if (level !in 1..LazyGardenLevels.count) return 0
+        val safeStars = stars.coerceIn(1, 3)
+        val key = "stars_level_$level"
+        val previous = prefs.getInt(key, 0).coerceIn(0, 3)
+        if (safeStars > previous) prefs.edit().putInt(key, safeStars).apply()
+        return maxOf(previous, safeStars)
+    }
+
+    fun bestStars(level: Int): Int = if (level in 1..LazyGardenLevels.count) prefs.getInt("stars_level_$level", 0).coerceIn(0, 3) else 0
+
+    fun totalStars(): Int = (1..LazyGardenLevels.count).sumOf { bestStars(it) }
+
     fun markBuildTaskCompleted(level: Int) {
         if (level in 1..LazyGardenLevels.count) prefs.edit().putBoolean("build_task_$level", true).apply()
     }
@@ -96,7 +110,7 @@ class LazyGardenProgressStore(context: Context) {
     }
 
     companion object {
-        private const val SAVE_VERSION = 2
+        private const val SAVE_VERSION = 3
         private const val MAX_SHUFFLE_BOOSTERS = 99
     }
 }
