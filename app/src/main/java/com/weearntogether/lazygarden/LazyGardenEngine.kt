@@ -15,8 +15,7 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
     fun restoreMoves(savedMoves:Int){movesLeft=savedMoves.coerceIn(0,level.moves)}
     fun shuffleBoard():Boolean{
         if(movesLeft<=0)return false
-        val old=encodeBoard()
-        var attempts=0
+        val old=encodeBoard();var attempts=0
         do{fillBoardWithoutImmediateMatches();attempts++}while((!hasValidMove()||encodeBoard()==old)&&attempts<MAX_RESHUFFLE_ATTEMPTS)
         if(!hasValidMove())seedGuaranteedMove()
         return hasValidMove()
@@ -26,8 +25,7 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
     fun encodeBoard():String=board.joinToString(""){row->row.joinToString(""){it.ordinal.toString()}}
     fun encodeObstacles():String=obstacles.joinToString(""){row->row.joinToString(""){cell->when(cell){null->"0";GardenObstacle.CRATE->"1";GardenObstacle.IVY->"2";GardenObstacle.STONE->"3"}}}
     fun restoreState(boardState:String,obstacleState:String):Boolean{
-        val cells=level.rows*level.columns
-        if(boardState.length!=cells||obstacleState.length!=cells)return false
+        val cells=level.rows*level.columns;if(boardState.length!=cells||obstacleState.length!=cells)return false
         var i=0
         for(r in 0 until level.rows)for(c in 0 until level.columns){
             val tile=boardState[i].digitToIntOrNull()?.let{GardenTile.entries.getOrNull(it)}?:return false
@@ -51,10 +49,31 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
         ensurePlayableBoard();return MatchResult(emptySet(),collected,cleared)
     }
 
+    /** Blocking crates/stones split a row/column into independent playable segments. They can
+     * never bridge two gems into a false match; ivy remains matchable because it covers a gem. */
     fun findMatches():MatchResult{
         val cells=linkedSetOf<Cell>()
-        for(r in board.indices){var start=0;while(start<level.columns){var end=start+1;while(end<level.columns&&board[r][end]==board[r][start])end++;if(end-start>=3)for(c in start until end)if(obstacles[r][c]!=GardenObstacle.STONE&&obstacles[r][c]!=GardenObstacle.CRATE)cells+=Cell(r,c);start=end}}
-        for(c in 0 until level.columns){var start=0;while(start<level.rows){var end=start+1;while(end<level.rows&&board[end][c]==board[start][c])end++;if(end-start>=3)for(r in start until end)if(obstacles[r][c]!=GardenObstacle.STONE&&obstacles[r][c]!=GardenObstacle.CRATE)cells+=Cell(r,c);start=end}}
+        fun blocked(r:Int,c:Int)=obstacles[r][c]==GardenObstacle.STONE||obstacles[r][c]==GardenObstacle.CRATE
+        for(r in board.indices){
+            var start=0
+            while(start<level.columns){
+                if(blocked(r,start)){start++;continue}
+                var end=start+1
+                while(end<level.columns&&!blocked(r,end)&&board[r][end]==board[r][start])end++
+                if(end-start>=3)for(c in start until end)cells+=Cell(r,c)
+                start=end
+            }
+        }
+        for(c in 0 until level.columns){
+            var start=0
+            while(start<level.rows){
+                if(blocked(start,c)){start++;continue}
+                var end=start+1
+                while(end<level.rows&&!blocked(end,c)&&board[end][c]==board[start][c])end++
+                if(end-start>=3)for(r in start until end)cells+=Cell(r,c)
+                start=end
+            }
+        }
         return MatchResult(cells,cells.groupingBy{board[it.row][it.col]}.eachCount())
     }
     fun findHint():Pair<Cell,Cell>?{
@@ -71,8 +90,7 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
     /** Ivy is removed by matching the tile under it. Crates and stones occupy a cell and are
      * removed by a match next to them. This gives the three obstacle families different tactics. */
     private fun clearObstaclesForMatch(matched:Set<Cell>):Map<GardenObstacle,Int>{
-        val cleared=mutableMapOf<GardenObstacle,Int>()
-        val adjacent=linkedSetOf<Cell>()
+        val cleared=mutableMapOf<GardenObstacle,Int>();val adjacent=linkedSetOf<Cell>()
         matched.forEach{x->adjacent+=Cell(x.row-1,x.col);adjacent+=Cell(x.row+1,x.col);adjacent+=Cell(x.row,x.col-1);adjacent+=Cell(x.row,x.col+1)}
         matched.filter(::inside).forEach{x->if(obstacles[x.row][x.col]==GardenObstacle.IVY){obstacles[x.row][x.col]=null;cleared[GardenObstacle.IVY]=(cleared[GardenObstacle.IVY]?:0)+1}}
         adjacent.filter(::inside).forEach{x->val o=obstacles[x.row][x.col]?:return@forEach;if(o==GardenObstacle.CRATE||o==GardenObstacle.STONE){obstacles[x.row][x.col]=null;cleared[o]=(cleared[o]?:0)+1}}
