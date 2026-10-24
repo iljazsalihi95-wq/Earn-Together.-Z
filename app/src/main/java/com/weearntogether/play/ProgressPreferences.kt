@@ -27,7 +27,14 @@ object ProgressPreferences {
         check(meta.edit().putString("legacy_owner", user).putBoolean("migrated_$user", true).commit())
     }
     fun snapshot(prefs: SharedPreferences): JSONObject = JSONObject().apply {
-        prefs.all.toSortedMap().forEach { (key, value) -> if (key != "cloud_updated_at") put(key, value) }
+        prefs.all.toSortedMap().forEach { (key, value) ->
+            if (key == "cloud_updated_at") return@forEach
+            when (value) {
+                is Long -> put(key, JSONObject().put("__wet_type", "long").put("value", value))
+                is Float -> put(key, JSONObject().put("__wet_type", "float").put("value", value.toDouble()))
+                else -> put(key, value)
+            }
+        }
     }
     fun restore(prefs: SharedPreferences, data: JSONObject) {
         val edit = prefs.edit().clear()
@@ -35,6 +42,10 @@ object ProgressPreferences {
             when (val value = data.get(key)) {
                 is Boolean -> edit.putBoolean(key, value)
                 is String -> edit.putString(key, value)
+                is JSONObject -> when (value.optString("__wet_type")) {
+                    "long" -> edit.putLong(key, value.optLong("value"))
+                    "float" -> edit.putFloat(key, value.optDouble("value").toFloat())
+                }
                 is Number -> if (key.endsWith("_at")) edit.putLong(key, value.toLong()) else edit.putInt(key, value.toInt())
             }
         }
