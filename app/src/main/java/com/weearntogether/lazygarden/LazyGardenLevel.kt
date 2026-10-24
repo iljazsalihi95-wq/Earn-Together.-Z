@@ -41,9 +41,20 @@ object LazyGardenLevels {
   addStage(108,20,1745,GardenTile.BERRY to 38,GardenTile.WATER to 34,GardenTile.FLOWER to 20,GardenObstacle.IVY to 11,GardenObstacle.STONE to 7)
   addStage(109,21,1780,GardenTile.LEAF to 38,GardenTile.ROSE to 35,GardenTile.BERRY to 20,GardenObstacle.CRATE to 12,GardenObstacle.IVY to 10,GardenObstacle.STONE to 7)
   addStage(110,22,1850,GardenTile.PEAR to 39,GardenTile.FLOWER to 35,GardenTile.WATER to 21,GardenObstacle.CRATE to 12,GardenObstacle.IVY to 11,GardenObstacle.STONE to 8)
+  // Chapter 12: authored expert set with deliberate recovery beats and escalating mixed-blocker pressure.
+  addStage(111,24,1870,GardenTile.WATER to 36,GardenTile.ROSE to 33,null,GardenObstacle.CRATE to 10,GardenObstacle.IVY to 8)
+  addStage(112,23,1895,GardenTile.LEAF to 36,GardenTile.BERRY to 33,null,GardenObstacle.STONE to 7,GardenObstacle.IVY to 9)
+  addStage(113,22,1920,GardenTile.PEAR to 37,GardenTile.FLOWER to 34,GardenTile.WATER to 19,GardenObstacle.CRATE to 11,GardenObstacle.STONE to 7)
+  addStage(114,21,1950,GardenTile.BERRY to 37,GardenTile.LEAF to 34,GardenTile.ROSE to 19,GardenObstacle.CRATE to 11,GardenObstacle.IVY to 10)
+  addStage(115,20,1985,GardenTile.ROSE to 38,GardenTile.PEAR to 35,GardenTile.FLOWER to 20,GardenObstacle.IVY to 11,GardenObstacle.STONE to 8)
+  addStage(116,24,2010,GardenTile.FLOWER to 36,GardenTile.WATER to 33,null,GardenObstacle.CRATE to 11,GardenObstacle.IVY to 9)
+  addStage(117,22,2045,GardenTile.LEAF to 38,GardenTile.BERRY to 35,GardenTile.PEAR to 20,GardenObstacle.CRATE to 12,GardenObstacle.STONE to 8)
+  addStage(118,20,2080,GardenTile.WATER to 39,GardenTile.ROSE to 35,GardenTile.LEAF to 21,GardenObstacle.IVY to 12,GardenObstacle.STONE to 8)
+  addStage(119,21,2120,GardenTile.PEAR to 39,GardenTile.FLOWER to 36,GardenTile.BERRY to 21,GardenObstacle.CRATE to 12,GardenObstacle.IVY to 11,GardenObstacle.STONE to 8)
+  addStage(120,22,2200,GardenTile.ROSE to 40,GardenTile.WATER to 36,GardenTile.FLOWER to 22,GardenObstacle.CRATE to 12,GardenObstacle.IVY to 12,GardenObstacle.STONE to 9)
  }
  private fun generated(number:Int):LazyGardenLevel{val chapter=(number-1)/10;val step=(number-1)%10;val tiles=GardenTile.entries;val primary=tiles[(number+chapter)%6];val secondary=tiles.filter{it!=primary}[(number*3+chapter+1)%5];val tertiary=tiles.filter{it!=primary&&it!=secondary}[(number*5+chapter+2)%4];val pressure=(chapter/5).coerceAtMost(4);val recovery=step==0||step==5;val challenge=step==4||step==7;val finale=step==9;val moves=when{recovery->24-pressure;finale->21-pressure;challenge->22-pressure;else->23-pressure}.coerceAtLeast(17);val growth=(chapter/3).coerceAtMost(8);val goals=mutableListOf(primary to(24+growth+step/2),secondary to(20+growth+if(challenge||finale)4 else step/3));if(challenge||finale)goals+=tertiary to(14+growth/2+step/2);val obs=mutableListOf(obstacle(GardenObstacle.CRATE,(4+chapter/3+step/4).coerceAtMost(12)));if(challenge||finale||step==2||step==6)obs+=obstacle(GardenObstacle.IVY,(3+chapter/4).coerceAtMost(9));if(finale||step==3||step==7)obs+=obstacle(GardenObstacle.STONE,(2+chapter/5).coerceAtMost(7));return LazyGardenLevel(number,8,8,moves,goals.map{LazyGardenGoal(it.first,it.second)},55+(number-1)*8+when{finale->80;challenge->35;else->0},obs)}
- private val levels=authored+(111..CAMPAIGN_LEVELS).map(::generated)
+ private val levels=authored+(121..CAMPAIGN_LEVELS).map(::generated)
  fun get(number:Int)=levels[(number-1).coerceIn(0,levels.lastIndex)]
  val count:Int get()=levels.size
 }
