@@ -12,21 +12,34 @@ class LazyGardenMilestone(context: Context) {
     private val prefs = ProgressPreferences.open(context, "lazy_garden_milestone")
 
     val completedLevels: Int
-        get() = prefs.getInt(KEY_COMPLETED_LEVELS, 0)
+        get() = prefs.getInt(KEY_COMPLETED_LEVELS, 0).coerceIn(0, CAMPAIGN_LEVELS)
 
     val targetLevels: Int = CAMPAIGN_LEVELS
 
-    /** Count a level once, even when it is replayed after completion. */
+    /**
+     * Campaign progression is sequential. A replay is harmless, while an out-of-order
+     * completion cannot skip restoration chapters or inflate campaign progress.
+     */
     fun markLevelCompleted(level: Int): Int {
         val safeLevel = level.coerceIn(1, CAMPAIGN_LEVELS)
-        val key = "level_${safeLevel}_counted"
-        if (prefs.getBoolean(key, false)) return completedLevels
-        val next = (completedLevels + 1).coerceAtMost(CAMPAIGN_LEVELS)
+        val current = completedLevels
+        if (safeLevel <= current) return current
+        if (safeLevel != current + 1) return current
+
         prefs.edit()
-            .putBoolean(key, true)
-            .putInt(KEY_COMPLETED_LEVELS, next)
+            .putBoolean("level_${safeLevel}_counted", true)
+            .putInt(KEY_COMPLETED_LEVELS, safeLevel)
             .apply()
-        return next
+        return safeLevel
+    }
+
+    /** First campaign level that still needs to be completed. */
+    val nextRequiredLevel: Int
+        get() = (completedLevels + 1).coerceAtMost(CAMPAIGN_LEVELS)
+
+    fun isLevelUnlocked(level: Int): Boolean {
+        val safeLevel = level.coerceIn(1, CAMPAIGN_LEVELS)
+        return safeLevel <= nextRequiredLevel
     }
 
     /** Ten-level chapters match the 25 restoration areas in the campaign. */
