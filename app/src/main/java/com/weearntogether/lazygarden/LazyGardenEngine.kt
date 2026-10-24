@@ -86,7 +86,21 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
         return null
     }
     fun hasValidMove():Boolean=findHint()!=null
-    private fun seedObstacles(){val candidates=mutableListOf<Cell>();for(r in 1 until level.rows-1)for(c in 1 until level.columns-1)candidates+=Cell(r,c);candidates.shuffle(random);var cursor=0;level.obstacleGoals.forEach{goal->repeat(goal.target.coerceAtMost(candidates.size-cursor)){val x=candidates[cursor++];obstacles[x.row][x.col]=goal.obstacle}};for(r in 0..1)for(c in 0..2)obstacles[r][c]=null;ensurePlayableBoard()}
+    /** Seed every requested obstacle exactly once when board capacity allows it. Earlier versions
+     * only used the 6x6 inner area, which silently truncated dense late-campaign objectives and
+     * could make a level mathematically impossible. The reserved 2x3 corner guarantees a safe
+     * area for the emergency move seeder without deleting objective obstacles. */
+    private fun seedObstacles(){
+        val reserved=buildSet{for(r in 0..1)for(c in 0..2)add(Cell(r,c))}
+        val candidates=mutableListOf<Cell>()
+        for(r in 0 until level.rows)for(c in 0 until level.columns){val cell=Cell(r,c);if(cell !in reserved)candidates+=cell}
+        candidates.shuffle(random)
+        val requested=level.obstacleGoals.sumOf{it.target.coerceAtLeast(0)}
+        require(requested<=candidates.size){"Level ${level.number} requests $requested obstacles but only ${candidates.size} cells are available"}
+        var cursor=0
+        level.obstacleGoals.forEach{goal->repeat(goal.target.coerceAtLeast(0)){val x=candidates[cursor++];obstacles[x.row][x.col]=goal.obstacle}}
+        ensurePlayableBoard()
+    }
     /** Ivy is removed by matching the tile under it. Crates and stones occupy a cell and are
      * removed by a match next to them. This gives the three obstacle families different tactics. */
     private fun clearObstaclesForMatch(matched:Set<Cell>):Map<GardenObstacle,Int>{
