@@ -1,9 +1,10 @@
 name: Activate GamePix integration
 on:
   push:
-    branches: [gamepix-activate]
+    branches: [main]
     paths:
       - scripts/activate-gamepix.py
+      - .github/workflows/activate-gamepix.yml
 permissions:
   contents: write
 jobs:
@@ -12,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: gamepix-activate
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
