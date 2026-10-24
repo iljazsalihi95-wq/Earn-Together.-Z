@@ -45,7 +45,6 @@ object LazyGardenLevels {
                 addStage(n,moves,45+n*9,goals[0],goals[1],goals.getOrNull(2),*obs.toTypedArray()); n++
             }
         }
-        // Chapter 7 — stone becomes a regular tactical constraint.
         addStage(61,24,630,GardenTile.PEAR to 30,GardenTile.LEAF to 27,null,GardenObstacle.CRATE to 7,GardenObstacle.STONE to 3)
         addStage(62,23,640,GardenTile.FLOWER to 30,GardenTile.BERRY to 27,null,GardenObstacle.IVY to 7,GardenObstacle.STONE to 3)
         addStage(63,22,650,GardenTile.ROSE to 31,GardenTile.WATER to 27,null,GardenObstacle.CRATE to 7,GardenObstacle.IVY to 5)
@@ -56,7 +55,6 @@ object LazyGardenLevels {
         addStage(68,21,720,GardenTile.FLOWER to 32,GardenTile.ROSE to 28,GardenTile.BERRY to 16,GardenObstacle.IVY to 8,GardenObstacle.STONE to 4)
         addStage(69,22,735,GardenTile.ROSE to 33,GardenTile.PEAR to 28,null,GardenObstacle.CRATE to 8,GardenObstacle.IVY to 6,GardenObstacle.STONE to 4)
         addStage(70,23,780,GardenTile.WATER to 33,GardenTile.LEAF to 29,GardenTile.FLOWER to 17,GardenObstacle.CRATE to 9,GardenObstacle.IVY to 7,GardenObstacle.STONE to 5)
-        // Chapter 8 — deliberate alternating recovery/pressure curve; all three blockers are mixed.
         addStage(71,24,790,GardenTile.LEAF to 31,GardenTile.BERRY to 28,null,GardenObstacle.CRATE to 8,GardenObstacle.STONE to 4)
         addStage(72,23,805,GardenTile.PEAR to 31,GardenTile.FLOWER to 29,null,GardenObstacle.IVY to 8,GardenObstacle.STONE to 4)
         addStage(73,22,820,GardenTile.WATER to 32,GardenTile.ROSE to 29,GardenTile.LEAF to 15,GardenObstacle.CRATE to 8,GardenObstacle.IVY to 6)
@@ -67,6 +65,17 @@ object LazyGardenLevels {
         addStage(78,21,915,GardenTile.WATER to 34,GardenTile.FLOWER to 30,GardenTile.ROSE to 17,GardenObstacle.IVY to 9,GardenObstacle.STONE to 5)
         addStage(79,22,940,GardenTile.LEAF to 35,GardenTile.ROSE to 30,GardenTile.PEAR to 17,GardenObstacle.CRATE to 9,GardenObstacle.IVY to 7,GardenObstacle.STONE to 5)
         addStage(80,23,990,GardenTile.BERRY to 35,GardenTile.WATER to 31,GardenTile.FLOWER to 18,GardenObstacle.CRATE to 10,GardenObstacle.IVY to 8,GardenObstacle.STONE to 6)
+        // Chapter 9 — premium campaign pacing: recovery stages alternate with dense blocker challenges.
+        addStage(81,24,1000,GardenTile.ROSE to 32,GardenTile.PEAR to 29,null,GardenObstacle.CRATE to 8,GardenObstacle.STONE to 5)
+        addStage(82,23,1015,GardenTile.WATER to 33,GardenTile.LEAF to 29,null,GardenObstacle.IVY to 8,GardenObstacle.STONE to 5)
+        addStage(83,22,1035,GardenTile.FLOWER to 33,GardenTile.BERRY to 30,GardenTile.ROSE to 16,GardenObstacle.CRATE to 9,GardenObstacle.IVY to 6)
+        addStage(84,21,1055,GardenTile.PEAR to 34,GardenTile.WATER to 30,GardenTile.LEAF to 17,GardenObstacle.CRATE to 9,GardenObstacle.STONE to 6)
+        addStage(85,22,1080,GardenTile.BERRY to 34,GardenTile.ROSE to 31,GardenTile.FLOWER to 17,GardenObstacle.IVY to 9,GardenObstacle.STONE to 6)
+        addStage(86,24,1095,GardenTile.LEAF to 33,GardenTile.PEAR to 30,null,GardenObstacle.CRATE to 9,GardenObstacle.IVY to 7)
+        addStage(87,22,1120,GardenTile.WATER to 35,GardenTile.BERRY to 31,GardenTile.ROSE to 17,GardenObstacle.CRATE to 10,GardenObstacle.STONE to 6)
+        addStage(88,21,1145,GardenTile.FLOWER to 35,GardenTile.LEAF to 31,GardenTile.PEAR to 18,GardenObstacle.IVY to 10,GardenObstacle.STONE to 6)
+        addStage(89,22,1170,GardenTile.ROSE to 36,GardenTile.WATER to 32,GardenTile.BERRY to 18,GardenObstacle.CRATE to 10,GardenObstacle.IVY to 8,GardenObstacle.STONE to 6)
+        addStage(90,23,1225,GardenTile.PEAR to 36,GardenTile.FLOWER to 32,GardenTile.LEAF to 19,GardenObstacle.CRATE to 11,GardenObstacle.IVY to 9,GardenObstacle.STONE to 7)
     }
 
     private fun generated(number:Int):LazyGardenLevel {
@@ -80,7 +89,7 @@ object LazyGardenLevels {
         if(challenge||finale||step==2||step==6) obstacles+=obstacle(GardenObstacle.IVY,(3+chapter/4).coerceAtMost(9)); if(finale||step==3||step==7) obstacles+=obstacle(GardenObstacle.STONE,(2+chapter/5).coerceAtMost(7))
         val reward=55+(number-1)*8+when{finale->80;challenge->35;else->0}; return LazyGardenLevel(number,8,8,moves,goals.map{LazyGardenGoal(it.first,it.second)},reward,obstacles)
     }
-    private val levels=authored+(81..CAMPAIGN_LEVELS).map(::generated)
+    private val levels=authored+(91..CAMPAIGN_LEVELS).map(::generated)
     fun get(number:Int):LazyGardenLevel=levels[(number-1).coerceIn(0,levels.lastIndex)]
     val count:Int get()=levels.size
 }
