@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="720dp"
+    android:height="320dp"
+    android:viewportWidth="720"
+    android:viewportHeight="320">
+    <!-- soft sunlight crossing the estate -->
+    <path android:fillColor="#FFF7C7" android:fillAlpha="0.10" android:pathData="M32,0 L218,0 L456,320 L315,320z"/>
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.07" android:pathData="M154,0 L272,0 L492,320 L412,320z"/>
+
+    <!-- distant cloud highlights -->
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.38" android:pathData="M38,45 C51,28 77,30 87,45 C96,34 119,35 126,50 C141,50 151,59 153,69 L24,69 C26,56 31,49 38,45z"/>
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.30" android:pathData="M545,34 C558,19 581,22 590,35 C602,25 624,29 630,43 C644,43 654,52 656,61 L531,61 C533,49 539,40 545,34z"/>
+
+    <!-- clipped topiary highlights for extra depth -->
+    <path android:fillColor="#78B96B" android:fillAlpha="0.42" android:pathData="M18,183 Q45,158 71,181 Q96,158 122,182 Q148,160 176,183 L176,192 Q148,174 121,191 Q94,173 69,191 Q42,172 18,192z"/>
+    <path android:fillColor="#78B96B" android:fillAlpha="0.42" android:pathData="M544,183 Q571,158 597,181 Q622,158 648,182 Q674,160 704,183 L704,192 Q675,174 648,191 Q621,173 596,191 Q569,172 544,192z"/>
+
+    <!-- fountain sparkle and water glints -->
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.82" android:pathData="M358,187h4v15h-4zM352,193h16v4h-16zM325,252h18v3h-18zM381,258h21v3h-21z"/>
+    <path android:fillColor="#B9F2FF" android:fillAlpha="0.72" android:pathData="M314,266 Q350,274 389,265 Q365,280 330,276z"/>
+
+    <!-- foreground leaf silhouettes give parallax-like depth -->
+    <path android:fillColor="#123F2B" android:fillAlpha="0.55" android:pathData="M0,272 C18,254 31,257 38,279 C48,249 66,247 73,280 C83,255 101,256 108,286 L108,320 L0,320z"/>
+    <path android:fillColor="#123F2B" android:fillAlpha="0.55" android:pathData="M612,286 C619,256 637,255 647,280 C654,247 672,249 682,279 C690,257 705,254 720,272 L720,320 L612,320z"/>
+
+    <!-- small butterflies / life accents -->
+    <path android:fillColor="#FFD95A" android:pathData="M205,206 C196,198 188,202 193,211 C197,216 202,216 207,212 C212,216 217,216 221,211 C226,202 218,198 209,206 L207,210z"/>
+    <path android:fillColor="#F48FB1" android:pathData="M506,222 C498,214 490,218 495,227 C499,232 503,232 508,228 C513,232 518,232 522,227 C527,218 519,214 511,222 L509,226z"/>
+
+    <!-- subtle edge vignette to frame the playable estate -->
+    <path android:fillColor="#071B18" android:fillAlpha="0.12" android:pathData="M0,0h18v320H0zM702,0h18v320h-18zM0,305h720v15H0z"/>
+</vector>
