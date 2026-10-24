@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -19,15 +21,31 @@ class MainActivity : Activity() {
     private val loyalty by lazy{LoyaltyProgress(this)}; private val playHistory by lazy{PlayHistory(this)}; private val profile by lazy{getSharedPreferences("wet_guest_profile",MODE_PRIVATE)}; private val accounts by lazy{AccountStore(this)}
     private var levelPlay:LevelPlayManager?=null; private var atHome=false
     private val googleIdentity by lazy { GoogleIdentity(this) }; private var googleInFlight=false
+    private val authHandler=Handler(Looper.getMainLooper())
+    private var operationId=0
+    private var operationTimeout:Runnable?=null
+    private fun endOperation(id:Int):Boolean {
+        if(id!=operationId||!busy)return false
+        operationTimeout?.let{authHandler.removeCallbacks(it)};operationTimeout=null
+        busy=false;googleInFlight=false;enabled(root,true);return true
+    }
+    private fun armTimeout(id:Int,status:TextView?,delay:Long=70_000L){
+        operationTimeout?.let{authHandler.removeCallbacks(it)}
+        operationTimeout=Runnable{val cancelGoogle=googleInFlight;if(endOperation(id)&&!isFinishing&&!isDestroyed){
+            operationId++;if(cancelGoogle)googleIdentity.cancel()
+            val message="Connection timed out. Try signing in again; an account you just created may already exist."
+            status?.text=message;Toast.makeText(this,message,Toast.LENGTH_LONG).show()
+        }}.also{authHandler.postDelayed(it,delay)}
+    }
     private var busy=false; private var firstResume=true
     private var cloudMessage=""; private var pendingConflicts=listOf<CloudProgress.Conflict>()
     private fun dp(n:Int)=(n*resources.displayMetrics.density).toInt()
     private fun enabled(view:View,enable:Boolean){view.isEnabled=enable;if(view is android.view.ViewGroup)for(i in 0 until view.childCount)enabled(view.getChildAt(i),enable)}
     private fun request(status:TextView?=null,work:()->AccountStore.Result,success:()->Unit){
-        if(busy)return;busy=true;enabled(root,false);status?.text="Connecting securely…"
-        CloudWorker.executor.execute {
+        if(busy)return;busy=true;val id=++operationId;enabled(root,false);status?.text="Connecting securely…";armTimeout(id,status)
+        AuthWorker.executor.execute {
             val result=try{work()}catch(e:Exception){AccountStore.Result(false,e.message?:"Request failed. Try again.")}
-            runOnUiThread {if(!isFinishing&&!isDestroyed){busy=false;enabled(root,true);if(result.ok)success()else{status?.text=result.message;Toast.makeText(this,result.message,Toast.LENGTH_LONG).show()}}}
+            runOnUiThread {if(!isFinishing&&!isDestroyed&&endOperation(id)){if(result.ok)success()else{status?.text=result.message;Toast.makeText(this,result.message,Toast.LENGTH_LONG).show()}}}
         }
     }
     private fun restoreAccount(){screen("PLAYER ACCOUNT");label("Restoring your secure session…");request(work={val result=accounts.restore();cloudMessage=result.message;AccountStore.Result(true,result.message)}){if(accounts.isSignedIn())syncAndHome()else welcome()}}
@@ -79,26 +97,29 @@ class MainActivity : Activity() {
     private fun googleButton(status:TextView){root.addView(Button(this).apply{text="CONTINUE WITH GOOGLE";isAllCaps=false;textSize=15f;setTypeface(null,Typeface.BOLD);setTextColor(navy);background=rounded(Color.WHITE,30f);setOnClickListener{googleLogin(status)}},LinearLayout.LayoutParams(-1,dp(54)).apply{bottomMargin=dp(16)})}
     private fun googleLogin(status:TextView?=null,link:Boolean=false){
         if(busy)return
-        busy=true;googleInFlight=true;enabled(root,false);status?.text="Connecting to Google…"
-        fun failed(message:String){busy=false;googleInFlight=false;enabled(root,true);status?.text=message;Toast.makeText(this,message,Toast.LENGTH_LONG).show()}
-        CloudWorker.executor.execute {
-            val challenge=try{accounts.googleChallenge()}catch(_:Exception){null}
+        busy=true;val id=++operationId;googleInFlight=true;enabled(root,false);status?.text="Connecting to Google…";armTimeout(id,status)
+        fun failed(message:String){if(endOperation(id)){status?.text=message;Toast.makeText(this,message,Toast.LENGTH_LONG).show()}}
+        AuthWorker.executor.execute {
+            var challengeError="Could not connect to the account service."
+            val challenge=try{accounts.googleChallenge()}catch(e:Exception){challengeError=e.message?:challengeError;null}
             runOnUiThread {
-                if(isFinishing||isDestroyed)return@runOnUiThread
-                if(challenge==null){failed("Could not connect. Check your connection and try again.");return@runOnUiThread}
+                if(isFinishing||isDestroyed||id!=operationId||!busy)return@runOnUiThread
+                if(challenge==null){failed(challengeError);return@runOnUiThread}
+                armTimeout(id,status,120_000L)
                 googleIdentity.signIn(challenge){token,error->
-                    if(isFinishing||isDestroyed)return@signIn
+                    if(isFinishing||isDestroyed||id!=operationId||!busy)return@signIn
                     if(token==null){failed(error?:"Google sign-in failed")}else{
-                        CloudWorker.executor.execute {
-                            val result=try{accounts.googleSignIn(token,link)}catch(_:Exception){AccountStore.Result(false,"Google sign-in could not be completed")}
-                            runOnUiThread {if(!isFinishing&&!isDestroyed){busy=false;googleInFlight=false;enabled(root,true);if(result.ok)syncAndHome()else failed(result.message)}}
+                        armTimeout(id,status)
+                        AuthWorker.executor.execute {
+                            val result=try{accounts.googleSignIn(token,link)}catch(e:Exception){AccountStore.Result(false,e.message?:"Google sign-in could not be completed")}
+                            runOnUiThread {if(!isFinishing&&!isDestroyed&&id==operationId&&busy){if(result.ok){endOperation(id);syncAndHome()}else failed(result.message)}}
                         }
                     }
                 }
             }
         }
     }
-    override fun onDestroy(){if(googleInFlight)googleIdentity.cancel();super.onDestroy()}
+    override fun onDestroy(){operationId++;operationTimeout?.let{authHandler.removeCallbacks(it)};if(googleInFlight)googleIdentity.cancel();super.onDestroy()}
     private fun hero(){val h=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;gravity=Gravity.CENTER_HORIZONTAL;setPadding(28,28,28,28);background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff4b2398.toInt(),0xff0d7bd8.toInt(),0xff071b42.toInt())).apply{cornerRadius=42f}};h.addView(TextView(this).apply{text="LAZYGARDEN";textSize=15f;setTextColor(gold);setTypeface(null,Typeface.BOLD)});h.addView(GameArtwork(this,"garden"),LinearLayout.LayoutParams(dp(120),dp(120)).apply{topMargin=dp(12)});h.addView(TextView(this).apply{text="RESTORE. MATCH. BUILD.";textSize=26f;setTextColor(Color.WHITE);setTypeface(null,Typeface.BOLD);gravity=Gravity.CENTER;setPadding(0,10,0,8)});h.addView(TextView(this).apply{text="250 progressive garden levels, restoration missions and challenges.";textSize=15f;setTextColor(0xffd7e5ff.toInt());gravity=Gravity.CENTER});h.addView(Button(this).apply{text="PLAY LAZYGARDEN";isAllCaps=false;setTypeface(null,Typeface.BOLD);setTextColor(navy);background=rounded(gold,26f);setOnClickListener{lazyGarden()}},LinearLayout.LayoutParams(-1,104).apply{topMargin=20});root.addView(h,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=20})}
     private fun stats(){val box=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER;background=rounded(panel,32f);setPadding(10,17,10,17)};fun add(v:String,l:String,c:Int){box.addView(TextView(this).apply{text="$v\n${tr(l)}";gravity=Gravity.CENTER;textSize=15f;setTextColor(c);setTypeface(null,Typeface.BOLD)},LinearLayout.LayoutParams(0,86,1f))};add(loyalty.points.toString(),"LOYALTY",gold);add(loyalty.currentStreak.toString(),"STREAK",Color.WHITE);add("${loyalty.todayGames}/${loyalty.dailyGoal}","TODAY",Color.WHITE);root.addView(box,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=20})}
     private fun gameKey(icon:String)=when(icon){"🌿"->"garden";"🫧"->"bubble";"🧩"->"block";"🔵"->"lines";"⚡"->"stack";"🔢"->"2048";else->"block"}

@@ -27,7 +27,7 @@ class GoogleIdentity(private val activity:Activity) {
         val option=GetSignInWithGoogleOption.Builder(WEB_CLIENT_ID).setNonce(nonce).build()
         val request=GetCredentialRequest.Builder().addCredentialOption(option).build()
         val signal=CancellationSignal();cancellation=signal
-        manager.getCredentialAsync(activity,request,signal,main,object:CredentialManagerCallback<GetCredentialResponse,GetCredentialException>{
+        try { manager.getCredentialAsync(activity,request,signal,main,object:CredentialManagerCallback<GetCredentialResponse,GetCredentialException>{
             override fun onResult(result:GetCredentialResponse){
                 cancellation=null
                 try{
@@ -40,7 +40,10 @@ class GoogleIdentity(private val activity:Activity) {
                 cancellation=null
                 complete(null,if(e is GetCredentialCancellationException)"Google sign-in cancelled" else "Google sign-in unavailable. Check Google Play services, your connection, and the app's OAuth configuration.")
             }
-        })
+        }) } catch (_: Exception) {
+            cancellation=null
+            complete(null,"Google sign-in could not start. Check Google Play services and the app signing certificate in OAuth settings.")
+        }
     }
     fun clear(complete:()->Unit){
         manager.clearCredentialStateAsync(ClearCredentialStateRequest(),null,main,object:CredentialManagerCallback<Void?,ClearCredentialException>{
