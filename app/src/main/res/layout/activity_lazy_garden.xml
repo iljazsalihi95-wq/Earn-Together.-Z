@@ -1,41 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical"
-    android:paddingStart="12dp" android:paddingEnd="12dp" android:paddingTop="10dp" android:paddingBottom="10dp"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:clipToPadding="false"
+    android:paddingBottom="28dp"
     android:background="@drawable/lazygarden_screen_background">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:background="@drawable/lazygarden_panel" android:padding="12dp">
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-            <TextView android:id="@+id/lgTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/lg_title" android:textColor="#FFF1B8" android:textSize="23sp" android:textStyle="bold" />
-            <TextView android:id="@+id/lgLevel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="#B9C7E7" android:textSize="13sp" android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="720dp"
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="32dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/lazygarden_panel"
+            android:padding="12dp">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                <TextView android:id="@+id/lgTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/lg_title" android:textColor="#FFF1B8" android:textSize="24sp" android:textStyle="bold" />
+                <TextView android:id="@+id/lgLevel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="#B9C7E7" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+            <TextView android:id="@+id/lgMoves" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/lazygarden_board" android:padding="10dp" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
+            <TextView android:id="@+id/lgCoins" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="7dp" android:background="@drawable/lazygarden_board" android:padding="10dp" android:textColor="#FFD86B" android:textSize="13sp" android:textStyle="bold" />
         </LinearLayout>
-        <TextView android:id="@+id/lgMoves" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/lazygarden_board" android:padding="10dp" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
-        <TextView android:id="@+id/lgCoins" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="7dp" android:background="@drawable/lazygarden_board" android:padding="10dp" android:textColor="#FFD86B" android:textSize="13sp" android:textStyle="bold" />
-    </LinearLayout>
-    <FrameLayout android:id="@+id/lgSceneHost" android:layout_width="match_parent" android:layout_height="160dp" android:layout_marginTop="7dp" android:background="@drawable/lazygarden_board" android:clipChildren="false">
-        <ImageView android:id="@+id/lgGardenArtwork" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_garden_scene" android:scaleType="fitXY" android:contentDescription="Garden" />
-        <ImageView android:id="@+id/lgGateRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_gate" android:scaleType="fitXY" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored gate" />
-        <ImageView android:id="@+id/lgFountainRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_fountain" android:scaleType="fitXY" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored fountain" />
-        <ImageView android:id="@+id/lgFlowersRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_flowers" android:scaleType="fitXY" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored flower bed" />
-        <ImageView android:id="@+id/lgBenchRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_bench" android:scaleType="fitXY" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored bench" />
-        <ImageView android:id="@+id/lgPathRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_path" android:scaleType="fitXY" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored path" />
-        <View android:id="@+id/lgRestoredGlow" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="5dp" android:background="@drawable/lg_garden_restored_glow" android:alpha="0" android:visibility="invisible" />
-        <TextView android:id="@+id/lgRestorationBadge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="top|end" android:layout_margin="10dp" android:background="@drawable/lazygarden_action" android:paddingStart="10dp" android:paddingEnd="10dp" android:paddingTop="5dp" android:paddingBottom="5dp" android:textColor="#07101F" android:textSize="11sp" android:textStyle="bold" android:visibility="gone" />
-    </FrameLayout>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="82dp" android:layout_marginTop="7dp" android:orientation="horizontal" android:gravity="center_vertical" android:background="@drawable/lazygarden_panel" android:padding="8dp">
-        <ImageView android:id="@+id/lgCharacter" android:layout_width="54dp" android:layout_height="70dp" android:scaleType="fitCenter" android:contentDescription="Character" />
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="9dp" android:orientation="vertical">
-            <TextView android:id="@+id/lgSpeaker" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#FFD86B" android:textStyle="bold" android:textSize="13sp" />
-            <TextView android:id="@+id/lgDialogue" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:maxLines="2" android:ellipsize="end" android:textColor="#F6F8FF" android:textSize="12sp" />
+
+        <FrameLayout
+            android:id="@+id/lgSceneHost"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/lazygarden_board"
+            android:clipChildren="false">
+            <ImageView android:id="@+id/lgGardenArtwork" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_garden_scene" android:scaleType="centerCrop" android:contentDescription="Garden estate" />
+            <ImageView android:id="@+id/lgGateRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_gate" android:scaleType="centerCrop" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored gate" />
+            <ImageView android:id="@+id/lgFountainRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_fountain" android:scaleType="centerCrop" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored fountain" />
+            <ImageView android:id="@+id/lgFlowersRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_flowers" android:scaleType="centerCrop" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored flower bed" />
+            <ImageView android:id="@+id/lgBenchRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_bench" android:scaleType="centerCrop" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored bench" />
+            <ImageView android:id="@+id/lgPathRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_path" android:scaleType="centerCrop" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored path" />
+            <View android:id="@+id/lgRestoredGlow" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_margin="5dp" android:background="@drawable/lg_garden_restored_glow" android:alpha="0" android:visibility="invisible" />
+            <TextView android:id="@+id/lgRestorationBadge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="top|end" android:layout_margin="10dp" android:background="@drawable/lazygarden_action" android:paddingStart="11dp" android:paddingEnd="11dp" android:paddingTop="6dp" android:paddingBottom="6dp" android:textColor="#07101F" android:textSize="11sp" android:textStyle="bold" android:visibility="gone" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/lazygarden_panel"
+            android:padding="9dp">
+            <ImageView android:id="@+id/lgCharacter" android:layout_width="68dp" android:layout_height="82dp" android:scaleType="fitCenter" android:contentDescription="Character" />
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:orientation="vertical">
+                <TextView android:id="@+id/lgSpeaker" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#FFD86B" android:textStyle="bold" android:textSize="14sp" />
+                <TextView android:id="@+id/lgDialogue" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:maxLines="3" android:ellipsize="end" android:textColor="#F6F8FF" android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/lgBoardHost"
+            android:layout_width="match_parent"
+            android:layout_height="390dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/lazygarden_board"
+            android:padding="7dp" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal" android:gravity="center_vertical" android:background="@drawable/lazygarden_panel" android:padding="8dp">
+            <TextView android:id="@+id/lgGoals" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="3" android:ellipsize="end" android:textColor="#FFFFFF" android:textSize="12sp" android:textStyle="bold" />
+            <Button android:id="@+id/lgShuffle" android:layout_width="116dp" android:layout_height="48dp" android:layout_marginStart="8dp" android:background="@drawable/lazygarden_action" android:textAllCaps="false" android:textColor="#07101F" android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView android:id="@+id/lgBoosterHint" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:paddingTop="5dp" android:paddingBottom="5dp" android:textColor="#A9B8D9" android:textSize="11sp" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:background="@drawable/lazygarden_panel" android:padding="9dp">
+            <TextView android:id="@+id/lgBuildTask" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="3" android:ellipsize="end" android:textColor="#FFF1B8" android:textSize="13sp" android:textStyle="bold" />
+            <Button android:id="@+id/lgAction" android:layout_width="128dp" android:layout_height="50dp" android:layout_marginStart="8dp" android:background="@drawable/lazygarden_action" android:textAllCaps="false" android:textColor="#07101F" android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
-    <FrameLayout android:id="@+id/lgBoardHost" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_marginTop="7dp" android:background="@drawable/lazygarden_board" android:padding="7dp" />
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="7dp" android:orientation="horizontal" android:gravity="center_vertical" android:background="@drawable/lazygarden_panel" android:padding="7dp">
-        <TextView android:id="@+id/lgGoals" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="2" android:ellipsize="end" android:textColor="#FFFFFF" android:textSize="12sp" android:textStyle="bold" />
-        <Button android:id="@+id/lgShuffle" android:layout_width="112dp" android:layout_height="46dp" android:layout_marginStart="7dp" android:background="@drawable/lazygarden_action" android:textAllCaps="false" android:textColor="#07101F" android:textStyle="bold" />
-    </LinearLayout>
-    <TextView android:id="@+id/lgBoosterHint" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:paddingTop="3dp" android:paddingBottom="2dp" android:textColor="#A9B8D9" android:textSize="10sp" />
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:background="@drawable/lazygarden_panel" android:padding="7dp">
-        <TextView android:id="@+id/lgBuildTask" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="2" android:ellipsize="end" android:textColor="#FFF1B8" android:textSize="12sp" android:textStyle="bold" />
-        <Button android:id="@+id/lgAction" android:layout_width="116dp" android:layout_height="48dp" android:layout_marginStart="7dp" android:background="@drawable/lazygarden_action" android:textAllCaps="false" android:textColor="#07101F" android:textStyle="bold" />
-    </LinearLayout>
-</LinearLayout>
+</ScrollView>
