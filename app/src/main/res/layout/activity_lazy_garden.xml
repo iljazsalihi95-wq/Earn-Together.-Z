@@ -40,6 +40,7 @@
             android:background="@drawable/lazygarden_board"
             android:clipChildren="false">
             <ImageView android:id="@+id/lgGardenArtwork" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_garden_scene" android:scaleType="centerCrop" android:contentDescription="Garden estate" />
+            <ImageView android:id="@+id/lgGardenAtmosphere" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_garden_atmosphere" android:scaleType="centerCrop" android:contentDescription="" android:importantForAccessibility="no" />
             <ImageView android:id="@+id/lgGateRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_gate" android:scaleType="centerCrop" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored gate" />
             <ImageView android:id="@+id/lgFountainRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_fountain" android:scaleType="centerCrop" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored fountain" />
             <ImageView android:id="@+id/lgFlowersRestored" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@drawable/lg_restored_flowers" android:scaleType="centerCrop" android:alpha="0" android:visibility="invisible" android:contentDescription="Restored flower bed" />
