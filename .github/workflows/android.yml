@@ -18,7 +18,9 @@ jobs:
         with:
           gradle-version: '8.10.2'
       - name: Test Google token verification and account linking
-        run: node backend/tests/google-auth.test.cjs
+        run: |
+          node backend/tests/google-auth.test.cjs
+          node backend/tests/wallet.test.cjs
       - name: Restore persistent Android signing key when configured
         env:
           KEYSTORE_BASE64: ${{ secrets.WET_SIGNING_KEYSTORE_BASE64 }}
