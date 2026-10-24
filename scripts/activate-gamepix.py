@@ -1,4 +1,5 @@
 from pathlib import Path
+# One-shot integration patch for the native Games hub.
 p=Path('app/src/main/java/com/weearntogether/play/MainActivity.kt')
 s=p.read_text()
 old='private fun gamesHub(){screen("GAMES");label("Choose a game visually. Your progress is saved offline and synced to your account.");missionCard('
