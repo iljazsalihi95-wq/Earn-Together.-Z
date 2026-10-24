@@ -53,9 +53,34 @@ class LazyGardenMilestone(context: Context) {
         get() = if (completedLevels >= CAMPAIGN_LEVELS) LEVELS_PER_CHAPTER
         else completedLevels % LEVELS_PER_CHAPTER
 
+    /** Stable 0..100 progress value for restoration UI and chapter presentation. */
+    val currentChapterProgressPercent: Int
+        get() = if (isCampaignComplete()) 100
+        else (levelsIntoCurrentChapter * 100 / LEVELS_PER_CHAPTER).coerceIn(0, 100)
+
+    /** Stable 0..100 progress value for the complete 250-level campaign. */
+    val campaignProgressPercent: Int
+        get() = (completedLevels * 100 / CAMPAIGN_LEVELS).coerceIn(0, 100)
+
+    /** A chapter becomes available only after every preceding chapter is finished. */
+    fun isChapterUnlocked(chapter: Int): Boolean {
+        val safeChapter = chapter.coerceIn(1, CHAPTERS)
+        return safeChapter <= currentChapter
+    }
+
     fun isChapterComplete(chapter: Int): Boolean {
         val safeChapter = chapter.coerceIn(1, CHAPTERS)
         return completedLevels >= safeChapter * LEVELS_PER_CHAPTER
+    }
+
+    /**
+     * Gives presentation code an exact level range without duplicating campaign math.
+     * This keeps restoration scenes aligned with their ten playable levels.
+     */
+    fun chapterLevelRange(chapter: Int): IntRange {
+        val safeChapter = chapter.coerceIn(1, CHAPTERS)
+        val first = (safeChapter - 1) * LEVELS_PER_CHAPTER + 1
+        return first..(first + LEVELS_PER_CHAPTER - 1)
     }
 
     fun isCampaignComplete(): Boolean = completedLevels >= CAMPAIGN_LEVELS
