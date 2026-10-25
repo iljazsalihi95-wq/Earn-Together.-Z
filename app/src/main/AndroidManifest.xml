@@ -26,6 +26,7 @@
     android:name="com.weearntogether.play.GamePixActivity"
     android:configChanges="orientation|screenSize|keyboardHidden"
     android:exported="false"/>
+<activity android:name=".AyetOfferwallActivity" android:exported="false"/>
 <activity android:name=".WalletActivity" android:exported="false"/>
 <activity android:name=".MainActivity" android:exported="true">
 <intent-filter>
