@@ -6,6 +6,8 @@ import kotlin.random.Random
 data class Cell(val row:Int,val col:Int)
 data class MatchResult(val cells:Set<Cell>,val tiles:Map<GardenTile,Int>,val obstacles:Map<GardenObstacle,Int> = emptyMap())
 
+enum class GardenPowerUp { ROW_SWEEP, COLUMN_SWEEP, CROSS_BLAST }
+
 class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Random(level.number.toLong()*104729L+0x57455447L)){
     val board:Array<Array<GardenTile>> = Array(level.rows){Array(level.columns){GardenTile.LEAF}}
     val obstacles:Array<Array<GardenObstacle?>> = Array(level.rows){arrayOfNulls(level.columns)}
@@ -39,6 +41,25 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
             damageObstacles(powered.cells).forEach{(o,n)->cleared[o]=(cleared[o]?:0)+n};collapseAndRefill(powered.cells.filterNot(::blocksSwap).toSet());matches=findMatches()
         }
         ensurePlayableBoard();return MatchResult(resolvedCells,collected,cleared)
+    }
+
+    /** Activates an earned booster without consuming a move. The blast damages obstacles and refills cleared playable cells. */
+    fun activatePowerUp(powerUp:GardenPowerUp,target:Cell):MatchResult?{
+        if(!inside(target)||movesLeft<=0)return null
+        val affected=linkedSetOf<Cell>()
+        when(powerUp){
+            GardenPowerUp.ROW_SWEEP->for(c in 0 until level.columns)affected+=Cell(target.row,c)
+            GardenPowerUp.COLUMN_SWEEP->for(r in 0 until level.rows)affected+=Cell(r,target.col)
+            GardenPowerUp.CROSS_BLAST->{for(c in 0 until level.columns)affected+=Cell(target.row,c);for(r in 0 until level.rows)affected+=Cell(r,target.col)}
+        }
+        val tiles=affected.filterNot(::blocksSwap).groupingBy{board[it.row][it.col]}.eachCount()
+        val cleared=damageObstacles(affected)
+        collapseAndRefill(affected.filterNot(::blocksSwap).toSet())
+        var cascade=findMatches();val allCells=linkedSetOf<Cell>().apply{addAll(affected)};val allTiles=tiles.toMutableMap();val allObstacles=cleared.toMutableMap()
+        while(cascade.cells.isNotEmpty()){
+            val powered=expandPowerClear(cascade);allCells+=powered.cells;powered.tiles.forEach{(t,n)->allTiles[t]=(allTiles[t]?:0)+n};damageObstacles(powered.cells).forEach{(o,n)->allObstacles[o]=(allObstacles[o]?:0)+n};collapseAndRefill(powered.cells.filterNot(::blocksSwap).toSet());cascade=findMatches()
+        }
+        ensurePlayableBoard();return MatchResult(allCells,allTiles,allObstacles)
     }
 
     /** A straight 4-match sweeps its full row/column; 5+ sweeps both axes, including obstacle cells. */
