@@ -36,17 +36,26 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
         val collected=mutableMapOf<GardenTile,Int>();val cleared=mutableMapOf<GardenObstacle,Int>();val resolvedCells=linkedSetOf<Cell>()
         while(matches.cells.isNotEmpty()){
             val powered=expandPowerClear(matches);resolvedCells+=powered.cells;powered.tiles.forEach{(t,n)->collected[t]=(collected[t]?:0)+n}
-            damageObstacles(powered.cells).forEach{(o,n)->cleared[o]=(cleared[o]?:0)+n};collapseAndRefill(powered.cells);matches=findMatches()
+            damageObstacles(powered.cells).forEach{(o,n)->cleared[o]=(cleared[o]?:0)+n};collapseAndRefill(powered.cells.filterNot(::blocksSwap).toSet());matches=findMatches()
         }
         ensurePlayableBoard();return MatchResult(resolvedCells,collected,cleared)
     }
 
-    /** A straight 4-match sweeps its full row/column; 5+ sweeps both axes. */
+    /** A straight 4-match sweeps its full row/column; 5+ sweeps both axes, including obstacle cells. */
     private fun expandPowerClear(match:MatchResult):MatchResult{
-        if(match.cells.size<4)return match;val expanded=linkedSetOf<Cell>().apply{addAll(match.cells)};val rows=match.cells.groupBy{it.row};val columns=match.cells.groupBy{it.col}
-        rows.filterValues{it.size>=4}.forEach{(row,line)->for(c in 0 until level.columns)if(!blocksSwap(Cell(row,c)))expanded+=Cell(row,c);if(line.size>=5){val pivot=line[line.size/2];for(r in 0 until level.rows)if(!blocksSwap(Cell(r,pivot.col)))expanded+=Cell(r,pivot.col)}}
-        columns.filterValues{it.size>=4}.forEach{(col,line)->for(r in 0 until level.rows)if(!blocksSwap(Cell(r,col)))expanded+=Cell(r,col);if(line.size>=5){val pivot=line[line.size/2];for(c in 0 until level.columns)if(!blocksSwap(Cell(pivot.row,c)))expanded+=Cell(pivot.row,c)}}
-        return MatchResult(expanded,expanded.groupingBy{board[it.row][it.col]}.eachCount())
+        if(match.cells.size<4)return match
+        val expanded=linkedSetOf<Cell>().apply{addAll(match.cells)}
+        val rows=match.cells.groupBy{it.row};val columns=match.cells.groupBy{it.col}
+        rows.filterValues{it.size>=4}.forEach{(row,line)->
+            for(c in 0 until level.columns)expanded+=Cell(row,c)
+            if(line.size>=5){val pivot=line[line.size/2];for(r in 0 until level.rows)expanded+=Cell(r,pivot.col)}
+        }
+        columns.filterValues{it.size>=4}.forEach{(col,line)->
+            for(r in 0 until level.rows)expanded+=Cell(r,col)
+            if(line.size>=5){val pivot=line[line.size/2];for(c in 0 until level.columns)expanded+=Cell(pivot.row,c)}
+        }
+        val clearedTiles=expanded.filterNot(::blocksSwap).groupingBy{board[it.row][it.col]}.eachCount()
+        return MatchResult(expanded,clearedTiles)
     }
 
     fun findMatches():MatchResult{
@@ -69,7 +78,10 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
 
     private fun damageObstacles(matched:Set<Cell>):Map<GardenObstacle,Int>{
         val cleared=mutableMapOf<GardenObstacle,Int>();val targets=linkedSetOf<Cell>()
-        matched.filter(::inside).forEach{x->if(obstacles[x.row][x.col]==GardenObstacle.IVY)targets+=x;targets+=Cell(x.row-1,x.col);targets+=Cell(x.row+1,x.col);targets+=Cell(x.row,x.col-1);targets+=Cell(x.row,x.col+1)}
+        matched.filter(::inside).forEach{x->
+            if(obstacles[x.row][x.col]!=null)targets+=x
+            targets+=Cell(x.row-1,x.col);targets+=Cell(x.row+1,x.col);targets+=Cell(x.row,x.col-1);targets+=Cell(x.row,x.col+1)
+        }
         targets.filter(::inside).forEach{x->val o=obstacles[x.row][x.col]?:return@forEach;if(o!=GardenObstacle.IVY&&o!=GardenObstacle.CRATE&&o!=GardenObstacle.STONE)return@forEach;obstacleHits[x.row][x.col]=(obstacleHits[x.row][x.col]-1).coerceAtLeast(0);if(obstacleHits[x.row][x.col]==0){obstacles[x.row][x.col]=null;cleared[o]=(cleared[o]?:0)+1}}
         return cleared
     }
