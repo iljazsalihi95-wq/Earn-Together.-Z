@@ -20,8 +20,6 @@ android {
         applicationId = "com.weearntogether.play"
         minSdk = 24
         targetSdk = 35
-        // Every CI artifact must have a newer Android versionCode so testers can install
-        // the next APK as an update instead of Android rejecting an equal/older package.
         val ciRunNumber = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull()
         versionCode = ciRunNumber ?: 1
         versionName = if (ciRunNumber != null) "0.1.$ciRunNumber" else "0.1.0"
@@ -29,6 +27,12 @@ android {
         buildConfigField("String", "LEVELPLAY_REWARDED_AD_UNIT", "\"ui8a3ve6ggugacuo\"")
         buildConfigField("String", "LEVELPLAY_INTERSTITIAL_AD_UNIT", "\"onmeefn82676cjk8\"")
         buildConfigField("String", "LEVELPLAY_BANNER_AD_UNIT", "\"3z9a2p5o88cx61ls\"")
+    }
+    // Keep the generated GamePix catalogue in one source of truth, but package it
+    // directly into the APK. The hub can therefore open even if GitHub Pages/CDN
+    // bootstrap delivery is unavailable on a phone.
+    sourceSets {
+        getByName("main").assets.srcDir("../docs/gamepix")
     }
     buildTypes { release { isMinifyEnabled = false } }
     buildFeatures { buildConfig = true }
