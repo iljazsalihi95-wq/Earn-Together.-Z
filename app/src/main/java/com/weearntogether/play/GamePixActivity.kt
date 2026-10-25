@@ -6,13 +6,12 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
-import android.view.View
 import android.widget.*
 import org.json.JSONObject
 import java.net.HttpURLConnection
@@ -21,6 +20,7 @@ import java.util.concurrent.Executors
 
 class GamePixActivity : Activity() {
     data class Game(val title:String,val category:String,val image:String,val url:String)
+    companion object { private const val GAMEPIX_SID = "71376" }
     private val bg=0xff080e22.toInt(); private val card=0xff141f42.toInt(); private val gold=0xffffce70.toInt()
     private val worker=Executors.newFixedThreadPool(5); private val ui=Handler(Looper.getMainLooper())
     private lateinit var grid:GridLayout; private lateinit var status:TextView; private lateinit var more:Button
@@ -42,7 +42,8 @@ class GamePixActivity : Activity() {
         search.addTextChangedListener(object:TextWatcher{override fun beforeTextChanged(s:CharSequence?,a:Int,b:Int,c:Int){};override fun onTextChanged(s:CharSequence?,a:Int,b:Int,c:Int){query=s?.toString()?.trim()?.lowercase()?:"";render()};override fun afterTextChanged(e:Editable?){}})
         setContentView(ScrollView(this).apply{isFillViewport=true;addView(root)});loadPage() }
     private fun loadPage(){if(loading)return;loading=true;more.isEnabled=false;status.text="Loading GamePix page $page…";val p=page
-        worker.execute{try{val conn=(URL("https://feeds.gamepix.com/v2/json?sid=71376&pagination=96&page=$p").openConnection() as HttpURLConnection).apply{connectTimeout=15000;readTimeout=20000};val text=conn.inputStream.bufferedReader().use{it.readText()};val root=JSONObject(text);val arr=when{root.has("items")->root.getJSONArray("items");root.has("games")->root.getJSONArray("games");root.has("data")->root.getJSONArray("data");else->throw IllegalStateException("GamePix feed format changed")};val batch=ArrayList<Game>();for(i in 0 until arr.length()){val o=arr.getJSONObject(i);val play=o.optString("url");if(play.isNotBlank())batch+=Game(o.optString("title","Game"),o.optString("category","other"),o.optString("banner_image",o.optString("image")),play)};ui.post{games+=batch;page++;loading=false;more.isEnabled=batch.isNotEmpty();status.text="${games.size} GamePix games loaded";render()}}catch(e:Exception){ui.post{loading=false;more.isEnabled=true;status.text="Could not load GamePix. Tap LOAD MORE to retry."}}}}
+        worker.execute{try{val conn=(URL("https://feeds.gamepix.com/v2/json?sid=$GAMEPIX_SID&pagination=96&page=$p").openConnection() as HttpURLConnection).apply{connectTimeout=15000;readTimeout=20000};val text=conn.inputStream.bufferedReader().use{it.readText()};val root=JSONObject(text);val arr=when{root.has("items")->root.getJSONArray("items");root.has("games")->root.getJSONArray("games");root.has("data")->root.getJSONArray("data");else->throw IllegalStateException("GamePix feed format changed")};val batch=ArrayList<Game>();for(i in 0 until arr.length()){val o=arr.getJSONObject(i);val raw=o.optString("url");if(raw.isNotBlank())batch+=Game(o.optString("title","Game"),o.optString("category","other"),o.optString("banner_image",o.optString("image")),publisherUrl(raw))};ui.post{games+=batch.filterNot{candidate->games.any{it.url==candidate.url}};page++;loading=false;more.isEnabled=batch.isNotEmpty();status.text="${games.size} GamePix games loaded";render()}}catch(e:Exception){ui.post{loading=false;more.isEnabled=true;status.text="Could not load GamePix. Tap LOAD MORE to retry."}}}}
+    private fun publisherUrl(raw:String):String=try{val uri=Uri.parse(raw);if(uri.getQueryParameter("sid")==GAMEPIX_SID)raw else uri.buildUpon().appendQueryParameter("sid",GAMEPIX_SID).build().toString()}catch(_:Exception){raw}
     private fun render(){grid.removeAllViews();val filtered=games.filter{g->(category=="ALL"||g.category.equals(category,true))&&(query.isBlank()||g.title.lowercase().contains(query)||g.category.lowercase().contains(query))};status.text="${filtered.size} shown • ${games.size} loaded";filtered.forEach{addCard(it)}}
     private fun addCard(g:Game){val box=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(8),dp(8),dp(8),dp(10));background=rounded(card,20);isClickable=true;setOnClickListener{play(g)}}
         val image=ImageView(this).apply{scaleType=ImageView.ScaleType.CENTER_CROP;setBackgroundColor(0xff202b50.toInt())};box.addView(image,LinearLayout.LayoutParams(-1,dp(145)))
@@ -51,6 +52,6 @@ class GamePixActivity : Activity() {
         box.addView(TextView(this).apply{text="PLAY  ›";textSize=12f;setTextColor(gold);setTypeface(null,Typeface.BOLD);setPadding(dp(4),0,dp(4),0)})
         val width=(resources.displayMetrics.widthPixels-dp(44))/2;grid.addView(box,GridLayout.LayoutParams().apply{this.width=width;height=GridLayout.LayoutParams.WRAP_CONTENT;setMargins(dp(4),dp(5),dp(4),dp(5))});loadImage(g.image,image)}
     private fun loadImage(src:String,target:ImageView){if(src.isBlank())return;worker.execute{try{val b=URL(src).openStream().use{BitmapFactory.decodeStream(it)};ui.post{if(!isFinishing&&!isDestroyed)target.setImageBitmap(b)}}catch(_:Exception){}}}
-    private fun play(g:Game){startActivity(Intent(this,GamePixPlayerActivity::class.java).putExtra("url",g.url).putExtra("title",g.title))}
+    private fun play(g:Game){startActivity(Intent(this,GamePixPlayerActivity::class.java).putExtra("url",publisherUrl(g.url)).putExtra("title",g.title))}
     override fun onDestroy(){worker.shutdownNow();super.onDestroy()}
 }
