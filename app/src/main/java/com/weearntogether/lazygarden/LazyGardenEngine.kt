@@ -42,11 +42,31 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
         swapTiles(a,b);var matches=findMatches();if(matches.cells.isEmpty()){swapTiles(a,b);return null};movesLeft--
         val collected=mutableMapOf<GardenTile,Int>();val cleared=mutableMapOf<GardenObstacle,Int>()
         while(matches.cells.isNotEmpty()){
-            matches.tiles.forEach{(t,n)->collected[t]=(collected[t]?:0)+n}
-            clearObstaclesForMatch(matches.cells).forEach{(o,n)->cleared[o]=(cleared[o]?:0)+n}
-            collapseAndRefill(matches.cells);matches=findMatches()
+            val powered=expandPowerClear(matches)
+            powered.tiles.forEach{(t,n)->collected[t]=(collected[t]?:0)+n}
+            clearObstaclesForMatch(powered.cells).forEach{(o,n)->cleared[o]=(cleared[o]?:0)+n}
+            collapseAndRefill(powered.cells);matches=findMatches()
         }
         ensurePlayableBoard();return MatchResult(emptySet(),collected,cleared)
+    }
+
+    /** Premium match power: a straight 4-match sweeps its full row/column; 5+ sweeps both axes.
+     * This is resolved inside the normal cascade, so power clears can break adjacent blockers and
+     * feed objectives without introducing fake rewards or a separate consumable economy. */
+    private fun expandPowerClear(match:MatchResult):MatchResult{
+        if(match.cells.size<4)return match
+        val expanded=linkedSetOf<Cell>().apply{addAll(match.cells)}
+        val rows=match.cells.groupBy{it.row}
+        val columns=match.cells.groupBy{it.col}
+        rows.filterValues{it.size>=4}.forEach{(row,line)->
+            for(c in 0 until level.columns)if(!blocksSwap(Cell(row,c)))expanded+=Cell(row,c)
+            if(line.size>=5){val pivot=line[line.size/2];for(r in 0 until level.rows)if(!blocksSwap(Cell(r,pivot.col)))expanded+=Cell(r,pivot.col)}
+        }
+        columns.filterValues{it.size>=4}.forEach{(col,line)->
+            for(r in 0 until level.rows)if(!blocksSwap(Cell(r,col)))expanded+=Cell(r,col)
+            if(line.size>=5){val pivot=line[line.size/2];for(c in 0 until level.columns)if(!blocksSwap(Cell(pivot.row,c)))expanded+=Cell(pivot.row,c)}
+        }
+        return MatchResult(expanded,expanded.groupingBy{board[it.row][it.col]}.eachCount())
     }
 
     fun findMatches():MatchResult{
