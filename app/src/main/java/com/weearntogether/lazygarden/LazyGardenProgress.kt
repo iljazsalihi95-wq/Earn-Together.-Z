@@ -11,7 +11,8 @@ data class LazyGardenProgress(
     val clearedObstacles: Map<GardenObstacle, Int> = emptyMap(),
     val boardState: String = "",
     val obstacleState: String = "",
-    val shuffleBoosters: Int = 3
+    val shuffleBoosters: Int = 3,
+    val obstacleHitState: String = ""
 )
 
 class LazyGardenProgressStore(context: Context) {
@@ -23,6 +24,7 @@ class LazyGardenProgressStore(context: Context) {
         val maxMoves = LazyGardenLevels.get(safeLevel).moves
         val safeBoard = progress.boardState.takeIf { isValidBoardState(it, safeLevel) }.orEmpty()
         val safeObstacles = progress.obstacleState.takeIf { isValidObstacleState(it, safeLevel) }.orEmpty()
+        val safeObstacleHits = progress.obstacleHitState.takeIf { isValidObstacleHitState(it, safeLevel) }.orEmpty()
         val hasCompleteSession = safeBoard.isNotEmpty() && safeObstacles.isNotEmpty()
         val editor = prefs.edit()
             .putInt("save_version", SAVE_VERSION)
@@ -32,6 +34,7 @@ class LazyGardenProgressStore(context: Context) {
             .putInt("moves", if (hasCompleteSession) progress.movesLeft.coerceIn(0, maxMoves) else maxMoves)
             .putString("board_state", if (hasCompleteSession) safeBoard else "")
             .putString("obstacle_state", if (hasCompleteSession) safeObstacles else "")
+            .putString("obstacle_hit_state", if (hasCompleteSession) safeObstacleHits else "")
             .putInt("shuffle_boosters", progress.shuffleBoosters.coerceIn(0, MAX_SHUFFLE_BOOSTERS))
         GardenTile.entries.forEach { tile -> editor.putInt("tile_${tile.name}", if (hasCompleteSession) (progress.collected[tile] ?: 0).coerceAtLeast(0) else 0) }
         GardenObstacle.entries.forEach { obstacle -> editor.putInt("obstacle_${obstacle.name}", if (hasCompleteSession) (progress.clearedObstacles[obstacle] ?: 0).coerceAtLeast(0) else 0) }
@@ -45,8 +48,10 @@ class LazyGardenProgressStore(context: Context) {
         val sameSession = prefs.getInt("session_level", level) == level
         val storedBoard = if (sameSession) prefs.getString("board_state", "") ?: "" else ""
         val storedObstacles = if (sameSession) prefs.getString("obstacle_state", "") ?: "" else ""
+        val storedObstacleHits = if (sameSession) prefs.getString("obstacle_hit_state", "") ?: "" else ""
         val boardState = storedBoard.takeIf { isValidBoardState(it, level) }.orEmpty()
         val obstacleState = storedObstacles.takeIf { isValidObstacleState(it, level) }.orEmpty()
+        val obstacleHitState = storedObstacleHits.takeIf { isValidObstacleHitState(it, level) }.orEmpty()
         val resumable = sameSession && boardState.isNotEmpty() && obstacleState.isNotEmpty()
         return LazyGardenProgress(
             level = level,
@@ -58,12 +63,13 @@ class LazyGardenProgressStore(context: Context) {
             clearedObstacles = GardenObstacle.entries.associateWith { obstacle -> if (resumable) prefs.getInt("obstacle_${obstacle.name}", 0).coerceAtLeast(0) else 0 },
             boardState = if (resumable) boardState else "",
             obstacleState = if (resumable) obstacleState else "",
-            shuffleBoosters = prefs.getInt("shuffle_boosters", 3).coerceIn(0, MAX_SHUFFLE_BOOSTERS)
+            shuffleBoosters = prefs.getInt("shuffle_boosters", 3).coerceIn(0, MAX_SHUFFLE_BOOSTERS),
+            obstacleHitState = if (resumable) obstacleHitState else ""
         )
     }
 
     fun clearSessionBoard() {
-        val editor = prefs.edit().remove("board_state").remove("obstacle_state").remove("session_level").remove("moves")
+        val editor = prefs.edit().remove("board_state").remove("obstacle_state").remove("obstacle_hit_state").remove("session_level").remove("moves")
         GardenTile.entries.forEach { editor.remove("tile_${it.name}") }
         GardenObstacle.entries.forEach { editor.remove("obstacle_${it.name}") }
         editor.apply()
@@ -96,9 +102,6 @@ class LazyGardenProgressStore(context: Context) {
     }
     fun isBuildTaskCompleted(level: Int): Boolean = level in 1..LazyGardenLevels.count && prefs.getBoolean("build_task_$level", false)
 
-    /** Engine restoreState consumes exactly one digit per cell. Accepting oversized/truncated
-     * strings made a save look resumable even though the engine rejected it, leaving stale goals
-     * and moves attached to a freshly generated board. Validate the serialized format strictly. */
     private fun isValidBoardState(state: String, level: Int): Boolean {
         val spec = LazyGardenLevels.get(level)
         val cells = spec.rows * spec.columns
@@ -112,8 +115,19 @@ class LazyGardenProgressStore(context: Context) {
         return state.length == cells && state.all { it in '0'..'3' }
     }
 
+    private fun isValidObstacleHitState(state: String, level: Int): Boolean {
+        if (state.isEmpty()) return false
+        val spec = LazyGardenLevels.get(level)
+        val rows = state.split(',')
+        if (rows.size != spec.rows) return false
+        return rows.all { row ->
+            val values = row.split('.')
+            values.size == spec.columns && values.all { value -> value.toIntOrNull()?.let { it in 0..3 } == true }
+        }
+    }
+
     companion object {
-        private const val SAVE_VERSION = 4
+        private const val SAVE_VERSION = 5
         private const val MAX_SHUFFLE_BOOSTERS = 99
     }
 }
