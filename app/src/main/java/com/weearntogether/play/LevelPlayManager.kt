@@ -24,6 +24,9 @@ class LevelPlayManager(
         @Volatile private var active: LevelPlayManager? = null
         fun showLevelCompleteVideo(): Boolean = active?.showInterstitialAtNaturalBreak() ?: false
     }
+    private var disposed=false
+    private var rewardFinished:(()->Unit)?=null
+    private var breakFinished:(()->Unit)?=null
     private var initialized=false
     private var rewarded:LevelPlayRewardedAd?=null
     private var interstitial:LevelPlayInterstitialAd?=null
@@ -31,12 +34,12 @@ class LevelPlayManager(
     private var lastInterstitialAt=0L
     private val minInterstitialGapMs=15_000L
 
-    fun initialize(){
-        active=this
+    fun initialize(makeActive:Boolean=true){
+        if(makeActive)active=this
         if(initialized)return
         val request=LevelPlayInitRequest.Builder(BuildConfig.LEVELPLAY_APP_KEY).withUserId(userId).build()
         LevelPlay.init(activity,request,object:LevelPlayInitListener{
-            override fun onInitSuccess(configuration:LevelPlayConfiguration){initialized=true;createRewarded();createInterstitial();status("LevelPlay ready")}
+            override fun onInitSuccess(configuration:LevelPlayConfiguration){if(disposed)return;initialized=true;createRewarded();createInterstitial();status("LevelPlay ready")}
             override fun onInitFailed(error:LevelPlayInitError){status("LevelPlay unavailable")}
         })
     }
@@ -46,12 +49,12 @@ class LevelPlayManager(
                 override fun onAdLoaded(adInfo:LevelPlayAdInfo){status("Rewarded ready")}
                 override fun onAdLoadFailed(error:LevelPlayAdError){status("Rewarded unavailable")}
                 override fun onAdDisplayed(adInfo:LevelPlayAdInfo){}
-                override fun onAdDisplayFailed(error:LevelPlayAdError,adInfo:LevelPlayAdInfo){pendingGameplayReward=null;ad.loadAd()}
+                override fun onAdDisplayFailed(error:LevelPlayAdError,adInfo:LevelPlayAdInfo){pendingGameplayReward=null;rewardFinished?.invoke();rewardFinished=null;if(!disposed)ad.loadAd()}
                 override fun onAdClicked(adInfo:LevelPlayAdInfo){}
-                override fun onAdClosed(adInfo:LevelPlayAdInfo){ad.loadAd()}
+                override fun onAdClosed(adInfo:LevelPlayAdInfo){pendingGameplayReward=null;rewardFinished?.invoke();rewardFinished=null;if(!disposed)ad.loadAd()}
                 override fun onAdInfoChanged(adInfo:LevelPlayAdInfo){}
                 override fun onAdRewarded(reward:LevelPlayReward,adInfo:LevelPlayAdInfo){pendingGameplayReward?.invoke();pendingGameplayReward=null}
-            });ad.loadAd()
+            });if(!disposed)ad.loadAd()
         }
     }
     private fun createInterstitial(){
@@ -60,19 +63,23 @@ class LevelPlayManager(
                 override fun onAdLoaded(adInfo:LevelPlayAdInfo){status("Interstitial ready")}
                 override fun onAdLoadFailed(error:LevelPlayAdError){status("Interstitial unavailable")}
                 override fun onAdDisplayed(adInfo:LevelPlayAdInfo){lastInterstitialAt=System.currentTimeMillis()}
-                override fun onAdDisplayFailed(error:LevelPlayAdError,adInfo:LevelPlayAdInfo){ad.loadAd()}
+                override fun onAdDisplayFailed(error:LevelPlayAdError,adInfo:LevelPlayAdInfo){breakFinished?.invoke();breakFinished=null;if(!disposed)ad.loadAd()}
                 override fun onAdClicked(adInfo:LevelPlayAdInfo){}
-                override fun onAdClosed(adInfo:LevelPlayAdInfo){ad.loadAd()}
+                override fun onAdClosed(adInfo:LevelPlayAdInfo){breakFinished?.invoke();breakFinished=null;if(!disposed)ad.loadAd()}
                 override fun onAdInfoChanged(adInfo:LevelPlayAdInfo){}
-            });ad.loadAd()
+            });if(!disposed)ad.loadAd()
         }
     }
-    fun showRewardedForGameplay(onReward:()->Unit):Boolean{val ad=rewarded?:return false;if(!ad.isAdReady)return false;pendingGameplayReward=onReward;ad.showAd(activity);return true}
+    fun showRewardedForGameplay(onReward:()->Unit):Boolean = showRewardedForGameplayWithCompletion(onReward,{})
+    fun showRewardedForGameplayWithCompletion(onReward:()->Unit,onFinished:()->Unit):Boolean{if(disposed||rewardFinished!=null)return false;val ad=rewarded?:return false;if(!ad.isAdReady)return false;pendingGameplayReward=onReward;rewardFinished=onFinished;ad.showAd(activity);return true}
     /** Called only at genuine game/level breaks. It attempts a video every completed level when inventory is ready. */
-    fun showInterstitialAtNaturalBreak():Boolean{
+    fun showInterstitialAtNaturalBreak(onFinished:(()->Unit)?=null):Boolean{
+        if(disposed||breakFinished!=null)return false;
         if(System.currentTimeMillis()-lastInterstitialAt<minInterstitialGapMs)return false
         val ad=interstitial?:return false
-        if(!ad.isAdReady){ad.loadAd();return false}
-        ad.showAd(activity);return true
+        if(!ad.isAdReady){if(!disposed)ad.loadAd();return false}
+        breakFinished=onFinished;ad.showAd(activity);return true
     }
+    fun dispose(){disposed=true;pendingGameplayReward=null;rewardFinished=null;breakFinished=null;if(active===this)active=null}
 }
+

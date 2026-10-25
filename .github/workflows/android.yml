@@ -21,6 +21,8 @@ jobs:
         run: |
           node backend/tests/google-auth.test.cjs
           node backend/tests/wallet.test.cjs
+      - name: Test bundled HTML5 game mechanics
+        run: node --test tests/html5-games.test.cjs
       - name: Restore persistent Android signing key when configured
         env:
           KEYSTORE_BASE64: ${{ secrets.WET_SIGNING_KEYSTORE_BASE64 }}
