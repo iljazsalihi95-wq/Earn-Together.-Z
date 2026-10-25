@@ -10,7 +10,14 @@ object LazyGardenLevels {
  private const val CAMPAIGN_LEVELS=250
  private fun obstacle(type:GardenObstacle,target:Int)=LazyGardenObstacleGoal(type,target)
  private val authored=buildList {
-  fun addStage(n:Int,m:Int,r:Int,a:Pair<GardenTile,Int>,b:Pair<GardenTile,Int>,c:Pair<GardenTile,Int>?=null,vararg obs:Pair<GardenObstacle,Int>){val g=if(c==null)listOf(a,b)else listOf(a,b,c);add(LazyGardenLevel(n,8,8,m,g.map{LazyGardenGoal(it.first,it.second)},r,obs.map{obstacle(it.first,it.second)}))}
+  fun addStage(n:Int,m:Int,r:Int,a:Pair<GardenTile,Int>,b:Pair<GardenTile,Int>,c:Pair<GardenTile,Int>?=null,vararg obs:Pair<GardenObstacle,Int>){
+   val g=if(c==null)listOf(a,b)else listOf(a,b,c)
+   // Campaign chapters now vary the playable footprint instead of repeating one 8x8 board for 250 stages.
+   // Narrow boards emphasize vertical planning; short boards emphasize horizontal planning; finales stay 8x8.
+   val step=(n-1)%10
+   val (rows,columns)=when(step){1,6->8 to 7;3,8->7 to 8;else->8 to 8}
+   add(LazyGardenLevel(n,rows,columns,m,g.map{LazyGardenGoal(it.first,it.second)},r,obs.map{obstacle(it.first,it.second)}))
+  }
   val chapters=listOf(arrayOf(GardenTile.LEAF,GardenTile.FLOWER,GardenTile.ROSE,GardenTile.BERRY,GardenTile.PEAR,GardenTile.WATER),arrayOf(GardenTile.LEAF,GardenTile.PEAR,GardenTile.FLOWER,GardenTile.WATER,GardenTile.BERRY,GardenTile.ROSE),arrayOf(GardenTile.FLOWER,GardenTile.BERRY,GardenTile.ROSE,GardenTile.LEAF,GardenTile.WATER,GardenTile.PEAR),arrayOf(GardenTile.LEAF,GardenTile.ROSE,GardenTile.BERRY,GardenTile.PEAR,GardenTile.FLOWER,GardenTile.WATER),arrayOf(GardenTile.LEAF,GardenTile.FLOWER,GardenTile.BERRY,GardenTile.ROSE,GardenTile.PEAR,GardenTile.WATER),arrayOf(GardenTile.LEAF,GardenTile.PEAR,GardenTile.FLOWER,GardenTile.BERRY,GardenTile.ROSE,GardenTile.WATER))
   var n=1;chapters.forEachIndexed{ci,t->val chapter=ci+1;repeat(10){step->val finale=step==9;val pressure=step==4||step==7||finale;val moves=when{finale->23;pressure->21+(chapter%2);else->24-(step%3)};val base=18+chapter*2+step/2;val goals=mutableListOf(t[(step+chapter)%6] to(base+4),t[(step*2+1)%6] to(base+2));if(pressure)goals+=t[(step*3+2)%6] to(12+chapter);val obs=mutableListOf<Pair<GardenObstacle,Int>>();if(n>=6)obs+=GardenObstacle.CRATE to(2+chapter+step/4);if(n>=8&&(step%2==0||pressure))obs+=GardenObstacle.IVY to(2+chapter/2+step/5);if(n>=41&&(step==1||step==4||step==7||finale))obs+=GardenObstacle.STONE to(2+(chapter-4).coerceAtLeast(0)+if(finale)1 else 0);addStage(n,moves,45+n*9,goals[0],goals[1],goals.getOrNull(2),*obs.toTypedArray());n++}}
   val tiles=GardenTile.entries
