@@ -21,6 +21,7 @@ class LazyGardenActivity : Activity() {
         board.loadLevel(LazyGardenLevels.get(currentLevel))
         val hasSnapshot=boardState.isNotEmpty()&&obstacleState.isNotEmpty()
         val snapshotRestored=hasSnapshot&&board.engine.restoreState(boardState,obstacleState,obstacleHitState.takeIf{it.isNotEmpty()})
+        if(hasSnapshot&&!snapshotRestored)board.loadLevel(LazyGardenLevels.get(currentLevel))
         collected.clear();clearedObstacles.clear()
         GardenTile.entries.forEach{collected[it]=if(snapshotRestored)restored[it]?:0 else 0}
         GardenObstacle.entries.forEach{clearedObstacles[it]=if(snapshotRestored)restoredObstacles[it]?:0 else 0}
