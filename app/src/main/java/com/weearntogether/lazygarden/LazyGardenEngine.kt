@@ -49,8 +49,6 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
         ensurePlayableBoard();return MatchResult(emptySet(),collected,cleared)
     }
 
-    /** Blocking crates/stones split a row/column into independent playable segments. They can
-     * never bridge two gems into a false match; ivy remains matchable because it covers a gem. */
     fun findMatches():MatchResult{
         val cells=linkedSetOf<Cell>()
         fun blocked(r:Int,c:Int)=obstacles[r][c]==GardenObstacle.STONE||obstacles[r][c]==GardenObstacle.CRATE
@@ -86,23 +84,37 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
         return null
     }
     fun hasValidMove():Boolean=findHint()!=null
-    /** Seed every requested obstacle exactly once when board capacity allows it. Earlier versions
-     * only used the 6x6 inner area, which silently truncated dense late-campaign objectives and
-     * could make a level mathematically impossible. The reserved 2x3 corner guarantees a safe
-     * area for the emergency move seeder without deleting objective obstacles. */
+
     private fun seedObstacles(){
         val reserved=buildSet{for(r in 0..1)for(c in 0..2)add(Cell(r,c))}
         val candidates=mutableListOf<Cell>()
         for(r in 0 until level.rows)for(c in 0 until level.columns){val cell=Cell(r,c);if(cell !in reserved)candidates+=cell}
-        candidates.shuffle(random)
+        val centerR=(level.rows-1)/2.0
+        val centerC=(level.columns-1)/2.0
+        val pattern=level.number%5
+        val ordered=when(pattern){
+            0->candidates.sortedWith(compareBy<Cell>({abs(it.row-centerR)+abs(it.col-centerC)},{it.row},{it.col}))
+            1->candidates.sortedWith(compareBy<Cell>({abs(it.row-it.col)},{it.row+it.col},{it.row}))
+            2->candidates.sortedWith(compareBy<Cell>({abs((level.columns-1-it.col)-it.row)},{it.row+it.col},{it.col}))
+            3->candidates.sortedWith(compareBy<Cell>({if((it.row+it.col)%2==0)0 else 1},{abs(it.row-centerR)+abs(it.col-centerC)},{it.row},{it.col}))
+            else->candidates.sortedWith(compareBy<Cell>({minOf(it.row,it.col,level.rows-1-it.row,level.columns-1-it.col)},{it.row},{it.col}))
+        }.toMutableList()
         val requested=level.obstacleGoals.sumOf{it.target.coerceAtLeast(0)}
-        require(requested<=candidates.size){"Level ${level.number} requests $requested obstacles but only ${candidates.size} cells are available"}
+        require(requested<=ordered.size){"Level ${level.number} requests $requested obstacles but only ${ordered.size} cells are available"}
         var cursor=0
-        level.obstacleGoals.forEach{goal->repeat(goal.target.coerceAtLeast(0)){val x=candidates[cursor++];obstacles[x.row][x.col]=goal.obstacle}}
+        level.obstacleGoals.forEach{goal->
+            repeat(goal.target.coerceAtLeast(0)){
+                val x=ordered[cursor++]
+                obstacles[x.row][x.col]=goal.obstacle
+            }
+            if(cursor<ordered.size){
+                val tail=ordered.subList(cursor,ordered.size)
+                tail.shuffle(random)
+            }
+        }
         ensurePlayableBoard()
     }
-    /** Ivy is removed by matching the tile under it. Crates and stones occupy a cell and are
-     * removed by a match next to them. This gives the three obstacle families different tactics. */
+
     private fun clearObstaclesForMatch(matched:Set<Cell>):Map<GardenObstacle,Int>{
         val cleared=mutableMapOf<GardenObstacle,Int>();val adjacent=linkedSetOf<Cell>()
         matched.forEach{x->adjacent+=Cell(x.row-1,x.col);adjacent+=Cell(x.row+1,x.col);adjacent+=Cell(x.row,x.col-1);adjacent+=Cell(x.row,x.col+1)}
@@ -117,8 +129,6 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
     private fun ensurePlayableBoard(){if(hasValidMove())return;var attempts=0;do{fillBoardWithoutImmediateMatches();attempts++}while(!hasValidMove()&&attempts<MAX_RESHUFFLE_ATTEMPTS);if(!hasValidMove())seedGuaranteedMove()}
     private fun seedGuaranteedMove(){if(level.rows<2||level.columns<3)return;for(r in 0..1)for(c in 0..2)obstacles[r][c]=null;board[0][0]=GardenTile.LEAF;board[0][1]=GardenTile.FLOWER;board[0][2]=GardenTile.LEAF;board[1][0]=GardenTile.ROSE;board[1][1]=GardenTile.LEAF;board[1][2]=GardenTile.BERRY}
 
-    /** Gravity respects solid blockers. Each column is collapsed as independent playable
-     * segments separated by crates/stones, so gems never fall through a physical obstacle. */
     private fun collapseAndRefill(matched:Set<Cell>){
         for(c in 0 until level.columns){
             var segmentBottom=level.rows-1
