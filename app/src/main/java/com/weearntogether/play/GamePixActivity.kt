@@ -3,7 +3,7 @@ package com.weearntogether.play
 import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
+import android.webkit.CookieManager
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -13,10 +13,8 @@ import android.webkit.WebViewClient
 
 class GamePixActivity : Activity() {
     companion object {
-        // Serve the existing generated GamePix catalogue directly from the repository CDN.
-        // This avoids depending on GitHub Pages being enabled for the repository.
-        const val CATALOG_URL = "https://cdn.jsdelivr.net/gh/iljazsalihi95-wq/Earn-Together.-Z@main/docs/gamepix/index.html"
-        private const val PAGES_FALLBACK_URL = "https://iljazsalihi95-wq.github.io/Earn-Together.-Z/gamepix/"
+        private const val LOCAL_CATALOG_URL = "file:///android_asset/index.html"
+        private const val NETWORK_FALLBACK_URL = "https://cdn.jsdelivr.net/gh/iljazsalihi95-wq/Earn-Together.-Z@main/docs/gamepix/index.html"
     }
 
     private lateinit var webView: WebView
@@ -26,24 +24,34 @@ class GamePixActivity : Activity() {
         super.onCreate(savedInstanceState)
         window.statusBarColor = Color.BLACK
         window.navigationBarColor = Color.BLACK
+
+        CookieManager.getInstance().setAcceptCookie(true)
         webView = WebView(this).apply {
             setBackgroundColor(Color.BLACK)
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
+            settings.databaseEnabled = true
             settings.mediaPlaybackRequiresUserGesture = false
             settings.cacheMode = WebSettings.LOAD_DEFAULT
-            settings.mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
+            settings.mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
+            settings.allowFileAccess = true
+            settings.allowContentAccess = true
+            settings.javaScriptCanOpenWindowsAutomatically = true
+            CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
+
             webViewClient = object : WebViewClient() {
                 override fun onReceivedError(view: WebView, request: WebResourceRequest, error: WebResourceError) {
                     super.onReceivedError(view, request, error)
+                    // The catalogue itself is bundled in the APK. Only fall back to the
+                    // network copy if that main local document somehow cannot be opened.
                     if (request.isForMainFrame && !fallbackAttempted) {
                         fallbackAttempted = true
-                        view.loadUrl(PAGES_FALLBACK_URL)
+                        view.loadUrl(NETWORK_FALLBACK_URL)
                     }
                 }
             }
             webChromeClient = WebChromeClient()
-            loadUrl(CATALOG_URL)
+            loadUrl(LOCAL_CATALOG_URL)
         }
         setContentView(webView)
     }
