@@ -12,7 +12,18 @@ import kotlin.random.Random
 class BlockPuzzleView(context: Context, private val onNaturalBreak: (() -> Unit)? = null) : View(context) {
     private val p=Paint(Paint.ANTI_ALIAS_FLAG); private val board=Array(8){IntArray(8)}
     private val palette=intArrayOf(0xff35c6fa.toInt(),0xffa478ff.toInt(),0xffffc857.toInt(),0xff49e1aa.toInt())
-    private val shapes=listOf(arrayOf(0 to 0),arrayOf(0 to 0,1 to 0),arrayOf(0 to 0,1 to 0,2 to 0),arrayOf(0 to 0,0 to 1),arrayOf(0 to 0,1 to 0,0 to 1),arrayOf(0 to 0,1 to 0,0 to 1,1 to 1),arrayOf(0 to 0,1 to 0,2 to 0,1 to 1),arrayOf(0 to 0,0 to 1,0 to 2),arrayOf(0 to 0,1 to 0,2 to 0,0 to 1),arrayOf(0 to 0,1 to 0,2 to 0,3 to 0),arrayOf(0 to 0,0 to 1,0 to 2,1 to 2))
+    private val shapes=listOf(
+        arrayOf(0 to 0), arrayOf(0 to 0,1 to 0), arrayOf(0 to 0,1 to 0,2 to 0), arrayOf(0 to 0,0 to 1),
+        arrayOf(0 to 0,1 to 0,0 to 1), arrayOf(0 to 0,1 to 0,0 to 1,1 to 1), arrayOf(0 to 0,1 to 0,2 to 0,1 to 1),
+        arrayOf(0 to 0,0 to 1,0 to 2), arrayOf(0 to 0,1 to 0,2 to 0,0 to 1), arrayOf(0 to 0,1 to 0,2 to 0,3 to 0),
+        arrayOf(0 to 0,0 to 1,0 to 2,1 to 2),
+        arrayOf(0 to 0,1 to 0,2 to 0,3 to 0,4 to 0),
+        arrayOf(0 to 0,0 to 1,0 to 2,0 to 3,0 to 4),
+        arrayOf(0 to 0,1 to 0,2 to 0,1 to 1,1 to 2),
+        arrayOf(0 to 0,0 to 1,0 to 2,1 to 2,2 to 2),
+        arrayOf(0 to 0,1 to 0,1 to 1,2 to 1,2 to 2),
+        arrayOf(1 to 0,0 to 1,1 to 1,2 to 1,1 to 2)
+    )
     private val prefs=ProgressPreferences.open(context,"block_puzzle")
     private var offers=MutableList(3){Random.nextInt(shapes.size)};private var selected=0;private var score=0;private var best=prefs.getInt("best",0);private var level=prefs.getInt("level",1).coerceIn(1,250);private var totalLines=prefs.getInt("total_lines",0);private var levelLines=prefs.getInt("level_lines",0);private var combo=prefs.getInt("combo",0);private var bestCombo=prefs.getInt("best_combo",0);private var reshuffles=prefs.getInt("reshuffles",1).coerceAtLeast(0);private var gameOver=false;private var dragging=false;private var previewX=-1;private var previewY=-1
     private var flashUntil=0L;private var flashLines=0;private var comboUntil=0L;private var placementUntil=0L;private var placementX=-1;private var placementY=-1;private var placementSize=0;private var invalidUntil=0L
