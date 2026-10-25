@@ -20,9 +20,13 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
     private fun blocksSwap(cell:Cell):Boolean=when(obstacleAt(cell)){GardenObstacle.CRATE,GardenObstacle.STONE->true;else->false}
     fun encodeBoard():String=board.joinToString(""){row->row.joinToString(""){it.ordinal.toString()}}
     fun encodeObstacles():String=obstacles.joinToString(""){row->row.joinToString(""){cell->when(cell){null->"0";GardenObstacle.CRATE->"1";GardenObstacle.IVY->"2";GardenObstacle.STONE->"3"}}}
-    fun restoreState(boardState:String,obstacleState:String):Boolean{
-        val cells=level.rows*level.columns;if(boardState.length!=cells||obstacleState.length!=cells)return false;var i=0
-        for(r in 0 until level.rows)for(c in 0 until level.columns){val tile=boardState[i].digitToIntOrNull()?.let{GardenTile.entries.getOrNull(it)}?:return false;val obstacle=when(obstacleState[i]){'0'->null;'1'->GardenObstacle.CRATE;'2'->GardenObstacle.IVY;'3'->GardenObstacle.STONE;else->return false};board[r][c]=tile;obstacles[r][c]=obstacle;obstacleHits[r][c]=durability(obstacle);i++}
+    fun encodeObstacleHits():String=obstacleHits.joinToString(","){row->row.joinToString(".")}
+    fun restoreState(boardState:String,obstacleState:String,obstacleHitState:String?=null):Boolean{
+        val cells=level.rows*level.columns;if(boardState.length!=cells||obstacleState.length!=cells)return false
+        val savedHits=obstacleHitState?.split(',')?.takeIf{it.size==level.rows}?.map{row->row.split('.').mapNotNull(String::toIntOrNull).takeIf{it.size==level.columns}?:return@map emptyList()}
+        val validSavedHits=savedHits?.takeIf{rows->rows.size==level.rows&&rows.all{it.size==level.columns}}
+        var i=0
+        for(r in 0 until level.rows)for(c in 0 until level.columns){val tile=boardState[i].digitToIntOrNull()?.let{GardenTile.entries.getOrNull(it)}?:return false;val obstacle=when(obstacleState[i]){'0'->null;'1'->GardenObstacle.CRATE;'2'->GardenObstacle.IVY;'3'->GardenObstacle.STONE;else->return false};board[r][c]=tile;obstacles[r][c]=obstacle;val max=durability(obstacle);obstacleHits[r][c]=if(obstacle==null)0 else validSavedHits?.get(r)?.get(c)?.coerceIn(1,max)?:max;i++}
         if(findMatches().cells.isNotEmpty()||!hasValidMove())return false;return true
     }
 
