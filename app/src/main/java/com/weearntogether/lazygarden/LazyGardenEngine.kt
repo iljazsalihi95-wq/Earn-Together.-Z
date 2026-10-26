@@ -12,8 +12,24 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
     val board:Array<Array<GardenTile>> = Array(level.rows){Array(level.columns){GardenTile.LEAF}}
     val obstacles:Array<Array<GardenObstacle?>> = Array(level.rows){arrayOfNulls(level.columns)}
     private val obstacleHits:Array<IntArray> = Array(level.rows){IntArray(level.columns)}
+    private val activeTiles:List<GardenTile> = buildActiveTilePool()
     var movesLeft:Int=level.moves;private set
     init{fillPlayableBoard();seedObstacles()}
+
+    /**
+     * Campaign colour pressure grows with the player. Early levels use four colours,
+     * mid-campaign five and advanced chapters all six. Every objective colour is always
+     * included, so a generated level can never ask the player to collect an unavailable tile.
+     */
+    private fun buildActiveTilePool():List<GardenTile>{
+        val desired=when{level.number<=20->4;level.number<=60->5;else->GardenTile.entries.size}
+        val pool=linkedSetOf<GardenTile>()
+        level.goals.forEach{pool+=it.tile}
+        val rotation=(level.number/10)%GardenTile.entries.size
+        repeat(GardenTile.entries.size){pool+=GardenTile.entries[(it+rotation)%GardenTile.entries.size]}
+        return pool.take(maxOf(desired,level.goals.map{it.tile}.distinct().size))
+    }
+    private fun randomTile():GardenTile=activeTiles[random.nextInt(activeTiles.size)]
 
     fun restoreMoves(savedMoves:Int){movesLeft=savedMoves.coerceIn(0,level.moves)}
     fun shuffleBoard():Boolean{if(movesLeft<=0)return false;val old=encodeBoard();var attempts=0;do{fillBoardWithoutImmediateMatches();attempts++}while((!hasValidMove()||encodeBoard()==old)&&attempts<MAX_RESHUFFLE_ATTEMPTS);if(!hasValidMove())seedGuaranteedMove();return hasValidMove()}
@@ -73,29 +89,9 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
 
     fun findMatches():MatchResult{
         val cells=linkedSetOf<Cell>()
-        fun blocked(r:Int,c:Int):Boolean {
-            return obstacles[r][c]==GardenObstacle.STONE || obstacles[r][c]==GardenObstacle.CRATE
-        }
-        for(r in board.indices){
-            var start=0
-            while(start<level.columns){
-                if(blocked(r,start)){start++;continue}
-                var end=start+1
-                while(end<level.columns&&!blocked(r,end)&&board[r][end]==board[r][start])end++
-                if(end-start>=3)for(c in start until end)cells+=Cell(r,c)
-                start=end
-            }
-        }
-        for(c in 0 until level.columns){
-            var start=0
-            while(start<level.rows){
-                if(blocked(start,c)){start++;continue}
-                var end=start+1
-                while(end<level.rows&&!blocked(end,c)&&board[end][c]==board[start][c])end++
-                if(end-start>=3)for(r in start until end)cells+=Cell(r,c)
-                start=end
-            }
-        }
+        fun blocked(r:Int,c:Int):Boolean { return obstacles[r][c]==GardenObstacle.STONE || obstacles[r][c]==GardenObstacle.CRATE }
+        for(r in board.indices){var start=0;while(start<level.columns){if(blocked(r,start)){start++;continue};var end=start+1;while(end<level.columns&&!blocked(r,end)&&board[r][end]==board[r][start])end++;if(end-start>=3)for(c in start until end)cells+=Cell(r,c);start=end}}
+        for(c in 0 until level.columns){var start=0;while(start<level.rows){if(blocked(start,c)){start++;continue};var end=start+1;while(end<level.rows&&!blocked(end,c)&&board[end][c]==board[start][c])end++;if(end-start>=3)for(r in start until end)cells+=Cell(r,c);start=end}}
         return MatchResult(cells,cells.groupingBy{board[it.row][it.col]}.eachCount())
     }
     fun findHint():Pair<Cell,Cell>?{if(movesLeft<=0)return null;for(r in 0 until level.rows)for(c in 0 until level.columns){val a=Cell(r,c);if(blocksSwap(a))continue;if(c+1<level.columns){val b=Cell(r,c+1);if(!blocksSwap(b)&&createsMatch(a,b))return a to b};if(r+1<level.rows){val b=Cell(r+1,c);if(!blocksSwap(b)&&createsMatch(a,b))return a to b}};return null}
@@ -106,10 +102,10 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
     private fun createsMatch(a:Cell,b:Cell):Boolean{swapTiles(a,b);val v=findMatches().cells.isNotEmpty();swapTiles(a,b);return v}
     private fun swapTiles(a:Cell,b:Cell){val x=board[a.row][a.col];board[a.row][a.col]=board[b.row][b.col];board[b.row][b.col]=x}
     private fun fillPlayableBoard(){var attempts=0;do{fillBoardWithoutImmediateMatches();attempts++}while(!hasValidMove()&&attempts<MAX_RESHUFFLE_ATTEMPTS);if(!hasValidMove())seedGuaranteedMove()}
-    private fun fillBoardWithoutImmediateMatches(){for(r in board.indices)for(c in board[r].indices){do{board[r][c]=GardenTile.entries[random.nextInt(GardenTile.entries.size)]}while((c>=2&&board[r][c]==board[r][c-1]&&board[r][c]==board[r][c-2])||(r>=2&&board[r][c]==board[r-1][c]&&board[r][c]==board[r-2][c]))}}
+    private fun fillBoardWithoutImmediateMatches(){for(r in board.indices)for(c in board[r].indices){do{board[r][c]=randomTile()}while((c>=2&&board[r][c]==board[r][c-1]&&board[r][c]==board[r][c-2])||(r>=2&&board[r][c]==board[r-1][c]&&board[r][c]==board[r-2][c]))}}
     private fun ensurePlayableBoard(){if(hasValidMove())return;var attempts=0;do{fillBoardWithoutImmediateMatches();attempts++}while(!hasValidMove()&&attempts<MAX_RESHUFFLE_ATTEMPTS);if(!hasValidMove())seedGuaranteedMove()}
-    private fun seedGuaranteedMove(){if(level.rows<2||level.columns<3)return;for(r in 0..1)for(c in 0..2){obstacles[r][c]=null;obstacleHits[r][c]=0};board[0][0]=GardenTile.LEAF;board[0][1]=GardenTile.FLOWER;board[0][2]=GardenTile.LEAF;board[1][0]=GardenTile.ROSE;board[1][1]=GardenTile.LEAF;board[1][2]=GardenTile.BERRY}
-    private fun collapseAndRefill(matched:Set<Cell>){for(c in 0 until level.columns){var segmentBottom=level.rows-1;while(segmentBottom>=0){if(blocksSwap(Cell(segmentBottom,c))){segmentBottom--;continue};var segmentTop=segmentBottom;while(segmentTop-1>=0&&!blocksSwap(Cell(segmentTop-1,c)))segmentTop--;val survivors=(segmentBottom downTo segmentTop).filter{Cell(it,c)!in matched}.map{board[it][c]};var survivorIndex=0;for(r in segmentBottom downTo segmentTop)board[r][c]=if(survivorIndex<survivors.size)survivors[survivorIndex++] else GardenTile.entries[random.nextInt(GardenTile.entries.size)];segmentBottom=segmentTop-1}}}
+    private fun seedGuaranteedMove(){if(level.rows<2||level.columns<3)return;for(r in 0..1)for(c in 0..2){obstacles[r][c]=null;obstacleHits[r][c]=0};val a=activeTiles[0];val b=activeTiles.getOrElse(1){a};val c=activeTiles.getOrElse(2){a};board[0][0]=a;board[0][1]=b;board[0][2]=a;board[1][0]=c;board[1][1]=a;board[1][2]=b}
+    private fun collapseAndRefill(matched:Set<Cell>){for(c in 0 until level.columns){var segmentBottom=level.rows-1;while(segmentBottom>=0){if(blocksSwap(Cell(segmentBottom,c))){segmentBottom--;continue};var segmentTop=segmentBottom;while(segmentTop-1>=0&&!blocksSwap(Cell(segmentTop-1,c)))segmentTop--;val survivors=(segmentBottom downTo segmentTop).filter{Cell(it,c)!in matched}.map{board[it][c]};var survivorIndex=0;for(r in segmentBottom downTo segmentTop)board[r][c]=if(survivorIndex<survivors.size)survivors[survivorIndex++] else randomTile();segmentBottom=segmentTop-1}}}
     private fun inside(cell:Cell)=cell.row in 0 until level.rows&&cell.col in 0 until level.columns
     companion object{private const val MAX_RESHUFFLE_ATTEMPTS=40}
 }
