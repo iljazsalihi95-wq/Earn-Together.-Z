@@ -13,11 +13,19 @@ import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.TextView
+import java.util.Locale
 
 /** Dedicated immersive host so Bubble Shooter owns the screen and all gestures. */
 class BubbleShooterActivity : Activity() {
     private lateinit var game: BubbleShooterView
     private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt()
+
+    private fun ui(en:String,sq:String,de:String,it:String):String=when(Locale.getDefault().language.lowercase(Locale.ROOT)){
+        "sq"->sq
+        "de"->de
+        "it"->it
+        else->en
+    }
 
     private fun chip(text:String, action:()->Unit)=TextView(this).apply {
         this.text=text
@@ -74,24 +82,31 @@ class BubbleShooterActivity : Activity() {
             ))
         }
 
-        val back=chip("‹  BACK") { finish() }
-        host.addView(back,FrameLayout.LayoutParams(dp(92),dp(44),Gravity.TOP or Gravity.START).apply {
+        val back=chip("‹  "+ui("BACK","PRAPA","ZURÜCK","INDIETRO")) { finish() }
+        back.contentDescription=ui("Back","Kthehu prapa","Zurück","Indietro")
+        host.addView(back,FrameLayout.LayoutParams(dp(104),dp(44),Gravity.TOP or Gravity.START).apply {
             leftMargin=dp(12); topMargin=dp(8)
         })
-        val restart=chip("↻  RESTART") { game.restart() }
-        host.addView(restart,FrameLayout.LayoutParams(dp(112),dp(44),Gravity.TOP or Gravity.END).apply {
+        val restart=chip("↻  "+ui("RESTART","RIFILLO","NEUSTART","RIPROVA")) { game.restart() }
+        restart.contentDescription=ui("Restart level","Rifillo nivelin","Level neu starten","Riavvia il livello")
+        host.addView(restart,FrameLayout.LayoutParams(dp(122),dp(44),Gravity.TOP or Gravity.END).apply {
             rightMargin=dp(12); topMargin=dp(8)
         })
-        val status=statusChip("BUBBLE SHOOTER  •  AUTO-SAVE  •  250 LEVELS")
-        host.addView(status,FrameLayout.LayoutParams(dp(286),dp(34),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply {
+        val status=statusChip(ui(
+            "BUBBLE SHOOTER  •  AUTO-SAVE  •  250 LEVELS",
+            "BUBBLE SHOOTER  •  AUTO-RUAJTJE  •  250 NIVELE",
+            "BUBBLE SHOOTER  •  AUTO-SPEICHERN  •  250 LEVEL",
+            "BUBBLE SHOOTER  •  SALVATAGGIO AUTO  •  250 LIVELLI"
+        ))
+        host.addView(status,FrameLayout.LayoutParams(dp(318),dp(34),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply {
             topMargin=dp(58)
         })
 
         // A dedicated queue control makes the existing current/next-bubble mechanic explicit
         // and usable without stealing aim gestures from the full-screen playfield.
-        val swap=chip("⇄  SWAP") { game.swapBubble() }
-        swap.contentDescription="Swap current and next bubble"
-        host.addView(swap,FrameLayout.LayoutParams(dp(108),dp(46),Gravity.BOTTOM or Gravity.END).apply {
+        val swap=chip("⇄  "+ui("SWAP","NDËRRO","TAUSCH","SCAMBIA")) { game.swapBubble() }
+        swap.contentDescription=ui("Swap current and next bubble","Ndërro topin aktual me tjetrin","Aktuelle und nächste Kugel tauschen","Scambia la bolla attuale con la prossima")
+        host.addView(swap,FrameLayout.LayoutParams(dp(118),dp(46),Gravity.BOTTOM or Gravity.END).apply {
             rightMargin=dp(14); bottomMargin=dp(16)
         })
         setContentView(host)
