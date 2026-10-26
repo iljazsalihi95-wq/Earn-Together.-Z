@@ -7,6 +7,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
+import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.Window
 import android.view.WindowInsets
@@ -19,6 +20,7 @@ import java.util.Locale
 /** Dedicated immersive host so Bubble Shooter owns the screen and all gestures. */
 class BubbleShooterActivity : Activity() {
     private lateinit var game: BubbleShooterView
+    private var dialogOpen=false
     private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt()
 
     private fun ui(en:String,sq:String,de:String,it:String):String=when(Locale.getDefault().language.lowercase(Locale.ROOT)){
@@ -28,23 +30,32 @@ class BubbleShooterActivity : Activity() {
         else->en
     }
 
-    private fun chip(text:String, action:()->Unit)=TextView(this).apply {
+    private fun chip(text:String, accent:Boolean=false, action:()->Unit)=TextView(this).apply {
         this.text=text
         textSize=13f
-        setTextColor(Color.WHITE)
+        setTextColor(if(accent) 0xff07152c.toInt() else Color.WHITE)
         gravity=Gravity.CENTER
         setTypeface(null, Typeface.BOLD)
         isClickable=true
         isFocusable=true
-        elevation=dp(8).toFloat()
-        background=GradientDrawable(
+        elevation=dp(10).toFloat()
+        background=if(accent) GradientDrawable(
             GradientDrawable.Orientation.TL_BR,
-            intArrayOf(0xee4b2aa8.toInt(),0xee145aa7.toInt())
+            intArrayOf(0xffffdf72.toInt(),0xffffb72f.toInt())
         ).apply {
-            cornerRadius=dp(22).toFloat()
-            setStroke(dp(1),0x99ffc857.toInt())
+            cornerRadius=dp(23).toFloat()
+            setStroke(dp(1),0xffffedaa.toInt())
+        } else GradientDrawable(
+            GradientDrawable.Orientation.TL_BR,
+            intArrayOf(0xf0162d5b.toInt(),0xf00a72c7.toInt())
+        ).apply {
+            cornerRadius=dp(23).toFloat()
+            setStroke(dp(1),0x8858c8ff.toInt())
         }
-        setOnClickListener { action() }
+        setOnClickListener {
+            performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            action()
+        }
     }
 
     private fun statusChip(text:String)=TextView(this).apply {
@@ -57,7 +68,7 @@ class BubbleShooterActivity : Activity() {
         elevation=dp(6).toFloat()
         background=GradientDrawable(
             GradientDrawable.Orientation.LEFT_RIGHT,
-            intArrayOf(0xdd111a3a.toInt(),0xdd281552.toInt(),0xdd111a3a.toInt())
+            intArrayOf(0xdd102a54.toInt(),0xdd24164d.toInt(),0xdd0b5f9f.toInt())
         ).apply {
             cornerRadius=dp(18).toFloat()
             setStroke(dp(1),0x88ffc857.toInt())
@@ -65,7 +76,9 @@ class BubbleShooterActivity : Activity() {
     }
 
     private fun confirmRestart() {
-        AlertDialog.Builder(this)
+        if(dialogOpen) return
+        dialogOpen=true
+        val dialog=AlertDialog.Builder(this)
             .setTitle(ui("Restart level?","Rifillo nivelin?","Level neu starten?","Riavviare il livello?"))
             .setMessage(ui(
                 "Your current level progress will restart. Your campaign progress and best score stay saved.",
@@ -75,8 +88,13 @@ class BubbleShooterActivity : Activity() {
             ))
             .setNegativeButton(ui("CANCEL","ANULO","ABBRECHEN","ANNULLA"), null)
             .setPositiveButton(ui("RESTART","RIFILLO","NEUSTART","RIPROVA")) { _, _ -> game.restart() }
-            .setOnDismissListener { enterImmersive() }
-            .show()
+            .create()
+        dialog.setOnDismissListener { dialogOpen=false; enterImmersive() }
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(0xffffb72f.toInt())
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(0xff58c8ff.toInt())
+        }
+        dialog.show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,12 +118,12 @@ class BubbleShooterActivity : Activity() {
 
         val back=chip("‹  "+ui("BACK","PRAPA","ZURÜCK","INDIETRO")) { finish() }
         back.contentDescription=ui("Back","Kthehu prapa","Zurück","Indietro")
-        host.addView(back,FrameLayout.LayoutParams(dp(104),dp(44),Gravity.TOP or Gravity.START).apply {
+        host.addView(back,FrameLayout.LayoutParams(dp(104),dp(46),Gravity.TOP or Gravity.START).apply {
             leftMargin=dp(12); topMargin=dp(8)
         })
-        val restart=chip("↻  "+ui("RESTART","RIFILLO","NEUSTART","RIPROVA")) { confirmRestart() }
+        val restart=chip("↻  "+ui("RESTART","RIFILLO","NEUSTART","RIPROVA"), accent=true) { confirmRestart() }
         restart.contentDescription=ui("Restart level","Rifillo nivelin","Level neu starten","Riavvia il livello")
-        host.addView(restart,FrameLayout.LayoutParams(dp(122),dp(44),Gravity.TOP or Gravity.END).apply {
+        host.addView(restart,FrameLayout.LayoutParams(dp(126),dp(46),Gravity.TOP or Gravity.END).apply {
             rightMargin=dp(12); topMargin=dp(8)
         })
         val status=statusChip(ui(
@@ -115,14 +133,12 @@ class BubbleShooterActivity : Activity() {
             "BUBBLE SHOOTER  •  SALVATAGGIO AUTO  •  250 LIVELLI"
         ))
         host.addView(status,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(34),Gravity.TOP).apply {
-            leftMargin=dp(16); rightMargin=dp(16); topMargin=dp(58)
+            leftMargin=dp(16); rightMargin=dp(16); topMargin=dp(60)
         })
 
-        // A dedicated queue control makes the existing current/next-bubble mechanic explicit
-        // and usable without stealing aim gestures from the full-screen playfield.
-        val swap=chip("⇄  "+ui("SWAP","NDËRRO","TAUSCH","SCAMBIA")) { game.swapBubble() }
+        val swap=chip("⇄  "+ui("SWAP","NDËRRO","TAUSCH","SCAMBIA"), accent=true) { game.swapBubble() }
         swap.contentDescription=ui("Swap current and next bubble","Ndërro topin aktual me tjetrin","Aktuelle und nächste Kugel tauschen","Scambia la bolla attuale con la prossima")
-        host.addView(swap,FrameLayout.LayoutParams(dp(118),dp(46),Gravity.BOTTOM or Gravity.END).apply {
+        host.addView(swap,FrameLayout.LayoutParams(dp(122),dp(48),Gravity.BOTTOM or Gravity.END).apply {
             rightMargin=dp(14); bottomMargin=dp(16)
         })
         setContentView(host)
@@ -130,7 +146,12 @@ class BubbleShooterActivity : Activity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) enterImmersive()
+        if (hasFocus && !dialogOpen) enterImmersive()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(!dialogOpen) enterImmersive()
     }
 
     private fun enterImmersive() {
