@@ -55,7 +55,7 @@ class LazyGardenBoardView @JvmOverloads constructor(context: Context, attrs: Att
 
     override fun onTouchEvent(event:MotionEvent):Boolean{
         if(!inputEnabled)return true
-        if(powerTargetMode){if(event.actionMasked==MotionEvent.ACTION_UP){val target=cellAt(event.x,event.y);powerTargetMode=false;lastInteractionAt=SystemClock.uptimeMillis();target?.let{onPowerTarget?.invoke(it)};invalidate()};return true}
+        if(powerTargetMode){if(event.actionMasked==MotionEvent.ACTION_UP){val target=cellAt(event.x,event.y);lastInteractionAt=SystemClock.uptimeMillis();if(target!=null){powerTargetMode=false;onPowerTarget?.invoke(target)}else{performHapticFeedback(HapticFeedbackConstants.REJECT)};invalidate()};return true}
         when(event.actionMasked){
             MotionEvent.ACTION_DOWN->{parent?.requestDisallowInterceptTouchEvent(true);lastInteractionAt=SystemClock.uptimeMillis();scheduleHint();downX=event.x;downY=event.y;downCell=cellAt(event.x,event.y);downCell?.let{if(!isBlocked(it))selected=it};invalidate();return true}
             MotionEvent.ACTION_CANCEL->{parent?.requestDisallowInterceptTouchEvent(false);downCell=null;selected=null;invalidate();return true}
