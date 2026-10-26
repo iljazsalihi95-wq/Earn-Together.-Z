@@ -86,6 +86,14 @@ class BubbleShooterActivity : Activity() {
         host.addView(status,FrameLayout.LayoutParams(dp(286),dp(34),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply {
             topMargin=dp(58)
         })
+
+        // A dedicated queue control makes the existing current/next-bubble mechanic explicit
+        // and usable without stealing aim gestures from the full-screen playfield.
+        val swap=chip("⇄  SWAP") { game.swapBubble() }
+        swap.contentDescription="Swap current and next bubble"
+        host.addView(swap,FrameLayout.LayoutParams(dp(108),dp(46),Gravity.BOTTOM or Gravity.END).apply {
+            rightMargin=dp(14); bottomMargin=dp(16)
+        })
         setContentView(host)
     }
 
