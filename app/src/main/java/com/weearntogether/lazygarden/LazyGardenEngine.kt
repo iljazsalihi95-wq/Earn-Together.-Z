@@ -51,16 +51,28 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
             GardenPowerUp.HAMMER->affected+=target
             GardenPowerUp.ROW_SWEEP->for(c in 0 until level.columns)affected+=Cell(target.row,c)
             GardenPowerUp.COLUMN_SWEEP->for(r in 0 until level.rows)affected+=Cell(r,target.col)
-            GardenPowerUp.CROSS_BLAST->{for(c in 0 until level.columns)affected+=Cell(target.row,c);for(r in 0 until level.rows)affected+=Cell(r,target.col)}
+            GardenPowerUp.CROSS_BLAST->{
+                for(c in 0 until level.columns) affected+=Cell(target.row,c)
+                for(r in 0 until level.rows) affected+=Cell(r,target.col)
+            }
         }
         val tiles=affected.filterNot(::blocksSwap).groupingBy{board[it.row][it.col]}.eachCount()
         val cleared=damageObstacles(affected)
         collapseAndRefill(affected.filterNot(::blocksSwap).toSet())
-        var cascade=findMatches();val allCells=linkedSetOf<Cell>().apply{addAll(affected)};val allTiles=tiles.toMutableMap();val allObstacles=cleared.toMutableMap()
+        var cascade=findMatches()
+        val allCells=linkedSetOf<Cell>().apply{addAll(affected)}
+        val allTiles=tiles.toMutableMap()
+        val allObstacles=cleared.toMutableMap()
         while(cascade.cells.isNotEmpty()){
-            val powered=expandPowerClear(cascade);allCells+=powered.cells;powered.tiles.forEach{(t,n)->allTiles[t]=(allTiles[t]?:0)+n};damageObstacles(powered.cells).forEach{(o,n)->allObstacles[o]=(allObstacles[o]?:0)+n};collapseAndRefill(powered.cells.filterNot(::blocksSwap).toSet());cascade=findMatches()
+            val powered=expandPowerClear(cascade)
+            allCells.addAll(powered.cells)
+            powered.tiles.forEach{(t,n)->allTiles[t]=(allTiles[t]?:0)+n}
+            damageObstacles(powered.cells).forEach{(o,n)->allObstacles[o]=(allObstacles[o]?:0)+n}
+            collapseAndRefill(powered.cells.filterNot(::blocksSwap).toSet())
+            cascade=findMatches()
         }
-        ensurePlayableBoard();return MatchResult(allCells,allTiles,allObstacles)
+        ensurePlayableBoard()
+        return MatchResult(allCells,allTiles,allObstacles)
     }
 
     /** A straight 4-match sweeps its full row/column; 5+ sweeps both axes, including obstacle cells. */
