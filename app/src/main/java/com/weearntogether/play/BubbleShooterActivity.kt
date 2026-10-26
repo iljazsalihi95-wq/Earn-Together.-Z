@@ -1,6 +1,7 @@
 package com.weearntogether.play
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -63,6 +64,21 @@ class BubbleShooterActivity : Activity() {
         }
     }
 
+    private fun confirmRestart() {
+        AlertDialog.Builder(this)
+            .setTitle(ui("Restart level?","Rifillo nivelin?","Level neu starten?","Riavviare il livello?"))
+            .setMessage(ui(
+                "Your current level progress will restart. Your campaign progress and best score stay saved.",
+                "Progresi i nivelit aktual do të rifillojë. Progresi i fushatës dhe rekordi mbeten të ruajtura.",
+                "Der Fortschritt dieses Levels wird neu gestartet. Kampagnenfortschritt und Bestwert bleiben gespeichert.",
+                "Il progresso del livello attuale verrà riavviato. Campagna e record resteranno salvati."
+            ))
+            .setNegativeButton(ui("CANCEL","ANULO","ABBRECHEN","ANNULLA"), null)
+            .setPositiveButton(ui("RESTART","RIFILLO","NEUSTART","RIPROVA")) { _, _ -> game.restart() }
+            .setOnDismissListener { enterImmersive() }
+            .show()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -87,7 +103,7 @@ class BubbleShooterActivity : Activity() {
         host.addView(back,FrameLayout.LayoutParams(dp(104),dp(44),Gravity.TOP or Gravity.START).apply {
             leftMargin=dp(12); topMargin=dp(8)
         })
-        val restart=chip("↻  "+ui("RESTART","RIFILLO","NEUSTART","RIPROVA")) { game.restart() }
+        val restart=chip("↻  "+ui("RESTART","RIFILLO","NEUSTART","RIPROVA")) { confirmRestart() }
         restart.contentDescription=ui("Restart level","Rifillo nivelin","Level neu starten","Riavvia il livello")
         host.addView(restart,FrameLayout.LayoutParams(dp(122),dp(44),Gravity.TOP or Gravity.END).apply {
             rightMargin=dp(12); topMargin=dp(8)
@@ -98,8 +114,8 @@ class BubbleShooterActivity : Activity() {
             "BUBBLE SHOOTER  •  AUTO-SPEICHERN  •  250 LEVEL",
             "BUBBLE SHOOTER  •  SALVATAGGIO AUTO  •  250 LIVELLI"
         ))
-        host.addView(status,FrameLayout.LayoutParams(dp(318),dp(34),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply {
-            topMargin=dp(58)
+        host.addView(status,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(34),Gravity.TOP).apply {
+            leftMargin=dp(16); rightMargin=dp(16); topMargin=dp(58)
         })
 
         // A dedicated queue control makes the existing current/next-bubble mechanic explicit
