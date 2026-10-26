@@ -43,7 +43,6 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
         ensurePlayableBoard();return MatchResult(resolvedCells,collected,cleared)
     }
 
-    /** Activates a purchased in-game booster without consuming a move. */
     fun activatePowerUp(powerUp:GardenPowerUp,target:Cell):MatchResult?{
         if(!inside(target)||movesLeft<=0)return null
         val affected=linkedSetOf<Cell>()
@@ -51,54 +50,54 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
             GardenPowerUp.HAMMER->affected+=target
             GardenPowerUp.ROW_SWEEP->for(c in 0 until level.columns)affected+=Cell(target.row,c)
             GardenPowerUp.COLUMN_SWEEP->for(r in 0 until level.rows)affected+=Cell(r,target.col)
-            GardenPowerUp.CROSS_BLAST->{
-                for(c in 0 until level.columns) affected+=Cell(target.row,c)
-                for(r in 0 until level.rows) affected+=Cell(r,target.col)
-            }
+            GardenPowerUp.CROSS_BLAST->{for(c in 0 until level.columns)affected+=Cell(target.row,c);for(r in 0 until level.rows)affected+=Cell(r,target.col)}
         }
         val tiles=affected.filterNot(::blocksSwap).groupingBy{board[it.row][it.col]}.eachCount()
         val cleared=damageObstacles(affected)
         collapseAndRefill(affected.filterNot(::blocksSwap).toSet())
-        var cascade=findMatches()
-        val allCells=linkedSetOf<Cell>().apply{addAll(affected)}
-        val allTiles=tiles.toMutableMap()
-        val allObstacles=cleared.toMutableMap()
+        var cascade=findMatches();val allCells=linkedSetOf<Cell>().apply{addAll(affected)};val allTiles=tiles.toMutableMap();val allObstacles=cleared.toMutableMap()
         while(cascade.cells.isNotEmpty()){
-            val powered=expandPowerClear(cascade)
-            allCells.addAll(powered.cells)
-            powered.tiles.forEach{(t,n)->allTiles[t]=(allTiles[t]?:0)+n}
-            damageObstacles(powered.cells).forEach{(o,n)->allObstacles[o]=(allObstacles[o]?:0)+n}
-            collapseAndRefill(powered.cells.filterNot(::blocksSwap).toSet())
-            cascade=findMatches()
+            val powered=expandPowerClear(cascade);allCells.addAll(powered.cells);powered.tiles.forEach{(t,n)->allTiles[t]=(allTiles[t]?:0)+n};damageObstacles(powered.cells).forEach{(o,n)->allObstacles[o]=(allObstacles[o]?:0)+n};collapseAndRefill(powered.cells.filterNot(::blocksSwap).toSet());cascade=findMatches()
         }
-        ensurePlayableBoard()
-        return MatchResult(allCells,allTiles,allObstacles)
+        ensurePlayableBoard();return MatchResult(allCells,allTiles,allObstacles)
     }
 
-    /** A straight 4-match sweeps its full row/column; 5+ sweeps both axes, including obstacle cells. */
     private fun expandPowerClear(match:MatchResult):MatchResult{
         if(match.cells.size<4)return match
         val expanded=linkedSetOf<Cell>().apply{addAll(match.cells)}
-        val rows=match.cells.groupBy{it.row}
-        val columns=match.cells.groupBy{it.col}
-        rows.filterValues{it.size>=4}.forEach{(row,line)->
-            for(c in 0 until level.columns) expanded+=Cell(row,c)
-            if(line.size>=5){
-                val pivot=line[line.size/2]
-                for(r in 0 until level.rows) expanded+=Cell(r,pivot.col)
-            }
-        }
-        columns.filterValues{it.size>=4}.forEach{(col,line)->
-            for(r in 0 until level.rows) expanded+=Cell(r,col)
-            if(line.size>=5){
-                val pivot=line[line.size/2]
-                for(c in 0 until level.columns) expanded+=Cell(pivot.row,c)
-            }
-        }
+        val rows=match.cells.groupBy{it.row};val columns=match.cells.groupBy{it.col}
+        rows.filterValues{it.size>=4}.forEach{(row,line)->for(c in 0 until level.columns)expanded+=Cell(row,c);if(line.size>=5){val pivot=line[line.size/2];for(r in 0 until level.rows)expanded+=Cell(r,pivot.col)}}
+        columns.filterValues{it.size>=4}.forEach{(col,line)->for(r in 0 until level.rows)expanded+=Cell(r,col);if(line.size>=5){val pivot=line[line.size/2];for(c in 0 until level.columns)expanded+=Cell(pivot.row,c)}}
         return MatchResult(expanded,expanded.filterNot(::blocksSwap).groupingBy{board[it.row][it.col]}.eachCount())
     }
 
-    fun findMatches():MatchResult{val cells=linkedSetOf<Cell>();fun blocked(r:Int,c:Int)=obstacles[r][c]==GardenObstacle.STONE||obstacles[r][c]==GardenObstacle.CRATE;for(r in board.indices){var start=0;while(start<level.columns){if(blocked(r,start)){start++;continue};var end=start+1;while(end<level.columns&&!blocked(r,end)&&board[r][end]==board[r][start])end++;if(end-start>=3)for(c in start until end)cells+=Cell(r,c);start=end}};for(c in 0 until level.columns){var start=0;while(start<level.rows){if(blocked(start,c)){start++;continue};var end=start+1;while(end<level.rows&&!blocked(end,c)&&board[end][c]==board[start][c])end++;if(end-start>=3)for(r in start until end)cells+=Cell(r,c);start=end}};return MatchResult(cells,cells.groupingBy{board[it.row][it.col]}.eachCount())}
+    fun findMatches():MatchResult{
+        val cells=linkedSetOf<Cell>()
+        fun blocked(r:Int,c:Int):Boolean {
+            return obstacles[r][c]==GardenObstacle.STONE || obstacles[r][c]==GardenObstacle.CRATE
+        }
+        for(r in board.indices){
+            var start=0
+            while(start<level.columns){
+                if(blocked(r,start)){start++;continue}
+                var end=start+1
+                while(end<level.columns&&!blocked(r,end)&&board[r][end]==board[r][start])end++
+                if(end-start>=3)for(c in start until end)cells+=Cell(r,c)
+                start=end
+            }
+        }
+        for(c in 0 until level.columns){
+            var start=0
+            while(start<level.rows){
+                if(blocked(start,c)){start++;continue}
+                var end=start+1
+                while(end<level.rows&&!blocked(end,c)&&board[end][c]==board[start][c])end++
+                if(end-start>=3)for(r in start until end)cells+=Cell(r,c)
+                start=end
+            }
+        }
+        return MatchResult(cells,cells.groupingBy{board[it.row][it.col]}.eachCount())
+    }
     fun findHint():Pair<Cell,Cell>?{if(movesLeft<=0)return null;for(r in 0 until level.rows)for(c in 0 until level.columns){val a=Cell(r,c);if(blocksSwap(a))continue;if(c+1<level.columns){val b=Cell(r,c+1);if(!blocksSwap(b)&&createsMatch(a,b))return a to b};if(r+1<level.rows){val b=Cell(r+1,c);if(!blocksSwap(b)&&createsMatch(a,b))return a to b}};return null}
     fun hasValidMove():Boolean=findHint()!=null
     private fun durability(obstacle:GardenObstacle?):Int=when(obstacle){GardenObstacle.IVY->1;GardenObstacle.CRATE->if(level.number>=80)2 else 1;GardenObstacle.STONE->if(level.number>=150)3 else 2;null->0}
