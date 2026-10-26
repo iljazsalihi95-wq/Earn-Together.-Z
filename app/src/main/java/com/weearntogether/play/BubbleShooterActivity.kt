@@ -38,6 +38,23 @@ class BubbleShooterActivity : Activity() {
         setOnClickListener { action() }
     }
 
+    private fun statusChip(text:String)=TextView(this).apply {
+        this.text=text
+        textSize=11f
+        setTextColor(0xffffd66b.toInt())
+        gravity=Gravity.CENTER
+        setTypeface(null, Typeface.BOLD)
+        letterSpacing=.08f
+        elevation=dp(6).toFloat()
+        background=GradientDrawable(
+            GradientDrawable.Orientation.LEFT_RIGHT,
+            intArrayOf(0xdd111a3a.toInt(),0xdd281552.toInt(),0xdd111a3a.toInt())
+        ).apply {
+            cornerRadius=dp(18).toFloat()
+            setStroke(dp(1),0x88ffc857.toInt())
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -57,7 +74,6 @@ class BubbleShooterActivity : Activity() {
             ))
         }
 
-        // Match Block Puzzle's premium blue/violet/gold navigation language.
         val back=chip("‹  BACK") { finish() }
         host.addView(back,FrameLayout.LayoutParams(dp(92),dp(44),Gravity.TOP or Gravity.START).apply {
             leftMargin=dp(12); topMargin=dp(8)
@@ -65,6 +81,10 @@ class BubbleShooterActivity : Activity() {
         val restart=chip("↻  RESTART") { game.restart() }
         host.addView(restart,FrameLayout.LayoutParams(dp(112),dp(44),Gravity.TOP or Gravity.END).apply {
             rightMargin=dp(12); topMargin=dp(8)
+        })
+        val status=statusChip("BUBBLE SHOOTER  •  AUTO-SAVE  •  250 LEVELS")
+        host.addView(status,FrameLayout.LayoutParams(dp(286),dp(34),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply {
+            topMargin=dp(58)
         })
         setContentView(host)
     }
