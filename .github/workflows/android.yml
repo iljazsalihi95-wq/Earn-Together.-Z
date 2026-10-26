@@ -22,7 +22,7 @@ jobs:
           node backend/tests/google-auth.test.cjs
           node backend/tests/wallet.test.cjs
       - name: Test bundled HTML5 game mechanics
-        run: node --test tests/html5-games.test.cjs
+        run: node --test tests/html5-games.test.cjs tests/html5-arcade.test.cjs
       - name: Test HTML5 interface in Chromium
         run: |
           npm install --no-save --prefix "$RUNNER_TEMP/html5-browser" playwright@1.58.2

@@ -28,3 +28,19 @@ assert.equal(call('getCashoutHistory',{},'B').cashouts.length,0);context.walletR
 out=call('requestCashout',{amount:'5.00',payment_method:'PAYPAL',payment_destination:'a@example.test',idempotency_key:'cashout-0003'});context.walletReviewCashout_(out.cashout.cashout_id,'UNDER_REVIEW','','Manual verification started');context.walletReviewCashout_(out.cashout.cashout_id,'APPROVED','','Destination and request verified');context.walletReviewCashout_(out.cashout.cashout_id,'PAID','fixture-paid-reference','Fixture payment evidence reviewed');assert.equal(call('getBalance').total_paid_cents,500);assert.equal(call('getBalance').available_cents,0);assert.equal(call('getCashoutHistory').cashouts[0].status,'PAID');assert.equal(call('getCashoutHistory').cashouts[0].payment_reference,'fixture-paid-reference');
 const alloc=context.walletAllocate_([{user_id:'A',coins:1},{user_id:'B',coins:2}],100);assert.equal(alloc.users.reduce((s,u)=>s+u.cents,0),100);assert.equal(context.walletMoney_('5.00'),500);reject(()=>context.walletMoney_('5.001'),'INVALID_AMOUNT');assert(tables.AUDIT_LOG.length>10);
 console.log('PASS: isolation, no client balance authority, duplicate events/session ownership, impossible timestamps, pending/rejected cash blocked, exact funded period conversion, 4.99/5.00 boundary, idempotency, competing withdrawals, reservation release, paid history, cent rounding and legacy auth dispatch. In-memory Script services; no real funds/payments seeded.');
+
+advance(120000);
+let videoSession=call('startRewardSession',{game_id:'html5_arrows'});
+assert.equal(videoSession.ad_reward_coins,10);
+advance(11000);
+let video=call('recordRewardEvent',{source:'AD_REWARD',event_id:'html5-video-0001',session_id:videoSession.session_id,game_id:'html5_arrows'});
+assert.equal(video.status,'PENDING');assert.equal(video.coins,10);assert.equal(call('getBalance').available_cents,0);
+props.WALLET_HTML5_VIDEO_COINS='7';advance(6000);
+let video2=call('recordRewardEvent',{source:'AD_REWARD',event_id:'html5-video-0002',session_id:videoSession.session_id,game_id:'html5_arrows'});
+assert.equal(video2.coins,7);props.WALLET_HTML5_VIDEO_COINS='20';
+const replay=call('recordRewardEvent',{source:'AD_REWARD',event_id:'html5-video-0002',session_id:videoSession.session_id,game_id:'html5_arrows'});
+assert.equal(replay.duplicate,true);assert.equal(replay.coins,7);
+reject(()=>call('recordRewardEvent',{source:'AD_REWARD',event_id:'html5-forge-0001',session_id:videoSession.session_id,game_id:'html5_arrows',coins:9999}),'CLIENT_AUTHORITY');
+props.WALLET_HTML5_VIDEO_COINS='-1';reject(()=>context.walletVideoCoins_(),'REWARD_CONFIG');
+console.log('PASS: HTML5 video coins use a configurable server rule, remain PENDING, preserve amounts on retry and never mint cash.');
+
