@@ -33,6 +33,22 @@ class LazyGardenMilestone(context: Context) {
         return safeLevel
     }
 
+    /**
+     * Migrates players who already restored sequential levels before milestone tracking
+     * was wired into the live activity. The caller must supply a contiguous restoration
+     * count derived from saved build tasks; arbitrary level jumps are never accepted.
+     */
+    fun syncCompletedThrough(contiguousRestoredLevels: Int): Int {
+        val target = contiguousRestoredLevels.coerceIn(0, CAMPAIGN_LEVELS)
+        var current = completedLevels
+        if (target <= current) return current
+        val editor = prefs.edit()
+        for (level in (current + 1)..target) editor.putBoolean("level_${level}_counted", true)
+        editor.putInt(KEY_COMPLETED_LEVELS, target).apply()
+        current = target
+        return current
+    }
+
     /** First campaign level that still needs to be completed. */
     val nextRequiredLevel: Int
         get() = (completedLevels + 1).coerceAtMost(CAMPAIGN_LEVELS)
