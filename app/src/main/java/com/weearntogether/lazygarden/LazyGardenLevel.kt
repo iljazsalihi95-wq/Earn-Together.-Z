@@ -11,8 +11,16 @@ object LazyGardenLevels {
  private fun obstacle(type:GardenObstacle,target:Int)=LazyGardenObstacleGoal(type,target)
  private val authored=buildList {
   fun addStage(n:Int,m:Int,r:Int,a:Pair<GardenTile,Int>,b:Pair<GardenTile,Int>,c:Pair<GardenTile,Int>?=null,vararg obs:Pair<GardenObstacle,Int>){
-   val g=if(c==null)listOf(a,b)else listOf(a,b,c)
-   // Campaign chapters now vary the playable footprint instead of repeating one 8x8 board for 250 stages.
+   val rawGoals=if(c==null)listOf(a,b)else listOf(a,b,c)
+   // Every objective must ask for a different tile. Earlier procedural arcs could select the same
+   // tile twice, making two HUD objectives advance together and weakening the intended difficulty.
+   val used=mutableSetOf<GardenTile>()
+   val g=rawGoals.map{goal->
+    val tile=if(goal.first !in used) goal.first else GardenTile.entries.first{it !in used}
+    used+=tile
+    tile to goal.second
+   }
+   // Campaign chapters vary the playable footprint instead of repeating one 8x8 board for 250 stages.
    // Narrow boards emphasize vertical planning; short boards emphasize horizontal planning; finales stay 8x8.
    val step=(n-1)%10
    val (rows,columns)=when(step){1,6->8 to 7;3,8->7 to 8;else->8 to 8}
@@ -47,7 +55,11 @@ object LazyGardenLevels {
   }
  }
  private val levels=authored
- init { require(levels.size==CAMPAIGN_LEVELS){"LazyGarden campaign must contain exactly $CAMPAIGN_LEVELS authored levels, found ${levels.size}"};require(levels.map{it.number}==(1..CAMPAIGN_LEVELS).toList()){"LazyGarden campaign numbering must be contiguous 1..$CAMPAIGN_LEVELS"} }
+ init {
+  require(levels.size==CAMPAIGN_LEVELS){"LazyGarden campaign must contain exactly $CAMPAIGN_LEVELS authored levels, found ${levels.size}"}
+  require(levels.map{it.number}==(1..CAMPAIGN_LEVELS).toList()){"LazyGarden campaign numbering must be contiguous 1..$CAMPAIGN_LEVELS"}
+  require(levels.all{level->level.goals.map{it.tile}.distinct().size==level.goals.size}){"LazyGarden levels must use distinct tile objectives"}
+ }
  fun get(number:Int)=levels[(number-1).coerceIn(0,levels.lastIndex)]
  val count:Int get()=levels.size
 }
