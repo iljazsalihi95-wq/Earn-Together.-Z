@@ -15,6 +15,7 @@ class LazyGardenStrings(context: Context) {
     fun goals(parts: List<String>) = when { de -> parts.joinToString(prefix="Ziele • ", separator=" • "); it -> parts.joinToString(prefix="Obiettivi • ", separator=" • "); else -> parts.joinToString(prefix="Goals • ", separator=" • ") }
     fun shuffle(count: Int) = "Shuffle ×$count"
     fun booster(count: Int) = when { count > 0 && de -> "Booster • verbraucht keinen Zug"; count > 0 && it -> "Booster • non consuma mosse"; count > 0 -> "Booster • no move consumed"; de -> "Alle 5 Level erhältst du 1 Shuffle"; it -> "Ottieni 1 Shuffle ogni 5 livelli"; else -> "Earn 1 Shuffle every 5 levels" }
+    fun powerBoost(cost: Int) = when { de -> "Shuffle halten: Kreuz-Blast • $cost Münzen"; it -> "Tieni premuto Shuffle: Esplosione a croce • $cost monete"; else -> "Hold Shuffle: Cross Blast • $cost coins" }
     fun retry(n: Int) = when { de -> "Level $n erneut spielen"; it -> "Riprova livello $n"; else -> "Retry level $n" }
     fun finishToBuild() = when { de -> "Schließe das Level ab, um zu bauen"; it -> "Completa il livello per costruire"; else -> "Finish the level to unlock building" }
     fun building() = when { de -> "Wird restauriert…"; it -> "Restauro in corso…"; else -> "Restoring…" }
