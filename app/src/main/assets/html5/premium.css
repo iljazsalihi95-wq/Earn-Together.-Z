@@ -1,0 +1,19 @@
+/* Premium visual layer — keeps gameplay/ad logic untouched. */
+.game-card{min-height:238px;padding:26px 24px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent,#6657d8),#121a36 25%),#22284d 62%,#121a31);border:1px solid #ffffff2d;box-shadow:0 18px 38px #05081755,inset 0 1px 0 #ffffff20}
+.game-card:after{content:'';position:absolute;inset:auto -45px -70px auto;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,#ffffff16,transparent 67%);pointer-events:none}
+.game-card .card-art{width:142px;height:142px;margin:8px -2px 8px 12px;padding:10px;border-radius:30px;background:linear-gradient(145deg,#ffffff18,#070b1a28);border:1px solid #ffffff20;filter:drop-shadow(0 15px 14px #05081766);transform:rotate(3deg)}
+.game-card h2{font-size:31px;line-height:1.03;text-shadow:0 3px 12px #0005}.game-card .caps{color:#ffe09a;text-shadow:0 2px 10px #0005}.game-card p{font-size:15px;color:#f1ecfb;line-height:1.55}.game-card .primary{min-width:170px;background:linear-gradient(135deg,#fff0b7,#ffc958 65%,#e6a93d);box-shadow:0 7px 0 #9d6b2e55,0 13px 25px #0004}
+
+/* Parking Escape: richer board and car rendering. */
+.parking-board{border:9px solid #696a87;border-right-color:#d6bd77;border-radius:24px;background-color:#202b43;background-image:linear-gradient(#d9ddff16 2px,transparent 2px),linear-gradient(90deg,#d9ddff16 2px,transparent 2px),radial-gradient(circle at 50% 42%,#354366,#1a2338 72%);box-shadow:0 20px 50px #03061488,inset 0 0 45px #05081755;margin:10px 0 14px;overflow:visible}
+.parking-board:before{content:'';position:absolute;inset:1.5%;border-radius:14px;box-shadow:inset 0 0 0 1px #ffffff10;pointer-events:none}
+.car{border:3px solid #172137;border-radius:18px;background:linear-gradient(155deg,color-mix(in srgb,var(--tile),white 25%),var(--tile) 48%,color-mix(in srgb,var(--tile),#10172b 25%));box-shadow:inset 0 3px 0 #ffffff70,inset 0 -8px 0 #00000020,0 7px 12px #03061470;transition:filter .08s,transform .08s;overflow:visible}
+.car:before,.car:after{content:'';position:absolute;background:#111a2b;border:2px solid #7c8ca0;border-radius:6px;box-shadow:inset 0 1px 2px #b9d4e8aa}
+.car.horizontal:before{left:10%;top:-5px;width:16%;height:8px}.car.horizontal:after{right:10%;bottom:-5px;width:16%;height:8px}.car.vertical:before{top:10%;left:-5px;height:16%;width:8px}.car.vertical:after{bottom:10%;right:-5px;height:16%;width:8px}
+.car .windshield,.car .rearwindow{background:linear-gradient(145deg,#b9e7ff,#4c718e 45%,#22384f);border:2px solid #d9f3ff77;box-shadow:inset 0 2px 3px #ffffff50,0 1px 2px #0005}
+.car.horizontal .windshield{right:17%;top:15%;width:20%;height:70%}.car.horizontal .rearwindow{left:15%;top:18%;width:13%;height:64%}.car.vertical .windshield{left:15%;top:17%;height:20%;width:70%}.car.vertical .rearwindow{left:18%;bottom:15%;height:13%;width:64%}
+.car.chosen{outline:3px solid #ffe29a;outline-offset:3px;filter:brightness(1.14) drop-shadow(0 0 12px #ffd87388);transform:scale(.985)}
+.car:first-of-type{box-shadow:inset 0 3px 0 #fff7,inset 0 -8px 0 #b5791733,0 0 20px #ffd86a44,0 8px 14px #0007}
+.exit-sign{right:-26px;top:34%;font-size:11px;font-weight:900;letter-spacing:1px;color:#ffe39b;text-shadow:0 2px 5px #000;writing-mode:vertical-rl}
+.arcade-field.park .objective{font-size:14px;color:#f6e6bc;font-weight:650}.arcade-field.park .arcade-controls button{min-width:76px;font-size:22px;background:linear-gradient(145deg,#343b64,#1d2745);border:1px solid #ffffff2b;box-shadow:0 6px 14px #0004}
+@media(max-width:430px){.game-card{min-height:220px;padding:22px 20px}.game-card .card-art{width:120px;height:120px}.game-card h2{font-size:28px}.parking-board{width:calc(100% - 14px);border-width:7px}}
