@@ -1,6 +1,7 @@
 package com.weearntogether.play
 
 import android.app.Activity
+import android.util.Log
 import com.unity3d.mediation.LevelPlay
 import com.unity3d.mediation.LevelPlayAdInfo
 import com.unity3d.mediation.LevelPlayConfiguration
@@ -24,6 +25,7 @@ class LevelPlayManager(
         @Volatile private var active: LevelPlayManager? = null
         fun showLevelCompleteVideo(): Boolean = active?.showInterstitialAtNaturalBreak() ?: false
     }
+    private fun trace(event:String){ Log.i("WET_LevelPlay", event); status(event) }
     private var disposed=false
     private var rewardFinished:(()->Unit)?=null
     private var breakFinished:(()->Unit)?=null
@@ -39,31 +41,31 @@ class LevelPlayManager(
         if(initialized)return
         val request=LevelPlayInitRequest.Builder(BuildConfig.LEVELPLAY_APP_KEY).withUserId(userId).build()
         LevelPlay.init(activity,request,object:LevelPlayInitListener{
-            override fun onInitSuccess(configuration:LevelPlayConfiguration){if(disposed)return;initialized=true;createRewarded();createInterstitial();status("LevelPlay ready")}
-            override fun onInitFailed(error:LevelPlayInitError){status("LevelPlay unavailable")}
+            override fun onInitSuccess(configuration:LevelPlayConfiguration){if(disposed)return;initialized=true;createRewarded();createInterstitial();trace("LevelPlay initialized; loading ad units")}
+            override fun onInitFailed(error:LevelPlayInitError){trace("LevelPlay initialization failed: $error")}
         })
     }
     private fun createRewarded(){
         rewarded=LevelPlayRewardedAd(BuildConfig.LEVELPLAY_REWARDED_AD_UNIT).also{ad->
             ad.setListener(object:LevelPlayRewardedAdListener{
-                override fun onAdLoaded(adInfo:LevelPlayAdInfo){status("Rewarded ready")}
-                override fun onAdLoadFailed(error:LevelPlayAdError){status("Rewarded unavailable")}
-                override fun onAdDisplayed(adInfo:LevelPlayAdInfo){}
-                override fun onAdDisplayFailed(error:LevelPlayAdError,adInfo:LevelPlayAdInfo){pendingGameplayReward=null;rewardFinished?.invoke();rewardFinished=null;if(!disposed)ad.loadAd()}
+                override fun onAdLoaded(adInfo:LevelPlayAdInfo){trace("Rewarded loaded")}
+                override fun onAdLoadFailed(error:LevelPlayAdError){trace("Rewarded load failed: $error")}
+                override fun onAdDisplayed(adInfo:LevelPlayAdInfo){trace("Rewarded impression displayed")}
+                override fun onAdDisplayFailed(error:LevelPlayAdError,adInfo:LevelPlayAdInfo){trace("Rewarded display failed: $error");pendingGameplayReward=null;rewardFinished?.invoke();rewardFinished=null;if(!disposed)ad.loadAd()}
                 override fun onAdClicked(adInfo:LevelPlayAdInfo){}
                 override fun onAdClosed(adInfo:LevelPlayAdInfo){pendingGameplayReward=null;rewardFinished?.invoke();rewardFinished=null;if(!disposed)ad.loadAd()}
                 override fun onAdInfoChanged(adInfo:LevelPlayAdInfo){}
-                override fun onAdRewarded(reward:LevelPlayReward,adInfo:LevelPlayAdInfo){pendingGameplayReward?.invoke();pendingGameplayReward=null}
+                override fun onAdRewarded(reward:LevelPlayReward,adInfo:LevelPlayAdInfo){trace("Rewarded completion callback");pendingGameplayReward?.invoke();pendingGameplayReward=null}
             });if(!disposed)ad.loadAd()
         }
     }
     private fun createInterstitial(){
         interstitial=LevelPlayInterstitialAd(BuildConfig.LEVELPLAY_INTERSTITIAL_AD_UNIT).also{ad->
             ad.setListener(object:LevelPlayInterstitialAdListener{
-                override fun onAdLoaded(adInfo:LevelPlayAdInfo){status("Interstitial ready")}
-                override fun onAdLoadFailed(error:LevelPlayAdError){status("Interstitial unavailable")}
-                override fun onAdDisplayed(adInfo:LevelPlayAdInfo){lastInterstitialAt=System.currentTimeMillis()}
-                override fun onAdDisplayFailed(error:LevelPlayAdError,adInfo:LevelPlayAdInfo){breakFinished?.invoke();breakFinished=null;if(!disposed)ad.loadAd()}
+                override fun onAdLoaded(adInfo:LevelPlayAdInfo){trace("Interstitial loaded")}
+                override fun onAdLoadFailed(error:LevelPlayAdError){trace("Interstitial load failed: $error")}
+                override fun onAdDisplayed(adInfo:LevelPlayAdInfo){trace("Interstitial impression displayed");lastInterstitialAt=System.currentTimeMillis()}
+                override fun onAdDisplayFailed(error:LevelPlayAdError,adInfo:LevelPlayAdInfo){trace("Interstitial display failed: $error");breakFinished?.invoke();breakFinished=null;if(!disposed)ad.loadAd()}
                 override fun onAdClicked(adInfo:LevelPlayAdInfo){}
                 override fun onAdClosed(adInfo:LevelPlayAdInfo){breakFinished?.invoke();breakFinished=null;if(!disposed)ad.loadAd()}
                 override fun onAdInfoChanged(adInfo:LevelPlayAdInfo){}
