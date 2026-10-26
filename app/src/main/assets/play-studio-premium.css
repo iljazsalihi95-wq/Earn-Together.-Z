@@ -1,0 +1,26 @@
+/* We Earn Together — HD 2D gameplay upgrade */
+:root{--ink:#07111f;--glass:rgba(10,25,39,.84);--gold:#ffd978;--mint:#5ee6c5;--sky:#72c9ff;--coral:#ff8e72;--rose:#ff72aa;--cream:#fff3d4}
+body{background:radial-gradient(circle at 18% 0,#16455a 0,transparent 36%),linear-gradient(180deg,#07111f 0,#09273a 55%,#0a3b45 100%)!important;color:#fff}
+.game-card,.catalog-card{position:relative;overflow:hidden;border:1px solid rgba(255,224,139,.28)!important;background:linear-gradient(145deg,rgba(20,55,67,.96),rgba(9,24,44,.96))!important;box-shadow:0 20px 55px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.1)!important}
+.game-card:before,.catalog-card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 82% 15%,rgba(255,220,120,.18),transparent 24%),radial-gradient(circle at 15% 80%,rgba(94,230,197,.12),transparent 32%);pointer-events:none}
+.game-card svg,.catalog-card svg{filter:drop-shadow(0 10px 14px rgba(0,0,0,.28)) saturate(1.22)}
+.game-card button,.catalog-card button,.reward-button,.game-help{background:linear-gradient(180deg,#ffe69b,#ffc85d)!important;color:#18243a!important;border:1px solid rgba(255,255,255,.45)!important;box-shadow:0 9px 0 rgba(135,91,31,.28),0 14px 28px rgba(0,0,0,.24)!important}
+/* Match-3: remove flat prototype tiles; give pieces depth and motion */
+.match-grid,.garden-grid{background:linear-gradient(180deg,rgba(17,55,54,.92),rgba(8,36,48,.94))!important;border:1px solid rgba(255,228,154,.32)!important;box-shadow:inset 0 10px 30px rgba(0,0,0,.28),0 20px 40px rgba(0,0,0,.2)!important}
+.match-grid>*,.garden-grid>*{border-radius:22%!important;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.025))!important;box-shadow:inset 2px 2px 4px rgba(255,255,255,.16),inset -4px -5px 9px rgba(0,0,0,.18),0 4px 8px rgba(0,0,0,.18)!important;transition:transform .14s cubic-bezier(.2,.9,.25,1.25),filter .14s ease!important}
+.match-grid>*:active,.garden-grid>*:active{transform:scale(.86)!important;filter:brightness(1.28)}
+/* Bubble shooter */
+.bubble-board,.bubble-stage{background:radial-gradient(circle at 50% 110%,rgba(88,211,196,.18),transparent 34%),linear-gradient(180deg,#0b2638,#10253f)!important;border:2px solid rgba(255,222,135,.32)!important;box-shadow:inset 0 0 55px rgba(0,0,0,.32),0 22px 48px rgba(0,0,0,.28)!important}
+.bubble{box-shadow:inset -7px -9px 12px rgba(0,0,0,.16),inset 7px 8px 10px rgba(255,255,255,.42),0 5px 9px rgba(0,0,0,.28)!important;transition:transform .1s ease,filter .1s ease!important}
+.bubble:after{content:"";position:absolute;width:24%;height:18%;left:20%;top:15%;border-radius:50%;background:rgba(255,255,255,.62);filter:blur(1px)}
+/* Block puzzle: tactile pieces + clear placement feedback */
+.block-board{background:linear-gradient(145deg,#0b2c3d,#0a1c32)!important;border:2px solid rgba(255,219,124,.28)!important;box-shadow:inset 0 0 35px rgba(0,0,0,.35),0 20px 40px rgba(0,0,0,.24)!important}
+.block-cell{border-radius:16%!important;background:rgba(255,255,255,.055)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)!important}
+.block-cell.filled{box-shadow:inset 3px 4px 5px rgba(255,255,255,.28),inset -5px -6px 8px rgba(0,0,0,.2),0 4px 8px rgba(0,0,0,.25)!important;transform:translateZ(0)}
+.piece,.block-piece{touch-action:none!important;cursor:grab!important;transition:transform .12s ease,filter .12s ease!important}.piece:active,.block-piece:active{cursor:grabbing!important;transform:scale(1.12) translateY(-8px)!important;filter:brightness(1.18) drop-shadow(0 14px 14px rgba(0,0,0,.3))}
+/* Parking */
+.parking-board{background:linear-gradient(180deg,#253647,#172838)!important;border:10px solid #6b7180!important;box-shadow:inset 0 0 0 2px rgba(255,255,255,.08),0 20px 45px rgba(0,0,0,.3)!important}.car{filter:drop-shadow(0 8px 5px rgba(0,0,0,.28));transition:transform .075s cubic-bezier(.2,.9,.2,1)!important}
+/* remove purple wash from gameplay */
+.game-shell,.play-shell,.game-screen{background:linear-gradient(180deg,#071526,#092a3b 62%,#0a4147)!important}
+@keyframes wetPop{0%{transform:scale(.55);opacity:.2}65%{transform:scale(1.16);opacity:1}100%{transform:scale(1);opacity:1}}
+.pop,.matched,.clearing{animation:wetPop .22s ease-out!important}
