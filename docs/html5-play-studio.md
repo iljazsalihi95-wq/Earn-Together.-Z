@@ -34,7 +34,7 @@ The GitHub commit contains the backend rule and Android queue. It does not itsel
 
 ## Verification
 
-`node --test tests/html5-games.test.cjs tests/html5-arcade.test.cjs` executes 292 mechanics checks. Every one of 40 Water Sort / Parking / Arrow levels is checked against a removal or reversal solution; Garden starts without matches and with valid moves; engine tests cover merge-once, line clears, collisions, target completion and revival boundaries.
+`node --test tests/html5-games.test.cjs tests/html5-arcade.test.cjs` executes 332 mechanics checks. Every one of 40 Water Sort / Parking / Arrow levels is checked against a removal or reversal solution; Garden starts without matches and with valid moves; engine tests cover merge-once, line clears, collisions, target completion and revival boundaries.
 
 `node tests/html5-browser.cjs` (Playwright path optionally supplied by PLAYWRIGHT_MODULE) exercises all 13 actual interfaces, selected inputs, word/memory/arrow completion, unlock persistence, responsive widths, no-fill/cancelled video and simulated SDK boost completion. It captures screenshots as a CI artifact. Browser bridge mocks do not confirm real mediation inventory, physical-device touch, S2S verification or money.
 

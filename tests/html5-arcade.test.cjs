@@ -1,5 +1,6 @@
 const test=require('node:test'),a=require('node:assert/strict'),G=require('../app/src/main/assets/html5/arcade.js');
 for(let n=1;n<=40;n++){
+ test(`2048 ${n}: stage budget can create the target tile`,()=>{const g=new G.Merge(n);a.ok(g.moves>=g.target/2+40);g.spawn=()=>{};g.board=[g.target/2,g.target/2,0,0,...Array(12).fill(0)];g.move(0);a.equal(g.result,'won')});
  test(`Arrow Escape ${n}: every authored path has a removal sequence`,()=>{const g=new G.Arrows(n);let steps=0;while(!g.ended&&steps++<200){const i=g.paths.findIndex((_,i)=>g.available(i));a.ok(i>=0);g.tap(i)}a.equal(g.result,'won')});
  test(`Water Sort ${n}: reverse-generated puzzle is solvable and preserves inventory`,()=>{const g=new G.Water(n),counts=Array(g.colors).fill(0);g.tubes.flat().forEach(v=>counts[v]++);a.deepEqual(counts,Array(g.colors).fill(4));a.equal(g.solved(),false);for(const [i,j]of g.solution){if(g.ended)break;a.equal(g.pour(i,j),true,`${i} to ${j}`)}a.equal(g.result,'won')});
  test(`Parking ${n}: collision-free shuffle can be solved`,()=>{const g=new G.Parking(n);a.notEqual(g.cars[0].x,4);for(const [i,d]of g.solution){if(g.ended)break;a.ok(g.move(i,d))}a.equal(g.result,'won')});
