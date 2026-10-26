@@ -79,9 +79,22 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
     private fun expandPowerClear(match:MatchResult):MatchResult{
         if(match.cells.size<4)return match
         val expanded=linkedSetOf<Cell>().apply{addAll(match.cells)}
-        val rows=match.cells.groupBy{it.row};val columns=match.cells.groupBy{it.col}
-        rows.filterValues{it.size>=4}.forEach{(row,line)->for(c in 0 until level.columns)expanded+=Cell(row,c);if(line.size>=5){val pivot=line[line.size/2];for(r in 0 until level.rows)expanded+=Cell(r,pivot.col)}}
-        columns.filterValues{it.size>=4}.forEach{(col,line)->for(r in 0 until level.rows)expanded+=Cell(r,col);if(line.size>=5){val pivot=line[line.size/2];for(c in 0 until level.columns)expanded+=Cell(pivot.row,c)}}
+        val rows=match.cells.groupBy{it.row}
+        val columns=match.cells.groupBy{it.col}
+        rows.filterValues{it.size>=4}.forEach{(row,line)->
+            for(c in 0 until level.columns) expanded+=Cell(row,c)
+            if(line.size>=5){
+                val pivot=line[line.size/2]
+                for(r in 0 until level.rows) expanded+=Cell(r,pivot.col)
+            }
+        }
+        columns.filterValues{it.size>=4}.forEach{(col,line)->
+            for(r in 0 until level.rows) expanded+=Cell(r,col)
+            if(line.size>=5){
+                val pivot=line[line.size/2]
+                for(c in 0 until level.columns) expanded+=Cell(pivot.row,c)
+            }
+        }
         return MatchResult(expanded,expanded.filterNot(::blocksSwap).groupingBy{board[it.row][it.col]}.eachCount())
     }
 
