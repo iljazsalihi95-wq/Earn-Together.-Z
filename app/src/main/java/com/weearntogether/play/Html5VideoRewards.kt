@@ -37,7 +37,8 @@ class Html5VideoRewards(context: Context, private val user: String) {
         for (i in 0 until rows.length()) { val r = rows.getJSONObject(i)
             when (r.optString("state")) { "WAITING" -> waiting++; "PENDING" -> pending += r.optLong("coins"); "VERIFIED" -> verified += r.optLong("coins") }
         }
-        JSONObject().put("pending_coins", pending).put("verified_coins", verified).put("waiting_videos", waiting)
+        val server=try{JSONObject(prefs.getString("$user:balance","{}"))}catch(_:Exception){JSONObject()}
+        JSONObject().put("pending_coins",server.optLong("pending_coins",pending)).put("verified_coins",server.optLong("verified_coins",verified)).put("waiting_videos", waiting)
     }
     private fun session(game: String, token: String): JSONObject {
         val key = "$user:session:$game"
@@ -69,6 +70,7 @@ class Html5VideoRewards(context: Context, private val user: String) {
                     val answer = BackendClient().request("recordRewardEvent", JSONObject().put("session_token", token)
                         .put("session_id", s.getString("session_id")).put("game_id", r.getString("game"))
                         .put("source", "AD_REWARD").put("event_id", r.getString("id")))
+                    answer.optJSONObject("balance")?.let{prefs.edit().putString("$user:balance",it.toString()).putLong("$user:balance_at",System.currentTimeMillis()).apply()}
                     val state = answer.optString("status")
                     if (state !in listOf("PENDING", "VERIFIED", "REJECTED")) continue
                     synchronized(guard) {
@@ -81,6 +83,10 @@ class Html5VideoRewards(context: Context, private val user: String) {
                     }
                     // Respect the existing server event interval; retry remaining receipts later.
                     break
+                }
+                if(sameAccount() && System.currentTimeMillis()-prefs.getLong("$user:balance_at",0)>60_000){
+                    val balance=BackendClient().request("getBalance",JSONObject().put("session_token",token))
+                    prefs.edit().putString("$user:balance",balance.toString()).putLong("$user:balance_at",System.currentTimeMillis()).apply()
                 }
             } catch (_: Exception) { /* Offline, old backend or expired auth: durable receipt remains queued. */ }
             finally { working.set(false) }
