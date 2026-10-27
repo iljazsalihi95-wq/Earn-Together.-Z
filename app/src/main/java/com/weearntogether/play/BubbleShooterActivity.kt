@@ -60,17 +60,17 @@ class BubbleShooterActivity : Activity() {
 
     private fun statusChip(text:String)=TextView(this).apply {
         this.text=text
-        textSize=11f
+        textSize=10f
         setTextColor(0xffffd66b.toInt())
         gravity=Gravity.CENTER
         setTypeface(null, Typeface.BOLD)
-        letterSpacing=.08f
+        letterSpacing=.06f
         elevation=dp(6).toFloat()
         background=GradientDrawable(
             GradientDrawable.Orientation.LEFT_RIGHT,
             intArrayOf(0xdd102a54.toInt(),0xdd24164d.toInt(),0xdd0b5f9f.toInt())
         ).apply {
-            cornerRadius=dp(18).toFloat()
+            cornerRadius=dp(16).toFloat()
             setStroke(dp(1),0x88ffc857.toInt())
         }
     }
@@ -116,6 +116,28 @@ class BubbleShooterActivity : Activity() {
             ))
         }
 
+        // Opaque premium chrome keeps navigation readable above the animated game canvas.
+        val header=View(this).apply {
+            background=GradientDrawable(
+                GradientDrawable.Orientation.TL_BR,
+                intArrayOf(0xff0a1a3b.toInt(),0xff241050.toInt(),0xff071a38.toInt())
+            ).apply { setStroke(dp(1),0x5569cfff) }
+            elevation=dp(4).toFloat()
+        }
+        host.addView(header,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(108),Gravity.TOP))
+
+        val title=TextView(this).apply {
+            text="BUBBLE SHOOTER"
+            textSize=18f
+            setTextColor(Color.WHITE)
+            gravity=Gravity.CENTER
+            setTypeface(null,Typeface.BOLD)
+            letterSpacing=.08f
+            contentDescription=ui("Bubble Shooter game","Loja Bubble Shooter","Bubble-Shooter-Spiel","Gioco Bubble Shooter")
+            elevation=dp(8).toFloat()
+        }
+        host.addView(title,FrameLayout.LayoutParams(dp(180),dp(46),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin=dp(8) })
+
         val back=chip("‹  "+ui("BACK","PRAPA","ZURÜCK","INDIETRO")) { finish() }
         back.contentDescription=ui("Back","Kthehu prapa","Zurück","Indietro")
         host.addView(back,FrameLayout.LayoutParams(dp(104),dp(46),Gravity.TOP or Gravity.START).apply {
@@ -127,14 +149,12 @@ class BubbleShooterActivity : Activity() {
             rightMargin=dp(12); topMargin=dp(8)
         })
         val status=statusChip(ui(
-            "BUBBLE SHOOTER  •  AUTO-SAVE  •  250 LEVELS",
-            "BUBBLE SHOOTER  •  AUTO-RUAJTJE  •  250 NIVELE",
-            "BUBBLE SHOOTER  •  AUTO-SPEICHERN  •  250 LEVEL",
-            "BUBBLE SHOOTER  •  SALVATAGGIO AUTO  •  250 LIVELLI"
+            "AUTO-SAVE  •  250 LEVELS",
+            "AUTO-RUAJTJE  •  250 NIVELE",
+            "AUTO-SPEICHERN  •  250 LEVEL",
+            "SALVATAGGIO AUTO  •  250 LIVELLI"
         ))
-        host.addView(status,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(34),Gravity.TOP).apply {
-            leftMargin=dp(16); rightMargin=dp(16); topMargin=dp(60)
-        })
+        host.addView(status,FrameLayout.LayoutParams(dp(230),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin=dp(64) })
 
         val swap=chip("⇄  "+ui("SWAP","NDËRRO","TAUSCH","SCAMBIA"), accent=true) { game.swapBubble() }
         swap.contentDescription=ui("Swap current and next bubble","Ndërro topin aktual me tjetrin","Aktuelle und nächste Kugel tauschen","Scambia la bolla attuale con la prossima")
