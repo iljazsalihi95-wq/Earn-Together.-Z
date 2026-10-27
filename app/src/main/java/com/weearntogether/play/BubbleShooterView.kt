@@ -36,7 +36,28 @@ class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Un
     private fun addPressureRow(){for(r in 11 downTo 1)for(c in 0..7)grid[r][c]=grid[r-1][c];val colorCount=(3+(level-1)/75).coerceAtMost(colors.size);for(c in 0..7)grid[0][c]=if(Random.nextFloat()<.82f)Random.nextInt(colorCount) else -1;misses=0;pressureStarted=System.nanoTime();performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)}
     private fun advanceLevel(){if(level>=250){points+=25000;ended=true;save();performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);post{onLevelComplete?.invoke()};return};level++;bestLevel=maxOf(bestLevel,level);points+=250*level;startLevel(false);performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);post{onLevelComplete?.invoke()}}
     private fun finishGame(){if(ended)return;ended=true;save();performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);post{onLevelComplete?.invoke()}}
-    private fun snap(){moving=false;val candidates=mutableListOf<Triple<Int,Int,Float>>();for(r in 0..11)for(c in 0..7)if(grid[r][c]<0){val connected=r==0||neighbors(r,c).any{(rr,cc)->grid[rr][cc]>=0};if(connected)candidates.add(Triple(r,c,hypot(px-centerX(c,r),py-centerY(r))))};val nearest=candidates.minByOrNull{it.third}?:run{finishGame();invalidate();return};val r=nearest.first;val c=nearest.second;grid[r][c]=current;val matches=group(r,c,true);if(matches.size>=3){streak++;misses=0;matches.forEach{(rr,cc)->grid[rr][cc]=-1};points+=matches.size*10*level+streak*5;val attached=mutableSetOf<Pair<Int,Int>>();for(col in 0..7)if(grid[0][col]>=0)attached.addAll(group(0,col,false));var dropped=0;for(rr in 0..11)for(cc in 0..7)if(grid[rr][cc]>=0&&(rr to cc)!in attached){grid[rr][cc]=-1;dropped++};points+=dropped*15*level;burstX=centerX(c,r);burstY=centerY(r);burstCount=matches.size;burstDropped=dropped;burstStarted=System.nanoTime();performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)}else{streak=0;misses++;if(misses>=missLimit())addPressureRow()};shots++;if(grid.all{row->row.all{it<0}})advanceLevel()else{current=next;next=playableColor();if(current !in activeColors())current=playableColor()};if(!ended&&(grid[10].any{it>=0}||grid[11].any{it>=0}))finishGame();save();invalidate()}
+    private fun snap(){
+        moving=false
+        val rad=radius()
+        val impact=mutableListOf<Pair<Int,Int>>()
+        for(r in 0..11)for(c in 0..7)if(grid[r][c]>=0&&hypot(px-centerX(c,r),py-centerY(r))<=rad*2.15f)impact.add(r to c)
+        val local=linkedSetOf<Pair<Int,Int>>()
+        if(py<=rad*1.35f){for(c in 0..7)if(grid[0][c]<0)local.add(0 to c)}
+        impact.sortedBy{(r,c)->hypot(px-centerX(c,r),py-centerY(r))}.take(3).forEach{(r,c)->neighbors(r,c).filterTo(local){(rr,cc)->grid[rr][cc]<0}}
+        val candidates=local.map{(r,c)->Triple(r,c,hypot(px-centerX(c,r),py-centerY(r)))}.filter{it.third<=rad*2.65f}.toMutableList()
+        if(candidates.isEmpty()){
+            for(r in 0..11)for(c in 0..7)if(grid[r][c]<0){
+                val connected=r==0||neighbors(r,c).any{(rr,cc)->grid[rr][cc]>=0}
+                val distance=hypot(px-centerX(c,r),py-centerY(r))
+                if(connected&&distance<=rad*3.0f)candidates.add(Triple(r,c,distance))
+            }
+        }
+        val nearest=candidates.minByOrNull{it.third}?:run{finishGame();invalidate();return}
+        val r=nearest.first;val c=nearest.second;grid[r][c]=current
+        val matches=group(r,c,true)
+        if(matches.size>=3){streak++;misses=0;matches.forEach{(rr,cc)->grid[rr][cc]=-1};points+=matches.size*10*level+streak*5;val attached=mutableSetOf<Pair<Int,Int>>();for(col in 0..7)if(grid[0][col]>=0)attached.addAll(group(0,col,false));var dropped=0;for(rr in 0..11)for(cc in 0..7)if(grid[rr][cc]>=0&&(rr to cc)!in attached){grid[rr][cc]=-1;dropped++};points+=dropped*15*level;burstX=centerX(c,r);burstY=centerY(r);burstCount=matches.size;burstDropped=dropped;burstStarted=System.nanoTime();performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)}else{streak=0;misses++;if(misses>=missLimit())addPressureRow()}
+        shots++;if(grid.all{row->row.all{it<0}})advanceLevel()else{current=next;next=playableColor();if(current !in activeColors())current=playableColor()};if(!ended&&(grid[10].any{it>=0}||grid[11].any{it>=0}))finishGame();save();invalidate()
+    }
     private fun drawBubble(c:Canvas,x:Float,y:Float,rad:Float,color:Int){p.style=Paint.Style.FILL;p.shader=RadialGradient(x-rad*.30f,y-rad*.36f,rad*1.35f,intArrayOf(Color.WHITE,color,darken(color)),floatArrayOf(0f,.30f,1f),Shader.TileMode.CLAMP);c.drawCircle(x,y,rad,p);p.shader=null;p.color=0x66ffffff;p.style=Paint.Style.STROKE;p.strokeWidth=max(2f,rad*.07f);c.drawCircle(x,y,rad*.91f,p);p.style=Paint.Style.FILL;p.color=0xbfffffff.toInt();c.drawCircle(x-rad*.32f,y-rad*.34f,rad*.17f,p)}
     private fun darken(color:Int)=Color.rgb((Color.red(color)*.55f).toInt(),(Color.green(color)*.55f).toInt(),(Color.blue(color)*.55f).toInt())
     private fun pill(c:Canvas,left:Float,top:Float,right:Float,bottom:Float,color:Int){p.color=color;p.style=Paint.Style.FILL;c.drawRoundRect(left,top,right,bottom,(bottom-top)/2,(bottom-top)/2,p)}
