@@ -28,6 +28,7 @@ class PremiumBubbleShooterView(context: Context) : FrameLayout(context) {
     private val hud = TextView(context)
     private val launcher = TextView(context)
     private val nextView = TextView(context)
+    private val aimDots = mutableListOf<View>()
     private var score = 0
     private var best = 0
     private var level = 1
@@ -37,6 +38,7 @@ class PremiumBubbleShooterView(context: Context) : FrameLayout(context) {
     private var busy = false
     private var cell = 1
     private var fieldTop = 0
+    private var aimingCol = -1
 
     init {
         setBackgroundColor(0xff071020.toInt())
@@ -50,6 +52,19 @@ class PremiumBubbleShooterView(context: Context) : FrameLayout(context) {
         addView(launcher, LayoutParams(dp(66), dp(66), Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply { bottomMargin = dp(12) })
         nextView.gravity = Gravity.CENTER; nextView.textSize = 22f; nextView.elevation = dp(10).toFloat()
         addView(nextView, LayoutParams(dp(48), dp(48), Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply { bottomMargin = dp(18); leftMargin = dp(116) })
+        repeat(8) {
+            val dot = View(context).apply {
+                visibility = View.GONE
+                elevation = dp(16).toFloat()
+                background = GradientDrawable().apply {
+                    shape = GradientDrawable.OVAL
+                    setColor(0xddffffff.toInt())
+                    setStroke(dp(1), 0x99ffc857.toInt())
+                }
+            }
+            aimDots += dot
+            addView(dot, LayoutParams(dp(8), dp(8)))
+        }
         restoreOrNew()
         post { rebuild() }
     }
@@ -97,13 +112,46 @@ class PremiumBubbleShooterView(context: Context) : FrameLayout(context) {
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (event.action != MotionEvent.ACTION_UP || busy) return true
-        val localX = event.x - field.left
-        val localY = event.y - field.top
-        if (localY < fieldTop || localX < 0 || localX > field.width) return true
-        val col = (localX / cell).toInt().coerceIn(0, cols - 1)
-        shoot(col)
+        if (busy) return true
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                if (event.y < field.top + fieldTop || event.y > height - dp(54)) {
+                    hideAim(); return true
+                }
+                updateAim(event.x)
+            }
+            MotionEvent.ACTION_UP -> {
+                val col = aimingCol
+                hideAim()
+                if (col >= 0) shoot(col)
+            }
+            MotionEvent.ACTION_CANCEL -> hideAim()
+        }
         return true
+    }
+
+    private fun updateAim(touchX: Float) {
+        val localX = (touchX - field.left).coerceIn(0f, field.width.toFloat())
+        val col = (localX / cell).toInt().coerceIn(0, cols - 1)
+        val row = landingRow(col)
+        if (row < 0) { hideAim(); return }
+        aimingCol = col
+        val startX = width / 2f
+        val startY = height - dp(45).toFloat()
+        val endX = field.left + dp(8) + col * cell + (cell - dp(5)) / 2f
+        val endY = field.top + fieldTop + row * cell + (cell - dp(5)) / 2f
+        aimDots.forEachIndexed { index, dot ->
+            val t = (index + 1f) / (aimDots.size + 1f)
+            dot.x = startX + (endX - startX) * t - dot.layoutParams.width / 2f
+            dot.y = startY + (endY - startY) * t - dot.layoutParams.height / 2f
+            dot.alpha = .95f - index * .07f
+            dot.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideAim() {
+        aimingCol = -1
+        aimDots.forEach { it.visibility = View.GONE }
     }
 
     private fun shoot(col: Int) {
@@ -175,5 +223,5 @@ class PremiumBubbleShooterView(context: Context) : FrameLayout(context) {
     }
 
     fun swapBubble() { if (busy) return; val t = current; current = next; next = t; save(); rebuild(); performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP) }
-    fun restart() { if (busy) return; score = 0; streak = 0; newBoard(); current = randomBoardColor(); next = randomBoardColor(); save(); rebuild() }
+    fun restart() { if (busy) return; hideAim(); score = 0; streak = 0; newBoard(); current = randomBoardColor(); next = randomBoardColor(); save(); rebuild() }
 }
