@@ -1,6 +1,8 @@
 package com.weearntogether.play
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.UUID
@@ -12,6 +14,8 @@ class Html5VideoRewards(context: Context, private val user: String) {
     private val app = context.applicationContext
     private val prefs = app.getSharedPreferences("wet_html5_video_receipts", Context.MODE_PRIVATE)
     private val account get() = AccountStore(app)
+    private val retryHandler = Handler(Looper.getMainLooper())
+    private val retryQueued = AtomicBoolean(false)
     private fun sameAccount() = account.isSignedIn() && account.currentUserId() == user
     private fun receipts(): JSONArray = try { JSONArray(prefs.getString("$user:receipts", "[]")) } catch (_: Exception) { JSONArray() }
     /** Only called from the native LevelPlay onAdRewarded callback, never from JS. */
@@ -28,6 +32,7 @@ class Html5VideoRewards(context: Context, private val user: String) {
             }
             rows.put(JSONObject().put("id", UUID.randomUUID().toString()).put("game", "html5_$game")
                 .put("completed_at", System.currentTimeMillis()).put("state", "WAITING").put("coins", 0))
+            // commit() is intentional: a completed SDK callback must be durable before sync starts.
             prefs.edit().putString("$user:receipts", rows.toString()).commit()
         }
         sync()
@@ -54,8 +59,28 @@ class Html5VideoRewards(context: Context, private val user: String) {
         CloudWorker.executor.execute { try { if (sameAccount()) session("html5_$game", account.requireToken()) } catch (_: Exception) {} }
         sync()
     }
+    private fun waitingCount(): Int = synchronized(guard) {
+        val rows=receipts();var waiting=0
+        for(i in 0 until rows.length()) if(rows.getJSONObject(i).optString("state")=="WAITING") waiting++
+        waiting
+    }
+    /**
+     * The backend intentionally rejects reward events submitted less than five seconds apart.
+     * Process one durable receipt per pass, then automatically schedule the next pass after the
+     * server interval. Previously the loop stopped after the first receipt and depended on the
+     * Activity's 15-second UI timer; leaving/closing the game could therefore make later completed
+     * videos look as if only one had counted even though their receipts were still WAITING.
+     */
+    private fun scheduleNextWaitingReceipt() {
+        if (!sameAccount() || waitingCount() == 0 || !retryQueued.compareAndSet(false, true)) return
+        retryHandler.postDelayed({
+            retryQueued.set(false)
+            if (sameAccount()) sync()
+        }, 6_000L)
+    }
     fun sync() {
         if (!sameAccount() || !working.compareAndSet(false, true)) return
+        var processedReceipt = false
         CloudWorker.executor.execute {
             try {
                 val token = account.requireToken()
@@ -81,7 +106,8 @@ class Html5VideoRewards(context: Context, private val user: String) {
                         }
                         prefs.edit().putString("$user:receipts", current.toString()).commit()
                     }
-                    // Respect the existing server event interval; retry remaining receipts later.
+                    processedReceipt = true
+                    // One server event per pass; scheduleNextWaitingReceipt respects the 5s interval.
                     break
                 }
                 if(sameAccount() && System.currentTimeMillis()-prefs.getLong("$user:balance_at",0)>60_000){
@@ -89,8 +115,11 @@ class Html5VideoRewards(context: Context, private val user: String) {
                     prefs.edit().putString("$user:balance",balance.toString()).putLong("$user:balance_at",System.currentTimeMillis()).apply()
                 }
             } catch (_: Exception) { /* Offline, old backend or expired auth: durable receipt remains queued. */ }
-            finally { working.set(false) }
+            finally {
+                working.set(false)
+                if (processedReceipt) scheduleNextWaitingReceipt()
+            }
         }
     }
-    fun canWatch(): Boolean = synchronized(guard) { val rows=receipts();var waiting=0;for(i in 0 until rows.length())if(rows.getJSONObject(i).optString("state")=="WAITING")waiting++;waiting<1000 }
+    fun canWatch(): Boolean = waitingCount() < 1000
 }
