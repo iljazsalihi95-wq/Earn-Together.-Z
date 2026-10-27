@@ -13,7 +13,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.TextView
 import kotlin.math.max
 import kotlin.random.Random
@@ -131,6 +130,11 @@ class PremiumBubbleShooterView(context: Context) : FrameLayout(context) {
         return 0
     }
 
+    private fun boardIsEmpty(): Boolean {
+        for (r in 0 until rows) for (c in 0 until cols) if (grid[r][c] != 0) return false
+        return true
+    }
+
     private fun settle(r: Int, c: Int) {
         grid[r][c] = current
         val group = flood(r, c, current)
@@ -143,7 +147,7 @@ class PremiumBubbleShooterView(context: Context) : FrameLayout(context) {
         } else {
             streak = 0; score += 10 * level; performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
         }
-        if (grid.flatten().none { it != 0 }) { level = (level + 1).coerceAtMost(250); score += level * 500; newBoard() }
+        if (boardIsEmpty()) { level = (level + 1).coerceAtMost(250); score += level * 500; newBoard() }
         current = next; next = randomBoardColor(); busy = false; save(); rebuild()
     }
 
@@ -162,7 +166,11 @@ class PremiumBubbleShooterView(context: Context) : FrameLayout(context) {
     }
 
     private fun randomBoardColor(): Int {
-        val present = grid.flatMap { it.asList() }.filter { it > 0 }.distinct()
+        val present = mutableListOf<Int>()
+        for (r in 0 until rows) for (c in 0 until cols) {
+            val value = grid[r][c]
+            if (value > 0 && value !in present) present.add(value)
+        }
         return if (present.isEmpty()) 1 + Random.nextInt(palette.size) else present.random()
     }
 
