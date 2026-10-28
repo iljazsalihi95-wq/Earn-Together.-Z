@@ -607,6 +607,33 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 32,
+      "id": "series2-032-fajr-end-sunrise",
+      "category": "Fikhu Hanefi",
+      "subcategory": "Kohët e namazit",
+      "originalQuestion": "Cila është koha e fundit e lejuar për faljen e namazit të Sabahut?",
+      "question": "Kur përfundon koha e namazit të Sabahut?",
+      "options": [
+        "Kur fillon lindja e diellit në horizont",
+        "Në orën 8 të mëngjesit",
+        "Kur fillon namazi i drekës",
+        "Në mesditë"
+      ],
+      "correctIndex": 0,
+      "explanation": "Koha e Sabahut fillon me agimin e vërtetë (sabah sadik) dhe mbaron kur fillon lindja e diellit. Shprehja 'deri në lindjen e plotë' është e pasaktë: kufiri është fillimi i lindjes. Në medhhebin Hanefi, nëse dielli fillon të lindë gjatë farzit të Sabahut, namazi prishet dhe duhet përsëritur pas përfundimit të kohës së ndaluar.",
+      "sources": [
+        {
+          "work": "Sahih Muslim",
+          "locator": "Hadithi 612, kohët e namazit"
+        },
+        {
+          "work": "El-Merginani",
+          "locator": "El-Hidaje, kohët e namazit"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
