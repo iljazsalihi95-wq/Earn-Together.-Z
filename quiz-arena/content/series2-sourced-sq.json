@@ -766,6 +766,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 38,
+      "id": "series2-038-jafar-at-tayyar-muta",
+      "category": "Historia Islame",
+      "subcategory": "Sahabët",
+      "question": "Pse u quajt Xhafer ibn Ebi Talibi me nofkën 'Et-Tajjar' (Fluturuesi në Xhenet)?",
+      "options": [
+        "Sepse ishte vrapuesi më i shpejtë",
+        "Sepse iu prenë të dy krahët duke mbajtur flamurin në Mu'te dhe Allahu ia zëvendësoi me krahë në Xhenet",
+        "Sepse bëri hixhret me anije",
+        "Sepse hipte në kalë me shpejtësi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Xhafer ibn Ebi Talibi (r.a.) ra dëshmor në betejën e Mu'tes në vitin 8 hixhri, duke mbajtur flamurin. Sipas transmetimeve islame, iu prenë të dy krahët në betejë dhe Allahu ia zëvendësoi me krahë në Xhenet; prandaj njihet si Et-Tajjar (Fluturuesi) dhe Dhul-Xhenahejn (Ai me dy krahë).",
+      "sources": [
+        {
+          "work": "Sahih el-Buhari",
+          "locator": "4261, ngjarjet e betejës së Mu'tes"
+        },
+        {
+          "work": "Xhami et-Tirmidhi",
+          "locator": "Transmetimet mbi virtytet e Xhafer ibn Ebi Talibit"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
