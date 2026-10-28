@@ -1,0 +1,65 @@
+{
+  "id": "quran-name-allah-frequency-sq",
+  "locale": "sq",
+  "domain": "Njohuri Islame",
+  "category": "Kurani",
+  "subcategory": "Fjalët dhe emrat në Kuran",
+  "question": "Cila nga këto fjalë përmendet më shpesh në Kuran?",
+  "options": [
+    "Muhamed",
+    "Allah",
+    "Xhenet",
+    "Namaz"
+  ],
+  "correctIndex": 1,
+  "lesson": {
+    "title": "Emri Allah në Kuran",
+    "frequency": {
+      "count": 2699,
+      "scope": "Emri i përveçëm Allah (ٱللَّه) sipas indeksimit morfologjik të Quranic Arabic Corpus; jo të gjitha emërtimet ose përemrat që i referohen Zotit.",
+      "source": "Quranic Arabic Corpus — Quran Dictionary / lemma Allah"
+    },
+    "explanation": "Emri Allah është emri i përveçëm i Zotit të Madhëruar. Ai shfaqet në shumë sure të Kuranit. Numërimi prej 2.699 përmendjesh është numërim gjuhësor për emrin e përveçëm; numrat mund të ndryshojnë nëse përfshihen forma të tjera ose metodologji të tjera numërimi.",
+    "examples": [
+      {
+        "surah": "El-Fatiha",
+        "ayah": "1:2",
+        "excerpt": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+        "meaning": "Falënderimi i takon Allahut, Zotit të botëve."
+      },
+      {
+        "surah": "El-Bekare",
+        "ayah": "2:255",
+        "excerpt": "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ",
+        "meaning": "Allahu! Nuk ka zot tjetër përveç Tij."
+      },
+      {
+        "surah": "Ali Imran",
+        "ayah": "3:18",
+        "excerpt": "شَهِدَ اللَّهُ أَنَّهُ لَا إِلَٰهَ إِلَّا هُوَ",
+        "meaning": "Allahu dëshmon se nuk ka zot tjetër përveç Tij."
+      },
+      {
+        "surah": "El-Ikhlas",
+        "ayah": "112:1",
+        "excerpt": "قُلْ هُوَ اللَّهُ أَحَدٌ",
+        "meaning": "Thuaj: Ai është Allahu, Një i Vetëm."
+      }
+    ],
+    "learningNote": "Vendet e listuara janë shembuj. Për listën e plotë të paraqitjeve kërkohet indeks konkordance, jo listim i hamendësuar."
+  },
+  "sources": [
+    {
+      "name": "Quranic Arabic Corpus",
+      "url": "https://corpus.quran.com/qurandictionary.jsp?q=Alh",
+      "purpose": "Numërimi dhe indeksimi i emrit Allah"
+    },
+    {
+      "name": "Kurani",
+      "reference": "1:2; 2:255; 3:18; 112:1",
+      "purpose": "Shembuj të emrit në tekstin kuranor"
+    }
+  ],
+  "reviewStatus": "requires_primary_corpus_crosscheck",
+  "integrationStatus": "content_only_not_wired_to_android"
+}
