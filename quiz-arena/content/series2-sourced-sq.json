@@ -392,6 +392,28 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 24,
+      "id": "series2-024-surah-zalzalah",
+      "category": "Kurani",
+      "subcategory": "Tefsiri / Dita e Kiametit",
+      "question": "Në cilën sure gjendet ajeti: 'Kur toka të dridhet me dridhjen e saj'?",
+      "options": [
+        "Surja El-Kari'ah",
+        "Surja Ez-Zelzele",
+        "Surja El-Vakia",
+        "Surja Et-Tekvir"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ajeti është Ez-Zelzele 99:1: إِذَا زُلْزِلَتِ الْأَرْضُ زِلْزَالَهَا. Surja përmban tetë ajete dhe flet për dridhjen e tokës në Ditën e Kiametit, dëshminë për veprat dhe shfaqjen e çdo vepre, qoftë sa grimca (99:7–8).",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "Ez-Zelzele 99:1–8"
+        }
+      ],
+      "reviewStatus": "source_references_identified"
     }
   ]
 }
