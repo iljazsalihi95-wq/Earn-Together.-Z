@@ -52,8 +52,14 @@ class BlockPuzzleActivity : Activity() {
         host.addView(back,FrameLayout.LayoutParams(dp(104),dp(46),Gravity.TOP or Gravity.START).apply{leftMargin=dp(12);topMargin=dp(8)})
         val restart=chip("↻  "+ui("RESTART","RIFILLO","NEUSTART","RIPROVA"),true){confirmRestart()}
         host.addView(restart,FrameLayout.LayoutParams(dp(126),dp(46),Gravity.TOP or Gravity.END).apply{rightMargin=dp(12);topMargin=dp(8)})
-        val status=statusChip(ui("NATIVE HD 2D  •  AUTO-SAVE","NATIVE HD 2D  •  AUTO-RUAJTJE","NATIVE HD 2D  •  AUTO-SPEICHERN","NATIVE HD 2D  •  SALVATAGGIO AUTO"))
-        host.addView(status,FrameLayout.LayoutParams(dp(250),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
+        val status=statusChip(ui("NATIVE HD 2D  •  AUTO-SAVE  •  250 LEVELS","NATIVE HD 2D  •  AUTO-RUAJTJE  •  250 NIVELE","NATIVE HD 2D  •  AUTO-SPEICHERN  •  250 LEVEL","NATIVE HD 2D  •  SALVATAGGIO AUTO  •  250 LIVELLI"))
+        host.addView(status,FrameLayout.LayoutParams(dp(280),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
+        val guide=TextView(this).apply{
+            text=ui("DRAG A PIECE TO THE BOARD  •  CLEAR ROWS & COLUMNS","TËRHIQ PJESËN NË TABELË  •  PASTRO RRESHTA & KOLONA","STEIN AUFS FELD ZIEHEN  •  REIHEN & SPALTEN LÖSCHEN","TRASCINA IL PEZZO  •  COMPLETA RIGHE E COLONNE")
+            textSize=10f;setTextColor(0xffb8c9ef.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.035f
+            background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xcc09172f.toInt(),0xcc241248.toInt(),0xcc09172f.toInt())).apply{cornerRadius=dp(15).toFloat();setStroke(dp(1),0x4458c8ff)}
+        }
+        host.addView(guide,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(32),Gravity.BOTTOM).apply{leftMargin=dp(20);rightMargin=dp(20);bottomMargin=dp(6)})
         setContentView(host)
     }
 
