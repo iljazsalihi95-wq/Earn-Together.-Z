@@ -1113,6 +1113,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 51,
+      "id": "series2-051-hanafi-hajj-rukn-arafat-tawaf",
+      "category": "Fikhu Hanefi",
+      "subcategory": "Haxhi",
+      "question": "Cilat janë farzet (ruknet) themelore të Haxhit sipas juristëve hanefi?",
+      "options": [
+        "Vetëm gjuajtja e gurëve në Mina",
+        "Vetëm pirja e ujit Zemzem",
+        "Vetëm ecja midis Safës dhe Mervës",
+        "Qëndrimi në Arefat dhe Tavafi Zijaret (bashkë me Ihramin si kusht hyrës)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Sipas medhhebit Hanefi, dy ruknet e Haxhit janë qëndrimi në Arefat (vukufi) dhe Tavafi Zijaret/Ifada. Ihrami është kusht (shart) i domosdoshëm për hyrjen në Haxh, por nuk numërohet si një nga këto dy rukne. Sa'ji ndërmjet Safës dhe Mervës dhe gjuajtja e gurëve janë vaxhibe në klasifikimin hanefi.",
+      "sources": [
+        {
+          "work": "El-Merginani",
+          "locator": "El-Hidaje, Kitab el-Haxh, farzet dhe vaxhibet"
+        },
+        {
+          "work": "El-Kudurij",
+          "locator": "Muhtesar el-Kudurij, Kitab el-Haxh"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
