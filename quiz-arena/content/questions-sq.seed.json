@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "locale": "sq",
+  "title": "Quiz Arena Premium — question seed",
+  "notes": "Seed data only. Not yet wired to Android gameplay. Islamic questions require editorial source review before publication.",
+  "questions": [
+    {
+      "id": "qa-001",
+      "domain": "general",
+      "category": "geography",
+      "difficulty": 1,
+      "type": "multiple_choice",
+      "timeLimitSeconds": 60,
+      "question": "Cili është kryeqyteti i Kanadasë?",
+      "choices": [
+        "Toronto",
+        "Ottawa",
+        "Vankuver",
+        "Montreal"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ottawa është kryeqyteti federal i Kanadasë.",
+      "source": "Njohuri të përgjithshme",
+      "reviewStatus": "editorial_review_pending"
+    },
+    {
+      "id": "qa-002",
+      "domain": "general",
+      "category": "science",
+      "difficulty": 1,
+      "type": "multiple_choice",
+      "timeLimitSeconds": 60,
+      "question": "Cili planet është më afër Diellit?",
+      "choices": [
+        "Venusi",
+        "Toka",
+        "Mërkuri",
+        "Marsi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Mërkuri është planeti më i afërt me Diellin.",
+      "source": "Njohuri të përgjithshme",
+      "reviewStatus": "editorial_review_pending"
+    },
+    {
+      "id": "qa-003",
+      "domain": "general",
+      "category": "math",
+      "difficulty": 1,
+      "type": "multiple_choice",
+      "timeLimitSeconds": 60,
+      "question": "Sa është 12 × 8?",
+      "choices": [
+        "88",
+        "96",
+        "108",
+        "86"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 shumëzuar me 8 është 96.",
+      "source": "Njohuri të përgjithshme",
+      "reviewStatus": "editorial_review_pending"
+    },
+    {
+      "id": "qa-004",
+      "domain": "general",
+      "category": "history",
+      "difficulty": 1,
+      "type": "multiple_choice",
+      "timeLimitSeconds": 60,
+      "question": "Në cilin vit ra Muri i Berlinit?",
+      "choices": [
+        "1987",
+        "1989",
+        "1991",
+        "1993"
+      ],
+      "correctIndex": 1,
+      "explanation": "Muri i Berlinit u hap më 9 nëntor 1989.",
+      "source": "Njohuri të përgjithshme",
+      "reviewStatus": "editorial_review_pending"
+    },
+    {
+      "id": "qa-005",
+      "domain": "general",
+      "category": "biology",
+      "difficulty": 1,
+      "type": "multiple_choice",
+      "timeLimitSeconds": 60,
+      "question": "Cili organ pompon gjakun në trup?",
+      "choices": [
+        "Mushkëria",
+        "Mëlçia",
+        "Zemra",
+        "Veshka"
+      ],
+      "correctIndex": 2,
+      "explanation": "Zemra pompon gjakun nëpër sistemin e qarkullimit.",
+      "source": "Njohuri të përgjithshme",
+      "reviewStatus": "editorial_review_pending"
+    },
+    {
+      "id": "qa-006",
+      "domain": "general",
+      "category": "language",
+      "difficulty": 1,
+      "type": "multiple_choice",
+      "timeLimitSeconds": 60,
+      "question": "Cila është fjala gjermane për 'libër'?",
+      "choices": [
+        "Haus",
+        "Buch",
+        "Baum",
+        "Stuhl"
+      ],
+      "correctIndex": 1,
+      "explanation": "Buch do të thotë libër në gjermanisht.",
+      "source": "Njohuri të përgjithshme",
+      "reviewStatus": "editorial_review_pending"
+    },
+    {
+      "id": "qa-007",
+      "domain": "islam",
+      "category": "quran",
+      "difficulty": 1,
+      "type": "multiple_choice",
+      "timeLimitSeconds": 60,
+      "question": "Sa sure ka Kurani?",
+      "choices": [
+        "110",
+        "112",
+        "114",
+        "116"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kurani përmban 114 sure.",
+      "source": "Mushafi i Kuranit",
+      "reviewStatus": "editorial_review_pending"
+    },
+    {
+      "id": "qa-008",
+      "domain": "islam",
+      "category": "quran",
+      "difficulty": 1,
+      "type": "multiple_choice",
+      "timeLimitSeconds": 60,
+      "question": "Cila është sureja e parë në renditjen e Mushafit?",
+      "choices": [
+        "El-Bekare",
+        "El-Fatiha",
+        "El-Ikhlas",
+        "En-Nas"
+      ],
+      "correctIndex": 1,
+      "explanation": "El-Fatiha është sureja e parë në renditjen e Mushafit.",
+      "source": "Kurani, sureja 1",
+      "reviewStatus": "editorial_review_pending"
+    },
+    {
+      "id": "qa-009",
+      "domain": "islam",
+      "category": "history",
+      "difficulty": 1,
+      "type": "multiple_choice",
+      "timeLimitSeconds": 60,
+      "question": "Në cilin qytet emigroi Profeti Muhamed ﷺ nga Meka?",
+      "choices": [
+        "Taif",
+        "Medinë",
+        "Kufe",
+        "Basra"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hixhreti i Profetit ﷺ ishte nga Meka në Medinë.",
+      "source": "Historia e Hixhretit",
+      "reviewStatus": "editorial_review_pending"
+    },
+    {
+      "id": "qa-010",
+      "domain": "islam",
+      "category": "fiqh",
+      "difficulty": 1,
+      "type": "multiple_choice",
+      "timeLimitSeconds": 60,
+      "question": "Sa rekate farz ka namazi i sabahut?",
+      "choices": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "Namazi i sabahut ka dy rekate farz.",
+      "source": "Fikhu i namazit",
+      "reviewStatus": "editorial_review_pending"
+    },
+    {
+      "id": "qa-011",
+      "domain": "islam",
+      "category": "tafsir",
+      "difficulty": 1,
+      "type": "multiple_choice",
+      "timeLimitSeconds": 60,
+      "question": "Çfarë do të thotë fjala 'El-Felek' në titullin e sures 113?",
+      "choices": [
+        "Agimi",
+        "Nata",
+        "Koha",
+        "Dielli"
+      ],
+      "correctIndex": 0,
+      "explanation": "El-Felek në këtë kontekst nënkupton agimin.",
+      "source": "Kurani 113:1",
+      "reviewStatus": "editorial_review_pending"
+    },
+    {
+      "id": "qa-012",
+      "domain": "islam",
+      "category": "hadith",
+      "difficulty": 1,
+      "type": "multiple_choice",
+      "timeLimitSeconds": 60,
+      "question": "Cili prej këtyre është përmbledhës i njohur i haditheve?",
+      "choices": [
+        "El-Buhariu",
+        "El-Idrisi",
+        "El-Havarizmi",
+        "Ibn Batuta"
+      ],
+      "correctIndex": 0,
+      "explanation": "Imam el-Buhariu është përmbledhës i Sahih el-Buhariut.",
+      "source": "Sahih el-Buhari",
+      "reviewStatus": "editorial_review_pending"
+    }
+  ]
+}
