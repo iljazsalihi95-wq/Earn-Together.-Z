@@ -896,6 +896,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 43,
+      "id": "series2-043-mutawatir-lafzi-manawi",
+      "category": "Shkencat Islame",
+      "subcategory": "Terminologjia e Hadithit",
+      "question": "Si ndahet hadithi Mutevatir në shkencën e terminologjisë së hadithit?",
+      "options": [
+        "Mutevatir i qartë dhe i fshehtë",
+        "Mutevatir Lafdhi (me tekst fjalë për fjalë) dhe Mutevatir Ma'nevi (me kuptim)",
+        "Mutevatir i shkurtër dhe i gjatë",
+        "Mutevatir i vjetër dhe i ri"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hadithi mutevatir ndahet në mutevatir lafdhi, ku transmetimet përputhen në formulimin e fjalëve, dhe mutevatir ma'nevi, ku formulimet ndryshojnë por transmetimet bashkohen në një kuptim të përbashkët. Mutevatir nënkupton transmetim nga aq shumë transmetues në çdo hallkë sa marrëveshja e tyre për gënjeshtër konsiderohet e pamundur sipas kritereve të dijetarëve.",
+      "sources": [
+        {
+          "work": "Es-Sujuti",
+          "locator": "Tedrib er-Ravi, trajtimi i hadithit mutevatir"
+        },
+        {
+          "work": "Tahir el-Xhezairi",
+          "locator": "Tevxhih en-Nadhar ila Usul el-Ether, mutevatir lafdhi dhe ma'nevi"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
