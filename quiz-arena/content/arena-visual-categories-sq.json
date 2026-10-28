@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "locale": "sq",
+  "name": "Quiz Arena Premium",
+  "integrationStatus": "design_spec_not_yet_integrated",
+  "visual": {
+    "style": "HD 2D illustrated game arena",
+    "screen": "portrait",
+    "categoryCards": {
+      "columns": 2,
+      "aspectRatio": "4:5",
+      "illustratedBackground": true,
+      "categoryIcon": true,
+      "questionCounter": true,
+      "progressBar": true
+    },
+    "arena": {
+      "animatedPresenter": true,
+      "answerButtons": 4,
+      "questionTimer": true,
+      "answerReveal": true
+    }
+  },
+  "categories": [
+    {
+      "id": "quran",
+      "title": "Kurani",
+      "visualTheme": "open book and golden light"
+    },
+    {
+      "id": "fiqh",
+      "title": "Fikhu Hanefi",
+      "visualTheme": "geometric scholarly library"
+    },
+    {
+      "id": "hadith",
+      "title": "Hadithi",
+      "visualTheme": "manuscript and ink"
+    },
+    {
+      "id": "islamic-history",
+      "title": "Historia Islame",
+      "visualTheme": "historical map and architecture"
+    },
+    {
+      "id": "geography",
+      "title": "Gjeografi",
+      "visualTheme": "illustrated globe"
+    },
+    {
+      "id": "science",
+      "title": "Shkencë",
+      "visualTheme": "microscope and laboratory"
+    },
+    {
+      "id": "mathematics",
+      "title": "Matematikë",
+      "visualTheme": "numbers and geometric shapes"
+    },
+    {
+      "id": "biology",
+      "title": "Biologji",
+      "visualTheme": "plants and cells"
+    },
+    {
+      "id": "astronomy",
+      "title": "Astronomi",
+      "visualTheme": "planets and stars"
+    },
+    {
+      "id": "technology",
+      "title": "Teknologji",
+      "visualTheme": "microchips and circuits"
+    },
+    {
+      "id": "history",
+      "title": "Histori",
+      "visualTheme": "world history timeline"
+    },
+    {
+      "id": "physics",
+      "title": "Fizikë",
+      "visualTheme": "magnetism and light"
+    },
+    {
+      "id": "literature",
+      "title": "Letërsi",
+      "visualTheme": "books and quill"
+    }
+  ],
+  "questionSources": [
+    "series2-sourced-sq.json",
+    "general-knowledge-sq-v1.json"
+  ],
+  "note": "Design specification only; artwork and Android UI must be implemented and tested separately."
+}
