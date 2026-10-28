@@ -527,6 +527,33 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 29,
+      "id": "series2-029-mehmed-ii-constantinople-1453",
+      "category": "Historia Islame",
+      "subcategory": "Perandoria Osmane",
+      "originalQuestion": "Kush e çliroi Kostandinopojën më 29 Maj 1453 duke përmbushur profecinë e njohur të Profetit Muhamed ﷺ?",
+      "question": "Cili sulltan osman mori Kostandinopojën më 29 maj 1453?",
+      "options": [
+        "Sulltan Sulejmani",
+        "Sulltan Selimi I",
+        "Sulltan Bajaziti I",
+        "Sulltan Mehmeti II (Fatihu)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Më 29 maj 1453, Sulltan Mehmeti II (Fatihu) mori Kostandinopojën dhe i dha fund Perandorisë Bizantine. Ekziston një transmetim i njohur për çlirimin e Kostandinopojës, por vlerësimi i autenticitetit të tij është i diskutuar; për këtë arsye pyetja përqendrohet te fakti historik i verifikueshëm.",
+      "sources": [
+        {
+          "work": "Encyclopaedia Britannica",
+          "locator": "Mehmed II; Fall of Constantinople"
+        },
+        {
+          "work": "Musnad Ahmad",
+          "locator": "Transmetimi për çlirimin e Kostandinopojës; autenticiteti i diskutuar"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
