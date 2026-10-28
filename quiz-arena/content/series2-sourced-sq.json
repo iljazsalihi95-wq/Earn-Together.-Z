@@ -740,6 +740,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 37,
+      "id": "series2-037-rukn-vs-shart",
+      "category": "Fikhu Hanefi",
+      "subcategory": "Usul el-Fikh",
+      "question": "Cili është dallimi thelbësor midis 'Ruknit' dhe 'Shartit' në jurisprudencën islame?",
+      "options": [
+        "Sharti është kusht paraprak jashtë veprës, kurse Rukni është pjesë përbërëse brenda vetë veprës",
+        "Rukni kryhet para kohe, sharti në fund",
+        "Nuk kanë dallim",
+        "Sharti është vaxhib, rukni është sunnet"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sharti është kusht i domosdoshëm për vlefshmërinë e një adhurimi, por ndodhet jashtë përbërjes së tij; rukni është element përbërës i vetë adhurimit. Në namaz, abdesi dhe hyrja e kohës janë sharte, ndërsa rukuja dhe sexhdeja janë rukne. Sharti nuk është domosdoshmërisht vetëm një veprim që kryhet një herë para fillimit: disa kushte duhet të vazhdojnë gjatë adhurimit.",
+      "sources": [
+        {
+          "work": "El-Merginani",
+          "locator": "El-Hidaje, kushtet dhe shtyllat e namazit"
+        },
+        {
+          "work": "Usul el-Fikh",
+          "locator": "Dallimi terminologjik ndërmjet shartit dhe ruknit"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
