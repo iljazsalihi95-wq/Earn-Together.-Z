@@ -922,6 +922,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 44,
+      "id": "series2-044-fiqh-ibadat-muamalat",
+      "category": "Fikhu Hanefi",
+      "subcategory": "Bazat e Fikhut",
+      "question": "Si ndahen dy fushat kryesore të shkencës së Fikhut?",
+      "options": [
+        "Ibadat (Adhurimet) dhe Muamelat (Marrëdhëniet shoqërore e juridike)",
+        "Teori dhe Praktikë",
+        "Hyrje dhe Përfundim",
+        "Besim dhe Kuran"
+      ],
+      "correctIndex": 0,
+      "explanation": "Në ndarjen e përgjithshme mësimore, fikhu përfshin ibadat (dispozitat e adhurimeve, si namazi, agjërimi, zekati dhe haxhi) dhe muamelat (dispozitat e marrëdhënieve juridike dhe shoqërore, si kontratat, shitblerja dhe huatë). Kjo nuk është ndarja e vetme: veprat klasike trajtojnë edhe fusha të tjera të veçanta si martesa, trashëgimia dhe e drejta penale.",
+      "sources": [
+        {
+          "work": "El-Merginani",
+          "locator": "El-Hidaje, librat e adhurimeve dhe të transaksioneve"
+        },
+        {
+          "work": "El-Kudurij",
+          "locator": "Muhtesar el-Kudurij, struktura e kapitujve të fikhut"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
