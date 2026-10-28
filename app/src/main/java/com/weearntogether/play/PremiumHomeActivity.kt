@@ -29,7 +29,7 @@ class PremiumHomeActivity : Activity() {
     private fun text(s:String,size:Int,color:Int=ink,bold:Boolean=false)=TextView(this).apply{text=s;textSize=size.toFloat();setTextColor(color);if(bold)setTypeface(null,Typeface.BOLD)}
     override fun onCreate(state:Bundle?){super.onCreate(state);window.statusBarColor=blue;window.navigationBarColor=Color.WHITE
         if(!accounts.isSignedIn()&&!(BuildConfig.DEBUG&&intent.getBooleanExtra("native_qa",false))){startActivity(Intent(this,MainActivity::class.java));finish();return}
-        ads=NativeGameAds(this,"home");build();rewardButton.isEnabled=true;rewardButton.text="SHIKO VIDEO"
+        ads=NativeGameAds(this,"home");build();rewardButton.isEnabled=true;rewardButton.text="Shiko"
     }
     private fun build(){
         host=FrameLayout(this).apply{setBackgroundColor(Color.WHITE)}
@@ -37,10 +37,10 @@ class PremiumHomeActivity : Activity() {
         root=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(16),0,dp(16),dp(108))};scroll.addView(root)
         host.addView(scroll,FrameLayout.LayoutParams(-1,-1));setContentView(host)
         host.setOnApplyWindowInsetsListener{v,i->v.setPadding(i.systemWindowInsetLeft,i.systemWindowInsetTop,i.systemWindowInsetRight,i.systemWindowInsetBottom);i};host.requestApplyInsets()
-        header();sectionTitle("★","Zgjedhja e sotme","Arena");featured();rewardCard();sectionTitle("🔥","Më të luajturat","Të gjitha");gameRow();sectionTitle("✦","Eksploro lojërat","Më shumë");compactGames();bottomNav();rewardButton.isEnabled=true;rewardButton.text="SHIKO VIDEO"
+        header();sectionTitle("★","Zgjedhja e sotme","Arena");featured();rewardCard();sectionTitle("🔥","Më të luajturat","Të gjitha");gameRow();sectionTitle("✦","Eksploro lojërat","Më shumë");compactGames();bottomNav();rewardButton.isEnabled=true;rewardButton.text="Shiko"
     }
     private fun header(){
-        val h=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(18),dp(20),dp(16),dp(22));background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xff476aef.toInt(),0xff569cf9.toInt()));minimumHeight=dp(104)}
+        val h=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(18),dp(12),dp(16),dp(14));background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xff476aef.toInt(),0xff569cf9.toInt()));minimumHeight=dp(80)}
         val portrait=PlayerPortrait.image(this).apply{setOnClickListener{PlayerPortrait.pick(this@PremiumHomeActivity)}}
         h.addView(portrait,LinearLayout.LayoutParams(dp(48),dp(48)).apply{rightMargin=dp(12)})
         h.addView(text(accounts.currentName()?:"Lojtari",21,Color.WHITE,true).apply{maxLines=2},LinearLayout.LayoutParams(0,-2,1f))
@@ -62,7 +62,15 @@ class PremiumHomeActivity : Activity() {
         c.addView(Button(this).apply{text="Luaj";isAllCaps=false;textSize=16f;setTextColor(Color.WHITE);background=round(blue,14);setOnClickListener{startActivity(Intent(this@PremiumHomeActivity,QuizArenaActivity::class.java))}},LinearLayout.LayoutParams(dp(72),dp(46)))
         root.addView(c,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(18)})
     }
-    private fun rewardCard(){val c=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(18),dp(16),dp(18),dp(16));background=round(0xfff8f9fc.toInt(),22)};val top=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL};top.addView(text("🪙",35,gold,true));val words=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(12),0,0,0)};words.addView(text("Bonus Coins me Video",17,muted,true));words.addView(text("Shiko video për bonus",19,gold,true));top.addView(words,LinearLayout.LayoutParams(0,-2,1f));c.addView(top);rewardButton=Button(this).apply{text="VIDEO DUKE U PËRGATITUR…";isAllCaps=false;isEnabled=false;setTextColor(Color.WHITE);background=round(blue,16);setOnClickListener{showRewarded()}};c.addView(rewardButton,LinearLayout.LayoutParams(-1,dp(50)).apply{topMargin=dp(12)});c.addView(text("Shpërblimi jepet vetëm pas përfundimit të verifikuar të videos. Bonus coins janë pikë loje, jo para të garantuara.",11,muted),LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(8)});root.addView(c,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(22)})}
+    private fun rewardCard(){
+        val card=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(14),dp(12),dp(14),dp(10));background=round(0xfff6f8fc.toInt(),18)}
+        val row=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL}
+        row.addView(text("★",32,gold,true),LinearLayout.LayoutParams(dp(44),-2))
+        val words=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL};words.addView(text("Bonus me video",15,muted,true));words.addView(text("Luaj dhe përparoni",18,gold,true));row.addView(words,LinearLayout.LayoutParams(0,-2,1f))
+        rewardButton=Button(this).apply{text="Shiko";isAllCaps=false;textSize=15f;setTextColor(Color.WHITE);background=round(blue,14);setOnClickListener{showRewarded()}};row.addView(rewardButton,LinearLayout.LayoutParams(dp(82),dp(44)));card.addView(row)
+        card.addView(text("Pas videos së plotë • Verifikim në server",11,muted),LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(7)})
+        root.addView(card,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(12)})
+    }
     private fun gameRow(){val hsv=HorizontalScrollView(this).apply{isHorizontalScrollBarEnabled=false;clipToPadding=false};val row=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL}
         gameTile(row,"garden","LazyGarden","Restauro pronën"){startActivity(Intent(this,LazyGardenActivity::class.java))}
         gameTile(row,"block","Block Puzzle","Bashko dhe pastro"){startActivity(Intent(this,BlockPuzzleActivity::class.java))}
