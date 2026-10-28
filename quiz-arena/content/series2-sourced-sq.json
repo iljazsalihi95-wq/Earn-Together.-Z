@@ -475,6 +475,32 @@
         }
       ],
       "reviewStatus": "needs_question_options_revision"
+    },
+    {
+      "order": 27,
+      "id": "series2-027-selim-i-1516-1517",
+      "category": "Historia Islame",
+      "subcategory": "Perandoria Osmane",
+      "question": "Cili sulltan osman bashkoi tokat arabe të Shamit, Egjiptit dhe Hixhazit me shtetin osman në vitet 1516–1517?",
+      "options": [
+        "Sulltan Murati IV",
+        "Sulltan Selimi I (Javuz)",
+        "Sulltan Sulejmani i Madhërishëm",
+        "Sulltan Mehmet Fatihu"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sulltan Selimi I (Javuz), që sundoi në vitet 1512–1520, mposhti mamlukët në Merxh Dabik (1516) dhe Ridanije (1517), duke vendosur nën sundimin osman Shamin dhe Egjiptin. Meka dhe Medina njohën autoritetin osman gjatë kësaj periudhe. Këto ngjarje e zgjeruan ndjeshëm Perandorinë Osmane.",
+      "sources": [
+        {
+          "work": "Halil İnalcık",
+          "locator": "The Ottoman Empire: The Classical Age 1300–1600, periudha e Selimit I"
+        },
+        {
+          "work": "Encyclopaedia Britannica",
+          "locator": "Selim I, Ottoman sultan"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
