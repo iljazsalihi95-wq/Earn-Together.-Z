@@ -1008,6 +1008,33 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 47,
+      "id": "series2-047-ilyas-baal",
+      "category": "Historia Islame",
+      "subcategory": "Profetët",
+      "question": "Cili profet, sipas disa rrëfimeve të tefsirit, lidhet me Ba'lebekun në Sham dhe e thirri popullin të braktiste adhurimin e Ba'lit?",
+      "originalQuestion": "Cili profet u dërgua në qytetin e Ba'lebekut në Sham për të larguar idhujtarinë e kultit të Ba'lit?",
+      "options": [
+        "Profeti Hud (a.s)",
+        "Profeti Salih (a.s)",
+        "Profeti Iljas (a.s)",
+        "Profeti Shuajb (a.s)"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kurani përmend se profeti Iljas (a.s.) e qortoi popullin për adhurimin e Ba'lit (Es-Saffat 37:123–132, sidomos 37:125). Lidhja me qytetin Ba'lebek në Sham vjen nga disa rrëfime të tefsirit dhe historisë; vetë Kurani nuk e emërton qytetin.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "Es-Saffat 37:123–132, veçanërisht 37:125"
+        },
+        {
+          "work": "Tefsiri i Ibn Kethirit",
+          "locator": "Komentimi i Es-Saffat 37:123–132, rrëfimet për Iljasin"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
