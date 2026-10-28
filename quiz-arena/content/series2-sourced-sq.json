@@ -713,6 +713,33 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 36,
+      "id": "series2-036-sahih-bukhari-most-authentic",
+      "category": "Shkencat Islame",
+      "subcategory": "Hadithi",
+      "question": "Cili libër i haditheve konsiderohet nga shumica e dijetarëve të Ehli Sunetit si përmbledhja më autentike pas Kuranit?",
+      "originalQuestion": "Cili libër i Hadithit konsiderohet më i sakti pas Kuranit?",
+      "options": [
+        "Suneni i Ebu Davudit",
+        "Sahih Muslim",
+        "Sahih el-Buhari",
+        "Muvetta e Imam Malikut"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sipas pikëpamjes mbizotëruese të dijetarëve sunitë, Sahih el-Buhari është përmbledhja më autentike e haditheve pas Kuranit, e ndjekur zakonisht nga Sahih Muslim. Ky vlerësim ka të bëjë me përmbledhjet e hadithit dhe nuk nënkupton se çdo hadith jashtë tyre është i dobët.",
+      "sources": [
+        {
+          "work": "Ibn Salah",
+          "locator": "Mukaddime fi Ulum el-Hadith, diskutimi i Sahihajnëve"
+        },
+        {
+          "work": "En-Nevevi",
+          "locator": "Hyrja e Sherh Sahih Muslim"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
