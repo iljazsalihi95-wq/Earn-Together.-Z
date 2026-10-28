@@ -1035,6 +1035,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 48,
+      "id": "series2-048-zayd-ibn-haritha-quran",
+      "category": "Kurani",
+      "subcategory": "Sahabët",
+      "question": "Cili sahab është përmendur shprehimisht me emër në Kuran?",
+      "options": [
+        "Ebu Bekri",
+        "Zejd bin Harith",
+        "Umeri",
+        "Aliu"
+      ],
+      "correctIndex": 1,
+      "explanation": "Zejd ibn Harithe (r.a.) është i vetmi sahabi i përmendur shprehimisht me emrin e tij në Kuran, në suren El-Ahzab 33:37. Sahabë të tjerë përmenden në Kuran përmes përshkrimeve, por jo me emrat e tyre personalë. Ajetet 33:4–5 trajtojnë gjithashtu prejardhjen dhe birësimin.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "El-Ahzab 33:37"
+        },
+        {
+          "work": "Kurani",
+          "locator": "El-Ahzab 33:4–5"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
