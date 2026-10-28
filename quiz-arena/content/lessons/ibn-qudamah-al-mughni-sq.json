@@ -1,0 +1,50 @@
+{
+  "id": "islamic-fiqh-hanbali-ibn-qudamah-al-mughni",
+  "locale": "sq",
+  "domain": "Njohuri Islame",
+  "category": "Fikhu Islam",
+  "subcategory": "Medhhebet juridike",
+  "topic": "Medhhebi Hanbeli — dijetarët dhe veprat",
+  "type": "multiple_choice_with_lesson",
+  "question": "Cili dijetar hanbeli është autor i veprës El-Mugni (المغني)?",
+  "options": [
+    "Ibn Kudame el-Makdisi",
+    "Ibn Tejmije",
+    "Ibn Kajjim el-Xheuzije",
+    "Imam Ahmed ibn Hanbeli"
+  ],
+  "correctIndex": 0,
+  "lesson": {
+    "title": "Ibn Kudame dhe libri El-Mugni",
+    "scholar": "Ibn Kudame el-Makdisi (541–620 h. / 1147–1223)",
+    "sections": [
+      {
+        "heading": "Kush ishte Ibn Kudame?",
+        "text": "Ibn Kudame el-Makdisi ishte dijetar i shquar i jurisprudencës islame, i lidhur me medhhebin Hanbeli. Ai njihet për veprat e tij të fikhut dhe trajtimin sistematik të çështjeve juridike."
+      },
+      {
+        "heading": "Çfarë është El-Mugni?",
+        "text": "El-Mugni është vepër madhore e fikhut krahasues. Ajo shpjegon dispozitat juridike, argumentet dhe mendimet e dijetarëve, përfshirë dallimet ndërmjet shkollave juridike. Libri është komentim i veprës El-Muhtasar të el-Hirakiut."
+      },
+      {
+        "heading": "Çfarë mësojmë?",
+        "text": "Njohja e literaturës së medhhebeve na ndihmon të kuptojmë se si dijetarët i kanë studiuar dhe argumentuar dispozitat e fikhut. El-Mugni nuk është libër i medhhebit Hanefi, por vepër e rëndësishme hanbelite me krahasime juridike."
+      }
+    ],
+    "shortExplanation": "Autori i El-Mugni është Ibn Kudame el-Makdisi, dijetar i medhhebit Hanbeli."
+  },
+  "sources": [
+    {
+      "title": "Ibn Kudame, El-Mugni",
+      "reference": "Titulli dhe autorësia e veprës; hyrja e botimit",
+      "sourceType": "primary_work"
+    },
+    {
+      "title": "El-Hiraki, El-Muhtasar",
+      "reference": "Vepra bazë e komentuar nga El-Mugni",
+      "sourceType": "related_work"
+    }
+  ],
+  "reviewStatus": "bibliographic_review_pending",
+  "notes": "Referencat janë bibliografike, jo verifikim i një botimi dhe faqeje specifike. Kjo është përmbajtje mësimore, ende jo e lidhur me gameplay-in."
+}
