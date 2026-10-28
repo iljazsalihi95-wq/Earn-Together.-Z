@@ -1061,6 +1061,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 49,
+      "id": "series2-049-khadijah-first-wife",
+      "category": "Historia Islame",
+      "subcategory": "Familja e Profetit ﷺ",
+      "question": "Kush ishte gruaja e parë e Profetit Muhamed (ﷺ)?",
+      "options": [
+        "Aishja",
+        "Hatixhja",
+        "Hafsa",
+        "Zejnebja"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hatixhe bint Huvejlid (r.a.) ishte bashkëshortja e parë e Profetit Muhamed ﷺ dhe personi i parë që besoi në misionin e tij profetik. Ajo e mbështeti në fillimet e shpalljes. Profeti ﷺ nuk u martua me grua tjetër gjatë jetës së Hatixhes.",
+      "sources": [
+        {
+          "work": "Sahih Muslim",
+          "locator": "2436, virtytet e Hatixhes dhe martesa e Profetit gjatë jetës së saj"
+        },
+        {
+          "work": "Sahih el-Buhari",
+          "locator": "Kapitujt mbi virtytet e Hatixhes"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
