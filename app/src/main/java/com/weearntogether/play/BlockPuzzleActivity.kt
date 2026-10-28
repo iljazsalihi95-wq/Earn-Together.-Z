@@ -20,6 +20,7 @@ import java.util.Locale
 /** Dedicated immersive host for the native HD 2D Block Puzzle. */
 class BlockPuzzleActivity : Activity() {
     private lateinit var game: PremiumBlockPuzzleView
+    private val loyalty by lazy { LoyaltyProgress(this) }
     private var dialogOpen=false
     private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt()
 
@@ -42,7 +43,10 @@ class BlockPuzzleActivity : Activity() {
 
     override fun onCreate(savedInstanceState:Bundle?){
         super.onCreate(savedInstanceState);requestWindowFeature(Window.FEATURE_NO_TITLE);window.statusBarColor=Color.TRANSPARENT;window.navigationBarColor=Color.TRANSPARENT;window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);enterImmersive()
-        game=PremiumBlockPuzzleView(this)
+        game=PremiumBlockPuzzleView(this){
+            loyalty.recordGameProgress(10)
+            LevelPlayManager.showLevelCompleteVideo()
+        }
         val host=FrameLayout(this).apply{setBackgroundColor(0xff070d20.toInt());isClickable=true;isFocusable=true;addView(game,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))}
         val header=View(this).apply{background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff0a1a3b.toInt(),0xff241050.toInt(),0xff071a38.toInt())).apply{setStroke(dp(1),0x5569cfff)};elevation=dp(4).toFloat()}
         host.addView(header,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(108),Gravity.TOP))
