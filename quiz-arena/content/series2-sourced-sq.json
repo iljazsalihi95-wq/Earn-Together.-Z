@@ -166,6 +166,28 @@
         }
       ],
       "reviewStatus": "source_references_identified"
+    },
+    {
+      "order": 14,
+      "id": "series2-014-al-asr-verse-count",
+      "category": "Kurani",
+      "subcategory": "Suret e Kuranit",
+      "question": "Sa ajete ka surja El-Asr?",
+      "options": [
+        "4 ajete",
+        "3 ajete",
+        "5 ajete",
+        "6 ajete"
+      ],
+      "correctIndex": 1,
+      "explanation": "El-Asr është surja e 103-të e Kuranit dhe ka 3 ajete. Ajo thekson besimin, veprat e mira, këshillimin për të vërtetën dhe këshillimin për durim.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "El-Asr 103:1–3"
+        }
+      ],
+      "reviewStatus": "source_references_identified"
     }
   ]
 }
