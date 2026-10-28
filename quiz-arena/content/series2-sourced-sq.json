@@ -188,6 +188,32 @@
         }
       ],
       "reviewStatus": "source_references_identified"
+    },
+    {
+      "order": 15,
+      "id": "series2-015-idris-pen-sewing",
+      "category": "Historia Islame",
+      "subcategory": "Historitë e pejgamberëve",
+      "question": "Cili profet përmendet në disa transmetime të historisë islame si i pari që shkroi me pendë dhe qepi rroba?",
+      "options": [
+        "Profeti Idris (a.s.)",
+        "Profeti Sheth (a.s.)",
+        "Profeti Adem (a.s.)",
+        "Profeti Nuh (a.s.)"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sipas rrëfimeve të përcjella në literaturën tradicionale islame, Idrisi (a.s.) lidhet me shkrimin me pendë dhe qepjen e rrobave. Kurani e përmend Idrisin si profet në Merjem 19:56–57, por nuk pohon aty se ai ishte i pari që shkroi apo qepi. Këto hollësi nuk duhen trajtuar si të vërtetuara nga vetë ajeti.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "Merjem 19:56–57 (identifikimi si profet, jo hollësitë e zanateve)"
+        },
+        {
+          "work": "Literatura tradicionale e historisë së pejgamberëve",
+          "locator": "Rrëfimet për Idrisin; nevojitet verifikim i zinxhirit dhe pasazhit"
+        }
+      ],
+      "reviewStatus": "traditional_report_not_primary_verified"
     }
   ]
 }
