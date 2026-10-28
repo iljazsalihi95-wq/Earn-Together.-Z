@@ -501,6 +501,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 28,
+      "id": "series2-028-masbuq-congregation",
+      "category": "Fikhu Hanefi",
+      "subcategory": "Namazi me xhemat",
+      "question": "Si quhet namazliu që arrin me vonesë në xhemat pasi imami ka filluar disa rekate?",
+      "options": [
+        "Mesbuk",
+        "Mudrik",
+        "Lahik",
+        "Munferid"
+      ],
+      "correctIndex": 0,
+      "explanation": "Mesbuk (مسبوق) quhet ai që i bashkohet imamit pasi ka humbur një ose më shumë rekate. Ai e ndjek imamin dhe, pasi imami jep selam, plotëson rekatet e humbura sipas rregullave të fikhut Hanefi. Mudriku e arrin namazin nga fillimi, lahiku e nis me imamin por humbet një pjesë më pas për shkak të një pengese, ndërsa munferidi falet vetëm.",
+      "sources": [
+        {
+          "work": "El-Merginani",
+          "locator": "El-Hidaje, namazi me xhemat dhe mesbuku"
+        },
+        {
+          "work": "El-Kasani",
+          "locator": "Bedai es-Sanai, dispozitat e mesbukut"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
