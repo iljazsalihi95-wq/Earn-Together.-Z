@@ -844,6 +844,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 41,
+      "id": "series2-041-battle-trench-5ah",
+      "category": "Historia Islame",
+      "subcategory": "Sira e Profetit ﷺ",
+      "question": "Cila betejë ndodhi në vitin 5 hixhri?",
+      "options": [
+        "Beteja e Bedrit",
+        "Beteja e Uhudit",
+        "Beteja e Hendekut",
+        "Beteja e Hajberit"
+      ],
+      "correctIndex": 2,
+      "explanation": "Beteja e Hendekut (El-Handek), e quajtur edhe Beteja e Ahzabit, ndodhi në vitin 5 hixhri (627 e.s.), kur një koalicion fisesh rrethoi Medinën. Për krahasim: Bedri ishte në vitin 2 hixhri, Uhudi në vitin 3 dhe Hajberi në vitin 7.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "El-Ahzab 33:9–27"
+        },
+        {
+          "work": "Sahih el-Buhari",
+          "locator": "Kitab el-Megazi, Beteja e Hendekut"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
