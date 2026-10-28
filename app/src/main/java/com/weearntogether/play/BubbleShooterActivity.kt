@@ -19,6 +19,7 @@ import java.util.Locale
 
 /** Dedicated immersive host for the native HD 2D Bubble Shooter renderer. */
 class BubbleShooterActivity : Activity() {
+    private lateinit var ads:NativeGameAds
     private lateinit var game: PremiumBubbleShooterView
     private val loyalty by lazy { LoyaltyProgress(this) }
     private var dialogOpen=false
@@ -56,11 +57,11 @@ class BubbleShooterActivity : Activity() {
     }
 
     override fun onCreate(savedInstanceState:Bundle?){
-        super.onCreate(savedInstanceState); requestWindowFeature(Window.FEATURE_NO_TITLE)
+        super.onCreate(savedInstanceState);ads=NativeGameAds(this,"bubble"); requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.statusBarColor=Color.TRANSPARENT;window.navigationBarColor=Color.TRANSPARENT;window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);enterImmersive()
         game=PremiumBubbleShooterView(this){
             loyalty.recordGameProgress(10)
-            LevelPlayManager.showLevelCompleteVideo()
+            ads.naturalBreak()
         }
         val host=FrameLayout(this).apply{setBackgroundColor(0xff070d20.toInt());isClickable=true;isFocusable=true;addView(game,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))}
         val header=View(this).apply{background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff0a1a3b.toInt(),0xff241050.toInt(),0xff071a38.toInt())).apply{setStroke(dp(1),0x5569cfff)};elevation=dp(4).toFloat()}
@@ -83,6 +84,8 @@ class BubbleShooterActivity : Activity() {
     }
 
     override fun onWindowFocusChanged(hasFocus:Boolean){super.onWindowFocusChanged(hasFocus);if(hasFocus&&!dialogOpen)enterImmersive()}
-    override fun onResume(){super.onResume();if(!dialogOpen)enterImmersive()}
+    override fun onResume(){super.onResume();if(::ads.isInitialized)ads.resume();if(!dialogOpen)enterImmersive()}
     private fun enterImmersive(){if(android.os.Build.VERSION.SDK_INT>=30){window.setDecorFitsSystemWindows(false);window.insetsController?.let{it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars());it.systemBarsBehavior=WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE}}else{@Suppress("DEPRECATION") window.decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE}}
+    override fun onPause(){if(::ads.isInitialized)ads.pause();super.onPause()}
+    override fun onDestroy(){if(::ads.isInitialized)ads.destroy();super.onDestroy()}
 }

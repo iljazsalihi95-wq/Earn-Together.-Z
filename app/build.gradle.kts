@@ -18,6 +18,7 @@ android {
     compileSdk = 35
     defaultConfig {
         applicationId = "com.weearntogether.play"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         minSdk = 24
         targetSdk = 35
         val ciRunNumber = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull()
@@ -50,6 +51,8 @@ dependencies {
     implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.test:rules:1.6.1")
 
     // LevelPlay is the single mediation controller. Network adapters are included
     // in the APK so impressions are attributed to the actual native Android app.
