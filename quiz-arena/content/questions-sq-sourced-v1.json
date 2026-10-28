@@ -1,0 +1,279 @@
+{
+  "version": 1,
+  "description": "Source-linked Albanian question bank. Source-backed facts; final editorial review and gameplay integration pending.",
+  "questions": [
+    {
+      "id": "source-sq-001",
+      "language": "sq",
+      "category": "quran",
+      "subcategory": "Kurani",
+      "difficulty": "easy",
+      "question": "Sa sure përmban Kurani?",
+      "options": [
+        "112",
+        "113",
+        "114",
+        "115"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kurani përmban 114 sure.",
+      "source": {
+        "url": "https://kuran.diyanet.gov.tr/Tefsir",
+        "reference": "Tefsir"
+      },
+      "status": "source_linked_pending_editorial_review"
+    },
+    {
+      "id": "source-sq-002",
+      "language": "sq",
+      "category": "quran",
+      "subcategory": "Kurani",
+      "difficulty": "easy",
+      "question": "Sa ajete ka sureja El-Fatiha?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "El-Fatiha përmban 7 ajete.",
+      "source": {
+        "url": "https://kuran.diyanet.gov.tr/Tefsir",
+        "reference": "Tefsir"
+      },
+      "status": "source_linked_pending_editorial_review"
+    },
+    {
+      "id": "source-sq-003",
+      "language": "sq",
+      "category": "quran",
+      "subcategory": "Kurani",
+      "difficulty": "easy",
+      "question": "Cila sure është e 12-ta në Mushaf?",
+      "options": [
+        "Junus",
+        "Hud",
+        "Jusuf",
+        "Er-Rad"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sureja e 12-të është Jusuf.",
+      "source": {
+        "url": "https://kuran.diyanet.gov.tr/Tefsir",
+        "reference": "Tefsir"
+      },
+      "status": "source_linked_pending_editorial_review"
+    },
+    {
+      "id": "source-sq-004",
+      "language": "sq",
+      "category": "quran",
+      "subcategory": "Kurani",
+      "difficulty": "easy",
+      "question": "Sa ajete ka sureja El-Ikhlas?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "El-Ikhlas është sureja 112 dhe ka 4 ajete.",
+      "source": {
+        "url": "https://study.thequran.com/112",
+        "reference": "112"
+      },
+      "status": "source_linked_pending_editorial_review"
+    },
+    {
+      "id": "source-sq-005",
+      "language": "sq",
+      "category": "quran",
+      "subcategory": "Kurani",
+      "difficulty": "easy",
+      "question": "Cila sure është e fundit në Mushaf?",
+      "options": [
+        "El-Felek",
+        "En-Nas",
+        "El-Ikhlas",
+        "El-Kevther"
+      ],
+      "correctIndex": 1,
+      "explanation": "En-Nas është sureja e 114-të.",
+      "source": {
+        "url": "https://kuran.diyanet.gov.tr/Tefsir",
+        "reference": "Tefsir"
+      },
+      "status": "source_linked_pending_editorial_review"
+    },
+    {
+      "id": "source-sq-006",
+      "language": "sq",
+      "category": "quran",
+      "subcategory": "Kurani",
+      "difficulty": "easy",
+      "question": "Sa ajete ka sureja El-Bekare?",
+      "options": [
+        "255",
+        "266",
+        "286",
+        "300"
+      ],
+      "correctIndex": 2,
+      "explanation": "El-Bekare ka 286 ajete.",
+      "source": {
+        "url": "https://kuran.diyanet.gov.tr/Tefsir",
+        "reference": "Tefsir"
+      },
+      "status": "source_linked_pending_editorial_review"
+    },
+    {
+      "id": "source-sq-007",
+      "language": "sq",
+      "category": "hadith",
+      "subcategory": "Hadith",
+      "difficulty": "easy",
+      "question": "Kush e transmeton hadithin e parë të Sahih el-Buhariut?",
+      "options": [
+        "Ebu Hurejra",
+        "Omer ibn el-Hattab",
+        "Enes ibn Malik",
+        "Ibn Abbasi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Transmetuesi është Omer ibn el-Hattab.",
+      "source": {
+        "url": "https://sunnah.com/bukhari:1",
+        "reference": "bukhari:1"
+      },
+      "status": "source_linked_pending_editorial_review"
+    },
+    {
+      "id": "source-sq-008",
+      "language": "sq",
+      "category": "hadith",
+      "subcategory": "Hadith",
+      "difficulty": "easy",
+      "question": "Cila temë trajtohet në hadithin e parë të Sahih el-Buhariut?",
+      "options": [
+        "Nijeti",
+        "Udhëtimi",
+        "Tregtia",
+        "Trashëgimia"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hadithi sqaron rëndësinë e nijetit për veprat.",
+      "source": {
+        "url": "https://sunnah.com/bukhari:1",
+        "reference": "bukhari:1"
+      },
+      "status": "source_linked_pending_editorial_review"
+    },
+    {
+      "id": "source-sq-009",
+      "language": "sq",
+      "category": "hadith",
+      "subcategory": "Hadith",
+      "difficulty": "easy",
+      "question": "Cili transmetues përmendet te Sahih Muslim 35a për degët e besimit?",
+      "options": [
+        "Ebu Hurejra",
+        "Ibn Omeri",
+        "Ebu Bekri",
+        "Aliu"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hadithi për degët e imanit transmetohet nga Ebu Hurejra.",
+      "source": {
+        "url": "https://sunnah.com/muslim:35a",
+        "reference": "muslim:35a"
+      },
+      "status": "source_linked_pending_editorial_review"
+    },
+    {
+      "id": "source-sq-010",
+      "language": "sq",
+      "category": "hadith",
+      "subcategory": "Hadith",
+      "difficulty": "easy",
+      "question": "Çfarë përmendet si degë e besimit në Sahih Muslim 35a?",
+      "options": [
+        "Modestia",
+        "Pasuria",
+        "Udhëtimi",
+        "Gjuetia"
+      ],
+      "correctIndex": 0,
+      "explanation": "Modestia (haja) përmendet si degë e imanit.",
+      "source": {
+        "url": "https://sunnah.com/muslim:35a",
+        "reference": "muslim:35a"
+      },
+      "status": "source_linked_pending_editorial_review"
+    },
+    {
+      "id": "source-sq-011",
+      "language": "sq",
+      "category": "science",
+      "subcategory": "Astronomi",
+      "difficulty": "easy",
+      "question": "Cili planet është më afër Diellit?",
+      "options": [
+        "Venusi",
+        "Toka",
+        "Mërkuri",
+        "Marsi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Mërkuri është planeti më afër Diellit.",
+      "source": {
+        "url": "https://www.asc-csa.gc.ca/eng/astronomy/solar-system/mercury.asp",
+        "reference": "mercury.asp"
+      },
+      "status": "source_linked_pending_editorial_review"
+    },
+    {
+      "id": "source-sq-012",
+      "language": "sq",
+      "category": "science",
+      "subcategory": "Astronomi",
+      "difficulty": "easy",
+      "question": "Sa hëna natyrore ka Mërkuri?",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "Mërkuri nuk ka hëna natyrore.",
+      "source": {
+        "url": "https://www.asc-csa.gc.ca/eng/astronomy/solar-system/mercury.asp",
+        "reference": "mercury.asp"
+      },
+      "status": "source_linked_pending_editorial_review"
+    },
+    {
+      "id": "source-sq-013",
+      "language": "sq",
+      "category": "science",
+      "subcategory": "Astronomi",
+      "difficulty": "easy",
+      "question": "Afërsisht sa ditë tokësore zgjat një vit në Mërkur?",
+      "options": [
+        "58",
+        "88",
+        "120",
+        "365"
+      ],
+      "correctIndex": 1,
+      "explanation": "Një orbitë e Mërkurit zgjat rreth 88 ditë tokësore.",
+      "source": {
+        "url": "https://www.asc-csa.gc.ca/eng/astronomy/solar-system/mercury.asp",
+        "reference": "mercury.asp"
+      },
+      "status": "source_linked_pending_editorial_review"
+    }
+  ]
+}
