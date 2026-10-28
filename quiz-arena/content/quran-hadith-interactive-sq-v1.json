@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 1,
+  "locale": "sq",
+  "collection": "Quiz Arena - Recitim, plotesim dhe fjala kryesore",
+  "publicationStatus": "editorial_review_required",
+  "integrationStatus": "content_only_audio_assets_and_native_gameplay_pending",
+  "audioPolicy": {
+    "source": "verified_human_quran_recitation_required",
+    "status": "audio_not_attached",
+    "noSyntheticRecitationClaim": true
+  },
+  "questions": [
+    {
+      "id": "interactive-sq-001",
+      "order": 1,
+      "type": "quran_recitation",
+      "category": "Kurani",
+      "surah": "El-Ihlas",
+      "reference": "112:1",
+      "arabic": "قُلْ هُوَ اللَّهُ أَحَدٌ",
+      "question": "Cila sure fillon me ajetin e recituar 'Kul huvallahu ehad'?",
+      "options": [
+        "El-Felek",
+        "En-Nas",
+        "El-Ihlas",
+        "El-Kevther"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ky është ajeti i parë i sures El-Ihlas (112:1).",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-002",
+      "order": 2,
+      "type": "quran_recitation",
+      "category": "Kurani",
+      "surah": "El-Felek",
+      "reference": "113:1",
+      "arabic": "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ",
+      "question": "Cila sure fillon me 'Kul eudhu bi rabbil-felek'?",
+      "options": [
+        "En-Nas",
+        "El-Felek",
+        "El-Ihlas",
+        "El-Asr"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ky është ajeti i parë i sures El-Felek (113:1).",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-003",
+      "order": 3,
+      "type": "quran_recitation",
+      "category": "Kurani",
+      "surah": "En-Nas",
+      "reference": "114:1",
+      "arabic": "قُلْ أَعُوذُ بِرَبِّ النَّاسِ",
+      "question": "Cila sure fillon me 'Kul eudhu bi rabbin-nas'?",
+      "options": [
+        "En-Nas",
+        "El-Felek",
+        "El-Fatiha",
+        "El-Kevther"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ky është ajeti i parë i sures En-Nas (114:1).",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-004",
+      "order": 4,
+      "type": "quran_recitation",
+      "category": "Kurani",
+      "surah": "El-Asr",
+      "reference": "103:1",
+      "arabic": "وَالْعَصْرِ",
+      "question": "Cila sure fillon me fjalët 'Vel-asr'?",
+      "options": [
+        "El-Kadr",
+        "El-Asr",
+        "El-Fil",
+        "El-Maun"
+      ],
+      "correctIndex": 1,
+      "explanation": "Surja El-Asr fillon me betimin 'Vel-asr' (103:1).",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-005",
+      "order": 5,
+      "type": "quran_recitation",
+      "category": "Kurani",
+      "surah": "El-Kevther",
+      "reference": "108:1",
+      "arabic": "إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ",
+      "question": "Në cilën sure është ajeti 'Inna a'tajnake-l-kevther'?",
+      "options": [
+        "El-Kafirun",
+        "El-Mesed",
+        "El-Kevther",
+        "El-Ihlas"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ky është ajeti 108:1 nga surja El-Kevther.",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-006",
+      "order": 6,
+      "type": "quran_missing_word",
+      "category": "Kurani",
+      "reference": "1:2",
+      "arabic": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+      "question": "Plotëso fjalën që mungon: El-hamdu lil-lahi rabbil-____.",
+      "options": [
+        "alemin",
+        "felak",
+        "nas",
+        "ehad"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ajeti 1:2 përfundon me 'el-alemin'.",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-007",
+      "order": 7,
+      "type": "quran_missing_word",
+      "category": "Kurani",
+      "reference": "112:1",
+      "arabic": "قُلْ هُوَ اللَّهُ أَحَدٌ",
+      "question": "Plotëso: Kul huvallahu ____.",
+      "options": [
+        "samed",
+        "ehad",
+        "nas",
+        "felak"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ajeti 112:1 përfundon me 'ehad'.",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-008",
+      "order": 8,
+      "type": "quran_keyword",
+      "category": "Kurani",
+      "reference": "2:183",
+      "question": "Cila fjalë kyçe lidhet me obligimin e përmendur në El-Bekare 2:183?",
+      "options": [
+        "Agjërimi",
+        "Haxhi",
+        "Trashëgimia",
+        "Tregtia"
+      ],
+      "correctIndex": 0,
+      "explanation": "El-Bekare 2:183 përmend obligimin e agjërimit.",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-009",
+      "order": 9,
+      "type": "quran_keyword",
+      "category": "Kurani",
+      "reference": "99:1",
+      "question": "Cila dukuri përmendet në fillim të sures Ez-Zelzele?",
+      "options": [
+        "Shiu",
+        "Tërmeti",
+        "Era",
+        "Bora"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ajeti 99:1 flet për tronditjen e Tokës.",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-010",
+      "order": 10,
+      "type": "hadith_missing_word",
+      "category": "Hadithi",
+      "reference": "Sahih el-Buhari 1; Sahih Muslim 1907",
+      "arabic": "إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ",
+      "question": "Plotëso hadithin: 'Veprat vlerësohen sipas ____.'",
+      "options": [
+        "pasurisë",
+        "nijeteve",
+        "moshës",
+        "vendit"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hadithi i njohur thotë se veprat vlerësohen sipas nijeteve.",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-011",
+      "order": 11,
+      "type": "hadith_missing_word",
+      "category": "Hadithi",
+      "reference": "Sahih Muslim 55",
+      "arabic": "الدِّينُ النَّصِيحَةُ",
+      "question": "Plotëso hadithin: 'Feja është ____.'",
+      "options": [
+        "këshillë e sinqertë",
+        "udhëtim",
+        "tregti",
+        "garë"
+      ],
+      "correctIndex": 0,
+      "explanation": "'Ed-dinu en-nesiha' thekson këshillën dhe sinqeritetin.",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-012",
+      "order": 12,
+      "type": "hadith_missing_word",
+      "category": "Hadithi",
+      "reference": "Sahih Muslim 223",
+      "arabic": "الطُّهُورُ شَطْرُ الْإِيمَانِ",
+      "question": "Plotëso hadithin: 'Pastërtia është gjysma e ____.'",
+      "options": [
+        "pasurisë",
+        "diturisë",
+        "besimit",
+        "udhëtimit"
+      ],
+      "correctIndex": 2,
+      "explanation": "Hadithi në Sahih Muslim 223: pastërtia është gjysma e besimit.",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-013",
+      "order": 13,
+      "type": "hadith_keyword",
+      "category": "Hadithi",
+      "reference": "Sahih el-Buhari 1; Sahih Muslim 1907",
+      "question": "Cila është fjala kryesore e hadithit 'Veprat vlerësohen sipas nijeteve'?",
+      "options": [
+        "Nijeti",
+        "Udhëtimi",
+        "Pasuria",
+        "Koha"
+      ],
+      "correctIndex": 0,
+      "explanation": "Mesazhi kryesor i hadithit është rëndësia e nijetit.",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-014",
+      "order": 14,
+      "type": "hadith_keyword",
+      "category": "Hadithi",
+      "reference": "Sahih Muslim 55",
+      "question": "Cila është tema kryesore e hadithit 'Feja është këshillë e sinqertë'?",
+      "options": [
+        "Tregtia",
+        "Këshilla e sinqertë",
+        "Trashëgimia",
+        "Udhëtimi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hadithi thekson sinqeritetin dhe këshillimin e mirë.",
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "id": "interactive-sq-015",
+      "order": 15,
+      "type": "hadith_keyword",
+      "category": "Hadithi",
+      "reference": "Sahih Muslim 223",
+      "question": "Cila është fjala kryesore e hadithit 'Pastërtia është gjysma e besimit'?",
+      "options": [
+        "Pastërtia",
+        "Tregtia",
+        "Historia",
+        "Gjuha"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hadithi thekson rëndësinë e pastërtisë.",
+      "reviewStatus": "needs_source_passage_check"
+    }
+  ]
+}
