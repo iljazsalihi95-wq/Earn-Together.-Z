@@ -29,5 +29,5 @@ object PlayerPortrait {
             file(context).outputStream().use { bitmap.compress(Bitmap.CompressFormat.WEBP,88,it) };bitmap.recycle();true
         }.getOrDefault(false)
     }
-    fun image(context:Context):ImageView=ImageView(context).apply { scaleType=ImageView.ScaleType.CENTER_CROP;setImageBitmap(load(context));background=GradientDrawable().apply {shape=GradientDrawable.OVAL;setColor(0xffdce9ff.toInt())};clipToOutline=true;contentDescription="Fotoja e lojtarit" }
+    fun image(context:Context):ImageView=ImageView(context).apply { scaleType=ImageView.ScaleType.CENTER_CROP;setImageBitmap(load(context)?:StudioAssets.get(context,"host").let{Bitmap.createBitmap(it,0,0,it.width/4,it.height/2)});background=GradientDrawable().apply {shape=GradientDrawable.OVAL;setColor(0xffdce9ff.toInt())};clipToOutline=true;contentDescription="Fotoja e lojtarit" }
 }

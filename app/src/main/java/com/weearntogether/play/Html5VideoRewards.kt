@@ -16,9 +16,10 @@ class Html5VideoRewards(context: Context, private val user: String) {
     private val account get() = AccountStore(app)
     private val retryHandler = Handler(Looper.getMainLooper())
     private val retryQueued = AtomicBoolean(false)
+    private var retryDelayMs=6_000L
     private fun sameAccount() = account.isSignedIn() && account.currentUserId() == user
     private fun receipts(): JSONArray = try { JSONArray(prefs.getString("$user:receipts", "[]")) } catch (_: Exception) { JSONArray() }
-    /** Only called from the native LevelPlay onAdRewarded callback, never from JS. */
+    /** Only called from a native ad SDK completion callback (LevelPlay or AdMob), never from JS. */
     fun completed(game: String) {
         if (!sameAccount()) return
         synchronized(guard) {
@@ -76,7 +77,7 @@ class Html5VideoRewards(context: Context, private val user: String) {
         retryHandler.postDelayed({
             retryQueued.set(false)
             if (sameAccount()) sync()
-        }, 6_000L)
+        }, retryDelayMs)
     }
     fun sync() {
         if (!sameAccount() || !working.compareAndSet(false, true)) return
@@ -117,7 +118,8 @@ class Html5VideoRewards(context: Context, private val user: String) {
             } catch (_: Exception) { /* Offline, old backend or expired auth: durable receipt remains queued. */ }
             finally {
                 working.set(false)
-                if (processedReceipt) scheduleNextWaitingReceipt()
+                retryDelayMs=if(processedReceipt)6_000L else (retryDelayMs*2).coerceAtMost(60_000L)
+                scheduleNextWaitingReceipt()
             }
         }
     }
