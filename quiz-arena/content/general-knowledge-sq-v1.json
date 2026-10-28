@@ -404,6 +404,206 @@
         }
       ],
       "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-021",
+      "order": 21,
+      "category": "Gjeografi",
+      "question": "Cili është kryeqyteti i Australisë?",
+      "options": [
+        "Sidnei",
+        "Melburni",
+        "Kanberra",
+        "Perthi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kanberra është kryeqyteti i Australisë.",
+      "sources": [
+        {
+          "work": "Australian Government"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-022",
+      "order": 22,
+      "category": "Shkencë",
+      "question": "Cili gaz përbën pjesën më të madhe të atmosferës së Tokës?",
+      "options": [
+        "Oksigjeni",
+        "Azoti",
+        "Dioksidi i karbonit",
+        "Hidrogjeni"
+      ],
+      "correctIndex": 1,
+      "explanation": "Azoti përbën rreth 78% të atmosferës së Tokës.",
+      "sources": [
+        {
+          "work": "NASA Earth"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-023",
+      "order": 23,
+      "category": "Matematikë",
+      "question": "Sa është rrënja katrore e numrit 144?",
+      "options": [
+        "10",
+        "11",
+        "12",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 × 12 = 144.",
+      "sources": [
+        {
+          "work": "Aritmetikë"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-024",
+      "order": 24,
+      "category": "Biologji",
+      "question": "Cili organ është përgjegjës kryesisht për filtrimin e gjakut dhe prodhimin e urinës?",
+      "options": [
+        "Zemra",
+        "Veshkat",
+        "Mushkëritë",
+        "Stomaku"
+      ],
+      "correctIndex": 1,
+      "explanation": "Veshkat filtrojnë gjakun dhe prodhojnë urinën.",
+      "sources": [
+        {
+          "work": "NIDDK"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-025",
+      "order": 25,
+      "category": "Teknologji",
+      "question": "Çfarë do të thotë shkurtesa CPU?",
+      "options": [
+        "Central Processing Unit",
+        "Computer Power Utility",
+        "Core Program Upload",
+        "Central Print Unit"
+      ],
+      "correctIndex": 0,
+      "explanation": "CPU është njësia qendrore e përpunimit.",
+      "sources": [
+        {
+          "work": "Intel"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-026",
+      "order": 26,
+      "category": "Astronomi",
+      "question": "Cili planet njihet për unazat e tij të dukshme?",
+      "options": [
+        "Marsi",
+        "Venusi",
+        "Saturni",
+        "Mërkuri"
+      ],
+      "correctIndex": 2,
+      "explanation": "Saturni njihet për sistemin e gjerë të unazave.",
+      "sources": [
+        {
+          "work": "NASA Saturn"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-027",
+      "order": 27,
+      "category": "Histori",
+      "question": "Në cilin vit përfundoi Lufta e Dytë Botërore?",
+      "options": [
+        "1939",
+        "1943",
+        "1945",
+        "1950"
+      ],
+      "correctIndex": 2,
+      "explanation": "Lufta e Dytë Botërore përfundoi në vitin 1945.",
+      "sources": [
+        {
+          "work": "United States Holocaust Memorial Museum"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-028",
+      "order": 28,
+      "category": "Gjeografi",
+      "question": "Në cilin kontinent ndodhet shkretëtira e Saharasë?",
+      "options": [
+        "Azia",
+        "Afrika",
+        "Amerika e Jugut",
+        "Australia"
+      ],
+      "correctIndex": 1,
+      "explanation": "Saharaja shtrihet në Afrikën Veriore.",
+      "sources": [
+        {
+          "work": "Encyclopaedia Britannica"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-029",
+      "order": 29,
+      "category": "Fizikë",
+      "question": "Cila është njësia SI e rezistencës elektrike?",
+      "options": [
+        "Volti",
+        "Amperi",
+        "Ohmi",
+        "Vati"
+      ],
+      "correctIndex": 2,
+      "explanation": "Rezistenca elektrike matet në ohm (Ω).",
+      "sources": [
+        {
+          "work": "BIPM SI"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-030",
+      "order": 30,
+      "category": "Letërsi",
+      "question": "Kush e shkroi romanin 'Don Kishoti'?",
+      "options": [
+        "Miguel de Servantes",
+        "Viktor Hygo",
+        "Dante Aligieri",
+        "Uilliam Shekspir"
+      ],
+      "correctIndex": 0,
+      "explanation": "Miguel de Servantes është autori i romanit Don Kishoti.",
+      "sources": [
+        {
+          "work": "Biblioteca Nacional de España"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
     }
   ]
 }
