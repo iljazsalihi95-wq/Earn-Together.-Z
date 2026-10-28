@@ -792,6 +792,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 39,
+      "id": "series2-039-abdul-muttalib-zamzam",
+      "category": "Historia Islame",
+      "subcategory": "Sira e Profetit ﷺ",
+      "question": "Kush ishte gjyshi i Profetit ﷺ që e rihapi dhe e pastroi pusin e shenjtë të Zemzemit?",
+      "options": [
+        "Hashimi",
+        "Abdul-Muttalib (Shejbeh el-Hamd)",
+        "Abd Menafi",
+        "Kusej ibn Kilab"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sipas burimeve të sirës, Abdul-Muttalibi (Shejbeh ibn Hashim), gjyshi i Profetit Muhamed ﷺ, rizbuloi dhe rihapi pusin e Zemzemit në Mekë. Rrëfimet tradicionale përmendin një ëndërr që e udhëzoi drejt vendit dhe ndihmën e djalit të tij Harith. Këto hollësi vijnë nga literatura e sirës, jo nga një ajet që e emërton drejtpërdrejt.",
+      "sources": [
+        {
+          "work": "Ibn Hisham",
+          "locator": "Es-Sire en-Nebevijje, rrëfimi për hapjen e Zemzemit nga Abdul-Muttalibi"
+        },
+        {
+          "work": "Ibn Kethir",
+          "locator": "El-Bidaje ve'n-Nihaje, biografia e Abdul-Muttalibit"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
