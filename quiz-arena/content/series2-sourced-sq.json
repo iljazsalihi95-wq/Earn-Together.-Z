@@ -88,6 +88,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 10,
+      "id": "series2-010-ibn-battuta",
+      "category": "Historia Islame",
+      "subcategory": "Udhëtarët dhe gjeografët",
+      "question": "Cili udhëpërshkrues i famshëm mysliman nga Tanxheri i Marokut udhëtoi për gati 30 vjet nëpër botën islame dhe, sipas rrëfimit të tij, deri në Kinë?",
+      "options": [
+        "El-Idrisi",
+        "Evlija Çelebiu",
+        "Ibn Batuta",
+        "Ibn Xhubejri"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ibn Batuta (lindur më 1304 në Tanxher) u nis në vitin 1325 për Haxh dhe udhëtoi për afro 29 vjet në shumë rajone të Afrikës dhe Azisë. Udhëtimet u përshkruan në veprën Er-Rihla, të redaktuar nga Ibn Xhuzej. Rrëfimi për Kinën ekziston, por disa hollësi të tij diskutohen nga historianët. El-Idrisi ishte gjeograf dhe hartograf; Evlija Çelebiu udhëtar osman; Ibn Xhubejri udhëtar andaluzian.",
+      "sources": [
+        {
+          "work": "Ibn Battuta, Tuhfat al-Nuzzar fi Ghara'ib al-Amsar wa 'Aja'ib al-Asfar (Er-Rihla)",
+          "locator": "Rrëfimi i udhëtimeve, redaktuar nga Ibn Xhuzej"
+        },
+        {
+          "work": "Encyclopaedia Britannica, Ibn Battuta",
+          "locator": "Biografia dhe itinerari"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
