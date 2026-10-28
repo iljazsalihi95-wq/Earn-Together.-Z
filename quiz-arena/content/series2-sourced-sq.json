@@ -661,6 +661,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 34,
+      "id": "series2-034-conquest-mecca-8ah",
+      "category": "Historia Islame",
+      "subcategory": "Sira e Profetit ﷺ",
+      "question": "Në cilin vit hixhri u çlirua Meka?",
+      "options": [
+        "Viti 6",
+        "Viti 8",
+        "Viti 10",
+        "Viti 12"
+      ],
+      "correctIndex": 1,
+      "explanation": "Çlirimi i Mekës (Fet'hul-Mekke) ndodhi në Ramazan të vitit 8 hixhri (630 e.s.). Viti 10 hixhri lidhet me Haxhin e Lamtumirës të Profetit Muhamed ﷺ. Prandaj përgjigjja C është e pasaktë dhe e sakta është B.",
+      "sources": [
+        {
+          "work": "Sahih el-Buhari",
+          "locator": "Kitab el-Megazi, kapitujt e çlirimit të Mekës"
+        },
+        {
+          "work": "Ibn Hisham",
+          "locator": "Es-Sire en-Nebevijje, Fet'hul-Mekke"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
