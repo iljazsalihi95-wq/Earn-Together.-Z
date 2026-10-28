@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "locale": "sq",
+  "series": "Kuizi i Diturisë – seria e dytë",
+  "source": "Fotografitë e përdoruesit nga kuizi në jusufzimeri.com",
+  "publicationStatus": "editorial_review_required",
+  "integrationStatus": "content_only_not_yet_loaded_by_QuizArenaActivity",
+  "questions": [
+    {
+      "order": 5,
+      "id": "series2-005-yarmuk",
+      "category": "Historia Islame",
+      "subcategory": "Sahabët / Çlirimet islame",
+      "question": "Cili komandant i shquar mysliman luajti rol vendimtar në drejtimin taktik të forcave myslimane gjatë Betejës së Jermukut kundër Bizantit?",
+      "options": [
+        "Halid ibn el-Velid (r.a.)",
+        "Ali ibn Ebi Talib (r.a.)",
+        "Usame ibn Zejd (r.a.)",
+        "Tarik ibn Zijad"
+      ],
+      "correctIndex": 0,
+      "explanation": "Beteja e Jermukut u zhvillua në vitin 636 e.s. (15 h.). Halid ibn el-Velidi luajti rol kyç në organizimin dhe drejtimin taktik të forcave myslimane. Ebu Ubejde ibn el-Xherrahu kishte përgjegjësi të komandës së përgjithshme në Sham; këto role nuk duhen ngatërruar.",
+      "sources": [
+        {
+          "work": "Et-Taberiu, Tarih er-Rusul ve el-Muluk",
+          "locator": "Ngjarjet e vitit 15 h."
+        },
+        {
+          "work": "Ibn Kethiri, El-Bidaje ve en-Nihaje",
+          "locator": "Ngjarjet e vitit 15 h."
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check",
+      "notes": "Pyetja u riformulua për të shmangur paqartësinë mes komandës taktike dhe komandës së përgjithshme."
+    }
+  ]
+}
