@@ -414,6 +414,36 @@
         }
       ],
       "reviewStatus": "source_references_identified"
+    },
+    {
+      "order": 25,
+      "id": "series2-025-prophet-lut",
+      "category": "Historia Islame",
+      "subcategory": "Historitë e pejgamberëve",
+      "question": "Cili profet u dërgua te populli që Kurani e përmend për veprat e tij të shëmtuara?",
+      "options": [
+        "Profeti Salih (a.s.)",
+        "Profeti Shuajb (a.s.)",
+        "Profeti Hud (a.s.)",
+        "Profeti Lut (a.s.)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Profeti Lut (a.s.) u dërgua te populli i tij dhe e thirri të largohej nga veprat e ndaluara dhe padrejtësitë. Kurani e përmend në El-A'raf 7:80 dhe në Hud 11:77–83. Kurani përdor shprehjen 'populli i Lutit'; lidhja me Sodomën është emërtim i traditës historike.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "El-A'raf 7:80–84"
+        },
+        {
+          "work": "Kurani",
+          "locator": "Hud 11:77–83"
+        },
+        {
+          "work": "Kurani",
+          "locator": "El-Ankebut 29:28–35"
+        }
+      ],
+      "reviewStatus": "source_references_identified"
     }
   ]
 }
