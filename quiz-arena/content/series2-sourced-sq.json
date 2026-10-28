@@ -870,6 +870,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 42,
+      "id": "series2-042-dhul-hijjah-last-month",
+      "category": "Njohuri Islame",
+      "subcategory": "Kalendari Islam",
+      "question": "Si quhet muaji i fundit i kalendarit hixhri?",
+      "options": [
+        "Sheval",
+        "Dhul Kade",
+        "Dhul Hixhxhe",
+        "Muharrem"
+      ],
+      "correctIndex": 2,
+      "explanation": "Dhul Hixhxhe (ذو الحجة) është muaji i dymbëdhjetë dhe i fundit i kalendarit hixhri. Në të kryhen ritualet e Haxhit dhe festohet Kurban Bajrami. Shevali është muaji i dhjetë, Dhul Kade i njëmbëdhjeti, ndërsa Muharremi muaji i parë.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "Et-Teube 9:36, dymbëdhjetë muajt"
+        },
+        {
+          "work": "Sahih el-Buhari",
+          "locator": "4662, muajt e shenjtë"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
