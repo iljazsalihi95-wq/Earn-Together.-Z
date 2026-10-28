@@ -978,6 +978,36 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 46,
+      "id": "series2-046-battle-of-badr-first-major",
+      "category": "Historia Islame",
+      "subcategory": "Sira e Profetit ﷺ",
+      "question": "Cila ishte beteja e parë e madhe në Islam?",
+      "options": [
+        "Beteja e Uhudit",
+        "Beteja e Hendekut",
+        "Beteja e Bedrit",
+        "Beteja e Tebukut"
+      ],
+      "correctIndex": 2,
+      "explanation": "Beteja e Bedrit, në vitin 2 hixhri (624 e.s.), ishte përballja e parë e madhe ushtarake e myslimanëve të Medinës me kurejshët e Mekës. Sipas rrëfimeve historike, rreth 313 myslimanë u përballën me afërsisht 1.000 luftëtarë kurejshitë. Uhudi ndodhi në vitin 3 hixhri, Hendeku në vitin 5 dhe ekspedita e Tebukut në vitin 9.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "Ali Imran 3:123"
+        },
+        {
+          "work": "Kurani",
+          "locator": "El-Enfal 8:5–19"
+        },
+        {
+          "work": "Ibn Hisham",
+          "locator": "Es-Sire en-Nebevijje, Beteja e Bedrit"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
