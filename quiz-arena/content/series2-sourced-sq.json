@@ -32,6 +32,38 @@
       ],
       "reviewStatus": "needs_source_passage_check",
       "notes": "Pyetja u riformulua për të shmangur paqartësinë mes komandës taktike dhe komandës së përgjithshme."
+    },
+    {
+      "order": 8,
+      "id": "series2-008-zakat-sheep",
+      "category": "Fikhu Hanefi",
+      "subcategory": "Zekati / Bagëtitë",
+      "question": "Sa është numri minimal i deleve ose dhive që kullosin, mbi të cilat bëhet obligim zekati pasi të plotësohen kushtet përkatëse?",
+      "options": [
+        "20 krerë",
+        "50 krerë",
+        "100 krerë",
+        "40 krerë"
+      ],
+      "correctIndex": 3,
+      "explanation": "Sipas fikhut Hanefi, nisabi i deleve dhe dhive që kullosin (sa'imah) është 40 krerë. Për 40–120 krerë jepet një dele ose dhi; për 121–200 jepen dy; për 201–399 jepen tri; për 400 jepen katër. Duhet të kalojë një vit hënor dhe të plotësohen kushtet e kullotjes. Bagëtitë për tregti trajtohen sipas rregullave të mallrave tregtare.",
+      "sources": [
+        {
+          "work": "Sahih el-Buhari",
+          "locator": "Hadithi 1454",
+          "url": "https://sunnah.com/bukhari:1454"
+        },
+        {
+          "work": "Nur el-Idah",
+          "locator": "Kapitulli Zekati i deleve dhe dhive"
+        },
+        {
+          "work": "Darul Iftaa Mahmudiyyah, Zakaat on Sheep and Goats",
+          "url": "https://islamqa.org/hanafi/daruliftaazambia/157273/"
+        }
+      ],
+      "reviewStatus": "source_cross_checked",
+      "notes": "Kushtet janë shprehur në pyetje për të shmangur përgjithësimin e gabuar."
     }
   ]
 }
