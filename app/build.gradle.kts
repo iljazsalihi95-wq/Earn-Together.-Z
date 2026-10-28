@@ -28,9 +28,6 @@ android {
         buildConfigField("String", "LEVELPLAY_INTERSTITIAL_AD_UNIT", "\"onmeefn82676cjk8\"")
         buildConfigField("String", "LEVELPLAY_BANNER_AD_UNIT", "\"3z9a2p5o88cx61ls\"")
     }
-    // Keep the generated GamePix catalogue in one source of truth, but package it
-    // directly into the APK. The hub can therefore open even if GitHub Pages/CDN
-    // bootstrap delivery is unavailable on a phone.
     sourceSets {
         getByName("main").assets.srcDir("../docs/gamepix")
     }
@@ -49,5 +46,9 @@ dependencies {
     implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     testImplementation("junit:junit:4.13.2")
+
+    // LevelPlay is the single mediation controller. Network adapters are included
+    // in the APK so impressions are attributed to the actual native Android app.
     implementation("com.unity3d.ads-mediation:mediation-sdk:9.5.0")
+    implementation("com.unity3d.ads-mediation:unityads-adapter:5.15.0")
 }
