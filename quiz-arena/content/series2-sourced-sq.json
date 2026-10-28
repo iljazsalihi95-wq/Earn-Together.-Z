@@ -366,6 +366,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 23,
+      "id": "series2-023-saladin-jerusalem-1187",
+      "category": "Historia Islame",
+      "subcategory": "Dinastia Ejubite / Kryqëzatat",
+      "question": "Kush ishte komandanti që çliroi Kudsin (Jerusalemin) në vitin 1187?",
+      "options": [
+        "Tarik bin Zijad",
+        "Salahudin Ejubi",
+        "Muhamed el-Fatih",
+        "Halid bin Velid"
+      ],
+      "correctIndex": 1,
+      "explanation": "Salahudin Ejubi udhëhoqi forcat myslimane që rimorën Jerusalemin më 2 tetor 1187, pas fitores së tij në Betejën e Hattinit më 4 korrik 1187. Qyteti kishte qenë nën sundimin e kryqtarëve që nga viti 1099. Tarik ibn Zijadi lidhet me hyrjen në Iberi, Muhamed el-Fatihu me Kostandinopojën dhe Halid ibn Velidi me fushatat e hershme islame.",
+      "sources": [
+        {
+          "work": "Ibn el-Ethir",
+          "locator": "El-Kamil fi't-Tarih, ngjarjet e vitit 583 Hixhri"
+        },
+        {
+          "work": "Bahauddin ibn Shedad",
+          "locator": "En-Nevadir es-Sultanijje, rimarrja e Kudsit"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
