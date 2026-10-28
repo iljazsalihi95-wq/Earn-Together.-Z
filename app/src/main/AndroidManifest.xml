@@ -9,6 +9,9 @@
     android:theme="@android:style/Theme.Material.Light.NoActionBar"
     android:usesCleartextTraffic="false">
 <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="${admobAppId}"/>
+<activity android:name=".PremiumHomeActivity" android:exported="true" android:screenOrientation="portrait">
+<intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+</activity>
 <activity android:name="com.weearntogether.play.CupShuffleActivity" android:theme="@android:style/Theme.Material.Light.NoActionBar.Fullscreen" android:screenOrientation="portrait" android:configChanges="orientation|screenSize|keyboardHidden" android:exported="false"/>
 <activity android:name="com.weearntogether.lazygarden.LazyGardenActivity" android:theme="@android:style/Theme.Material.Light.NoActionBar.Fullscreen" android:screenOrientation="portrait" android:exported="false"/>
 <activity android:name="com.weearntogether.play.BubbleShooterActivity" android:theme="@android:style/Theme.Material.Light.NoActionBar.Fullscreen" android:screenOrientation="portrait" android:configChanges="orientation|screenSize|keyboardHidden" android:exported="false"/>
@@ -19,8 +22,6 @@
 <activity android:name=".AyetOfferwallActivity" android:exported="false"/>
 <activity android:name=".WalletActivity" android:exported="false"/>
 <activity android:name=".QuizArenaActivity" android:exported="false" android:screenOrientation="portrait" android:theme="@android:style/Theme.Material.Light.NoActionBar.Fullscreen"/>
-<activity android:name=".MainActivity" android:exported="true">
-<intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
-</activity>
+<activity android:name=".MainActivity" android:exported="false"/>
 </application>
 </manifest>
