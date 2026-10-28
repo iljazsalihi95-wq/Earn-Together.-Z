@@ -18,7 +18,7 @@ class QuizBank(private val context:Context) {
         return Loaded(parse(rows),false,rows.length())
     }
     fun refresh():Loaded {
-        val rows=fetchRows("Pyetjet")
+        val rows=fetchRows("Pyetjet");runCatching{fetchRows("Arena - Pyetjet e tua")}.onSuccess{extra->for(i in 0 until extra.length())rows.put(extra.getJSONArray(i))}
         val questions=parse(rows);require(questions.isNotEmpty())
         prefs.edit().putString("rows",rows.toString()).putLong("fetched",System.currentTimeMillis()).apply()
         return Loaded(questions,true,rows.length())

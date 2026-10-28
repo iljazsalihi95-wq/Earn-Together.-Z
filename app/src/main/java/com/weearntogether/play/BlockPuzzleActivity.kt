@@ -64,6 +64,7 @@ class BlockPuzzleActivity : Activity() {
             textSize=10f;setTextColor(0xffb8c9ef.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.035f
             background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xcc09172f.toInt(),0xcc241248.toInt(),0xcc09172f.toInt())).apply{cornerRadius=dp(15).toFloat();setStroke(dp(1),0x4458c8ff)}
         }
+        guide.text="VIDEO BONUS • PASTRO NJË RRESHT";guide.setOnClickListener{ads.rewarded(onGameplayReward={game.videoRescue()})}
         host.addView(guide,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(32),Gravity.BOTTOM).apply{leftMargin=dp(20);rightMargin=dp(20);bottomMargin=dp(6)})
         setContentView(host)
     }

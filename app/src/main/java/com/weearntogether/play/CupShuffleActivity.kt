@@ -25,6 +25,7 @@ import kotlin.random.Random
 
 /** Native HD 2D cup-and-ball memory game. No Canvas/WebView. */
 class CupShuffleActivity : Activity() {
+    private lateinit var ads:NativeGameAds
     private val navy = 0xff060c1f.toInt()
     private val purple = 0xff713fe8.toInt()
     private val blue = 0xff197ef2.toInt()
@@ -48,7 +49,7 @@ class CupShuffleActivity : Activity() {
     private fun gradient(a: Int, b: Int, radius: Float) = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(a, b)).apply { cornerRadius = radius }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState);ads=NativeGameAds(this,"cups")
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         window.navigationBarColor = navy
@@ -191,7 +192,7 @@ class CupShuffleActivity : Activity() {
             pulse(cups[ballCup], 0xffff6d91.toInt())
             if (lives <= 0) { score = 0; lives = 3; level = max(1, level - 2); message.text = "NEW RUN • LEVEL $level" }
         }
-        save(); updateHud(); handler.postDelayed({ startRound() }, 1250)
+        save(); updateHud(); if(!correct||!ads.naturalBreak{handler.postDelayed({startRound()},1250)})handler.postDelayed({ startRound() }, 1250)
     }
 
     private fun pulse(v: View, color: Int) {
@@ -204,5 +205,5 @@ class CupShuffleActivity : Activity() {
 
     private fun restartGame() { handler.removeCallbacksAndMessages(null); score = 0; lives = 3; round = 0; save(); updateHud(); message.text = "Watch the golden ball"; handler.postDelayed({ startRound() }, 450) }
 
-    override fun onDestroy() { handler.removeCallbacksAndMessages(null); tone.release(); save(); super.onDestroy() }
+    override fun onDestroy() { handler.removeCallbacksAndMessages(null); tone.release(); save(); ads.destroy(); super.onDestroy() }
 }

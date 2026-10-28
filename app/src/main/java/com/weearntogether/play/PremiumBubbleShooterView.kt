@@ -43,4 +43,6 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: ()
  private fun disconnectedCells():Set<Pair<Int,Int>>{val keep=mutableSetOf<Pair<Int,Int>>();val q=ArrayDeque<Pair<Int,Int>>();for(c in 0 until cols)if(grid[0][c]!=0)q.add(0 to c);while(q.isNotEmpty()){val p=q.removeFirst();if(!keep.add(p))continue;val(r,c)=p;arrayOf(r-1 to c,r+1 to c,r to c-1,r to c+1).forEach{(rr,cc)->if(rr in 0 until rows&&cc in 0 until cols&&grid[rr][cc]!=0&&(rr to cc)!in keep)q.add(rr to cc)}};val out=linkedSetOf<Pair<Int,Int>>();for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]!=0&&(r to c)!in keep)out+=r to c;return out}
  private fun randomBoardColor():Int{val a=mutableListOf<Int>();for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]>0&&grid[r][c] !in a)a+=grid[r][c];return if(a.isEmpty())1+Random.nextInt(palette.size)else a.random()}
  fun swapBubble(){if(busy)return;val t=current;current=next;next=t;save();rebuild()};fun restart(){if(busy)return;score=0;streak=0;misses=0;newBoard();current=randomBoardColor();next=randomBoardColor();save();rebuild()}
+    fun videoRescue(){if(busy)return;for(r in (rows-3) until rows)grid[r].fill(0);misses=0;save();rebuild()}
+
 }

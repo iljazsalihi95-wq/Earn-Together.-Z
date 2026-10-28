@@ -37,7 +37,7 @@ class PremiumHomeActivity : Activity() {
         root=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(16),0,dp(16),dp(108))};scroll.addView(root)
         host.addView(scroll,FrameLayout.LayoutParams(-1,-1));setContentView(host)
         host.setOnApplyWindowInsetsListener{v,i->v.setPadding(i.systemWindowInsetLeft,i.systemWindowInsetTop,i.systemWindowInsetRight,i.systemWindowInsetBottom);i};host.requestApplyInsets()
-        header();sectionTitle("★","Zgjedhja e sotme","Arena");featured();rewardCard();sectionTitle("🔥","Më të luajturat","Të gjitha");gameRow();sectionTitle("✦","Eksploro lojërat","Më shumë");compactGames();bottomNav()
+        header();sectionTitle("★","Zgjedhja e sotme","Arena");featured();rewardCard();sectionTitle("🔥","Më të luajturat","Të gjitha");gameRow();sectionTitle("✦","Eksploro lojërat","Më shumë");compactGames();bottomNav();rewardButton.isEnabled=true;rewardButton.text="SHIKO VIDEO"
     }
     private fun header(){
         val h=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(18),dp(20),dp(16),dp(22));background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xff476aef.toInt(),0xff569cf9.toInt()));minimumHeight=dp(104)}
@@ -89,7 +89,6 @@ class PremiumHomeActivity : Activity() {
         nav("◉","Lojëra"){};nav("♧","Oferta"){startActivity(Intent(this,AyetOfferwallActivity::class.java))};nav("▣","Portofoli"){startActivity(Intent(this,WalletActivity::class.java))};nav("☺","Profili"){startActivity(Intent(this,MainActivity::class.java).putExtra("open_profile",true))}
         host.addView(bar,FrameLayout.LayoutParams(-1,dp(78),Gravity.BOTTOM).apply{leftMargin=dp(10);rightMargin=dp(10);bottomMargin=dp(10)})
     }
-    private fun loadRewarded(){RewardedAd.load(this,BuildConfig.ADMOB_REWARDED_ID,AdRequest.Builder().build(),object:RewardedAdLoadCallback(){override fun onAdLoaded(ad:RewardedAd){rewarded=ad;rewardButton.isEnabled=true;rewardButton.text="SHIKO VIDEO • +25 COINS"};override fun onAdFailedToLoad(e:LoadAdError){rewarded=null;rewardButton.isEnabled=false;rewardButton.text="VIDEO NUK ËSHTË GATI"}})}
     private fun showRewarded(){ads.rewarded()}
     override fun onResume(){super.onResume();if(::ads.isInitialized)ads.resume()}
     override fun onPause(){if(::ads.isInitialized)ads.pause();super.onPause()}

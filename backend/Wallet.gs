@@ -44,6 +44,7 @@ function walletBalance_(user){
 }
 function walletPublicOut_(c){return {cashout_id:c.cashout_id,requested_at:c.requested_at,amount_cents:Number(c.amount),currency:c.currency,payment_method:c.payment_method,status:c.status,payment_reference:c.payment_reference||'',review_note:c.review_note||'',paid_at:c.paid_at||''};}
 function route_(p){
+ if(typeof quizArenaRoute_==='function'&&['quizArenaStart','quizArenaFinish'].includes(p.action))return quizArenaRoute_(p);
  if(!WALLET_ACTIONS.includes(p.action))return preWalletRoute_(p);
  return walletLock_(()=>{const identity=auth_(p),u=identity.u;
  if(p.user_id!==undefined||p.balance!==undefined||p.coins!==undefined||p.status!==undefined||p.verified!==undefined)fail_('CLIENT_AUTHORITY','The server determines identity, coins and balances');

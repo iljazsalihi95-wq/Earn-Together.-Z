@@ -75,6 +75,7 @@ class BubbleShooterActivity : Activity() {
         val status=statusChip(ui("HD 2D  •  AUTO-SAVE  •  250 LEVELS","HD 2D  •  AUTO-RUAJTJE  •  250 NIVELE","HD 2D  •  AUTO-SPEICHERN  •  250 LEVEL","HD 2D  •  SALVATAGGIO AUTO  •  250 LIVELLI"))
         host.addView(status,FrameLayout.LayoutParams(dp(250),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
         val guide=guideChip()
+        guide.text="VIDEO BONUS • HIQ 3 RRESHTAT E FUNDIT";guide.setOnClickListener{ads.rewarded(onGameplayReward={game.videoRescue()})}
         host.addView(guide,FrameLayout.LayoutParams(dp(310),dp(30),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(72)})
         guide.postDelayed({if(!isFinishing)guide.animate().alpha(.38f).setDuration(700).start()},5500)
         guide.setOnClickListener{guide.animate().alpha(1f).setDuration(180).withEndAction{guide.postDelayed({if(!isFinishing)guide.animate().alpha(.38f).setDuration(700).start()},3500)}.start()}

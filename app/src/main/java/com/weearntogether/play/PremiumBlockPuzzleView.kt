@@ -52,4 +52,6 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: () -
     private fun canPlace(shape:Array<Pair<Int,Int>>,r:Int,c:Int)=shape.all{(x,y)->r+y in 0..7&&c+x in 0..7&&board[r+y][c+x]==0}
     private fun hasAnyMove():Boolean{for(s in offers)if(s>=0&&shapeFits(s))return true;return false}
     fun restart(){best=max(best,score);for(r in board)r.fill(0);score=0;levelLines=0;combo=0;gameOver=false;offers=nextOffers();save();refresh()}
+    fun videoRescue(){val row=(0..7).maxByOrNull{r->board[r].count{it!=0}}?:return;board[row].fill(0);gameOver=false;ensurePlayableTray();save();refresh()}
+
 }

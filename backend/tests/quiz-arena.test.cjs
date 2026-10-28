@@ -1,0 +1,15 @@
+const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
+const headers=['Timestamp','Emri','Pikët','Pyetje','Përqindja','Kaloi','Koha sek.','Gjuha','Visitor ID','Quiz Version'];
+const questions=[['title'],['note'],['ID'],['1','PO','Test','Question?','A','B','','','','B','Explanation','Source','','OK'],['2','JO','Test','Inactive?','A','B','','','','A','','','','OK']];
+const results=[['title'],['note'],headers];let who='user1';const cache=new Map();let lock=0;
+const context={Date,Set,JSON,Array,String,Number,Math,ARENA_SHEET_ID:undefined,auth_:()=>({u:{user_id:who}}),fail_:(code,msg)=>{throw Error(code+':'+msg)},Utilities:{getUuid:()=> 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'},CacheService:{getScriptCache:()=>({put:(k,v)=>cache.set(k,v),get:k=>cache.get(k),remove:k=>cache.delete(k)})},LockService:{getScriptLock:()=>({waitLock:()=>lock++,releaseLock:()=>lock--})},SpreadsheetApp:{openById:id=>({getSheetByName:name=>name==='Arena - Pyetjet e tua'?null:name==='Pyetjet'?{getDataRange:()=>({getDisplayValues:()=>questions})}:{getDataRange:()=>({getValues:()=>results}),getRange:()=>({getDisplayValues:()=>[headers]}),appendRow:row=>results.push(row)}})}};
+vm.createContext(context);vm.runInContext(fs.readFileSync('backend/QuizArena.gs','utf8'),context);
+const route=p=>context.quizArenaRoute_(p);
+assert.throws(()=>route({action:'quizArenaStart',name:'A',question_ids:['sheet-1']}),/INVALID_NAME/);
+assert.throws(()=>route({action:'quizArenaStart',name:'Player',question_ids:['sheet-2']}),/QUIZ_CHANGED/);
+const round=route({action:'quizArenaStart',name:'=1+1',question_ids:['sheet-1']});assert.equal(round.questions[0].correct,undefined);
+who='user2';assert.throws(()=>route({action:'quizArenaFinish',round_id:round.round_id,answers:[{id:'sheet-1',choice:1}]}),/FORBIDDEN/);who='user1';
+assert.throws(()=>route({action:'quizArenaFinish',round_id:round.round_id,answers:[]}),/INVALID_ANSWERS/);
+const answer=route({action:'quizArenaFinish',round_id:round.round_id,answers:[{id:'sheet-1',choice:1}],score:999});assert.equal(answer.score,1);assert.equal(results[3][1],"'=1+1");assert.equal(results.length,4);
+assert.equal(route({action:'quizArenaFinish',round_id:round.round_id,answers:[]}).duplicate,true);assert.equal(results.length,4);assert.equal(lock,0);
+console.log('PASS: existing quiz sheet, active-only bank, server grading, session ownership, formula escaping and idempotent result writes');

@@ -34,7 +34,11 @@ jobs:
           profile: pixel_2
           disable-animations: false
           script: |
-            gradle --no-daemon connectedDebugAndroidTest
+            gradle --no-daemon assembleDebug assembleDebugAndroidTest
+            adb install -r app/build/outputs/apk/debug/app-debug.apk
+            adb install -r app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+            adb shell am instrument -w -r com.weearntogether.play.test/androidx.test.runner.AndroidJUnitRunner | tee native-instrumentation.txt
+            grep -F 'OK (3 tests)' native-instrumentation.txt
             adb pull /sdcard/Android/data/com.weearntogether.play/files/native-qa native-qa-results
       - uses: actions/upload-artifact@v4
         if: always()
@@ -42,5 +46,6 @@ jobs:
           name: Native-Android-screens-and-test-results
           path: |
             native-qa-results/
+            native-instrumentation.txt
             app/build/reports/androidTests/
             app/build/outputs/androidTest-results/
