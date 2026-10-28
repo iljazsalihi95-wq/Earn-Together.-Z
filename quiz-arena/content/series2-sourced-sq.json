@@ -634,6 +634,33 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 33,
+      "id": "series2-033-sifat-dhati-thubuti",
+      "category": "Akide Maturidije",
+      "subcategory": "Cilësitë e Allahut",
+      "originalQuestion": "Si ndahen cilësitë e Allahut (Sifatet) në teologjinë islame?",
+      "question": "Në mësimin tradicional të akides hanefite-maturidite, në cilat dy grupe kryesore shpjegohen cilësitë e Allahut?",
+      "options": [
+        "Cilësi të kufizuara dhe të përkohshme",
+        "Cilësi të dukshme dhe të padukshme",
+        "Cilësi njerëzore dhe engjëllore",
+        "Cilësi të Qenies (Dhatijje) dhe Cilësi Pohuese (Thubutijje)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Në mësimin tradicional hanefi-maturidi, sifatet shpesh paraqiten si dhatijje dhe thubutijje. Dhatijje lidhen me Qenien dhe pangjashmërinë e Allahut me krijesat; thubutijje janë cilësi pohuese të përsosmërisë, si dituria, fuqia, dëgjimi dhe shikimi. Thubutijje nuk do të thotë e njëjta gjë si fi'lijje (cilësi vepruese); në teologjinë maturidite trajtohet edhe tekvini. Kjo është një skemë didaktike, jo ndarja e vetme në të gjitha shkollat e kelamit.",
+      "sources": [
+        {
+          "work": "Ebu Hanife",
+          "locator": "El-Fikh el-Ekber, cilësitë e Allahut"
+        },
+        {
+          "work": "Ebu Mensur el-Maturidi",
+          "locator": "Kitab et-Teuhid, trajtimi i sifateve"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
