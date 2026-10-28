@@ -948,6 +948,36 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 45,
+      "id": "series2-045-surah-tawbah-no-basmala",
+      "category": "Kurani",
+      "subcategory": "Njohuri Kuranore",
+      "question": "Cila sure e Kuranit nuk fillon me 'Bismilah'?",
+      "options": [
+        "Surja El-Fatiha",
+        "Surja Ja-Sin",
+        "Surja Et-Teube",
+        "Surja El-Kehf"
+      ],
+      "correctIndex": 2,
+      "explanation": "Et-Teube është surja e nëntë dhe e vetmja sure e Kuranit që nuk fillon me Bismil-lahir-Rrahmanir-Rrahim. Dijetarët e tefsirit kanë dhënë shpjegime të ndryshme për këtë, përfshirë lidhjen e saj me suren El-Enfal. Bismilahu gjendet edhe brenda sures En-Neml në ajetin 27:30.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "Et-Teube 9:1, fillimi i sures pa Bismilah"
+        },
+        {
+          "work": "Kurani",
+          "locator": "En-Neml 27:30"
+        },
+        {
+          "work": "Ibn Kethir",
+          "locator": "Tefsiri, hyrja e sures Et-Teube"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
