@@ -554,6 +554,33 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 30,
+      "id": "series2-030-yusha-ibn-nun",
+      "category": "Historia Islame",
+      "subcategory": "Profetët dhe Beni Israilët",
+      "question": "Sipas traditës islame, cili profet udhëhoqi Beni Israilët pas Musait dhe Harunit (a.s.) drejt Tokës së Shenjtë?",
+      "originalQuestion": "Cili profet shërbeu si prijës i bijve të Israilit pas vdekjes së Musait dhe Harunit dhe çliroi Tokën e Shenjtë?",
+      "options": [
+        "Profeti Samuel (a.s)",
+        "Profeti Kaleb",
+        "Profeti Talut",
+        "Profeti Jusha ibn Nun (a.s)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Sipas traditës historike islame, Jusha ibn Nun (a.s.) pasoi Musain (a.s.) në udhëheqjen e Beni Israilëve dhe i udhëhoqi drejt Tokës së Shenjtë. Kurani 5:20–26 rrëfen urdhrin për të hyrë në Tokën e Shenjtë dhe përmend dy burra besimtarë në 5:23, por nuk e emërton Jushan; identifikimi vjen nga komentet dhe tradita historike.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "El-Maide 5:20–26, veçanërisht 5:23"
+        },
+        {
+          "work": "Ibn Kethir",
+          "locator": "El-Bidaje ve'n-Nihaje, rrëfimi për Jusha ibn Nun"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
