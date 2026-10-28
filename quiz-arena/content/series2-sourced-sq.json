@@ -314,6 +314,32 @@
         }
       ],
       "reviewStatus": "source_references_identified"
+    },
+    {
+      "order": 21,
+      "id": "series2-021-amr-ibn-al-as-egypt",
+      "category": "Historia Islame",
+      "subcategory": "Sahabët / Hulefai Rashidinët",
+      "question": "Kush ishte komandanti që udhëhoqi çlirimin islam të Egjiptit në kohën e Umerit?",
+      "options": [
+        "Ebu Ubejde (r.a.)",
+        "Amr ibn el-As (r.a.)",
+        "Sa'd ibn Ebi Vakkasi (r.a.)",
+        "Halid ibn Velidi (r.a.)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Amr ibn el-As (r.a.) udhëhoqi fushatën myslimane për marrjen e Egjiptit gjatë kalifatit të Umer ibn el-Hattabit. Fushata nisi në 639 e.s. (18 Hixhri); u mor fortesa e Babilonisë dhe më pas Aleksandria rreth 641–642. Ai themeloi Fustatin, qendër të hershme administrative të Egjiptit islam.",
+      "sources": [
+        {
+          "work": "El-Beladhuri",
+          "locator": "Futuh el-Buldan, çlirimi i Egjiptit"
+        },
+        {
+          "work": "Et-Taberi",
+          "locator": "Tarikh er-Rusul ve'l-Muluk, ngjarjet e kalifatit të Umerit"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
