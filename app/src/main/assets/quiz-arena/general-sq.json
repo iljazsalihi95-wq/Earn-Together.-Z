@@ -1,0 +1,528 @@
+{
+  "schemaVersion": 1,
+  "locale": "sq",
+  "collection": "Quiz Arena – Njohuri të përgjithshme",
+  "integrationStatus": "bundled_android_quiz_arena",
+  "questions": [
+    {
+      "id": "general-sq-001",
+      "order": 1,
+      "category": "Shkencë",
+      "question": "Cili planet është më afër Diellit?",
+      "options": [
+        "Venusi",
+        "Mërkuri",
+        "Marsi",
+        "Toka"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mërkuri është planeti më i afërt me Diellin.",
+      "sources": [
+        {
+          "work": "NASA Solar System Exploration, Mercury"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-002",
+      "order": 2,
+      "category": "Gjeografi",
+      "question": "Cili është oqeani më i madh në Tokë?",
+      "options": [
+        "Atlantik",
+        "Indian",
+        "Arktik",
+        "Paqësor"
+      ],
+      "correctIndex": 3,
+      "explanation": "Oqeani Paqësor është më i madhi për nga sipërfaqja.",
+      "sources": [
+        {
+          "work": "NOAA, Pacific Ocean"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-003",
+      "order": 3,
+      "category": "Histori",
+      "question": "Në cilin vit ra Muri i Berlinit?",
+      "options": [
+        "1987",
+        "1989",
+        "1991",
+        "1993"
+      ],
+      "correctIndex": 1,
+      "explanation": "Muri i Berlinit u hap më 9 nëntor 1989.",
+      "sources": [
+        {
+          "work": "Bundeszentrale für politische Bildung, Mauerfall 1989"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-004",
+      "order": 4,
+      "category": "Matematikë",
+      "question": "Sa është 15% e numrit 200?",
+      "options": [
+        "20",
+        "25",
+        "30",
+        "35"
+      ],
+      "correctIndex": 2,
+      "explanation": "0,15 × 200 = 30.",
+      "sources": [
+        {
+          "work": "Llogaritje aritmetike"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-005",
+      "order": 5,
+      "category": "Biologji",
+      "question": "Cili organ pompon gjakun në trupin e njeriut?",
+      "options": [
+        "Mushkëritë",
+        "Zemra",
+        "Mëlçia",
+        "Veshkat"
+      ],
+      "correctIndex": 1,
+      "explanation": "Zemra pompon gjakun përmes sistemit të qarkullimit.",
+      "sources": [
+        {
+          "work": "Biologji bazë njerëzore"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-006",
+      "order": 6,
+      "category": "Astronomi",
+      "question": "Si quhet galaktika ku ndodhet Sistemi ynë Diellor?",
+      "options": [
+        "Andromeda",
+        "Rruga e Qumështit",
+        "Triangulum",
+        "Sombrero"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sistemi Diellor gjendet në galaktikën Rruga e Qumështit.",
+      "sources": [
+        {
+          "work": "NASA, Milky Way"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-007",
+      "order": 7,
+      "category": "Gjeografi",
+      "question": "Cili është kryeqyteti i Kanadasë?",
+      "options": [
+        "Toronto",
+        "Vankuver",
+        "Otava",
+        "Montreal"
+      ],
+      "correctIndex": 2,
+      "explanation": "Otava është kryeqyteti federal i Kanadasë.",
+      "sources": [
+        {
+          "work": "Government of Canada"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-008",
+      "order": 8,
+      "category": "Fizikë",
+      "question": "Cila është njësia SI e forcës?",
+      "options": [
+        "Xhaul",
+        "Vat",
+        "Njuton",
+        "Paskal"
+      ],
+      "correctIndex": 2,
+      "explanation": "Forca matet në njuton (N); xhauli mat energjinë, vati fuqinë dhe paskali presionin.",
+      "sources": [
+        {
+          "work": "BIPM, SI Brochure"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-009",
+      "order": 9,
+      "category": "Letërsi",
+      "question": "Kush e shkroi romanin 'Don Kishoti'?",
+      "options": [
+        "Miguel de Servantes",
+        "Viktor Hygo",
+        "Dante Aligieri",
+        "Lev Tolstoi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Miguel de Servantes është autori i romanit Don Kishoti.",
+      "sources": [
+        {
+          "work": "Biblioteca Nacional de España, Cervantes"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-010",
+      "order": 10,
+      "category": "Teknologji",
+      "question": "Çfarë do të thotë shkurtesa CPU në informatikë?",
+      "options": [
+        "Central Processing Unit",
+        "Computer Power Utility",
+        "Control Program Upload",
+        "Core Peripheral Unit"
+      ],
+      "correctIndex": 0,
+      "explanation": "CPU është njësia qendrore e përpunimit të kompjuterit.",
+      "sources": [
+        {
+          "work": "Terminologji standarde informatike"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-011",
+      "order": 11,
+      "category": "Kimi",
+      "question": "Cili është simboli kimik i hekurit?",
+      "options": [
+        "He",
+        "H",
+        "Fe",
+        "Ir"
+      ],
+      "correctIndex": 2,
+      "explanation": "Simboli Fe vjen nga emri latin ferrum.",
+      "sources": [
+        {
+          "work": "IUPAC Periodic Table"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-012",
+      "order": 12,
+      "category": "Histori",
+      "question": "Në cilin vit përfundoi Lufta e Dytë Botërore?",
+      "options": [
+        "1943",
+        "1944",
+        "1945",
+        "1946"
+      ],
+      "correctIndex": 2,
+      "explanation": "Lufta e Dytë Botërore përfundoi në vitin 1945.",
+      "sources": [
+        {
+          "work": "United States Holocaust Memorial Museum"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-013",
+      "order": 13,
+      "category": "Matematikë",
+      "question": "Sa është perimetri i një katrori me brinjë 7 cm?",
+      "options": [
+        "14 cm",
+        "21 cm",
+        "28 cm",
+        "49 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "Perimetri i katrorit është 4 × 7 = 28 cm.",
+      "sources": [
+        {
+          "work": "Gjeometri elementare"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-014",
+      "order": 14,
+      "category": "Gjeografi",
+      "question": "Në cilin kontinent ndodhet shkretëtira e Saharasë?",
+      "options": [
+        "Azi",
+        "Afrikë",
+        "Australi",
+        "Amerikë e Jugut"
+      ],
+      "correctIndex": 1,
+      "explanation": "Saharaja shtrihet në Afrikën Veriore.",
+      "sources": [
+        {
+          "work": "National Geographic, Sahara"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-015",
+      "order": 15,
+      "category": "Biologji",
+      "question": "Cili gaz merret kryesisht nga bimët gjatë fotosintezës?",
+      "options": [
+        "Oksigjen",
+        "Azot",
+        "Dioksid karboni",
+        "Helium"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bimët përdorin dioksidin e karbonit dhe ujin për të prodhuar sheqerna gjatë fotosintezës.",
+      "sources": [
+        {
+          "work": "Biologji bazë, fotosinteza"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-016",
+      "order": 16,
+      "category": "Sport",
+      "question": "Sa lojtarë ka një skuadër futbolli në fushë në fillim të ndeshjes?",
+      "options": [
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "correctIndex": 2,
+      "explanation": "Një skuadër futbolli fillon normalisht me 11 lojtarë, përfshirë portierin.",
+      "sources": [
+        {
+          "work": "IFAB Laws of the Game, Law 3"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-017",
+      "order": 17,
+      "category": "Gjuhë shqipe",
+      "question": "Cila nga këto fjalë është mbiemër?",
+      "options": [
+        "Vrapoj",
+        "I bukur",
+        "Shkollë",
+        "Shpejt"
+      ],
+      "correctIndex": 1,
+      "explanation": "'I bukur' është mbiemër që tregon cilësi.",
+      "sources": [
+        {
+          "work": "Gramatika e gjuhës shqipe"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-018",
+      "order": 18,
+      "category": "Astronomi",
+      "question": "Sa kohë i duhet afërsisht Tokës për një rrotullim rreth Diellit?",
+      "options": [
+        "24 orë",
+        "30 ditë",
+        "365 ditë",
+        "10 vjet"
+      ],
+      "correctIndex": 2,
+      "explanation": "Një vit është afërsisht 365,24 ditë.",
+      "sources": [
+        {
+          "work": "NASA Earth Facts"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-019",
+      "order": 19,
+      "category": "Muzikë",
+      "question": "Sa vija ka pentagrami muzikor?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pentagrami standard përbëhet nga pesë vija paralele.",
+      "sources": [
+        {
+          "work": "Teoria bazë e muzikës"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-020",
+      "order": 20,
+      "category": "Logjikë",
+      "question": "Nëse të gjithë katrorët janë drejtkëndësha, cili pohim është patjetër i vërtetë?",
+      "options": [
+        "Çdo drejtkëndësh është katror",
+        "Asnjë katror nuk është drejtkëndësh",
+        "Çdo katror ka katër kënde të drejta",
+        "Çdo katror ka tri brinjë"
+      ],
+      "correctIndex": 2,
+      "explanation": "Katrori ka katër kënde të drejta; jo çdo drejtkëndësh është katror.",
+      "sources": [
+        {
+          "work": "Gjeometri elementare"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-021",
+      "order": 21,
+      "category": "Gjeografi",
+      "question": "Cili është kryeqyteti i Australisë?",
+      "options": [
+        "Sidnei",
+        "Melburni",
+        "Kanberra",
+        "Perthi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kanberra është kryeqyteti i Australisë.",
+      "sources": [
+        {
+          "work": "Australian Government"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-022",
+      "order": 22,
+      "category": "Shkencë",
+      "question": "Cili gaz përbën pjesën më të madhe të atmosferës së Tokës?",
+      "options": [
+        "Oksigjeni",
+        "Azoti",
+        "Dioksidi i karbonit",
+        "Hidrogjeni"
+      ],
+      "correctIndex": 1,
+      "explanation": "Azoti përbën rreth 78% të atmosferës së Tokës.",
+      "sources": [
+        {
+          "work": "NASA Earth"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-023",
+      "order": 23,
+      "category": "Matematikë",
+      "question": "Sa është rrënja katrore e numrit 144?",
+      "options": [
+        "10",
+        "11",
+        "12",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 × 12 = 144.",
+      "sources": [
+        {
+          "work": "Aritmetikë"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-024",
+      "order": 24,
+      "category": "Biologji",
+      "question": "Cili organ është përgjegjës kryesisht për filtrimin e gjakut dhe prodhimin e urinës?",
+      "options": [
+        "Zemra",
+        "Veshkat",
+        "Mushkëritë",
+        "Stomaku"
+      ],
+      "correctIndex": 1,
+      "explanation": "Veshkat filtrojnë gjakun dhe prodhojnë urinën.",
+      "sources": [
+        {
+          "work": "NIDDK"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-026",
+      "order": 26,
+      "category": "Astronomi",
+      "question": "Cili planet njihet për unazat e tij të dukshme?",
+      "options": [
+        "Marsi",
+        "Venusi",
+        "Saturni",
+        "Mërkuri"
+      ],
+      "correctIndex": 2,
+      "explanation": "Saturni njihet për sistemin e gjerë të unazave.",
+      "sources": [
+        {
+          "work": "NASA Saturn"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "general-sq-029",
+      "order": 29,
+      "category": "Fizikë",
+      "question": "Cila është njësia SI e rezistencës elektrike?",
+      "options": [
+        "Volti",
+        "Amperi",
+        "Ohmi",
+        "Vati"
+      ],
+      "correctIndex": 2,
+      "explanation": "Rezistenca elektrike matet në ohm (Ω).",
+      "sources": [
+        {
+          "work": "BIPM SI"
+        }
+      ],
+      "reviewStatus": "needs_editorial_verification"
+    }
+  ]
+}

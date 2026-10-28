@@ -17,8 +17,14 @@ class GameArtwork(context: Context, private val game: String) : View(context) {
         c.drawRoundRect(RectF(0f,0f,w,h),s*.18f,s*.18f,p);p.shader=null
         p.color=Color.argb(45,255,255,255);c.drawCircle(w*.80f,h*.13f,s*.28f,p)
         p.color=Color.argb(35,80,190,255);c.drawCircle(w*.10f,h*.88f,s*.36f,p)
-        when(game){"garden"->garden(c,w,h,s);"bubble"->bubbles(c,w,h,s);"block"->blocks(c,w,h,s);"lines"->lines(c,w,h,s);"stack"->stack(c,w,h,s);"2048"->tile2048(c,w,h,s);"water"->waterSort(c,w,h,s);"knife"->knife(c,w,h,s);"arrows"->arrows(c,w,h,s);"cups"->cups(c,w,h,s)}
+        when(game){"quiz"->quiz(c,w,h,s);"garden"->garden(c,w,h,s);"bubble"->bubbles(c,w,h,s);"block"->blocks(c,w,h,s);"lines"->lines(c,w,h,s);"stack"->stack(c,w,h,s);"2048"->tile2048(c,w,h,s);"water"->waterSort(c,w,h,s);"knife"->knife(c,w,h,s);"arrows"->arrows(c,w,h,s);"cups"->cups(c,w,h,s)}
         p.style=Paint.Style.STROKE;p.strokeWidth=s*.018f;p.color=Color.argb(105,255,215,95);c.drawRoundRect(RectF(s*.025f,s*.025f,w-s*.025f,h-s*.025f),s*.16f,s*.16f,p);p.style=Paint.Style.FILL
+    }
+    private fun quiz(c:Canvas,w:Float,h:Float,s:Float){
+        rr(c,w*.12f,h*.64f,w*.88f,h*.88f,s*.05f,0xff143a75.toInt())
+        p.style=Paint.Style.STROKE;p.strokeWidth=s*.025f;p.color=gold;c.drawOval(w*.20f,h*.15f,w*.80f,h*.75f,p);p.style=Paint.Style.FILL
+        p.shader=RadialGradient(w*.42f,h*.32f,s*.42f,intArrayOf(0xff487eea.toInt(),0xff19184f.toInt()),null,Shader.TileMode.CLAMP);c.drawCircle(w*.5f,h*.45f,s*.25f,p);p.shader=null
+        p.color=gold;p.textAlign=Paint.Align.CENTER;p.typeface=Typeface.DEFAULT_BOLD;p.textSize=s*.38f;c.drawText("?",w*.5f,h*.58f,p);p.textSize=s*.09f;c.drawText("QUIZ ARENA",w*.5f,h*.82f,p);p.textAlign=Paint.Align.LEFT
     }
     private fun garden(c:Canvas,w:Float,h:Float,s:Float){rr(c,w*.08f,h*.56f,w*.92f,h*.88f,s*.12f,0xff20774d.toInt());p.color=0xffc8a36a.toInt();val path=Path().apply{moveTo(w*.43f,h*.88f);lineTo(w*.57f,h*.88f);lineTo(w*.65f,h*.50f);lineTo(w*.35f,h*.50f);close()};c.drawPath(path,p);rr(c,w*.28f,h*.22f,w*.72f,h*.52f,s*.025f,0xffffe3a2.toInt());p.color=0xff7b2b6e.toInt();val roof=Path().apply{moveTo(w*.23f,h*.24f);lineTo(w*.50f,h*.08f);lineTo(w*.77f,h*.24f);close()};c.drawPath(roof,p);p.color=0xff62c8ff.toInt();c.drawOval(RectF(w*.37f,h*.58f,w*.63f,h*.78f),p)}
     private fun glossyBubble(c:Canvas,x:Float,y:Float,r:Float,col:Int){p.shader=RadialGradient(x-r*.30f,y-r*.34f,r*1.30f,intArrayOf(Color.WHITE,col,Color.rgb((Color.red(col)*.45f).toInt(),(Color.green(col)*.45f).toInt(),(Color.blue(col)*.45f).toInt())),floatArrayOf(0f,.28f,1f),Shader.TileMode.CLAMP);c.drawCircle(x,y,r,p);p.shader=null;p.color=0xbfffffff.toInt();c.drawCircle(x-r*.31f,y-r*.33f,r*.16f,p)}

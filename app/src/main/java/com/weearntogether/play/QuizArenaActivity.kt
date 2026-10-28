@@ -4,17 +4,20 @@ import android.app.Activity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
-import android.graphics.*
-import android.view.*
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
+import android.view.Gravity
+import android.view.View
+import android.widget.*
 import android.media.ToneGenerator
 import android.media.AudioManager
 import java.util.Locale
-import kotlin.math.min
 
-/** Native, resolution-independent Quiz Arena gameplay. No WebView. */
+/** Native arena: animated stage, accessible controls and pause-safe quiz rounds. */
 class QuizArenaActivity : Activity(), TextToSpeech.OnInitListener {
     data class Question(val category:String,val prompt:String,val choices:List<String>,val correct:Int,val why:String)
-    private val bank=listOf(
+    private val bank by lazy { (listOf(
         Question("KURANI","Sa sure ka Kurani?",listOf("112","114","116","110"),1,"Kurani përmban 114 sure."),
         Question("HADITHI","Cili dijetar përmblodhi Sahih el-Buhariun?",listOf("Ibn Sina","El-Buhariu","El-Idrisi","El-Havarizmi"),1,"Imam el-Buhariu është përmbledhësi i Sahih el-Buhariut."),
         Question("FIKHU","Sa rekate farz ka namazi i sabahut?",listOf("2","3","4","5"),0,"Sabahu ka dy rekate farz."),
@@ -25,53 +28,54 @@ class QuizArenaActivity : Activity(), TextToSpeech.OnInitListener {
         Question("MATEMATIKË","Sa është 12 × 8?",listOf("86","96","108","88"),1,"12 × 8 = 96."),
         Question("HISTORI","Në cilin vit ra Muri i Berlinit?",listOf("1987","1989","1991","1993"),1,"Muri i Berlinit u hap më 9 nëntor 1989."),
         Question("GJUHË","Si thuhet libër në gjermanisht?",listOf("Haus","Buch","Baum","Stuhl"),1,"Buch do të thotë libër.")
-    )
-    private var index=0; private var score=0; private var seconds=60
-    private var choosing=true; private var categoryMenu=false; private var chosenCategory="TË GJITHA"; private var chosenLanguage="Shqip"
-    private val languages=listOf("Shqip","Deutsch","English","Italiano","Türkçe","Français")
-    private val categories=listOf("TË GJITHA","KURANI","HADITHI","FIKHU","TEFSIRI","HISTORI ISLAME","GJEOGRAFI","SHKENCË","MATEMATIKË","HISTORI","GJUHË")
-    private var session=bank
-    private var selected=-1; private var finished=false; private var removed=setOf<Int>(); private var helpUsed=false
+    ) + loadGeneralQuestions()).distinctBy { it.prompt.lowercase(Locale.ROOT) } }
+    private fun loadGeneralQuestions():List<Question> = runCatching {
+        val rows=org.json.JSONObject(assets.open("quiz-arena/general-sq.json").bufferedReader().use { it.readText() }).getJSONArray("questions")
+        (0 until rows.length()).map { i->val q=rows.getJSONObject(i);val options=q.getJSONArray("options");Question(q.getString("category").uppercase(Locale.ROOT),q.getString("question"),(0 until options.length()).map { options.getString(it) },q.getInt("correctIndex"),q.getString("explanation")) }.filter { it.choices.size==4 && it.correct in 0..3 }
+    }.getOrDefault(emptyList())
+    private var session = listOf<Question>()
+    private var index=0; private var score=0; private var correctCount=0
+    private var remaining=60000L; private var selected=-1
+    private var removed=setOf<Int>(); private var helpUsed=false; private var playing=false
     private var timer:CountDownTimer?=null; private var tts:TextToSpeech?=null
-    private val sound=ToneGenerator(AudioManager.STREAM_MUSIC,75)
-    private lateinit var stage:Stage
-    override fun onCreate(savedInstanceState:Bundle?){super.onCreate(savedInstanceState);window.decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;stage=Stage();setContentView(stage);tts=TextToSpeech(this,this);stage.invalidate()}
-    override fun onInit(status:Int){if(status==TextToSpeech.SUCCESS){tts?.language=Locale("sq");speakCurrent()}}
-    private fun speakCurrent(){if(!choosing&&index<session.size)tts?.speak(session[index].prompt,TextToSpeech.QUEUE_FLUSH,null,"quiz-question")}
-    private fun startSession(){session=if(chosenCategory=="TË GJITHA")bank.shuffled() else bank.filter{it.category==chosenCategory}.shuffled();if(session.isEmpty())return;choosing=false;index=0;score=0;finished=false;showQuestion()}
-    private fun showQuestion(){timer?.cancel();selected=-1;removed=emptySet();helpUsed=false;seconds=60;stage.invalidate();speakCurrent();timer=object:CountDownTimer(60000,1000){override fun onTick(ms:Long){seconds=((ms+999)/1000).toInt();if(seconds<=10&&seconds>0)sound.startTone(ToneGenerator.TONE_PROP_BEEP,65);stage.invalidate()};override fun onFinish(){seconds=0;answer(-1)}}.start()}
-    private fun answer(n:Int){if(selected!=-1||finished)return;timer?.cancel();selected=if(n<0)4 else n;if(n==session[index].correct){score+=100+seconds;sound.startTone(ToneGenerator.TONE_PROP_ACK,260)}else sound.startTone(ToneGenerator.TONE_PROP_NACK,350);stage.invalidate()}
-    private fun advance(){if(selected==-1)return;if(index==session.lastIndex){finished=true;timer?.cancel()}else{index++;showQuestion()};stage.invalidate()}
-    override fun onDestroy(){timer?.cancel();tts?.stop();tts?.shutdown();sound.release();super.onDestroy()}
-    inner class Stage:View(this@QuizArenaActivity){
-        private val p=Paint(3); private val gold=Color.rgb(255,207,99);private val white=Color.WHITE
-        private fun box(c:Canvas,l:Float,t:Float,r:Float,b:Float,color:Int,rad:Float=22f){p.color=color;p.style=Paint.Style.FILL;c.drawRoundRect(l,t,r,b,rad,rad,p)}
-        private fun text(c:Canvas,s:String,x:Float,y:Float,size:Float,color:Int=white,center:Boolean=true){p.color=color;p.textSize=size;p.typeface=Typeface.create("sans-serif",Typeface.BOLD);p.textAlign=if(center)Paint.Align.CENTER else Paint.Align.LEFT;c.drawText(s,x,y,p)}
-        private fun lines(c:Canvas,s:String,x:Float,y:Float,width:Float,size:Float,color:Int=white):Float{val words=s.split(" ");var line="";var yy=y;p.textSize=size;for(w in words){val next=if(line.isEmpty())w else "$line $w";if(p.measureText(next)>width&&line.isNotEmpty()){text(c,line,x,yy,size,color);yy+=size*1.4f;line=w}else line=next};if(line.isNotEmpty())text(c,line,x,yy,size,color);return yy}
-        override fun onDraw(raw:Canvas){super.onDraw(raw);val c=raw;val save=c.save();val scale=min(width/420f,height/840f);c.translate((width-420*scale)/2,(height-840*scale)/2);c.scale(scale,scale)
-            p.shader=LinearGradient(0f,0f,420f,840f,0xff070f2b.toInt(),0xff30215e.toInt(),Shader.TileMode.CLAMP);c.drawRect(0f,0f,420f,840f,p);p.shader=null
-            for(i in 0..7){p.color=0x18ffd782;p.strokeWidth=2f;c.drawLine(i*65f,0f,210f,430f,p)}
-            text(c,"✦ QUIZ ARENA ✦",210f,49f,29f,gold)
-            if(choosing){text(c,if(categoryMenu)"ZGJIDH FUSHËN" else "ZGJIDH GJUHËN",210f,122f,24f,gold);val opts=if(categoryMenu)categories else languages;opts.forEachIndexed{i,v->val top=145f+i*if(categoryMenu)57f else 90f;box(c,25f,top,395f,top+49f,0xff253d7a.toInt(),16f);text(c,v,210f,top+32f,18f)};if(categoryMenu)text(c,"Prezantuesi: Në cilën fushë do të pyetesh?",210f,810f,14f);c.restoreToCount(save);return}
-            box(c,18f,69f,402f,119f,0xff172953.toInt());text(c,"NIVELI ${index+1} / ${session.size}",112f,100f,16f);text(c,"★ $score",321f,100f,19f,gold)
-            box(c,26f,138f,394f,322f,0xff101d45.toInt(),32f)
-            box(c,43f,160f,145f,270f,0xff304b93.toInt());box(c,275f,160f,377f,270f,0xff5b337f.toInt())
-            text(c,"◉",94f,225f,58f,gold);text(c,"◉",326f,225f,58f,gold)
-            text(c,"LOJTARI",94f,292f,14f);text(c,"PREZANTUESI",326f,292f,14f)
-            box(c,155f,188f,265f,250f,if(seconds<=10)0xffae314c.toInt() else 0xff176b8e.toInt());text(c,"${seconds}s",210f,230f,31f)
-            val q=session[index];text(c,q.category,210f,360f,16f,gold)
-            box(c,19f,380f,401f,486f,0xff213366.toInt(),25f);lines(c,q.prompt,210f,421f,350f,21f)
-            q.choices.forEachIndexed{i,s->val top=504f+i*65f;val color=when{selected!=-1&&i==q.correct->0xff16815d.toInt();selected==i->0xff9d354a.toInt();i in removed->0xff242a43.toInt();else->0xff253d7a.toInt()};box(c,25f,top,395f,top+55,color,17f);text(c,"${'A'+i}. $s",210f,top+35f,18f,if(i in removed)0xff777d94.toInt() else white)}
-            if(finished){box(c,20f,382f,400f,807f,0xff132954.toInt());text(c,"SFIDA U PËRFUNDUA!",210f,465f,25f,gold);text(c,"★ $score PIKË",210f,545f,30f);text(c,"Prek për të zgjedhur fushën",210f,645f,17f)}
-            else if(selected!=-1){box(c,25f,765f,395f,832f,0xffb38b39.toInt());lines(c,q.why,210f,790f,340f,15f,0xff10162b.toInt());text(c,"PREK PËR PYETJEN TJETËR ›",210f,830f,13f,white)}
-            else{box(c,25f,777f,190f,828f,0xffa07835.toInt());text(c,if(helpUsed)"50/50 U PËRDOR" else "✂ 50 / 50",108f,810f,16f);box(c,205f,777f,395f,828f,0xff315b91.toInt());text(c,"🔊 LEXO PYETJEN",300f,810f,15f)}
-            c.restoreToCount(save)}
-        override fun onTouchEvent(e:android.view.MotionEvent):Boolean{if(e.action!=MotionEvent.ACTION_UP)return true;val scale=min(width/420f,height/840f);val x=(e.x-(width-420*scale)/2)/scale;val y=(e.y-(height-840*scale)/2)/scale
-            if(choosing){val opts=if(categoryMenu)categories else languages;val step=if(categoryMenu)57f else 90f;val n=((y-145f)/step).toInt();if(n in opts.indices&&y>=145f+n*step&&y<=194f+n*step){if(categoryMenu){chosenCategory=opts[n];startSession()}else{chosenLanguage=opts[n];categoryMenu=true;tts?.language=when(chosenLanguage){"Deutsch"->Locale.GERMAN;"English"->Locale.ENGLISH;"Italiano"->Locale.ITALIAN;"Türkçe"->Locale("tr");"Français"->Locale.FRENCH;else->Locale("sq")};invalidate()}};return true}
-            if(finished){choosing=true;categoryMenu=true;finished=false;invalidate();return true}
-            if(selected!=-1){advance();return true}
-            if(y in 504f..754f&&x in 25f..395f){val n=((y-504f)/65f).toInt();if(n in 0..3&&n !in removed)answer(n)}
-            else if(y in 777f..833f){if(x<195f&&!helpUsed){helpUsed=true;val wrong=(0..3).filter{it!=session[index].correct}.shuffled().take(2);removed=wrong.toSet();invalidate()}else if(x>=195f)speakCurrent()}
-            return true}
+    private var sound:ToneGenerator?=null; private var audioEnabled=true; private var resumed=false
+    private val prefs by lazy { getSharedPreferences("quiz_arena",MODE_PRIVATE) }
+    private val gold=0xffffce69.toInt(); private val white=Color.WHITE
+    private lateinit var root:LinearLayout; private lateinit var hud:TextView
+    private lateinit var clock:ProgressBar; private lateinit var scene:QuizArenaScene
+    private lateinit var help:Button; private var buttons=listOf<Button>()
+    private fun dp(n:Int)=(n*resources.displayMetrics.density).toInt()
+    private fun bg(a:Int,b:Int=a)=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(a,b)).apply { cornerRadius=dp(20).toFloat();setStroke(dp(1),0x5576bfff) }
+    private fun label(s:String,size:Int=18,color:Int=white)=TextView(this).apply { text=s;textSize=size.toFloat();setTextColor(color);setTypeface(null,Typeface.BOLD);setPadding(dp(6),dp(8),dp(6),dp(8)) }
+    private fun button(s:String,action:()->Unit)=Button(this).apply { text=s;textSize=16f;isAllCaps=false;setTextColor(white);background=bg(0xff224e99.toInt(),0xff353075.toInt());setPadding(dp(16),dp(12),dp(16),dp(12));minHeight=dp(54);setOnClickListener { performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP);action() } }
+    private fun add(v:View){root.addView(v,LinearLayout.LayoutParams(-1,-2).apply { bottomMargin=dp(10) })}
+    private fun shell(){val scroll=ScrollView(this).apply { isFillViewport=true;setBackgroundColor(0xff080f29.toInt()) };root=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL;setPadding(dp(18),dp(12),dp(18),dp(24));background=bg(0xff0b1734.toInt(),0xff29184c.toInt()) };scroll.addView(root);setContentView(scroll)
+        val top=LinearLayout(this).apply { gravity=Gravity.CENTER_VERTICAL };top.addView(button("‹"){ if(playing)confirmExit() else finish() },LinearLayout.LayoutParams(dp(52),dp(52)));top.addView(label("QUIZ ARENA",24,gold),LinearLayout.LayoutParams(0,-2,1f));top.addView(button(if(audioEnabled)"♪" else "×"){audioEnabled=!audioEnabled;prefs.edit().putBoolean("audio",audioEnabled).apply();if(!audioEnabled)tts?.stop();if(playing)renderQuestion() else menu()},LinearLayout.LayoutParams(dp(52),dp(52)));add(top)
     }
+    override fun onCreate(state:Bundle?){super.onCreate(state);window.statusBarColor=0xff080f29.toInt();window.navigationBarColor=0xff080f29.toInt();audioEnabled=prefs.getBoolean("audio",true);sound=runCatching { ToneGenerator(AudioManager.STREAM_MUSIC,55) }.getOrNull();tts=TextToSpeech(this,this)
+        if(state!=null&&state.getBoolean("playing")){val ids=state.getIntArray("session")?:intArrayOf();session=ids.mapNotNull { bank.getOrNull(it) };index=state.getInt("index");score=state.getInt("score");correctCount=state.getInt("correctCount");remaining=state.getLong("remaining",60000L);selected=state.getInt("selected",-1);helpUsed=state.getBoolean("helpUsed");removed=(state.getIntArray("removed")?:intArrayOf()).toSet();playing=session.isNotEmpty()&&index in session.indices}
+        if(playing)renderQuestion() else menu()
+    }
+    private fun menu(){playing=false;timer?.cancel();shell();add(label("LOJA JONË • WE EARN TOGETHER",12,gold));scene=QuizArenaScene(this);addScene();add(label("Hyr në arenën e diturisë",27));add(label("60 sekonda për pyetje. Zgjidh fushën, përdor ndihmën 50/50 dhe mund rekordin tënd.",15,0xffc7d8ff.toInt()));add(label("REKORDI  ★ ${prefs.getInt("best",0)}",18,gold))
+        (listOf("TË GJITHA")+bank.map { it.category }.distinct()).forEach { category->val count=if(category=="TË GJITHA")bank.size else bank.count { it.category==category };add(button("$category   •   $count pyetje   ›"){session=(if(category=="TË GJITHA")bank else bank.filter { it.category==category }).shuffled();index=0;score=0;correctCount=0;playing=true;nextQuestion()}) }
+        add(label("Pyetjet: shqip • Pikët janë rezultat loje.",12,0xffb7c7e9.toInt()))
+    }
+    private fun addScene(){root.addView(scene,LinearLayout.LayoutParams(-1,dp(210)).apply { bottomMargin=dp(14) })}
+    private fun nextQuestion(){remaining=60000L;selected=-1;removed=emptySet();helpUsed=false;renderQuestion();startTimer();speakCurrent()}
+    private fun renderQuestion(){shell();hud=label("",15,gold);add(hud);clock=ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal).apply { max=60000;progressTintList=android.content.res.ColorStateList.valueOf(gold) };add(clock);scene=QuizArenaScene(this);scene.reaction=if(selected==-1)0 else if(selected==session[index].correct)1 else -1;addScene();val q=session[index];add(label(q.category,12,gold));add(label(q.prompt,24));buttons=q.choices.mapIndexed { i,choice->button("${'A'+i}   $choice"){answer(i)}.apply { gravity=Gravity.START or Gravity.CENTER_VERTICAL;isEnabled=selected==-1&&i !in removed;alpha=if(i in removed).22f else 1f;if(selected!=-1&&i==q.correct)background=bg(0xff087c65.toInt(),0xff155b4c.toInt()) else if(selected==i)background=bg(0xffa73862.toInt(),0xff66233f.toInt()) }.also { add(it) } }
+        if(selected!=-1){add(label(if(selected==q.correct)"Saktë! +${100+(remaining/1000).toInt()} pikë" else if(selected==4)"Koha përfundoi" else "Përgjigjja e saktë: ${'A'+q.correct}",18,gold));add(label(q.why,16));add(button(if(index==session.lastIndex)"SHIKO REZULTATIN  ›" else "PYETJA TJETËR  ›"){if(index==session.lastIndex)results() else {index++;nextQuestion()}})}
+        else {help=button(if(helpUsed)"50/50 u përdor" else "50 / 50  •  Hiq dy përgjigje"){if(!helpUsed){helpUsed=true;removed=(0..3).filter { it!=q.correct }.shuffled().take(2).toSet();renderQuestion()}};help.isEnabled=!helpUsed;add(help);add(button("LEXO PYETJEN ME ZË"){speakCurrent()})};updateClock()
+    }
+    private fun updateClock(){if(!::hud.isInitialized)return;hud.text="PYETJA ${index+1}/${session.size}     ★ $score     ${(remaining+999)/1000}s";clock.progress=remaining.toInt()}
+    private fun startTimer(){timer?.cancel();if(!resumed||!playing||selected!=-1)return;timer=object:CountDownTimer(remaining,100){override fun onTick(ms:Long){remaining=ms;updateClock()};override fun onFinish(){remaining=0;answer(4)}}.start()}
+    private fun answer(n:Int){if(!playing||selected!=-1||n in removed)return;selected=n;timer?.cancel();tts?.stop();val right=n==session[index].correct;if(right){score+=100+(remaining/1000).toInt();correctCount++};if(audioEnabled)sound?.startTone(if(right)ToneGenerator.TONE_PROP_ACK else ToneGenerator.TONE_PROP_NACK,180);renderQuestion()}
+    private fun results(){playing=false;timer?.cancel();tts?.stop();val best=maxOf(score,prefs.getInt("best",0));prefs.edit().putInt("best",best).apply();shell();scene=QuizArenaScene(this).apply { reaction=1 };addScene();add(label("SFIDA U PËRFUNDUA",26,gold));add(label("★ $score PIKË",34));add(label("$correctCount / ${session.size} përgjigje të sakta",21));add(label("Rekordi yt: $best pikë",18,gold));add(button("LUAJ PËRSËRI"){menu()});add(button("KTHEHU NË BALLINË"){finish()})}
+    override fun onInit(status:Int){if(status==TextToSpeech.SUCCESS)tts?.language=Locale("sq")}
+    private fun speakCurrent(){if(!audioEnabled||!playing||selected!=-1)return;val q=session[index];tts?.speak(q.prompt+". "+q.choices.mapIndexed { i,s->"${'A'+i}. $s" }.joinToString(". "),TextToSpeech.QUEUE_FLUSH,null,"arena")}
+    private fun confirmExit(){timer?.cancel();tts?.stop();android.app.AlertDialog.Builder(this).setTitle("Dil nga sfida?").setMessage("Rezultati i kësaj sfide nuk ka përfunduar.").setNegativeButton("VAZHDO"){_,_->startTimer()}.setPositiveButton("DIL"){_,_->menu()}.setOnCancelListener { startTimer() }.show()}
+    @Deprecated("Activity back navigation") override fun onBackPressed(){if(playing)confirmExit() else super.onBackPressed()}
+    override fun onResume(){super.onResume();resumed=true;startTimer()}
+    override fun onPause(){resumed=false;timer?.cancel();tts?.stop();super.onPause()}
+    override fun onSaveInstanceState(out:Bundle){super.onSaveInstanceState(out);out.putBoolean("playing",playing);out.putIntArray("session",session.map { bank.indexOf(it) }.toIntArray());out.putInt("index",index);out.putInt("score",score);out.putInt("correctCount",correctCount);out.putLong("remaining",remaining);out.putInt("selected",selected);out.putBoolean("helpUsed",helpUsed);out.putIntArray("removed",removed.toIntArray())}
+    override fun onDestroy(){timer?.cancel();tts?.stop();tts?.shutdown();sound?.release();super.onDestroy()}
 }
