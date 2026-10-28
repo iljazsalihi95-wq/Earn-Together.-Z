@@ -818,6 +818,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 40,
+      "id": "series2-040-ayat-al-kursi-al-baqarah",
+      "category": "Kurani",
+      "subcategory": "Suret dhe ajetet",
+      "question": "Në cilën sure gjendet Ajeti i Kursisë?",
+      "options": [
+        "Surja El-Fatiha",
+        "Surja El-Bekare",
+        "Surja Al-Imran",
+        "Surja En-Nisa"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ajeti i Kursisë është ajeti 255 i sures El-Bekare (2:255). Ai fillon me 'Allahu la ilahe il-la Huvel-Hajjul-Kajjum' dhe flet për njëshmërinë, dijen dhe madhështinë e Allahut.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "El-Bekare 2:255"
+        },
+        {
+          "work": "Sahih Muslim",
+          "locator": "810, virtyti i Ajetit të Kursisë"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
