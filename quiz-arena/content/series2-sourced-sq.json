@@ -340,6 +340,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 22,
+      "id": "series2-022-al-qaswa-camel",
+      "category": "Historia Islame",
+      "subcategory": "Sira / Hixhreti në Medinë",
+      "question": "Si quhej deveja e njohur e Pejgamberit ﷺ me të cilën ai hyri në Medinë dhe që u ndal në vendin ku më pas u ngrit xhamia?",
+      "options": [
+        "El-Adba",
+        "El-Kasva",
+        "El-Xhed'a",
+        "Buraku"
+      ],
+      "correctIndex": 1,
+      "explanation": "El-Kasva (القصواء) është emri i njohur në literaturën e Sirës për devenë e Pejgamberit ﷺ gjatë Hixhretit. Sipas rrëfimeve, ajo u ul në vendin ku më pas u ndërtua Xhamia e Pejgamberit në Medinë. Emrat El-Kasva, El-Adba dhe El-Xhed'a përmenden në transmetime dhe dijetarët kanë diskutuar nëse tregojnë të njëjtën deve apo deve të ndryshme.",
+      "sources": [
+        {
+          "work": "Sahih el-Buhari",
+          "locator": "Hadithi 3906, rrëfimi për mbërritjen në Medinë dhe vendin e xhamisë"
+        },
+        {
+          "work": "Ibn Hisham",
+          "locator": "Es-Sira en-Nebevijje, Hixhreti dhe hyrja në Medinë"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
