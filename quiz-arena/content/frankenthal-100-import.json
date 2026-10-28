@@ -1,0 +1,1909 @@
+{
+  "schemaVersion": 1,
+  "sourceSpreadsheet": "1UZjTbjKVszSL6mfcQJwQKoIlyiqJ_liZxTQ18l7M_Xk",
+  "sourceSheet": "Pyetjet",
+  "note": "Imported verbatim from user's own Sheet. Do not publish until independently reviewed; sourceText is not proof.",
+  "questionCount": 100,
+  "questions": [
+    {
+      "id": "frankenthal-001",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Kurban",
+      "question": "Sa persona lejohet të bashkohen në kurbanin e vogël?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "Vetëm 1 person lejohet.",
+      "sourceText": "Fikh – kurbani",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-002",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Muhammedi ﷺ është rritur jetim që nga cila moshë?",
+      "options": [
+        "8 vjeç",
+        "4 vjeç",
+        "2 vjeç",
+        "Lindja"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ai mbeti jetim që nga lindja sepse babai i kishte vdekur para lindjes.",
+      "sourceText": "Sira",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-003",
+      "locale": "sq",
+      "category": "MIRATHI",
+      "originalCategory": "Mirath",
+      "question": "Trashëgimtarja e cila nuk mbulohet asnjëherë (haxhb) në të drejtën trashëgimore është:",
+      "options": [
+        "Vajza",
+        "Nëna",
+        "Bashkëshortja",
+        "Gjyshja"
+      ],
+      "correctIndex": 1,
+      "explanation": "Nëna nuk mbulohet asnjëherë me hixhëb në të drejtën trashëgimore.",
+      "sourceText": "Mirath",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-004",
+      "locale": "sq",
+      "category": "DIJETARËT",
+      "originalCategory": "Dijetarë",
+      "question": "Në cilin vit ka lindur dhe ka vdekur Imam Shafiu?",
+      "options": [
+        "150-206 H",
+        "105-165 H",
+        "156-204 H",
+        "150-204 H"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ka lindur vitin 150 H dhe ka vdekur vitin 204 Hixhrije.",
+      "sourceText": "Biografi Imam Shafiu",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-005",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Si quhet namazi i cili falet në kohën e vet?",
+      "options": [
+        "Uda",
+        "Eda",
+        "Salah",
+        "Ida"
+      ],
+      "correctIndex": 1,
+      "explanation": "Namazi quhet Eda kur falet në kohën e vet.",
+      "sourceText": "Fikh – Namazi",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-006",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Cili është shehidi që nuk i pastrohet kufoma?",
+      "options": [
+        "Shehidi që sapo ka hyrë në luftë",
+        "Shehidi që ka vdekur në pikën e frontit pa ndihma",
+        "Shehidi që ka vdekur pas dyluftimit",
+        "Shehidi që ka bërë dyluftim të gjatë"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shehidi që ka vdekur në pikën e frontit pa marrë ndihma njerëzore nuk i pastrohet kufoma.",
+      "sourceText": "Fikh – Xhenaze",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RISHIKIM FIKHU",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-007",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cila është ajo sure në të cilën në çdo ajet përmendet emri Allah?",
+      "options": [
+        "Inshirah",
+        "El Mulk",
+        "El Kevther",
+        "El Muxhadele"
+      ],
+      "correctIndex": 3,
+      "explanation": "Teksti origjinal ka mospërputhje mes përgjigjes dhe shpjegimit.",
+      "sourceText": "Kur'an",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RISHIKIM – mospërputhje",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-008",
+      "locale": "sq",
+      "category": "USULI",
+      "originalCategory": "Usul",
+      "question": "Si ndahet shpallja (el vahju) sipas juristëve islam?",
+      "options": [
+        "Shpallje jo e lexuar (vahjun gajru metluv) Suneti",
+        "Shpallje e lexuar (vahjun metluv) Kur’ani",
+        "",
+        ""
+      ],
+      "correctIndex": 1,
+      "explanation": "Shpallja ndahet në jo të lexuar (suneti) dhe të lexuar (Kur’ani).",
+      "sourceText": "Usul",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RISHIKIM formulimi",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-009",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Cila është gruaja e Pejgamberit ﷺ që vdiq e fundit?",
+      "options": [
+        "Hatixhja r.a.",
+        "Ummu Seleme r.a.",
+        "Aishja r.a.",
+        "Fatimja r.a."
+      ],
+      "correctIndex": 1,
+      "explanation": "Ummu Seleme r.a. ishte nga gratë e Pejgamberit ﷺ që jetoi më gjatë.",
+      "sourceText": "Sira",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-010",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Shkenca e Fikhut merret me studimin e dispozitave praktike të Sheriatit?",
+      "options": [
+        "E vërtetë",
+        "E pavërtetë",
+        "",
+        ""
+      ],
+      "correctIndex": 0,
+      "explanation": "Fikhu studion dispozitat praktike të Sheriatit.",
+      "sourceText": "Usul el-Fikh",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-011",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Kush i propozoi Pejgamberit ﷺ hapjen e Hendekut?",
+      "options": [
+        "Omeri r.a.",
+        "Othmani r.a.",
+        "Aliu r.a.",
+        "Selman el-Farisi r.a."
+      ],
+      "correctIndex": 3,
+      "explanation": "Selman el-Farisi r.a. propozoi hapjen e hendekut.",
+      "sourceText": "Sira – Hendeku",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-012",
+      "locale": "sq",
+      "category": "AKIDEJA",
+      "originalCategory": "Akide",
+      "question": "Melaiket nuk vdesin asnjëherë?",
+      "options": [
+        "E pavërtetë",
+        "E vërtetë",
+        "",
+        ""
+      ],
+      "correctIndex": 0,
+      "explanation": "Sipas tekstit të kuizit, melaiket do të vdesin kur të fryhet Suri.",
+      "sourceText": "Akide",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RISHIKIM burimi",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-013",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Si quheshin pasuesit e Isa alejhis-selamit?",
+      "options": [
+        "Havarijun",
+        "Sahabe",
+        "Ansar",
+        "Tabi'in"
+      ],
+      "correctIndex": 0,
+      "explanation": "Pasuesit e Isa a.s. quhen Havarijun.",
+      "sourceText": "Kur'an 3:52; 5:111",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-014",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cilit Pejgamber i është kushtuar një sure Kur’anore dhe më nuk përmendet në asnjë sure tjetër?",
+      "options": [
+        "Davudi a.s.",
+        "Junusi a.s.",
+        "Jusufi a.s.",
+        "Hudi a.s."
+      ],
+      "correctIndex": 2,
+      "explanation": "Jusufi a.s. ka një sure të veçantë, por formulimi kërkon korrigjim.",
+      "sourceText": "Kur'an",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RISHIKIM – formulim",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-015",
+      "locale": "sq",
+      "category": "AKIDEJA",
+      "originalCategory": "Akide",
+      "question": "Isa a.s. ka lindur pa baba, por nuk është djali i Allahut?",
+      "options": [
+        "E pavërtetë",
+        "E vërtetë",
+        "",
+        ""
+      ],
+      "correctIndex": 1,
+      "explanation": "Isa a.s. lindi pa baba dhe në Islam është rob dhe i dërguar i Allahut.",
+      "sourceText": "Kur'an 3:45-59; 4:171",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-016",
+      "locale": "sq",
+      "category": "HAXHI",
+      "originalCategory": "Haxh",
+      "question": "Si quhet haxhi kur bashkohet Umra dhe Haxhi në një ihram?",
+      "options": [
+        "Haxhi Temettu",
+        "Haxhi Kiran",
+        "Haxhi Ifrad",
+        "Haxhi Farz"
+      ],
+      "correctIndex": 1,
+      "explanation": "Haxhi Kiran është bashkimi i Umres dhe Haxhit në një ihram.",
+      "sourceText": "Fikh – Haxh",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-017",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Sa herë është përmendur Xhenneti në Kur’an?",
+      "options": [
+        "10",
+        "20",
+        "30",
+        "25"
+      ],
+      "correctIndex": 0,
+      "explanation": "Teksti origjinal kishte indeks jashtë listës dhe pyetja kërkon rishikim.",
+      "sourceText": "Kur'an",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RISHIKIM – jo funksionale",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-018",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Sa sexhde të leximit gjenden në Kur’an sipas medhhebit Hanefi?",
+      "options": [
+        "14",
+        "15",
+        "16",
+        "17"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sipas medhhebit Hanefi janë 14 sexhde tilaveti.",
+      "sourceText": "Fikh Hanefi",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-019",
+      "locale": "sq",
+      "category": "FAMILJA",
+      "originalCategory": "Familje",
+      "question": "Fejesa sipas Islamit është:",
+      "options": [
+        "Kontratë",
+        "Mashtrim",
+        "Marrëveshje",
+        "Premtim"
+      ],
+      "correctIndex": 3,
+      "explanation": "Fejesa është premtim për martesë, jo kontrata e nikahut.",
+      "sourceText": "Fikh – Familje",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-020",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Cili ishte sahabiu që i pari emigroi në Abisini?",
+      "options": [
+        "Xhafer ibn Ebi Talib r.a.",
+        "Enes ibn Malik r.a.",
+        "Othmani r.a.",
+        "Bilal r.a."
+      ],
+      "correctIndex": 0,
+      "explanation": "Teksti origjinal duhet verifikuar para publikimit.",
+      "sourceText": "Sira – Abisini",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RISHIKIM historik",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-021",
+      "locale": "sq",
+      "category": "FIKHU HANEFI",
+      "originalCategory": "Fikh Hanefi",
+      "question": "Si duhet vepruar nëse harrohet tekbiri i kunutit në namazin e Vitrit?",
+      "options": [
+        "Duhet të përsëritet namazi",
+        "Duhet të bëjë sehvi sexhde",
+        "",
+        ""
+      ],
+      "correctIndex": 1,
+      "explanation": "Për lënien e një vaxhibi nga harresa bëhet sehvi sexhde.",
+      "sourceText": "Fikh Hanefi – Vitr",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-022",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cili i dërguar i Allahut u rrit në shtëpinë e Faraonit?",
+      "options": [
+        "Sulejmani a.s.",
+        "Nuhu a.s.",
+        "Davudi a.s.",
+        "Musa a.s."
+      ],
+      "correctIndex": 3,
+      "explanation": "Musa a.s. u mor dhe u rrit në shtëpinë e Faraonit.",
+      "sourceText": "Kur'an 28:7-13",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-023",
+      "locale": "sq",
+      "category": "HISTORI ISLAME",
+      "originalCategory": "Histori",
+      "question": "Në cilin vend të Evropës myslimanët sunduan për shumë shekuj në periudhën e Andaluzisë?",
+      "options": [
+        "Turqi",
+        "Abisini",
+        "Azi",
+        "Spanjë"
+      ],
+      "correctIndex": 3,
+      "explanation": "Andaluzia përfshinte pjesë të Gadishullit Iberik.",
+      "sourceText": "Histori Islame",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RIFORMULUAR",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-024",
+      "locale": "sq",
+      "category": "MIRATHI",
+      "originalCategory": "Mirath",
+      "question": "A trashëgon prindi musliman nga fëmija jomusliman sipas rregullit klasik të mirathit?",
+      "options": [
+        "Jo",
+        "Po",
+        "",
+        ""
+      ],
+      "correctIndex": 0,
+      "explanation": "Në fikhun klasik, dallimi i fesë është pengesë e trashëgimisë.",
+      "sourceText": "Fikh – Mirath",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RISHIKIM juridik",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-025",
+      "locale": "sq",
+      "category": "FAMILJA",
+      "originalCategory": "Familje",
+      "question": "Cilat nga këto nuk janë obligime ndaj gruas, përveç ndonjë marrëveshje speciale?",
+      "options": [
+        "Dërgimi i saj në Haxh",
+        "Sjellja dhe respekti ndaj gruas",
+        "Pengimi i saj nga vizita e familjes së vet",
+        "Mbulimi i shpenzimeve ndaj gruas"
+      ],
+      "correctIndex": 0,
+      "explanation": "Teksti origjinal ka mospërputhje mes indeksit dhe shpjegimit.",
+      "sourceText": "Fikh – Familje",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RISHIKIM – mospërputhje",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-026",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cila është sureja e vetme e emërtuar me emrin e një gruaje?",
+      "options": [
+        "Sureja Merjem",
+        "Sureja Haxh",
+        "Sureja Nisa",
+        "Sureja Jusuf"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sureja Merjem mban emrin e Merjemes a.s.",
+      "sourceText": "Kur'an – Sureja 19",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-027",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Cilat nga përgjigjet janë kushte të namazit?",
+      "options": [
+        "Falja pas imamit",
+        "Abdesi",
+        "Pastërtia",
+        ""
+      ],
+      "correctIndex": 1,
+      "explanation": "Abdesi dhe pastërtia lidhen të dyja me kushtet; pyetja duhet riformuluar.",
+      "sourceText": "Fikh – Namazi",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RISHIKIM – shumë përgjigje",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-028",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Sa sahabe janë të njohur si el-Ashere el-Mubeshshere?",
+      "options": [
+        "10",
+        "12",
+        "13",
+        ""
+      ],
+      "correctIndex": 0,
+      "explanation": "Janë 10 sahabe të njohur me këtë emërtim.",
+      "sourceText": "Hadith/Sira",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "KORRIGJUAR NGA KONTRADIKTA",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-029",
+      "locale": "sq",
+      "category": "SUNETI",
+      "originalCategory": "Sunet",
+      "question": "Sa rekate sunete muekkede përmenden zakonisht në hadithin e 12 rekateve ditore?",
+      "options": [
+        "2 sabah, 6 drekë, 2 aksham, 2 jaci",
+        "4 para farzit, 2 pas farzit, 6 drekë",
+        "12",
+        ""
+      ],
+      "correctIndex": 2,
+      "explanation": "Hadithi përmend 12 rekate sunete të rregullta.",
+      "sourceText": "Hadith – Revatib",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-030",
+      "locale": "sq",
+      "category": "AKIDEJA",
+      "originalCategory": "Akide",
+      "question": "Besimi në melaiket nuk është kusht i besimit?",
+      "options": [
+        "E pavërtetë",
+        "E vërtetë",
+        "",
+        ""
+      ],
+      "correctIndex": 0,
+      "explanation": "Besimi në melaiket është nga shtyllat e imanit.",
+      "sourceText": "Kur'an 2:285; Hadithi i Xhibrilit",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-031",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Cila është xhamia e njohur si xhamia e parë e ndërtuar nga muslimanët pas Hixhretit?",
+      "options": [
+        "Xhamia Kuba",
+        "Mesxhidul Aksa",
+        "Xhamia e Pejgamberit ﷺ",
+        ""
+      ],
+      "correctIndex": 0,
+      "explanation": "Xhamia Kuba njihet si xhamia e parë e ndërtuar pas Hixhretit.",
+      "sourceText": "Kur'an 9:108; Sira",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RIFORMULUAR",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-032",
+      "locale": "sq",
+      "category": "AKIDEJA DHE FIKHU",
+      "originalCategory": "Akide/Fikh",
+      "question": "Si quhet në terminologjinë klasike ai që mohon me vetëdije një farz të vërtetuar domosdoshmërisht në fe?",
+      "options": [
+        "Fasik",
+        "Ibret",
+        "Munafik",
+        "Kafir"
+      ],
+      "correctIndex": 3,
+      "explanation": "Çështja ka kushte dhe hollësi; pyetja duhet trajtuar me kujdes.",
+      "sourceText": "Akide/Fikh",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "RISHIKIM – e ndjeshme",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-033",
+      "locale": "sq",
+      "category": "FIKHU HANEFI",
+      "originalCategory": "Fikh Hanefi",
+      "question": "Cila nga këto është rukn/farz i namazit sipas fikhut Hanefi?",
+      "options": [
+        "Leximi i Kur’anit",
+        "Thënia Amin",
+        "Semi'allahu limen hamideh",
+        "Leximi i Fatihasë si e tillë"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kiraeti është farz; Fatiha është vaxhib në fikhun Hanefi.",
+      "sourceText": "Fikh Hanefi",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-034",
+      "locale": "sq",
+      "category": "FIKHU HANEFI",
+      "originalCategory": "Fikh Hanefi",
+      "question": "Çfarë duhet bërë nëse gjatë namazit harrohet një vaxhib?",
+      "options": [
+        "Nuk duhet bërë asgjë",
+        "Duhet bërë sehvi sexhde",
+        "Duhet falur gjysmën e namazit",
+        "Duhet përsëritur namazi gjithmonë"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kur vaxhibi lihet nga harresa, bëhet sehvi sexhde.",
+      "sourceText": "Fikh Hanefi",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-035",
+      "locale": "sq",
+      "category": "HAXHI",
+      "originalCategory": "Haxh",
+      "question": "Telbije quhet thënia “Lebbejke Allahumme lebbejk…”?",
+      "options": [
+        "E vërtetë",
+        "E pavërtetë",
+        "",
+        ""
+      ],
+      "correctIndex": 0,
+      "explanation": "Kjo thënie quhet Telbije.",
+      "sourceText": "Haxh – Telbije",
+      "origin": "HTML i përdoruesit",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-036",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Sa sure ka Kur'ani?",
+      "options": [
+        "114",
+        "110",
+        "120",
+        "99"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kur'ani përbëhet nga 114 sure.",
+      "sourceText": "Kur'an – struktura",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-037",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cila është sureja e parë në Mushaf?",
+      "options": [
+        "El-Bekare",
+        "El-Fatiha",
+        "En-Nas",
+        "El-Alek"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sureja e parë është El-Fatiha.",
+      "sourceText": "Kur'an – Sureja 1",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-038",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cila është sureja më e gjatë në Kur'an?",
+      "options": [
+        "Ali Imran",
+        "En-Nisa",
+        "El-Bekare",
+        "El-Maide"
+      ],
+      "correctIndex": 2,
+      "explanation": "El-Bekare është sureja më e gjatë.",
+      "sourceText": "Kur'an – Sureja 2",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-039",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cila është sureja më e shkurtër në Kur'an?",
+      "options": [
+        "El-Kevther",
+        "El-Asr",
+        "El-Ihlas",
+        "En-Nasr"
+      ],
+      "correctIndex": 0,
+      "explanation": "El-Kevther ka tre ajete.",
+      "sourceText": "Kur'an – Sureja 108",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-040",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Në cilën sure gjendet Ajetul-Kursij?",
+      "options": [
+        "El-Bekare",
+        "Jasin",
+        "El-Mulk",
+        "El-Fatiha"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ajetul-Kursij është 2:255.",
+      "sourceText": "Kur'an 2:255",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-041",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Në cilin muaj u shpall Kur'ani sipas Kur'anit?",
+      "options": [
+        "Muharrem",
+        "Ramazan",
+        "Shaban",
+        "Dhul-Hixhe"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kur'ani përmend Ramazanin si muajin e shpalljes.",
+      "sourceText": "Kur'an 2:185",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-042",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cila sure nuk fillon me Bismilah?",
+      "options": [
+        "Et-Teube",
+        "Jasin",
+        "El-Mulk",
+        "El-Kehf"
+      ],
+      "correctIndex": 0,
+      "explanation": "Et-Teube nuk fillon me Bismilah.",
+      "sourceText": "Kur'an – Sureja 9",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-043",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Në cilën sure përmendet Bismilah edhe brenda tekstit të sures?",
+      "options": [
+        "En-Neml",
+        "El-Felek",
+        "El-Asr",
+        "El-Kadr"
+      ],
+      "correctIndex": 0,
+      "explanation": "Në En-Neml 27:30.",
+      "sourceText": "Kur'an 27:30",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-044",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Sa xhuze ka Kur'ani?",
+      "options": [
+        "20",
+        "25",
+        "30",
+        "40"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kur'ani ndahet zakonisht në 30 xhuze.",
+      "sourceText": "Kur'an – struktura",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-045",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cila sure quhet edhe Ummul-Kitab?",
+      "options": [
+        "El-Fatiha",
+        "El-Bekare",
+        "El-Ihlas",
+        "Jasin"
+      ],
+      "correctIndex": 0,
+      "explanation": "El-Fatiha njihet si Ummul-Kitab.",
+      "sourceText": "Hadith – Fatiha",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-046",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cila është fjala e parë e shpalljes së parë?",
+      "options": [
+        "Kul",
+        "Ikra",
+        "Subhan",
+        "Elhamdu"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shpallja e parë filloi me Ikra.",
+      "sourceText": "Kur'an 96:1",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-047",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Ku ndodhej Pejgamberi ﷺ kur mori shpalljen e parë?",
+      "options": [
+        "Në shpellën Hira",
+        "Në Medinë",
+        "Në Taif",
+        "Në shpellën Theur"
+      ],
+      "correctIndex": 0,
+      "explanation": "Shpallja e parë erdhi në Hira.",
+      "sourceText": "Sira",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-048",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Kush ishte gruaja e parë e Pejgamberit ﷺ?",
+      "options": [
+        "Aishja r.a.",
+        "Hafsa r.a.",
+        "Hatixhja r.a.",
+        "Ummu Seleme r.a."
+      ],
+      "correctIndex": 2,
+      "explanation": "Hatixhja r.a. ishte gruaja e parë.",
+      "sourceText": "Sira",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-049",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Kush e shoqëroi Pejgamberin ﷺ në Hixhret drejt Medinës?",
+      "options": [
+        "Aliu r.a.",
+        "Ebu Bekri r.a.",
+        "Omeri r.a.",
+        "Othmani r.a."
+      ],
+      "correctIndex": 1,
+      "explanation": "Ebu Bekri r.a. e shoqëroi në Hixhret.",
+      "sourceText": "Kur'an 9:40; Sira",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-050",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Në cilën shpellë u strehuan Pejgamberi ﷺ dhe Ebu Bekri r.a. gjatë Hixhretit?",
+      "options": [
+        "Hira",
+        "Theur",
+        "Uhud",
+        "Safa"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ata u strehuan në Theur.",
+      "sourceText": "Sira",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-051",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Si quhet qyteti ku emigroi Pejgamberi ﷺ nga Meka?",
+      "options": [
+        "Taif",
+        "Jerusalem",
+        "Medina",
+        "Damask"
+      ],
+      "correctIndex": 2,
+      "explanation": "Hixhreti ishte drejt Medinës.",
+      "sourceText": "Sira",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-052",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Në cilin vit hixhri ndodhi Beteja e Bedrit?",
+      "options": [
+        "1 H",
+        "2 H",
+        "5 H",
+        "8 H"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bedri ndodhi në vitin 2 H.",
+      "sourceText": "Sira",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-053",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Në cilin vit hixhri ndodhi Çlirimi i Mekës?",
+      "options": [
+        "2 H",
+        "5 H",
+        "8 H",
+        "10 H"
+      ],
+      "correctIndex": 2,
+      "explanation": "Çlirimi i Mekës ndodhi në 8 H.",
+      "sourceText": "Sira",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-054",
+      "locale": "sq",
+      "category": "SIRA",
+      "originalCategory": "Sira",
+      "question": "Si quhej xhaxhai i Pejgamberit ﷺ që e mbrojti për shumë vite në Mekë?",
+      "options": [
+        "Ebu Talibi",
+        "Ebu Lehebi",
+        "Hamza r.a.",
+        "Abbas r.a."
+      ],
+      "correctIndex": 0,
+      "explanation": "Ebu Talibi e mbrojti për shumë vite.",
+      "sourceText": "Sira",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-055",
+      "locale": "sq",
+      "category": "AKIDEJA",
+      "originalCategory": "Akide",
+      "question": "Sa janë shtyllat e Islamit?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shtyllat e Islamit janë pesë.",
+      "sourceText": "Hadithi i Xhibrilit",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-056",
+      "locale": "sq",
+      "category": "AKIDEJA",
+      "originalCategory": "Akide",
+      "question": "Sa janë shtyllat e Imanit?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shtyllat e Imanit janë gjashtë.",
+      "sourceText": "Hadithi i Xhibrilit",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-057",
+      "locale": "sq",
+      "category": "AKIDEJA",
+      "originalCategory": "Akide",
+      "question": "Besimi në Ditën e Gjykimit është pjesë e:",
+      "options": [
+        "Imanit",
+        "Vetëm fikhut",
+        "Historisë",
+        "Gjuhës arabe"
+      ],
+      "correctIndex": 0,
+      "explanation": "Është nga shtyllat e Imanit.",
+      "sourceText": "Hadithi i Xhibrilit",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-058",
+      "locale": "sq",
+      "category": "AKIDEJA",
+      "originalCategory": "Akide",
+      "question": "Kush është meleku i shpalljes?",
+      "options": [
+        "Mikaili a.s.",
+        "Xhibrili a.s.",
+        "Israfil a.s.",
+        "Maliku"
+      ],
+      "correctIndex": 1,
+      "explanation": "Xhibrili a.s. solli shpalljen.",
+      "sourceText": "Kur'an 2:97",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-059",
+      "locale": "sq",
+      "category": "AKIDEJA",
+      "originalCategory": "Akide",
+      "question": "Cili libër iu shpall Musait a.s.?",
+      "options": [
+        "Teurati",
+        "Inxhili",
+        "Zeburi",
+        "Kur'ani"
+      ],
+      "correctIndex": 0,
+      "explanation": "Musait a.s. iu dha Teurati.",
+      "sourceText": "Kur'an",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-060",
+      "locale": "sq",
+      "category": "AKIDEJA",
+      "originalCategory": "Akide",
+      "question": "Cili libër iu dha Davudit a.s.?",
+      "options": [
+        "Teurati",
+        "Zeburi",
+        "Inxhili",
+        "Kur'ani"
+      ],
+      "correctIndex": 1,
+      "explanation": "Davudit a.s. iu dha Zeburi.",
+      "sourceText": "Kur'an 4:163",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-061",
+      "locale": "sq",
+      "category": "AKIDEJA",
+      "originalCategory": "Akide",
+      "question": "Cili libër iu dha Isait a.s.?",
+      "options": [
+        "Teurati",
+        "Zeburi",
+        "Inxhili",
+        "Kur'ani"
+      ],
+      "correctIndex": 2,
+      "explanation": "Isait a.s. iu dha Inxhili.",
+      "sourceText": "Kur'an 5:46",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-062",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Sa farze ka abdesi sipas përmbledhjes së ajetit të abdesit?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "Janë katër veprime themelore.",
+      "sourceText": "Kur'an 5:6",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-063",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Sa rekate është farzi i Sabahut?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "Farzi i Sabahut është 2 rekate.",
+      "sourceText": "Fikh – Namazi",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-064",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Sa rekate është farzi i Drekës?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 2,
+      "explanation": "Farzi i Drekës është 4 rekate.",
+      "sourceText": "Fikh – Namazi",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-065",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Sa rekate është farzi i Akshamit?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "Farzi i Akshamit është 3 rekate.",
+      "sourceText": "Fikh – Namazi",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-066",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Sa rekate është farzi i Jacisë?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 2,
+      "explanation": "Farzi i Jacisë është 4 rekate.",
+      "sourceText": "Fikh – Namazi",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-067",
+      "locale": "sq",
+      "category": "FIKHU HANEFI",
+      "originalCategory": "Fikh Hanefi",
+      "question": "Sa rekate falet Vitri sipas medhhebit Hanefi?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correctIndex": 2,
+      "explanation": "Vitri falet 3 rekate.",
+      "sourceText": "Fikh Hanefi – Vitr",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-068",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Në cilin drejtim kthehen muslimanët në namaz?",
+      "options": [
+        "Drejt Medinës",
+        "Drejt Qabes",
+        "Drejt Jerusalemit gjithmonë",
+        "Drejt lindjes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kibla është Qabja.",
+      "sourceText": "Kur'an 2:144",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-069",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Çfarë quhet thirrja për hyrjen e kohës së namazit?",
+      "options": [
+        "Hutbe",
+        "Ezan",
+        "Tekbir i teshrikut",
+        "Talbije"
+      ],
+      "correctIndex": 1,
+      "explanation": "Thirrja quhet Ezan.",
+      "sourceText": "Fikh – Namazi",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-070",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Çfarë quhet thirrja menjëherë para fillimit të namazit me xhemat?",
+      "options": [
+        "Ikamet",
+        "Ezan",
+        "Hutbe",
+        "Tesbih"
+      ],
+      "correctIndex": 0,
+      "explanation": "Quhet Ikamet.",
+      "sourceText": "Fikh – Namazi",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-071",
+      "locale": "sq",
+      "category": "FIKHU",
+      "originalCategory": "Fikh",
+      "question": "Cili namaz javor falet të premten në vend të Drekës për ata që e kanë obligim?",
+      "options": [
+        "Vitri",
+        "Xhumaja",
+        "Teravia",
+        "Bajrami"
+      ],
+      "correctIndex": 1,
+      "explanation": "Namazi i Xhumasë falet të premten.",
+      "sourceText": "Kur'an 62:9",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-072",
+      "locale": "sq",
+      "category": "RAMAZANI",
+      "originalCategory": "Ramazan",
+      "question": "Në cilin muaj agjërojnë muslimanët agjërimin farz?",
+      "options": [
+        "Ramazan",
+        "Shaban",
+        "Muharrem",
+        "Rexheb"
+      ],
+      "correctIndex": 0,
+      "explanation": "Agjërimi farz është në Ramazan.",
+      "sourceText": "Kur'an 2:185",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-073",
+      "locale": "sq",
+      "category": "RAMAZANI",
+      "originalCategory": "Ramazan",
+      "question": "Si quhet vakti para agimit për agjëruesin?",
+      "options": [
+        "Iftar",
+        "Syfyr",
+        "Akika",
+        "Talbije"
+      ],
+      "correctIndex": 1,
+      "explanation": "Vakti para agimit quhet syfyr.",
+      "sourceText": "Hadith – Agjërimi",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-074",
+      "locale": "sq",
+      "category": "RAMAZANI",
+      "originalCategory": "Ramazan",
+      "question": "Si quhet çelja e agjërimit pas perëndimit të diellit?",
+      "options": [
+        "Iftar",
+        "Syfyr",
+        "Imsak",
+        "Itikaf"
+      ],
+      "correctIndex": 0,
+      "explanation": "Quhet iftar.",
+      "sourceText": "Fikh – Agjërimi",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-075",
+      "locale": "sq",
+      "category": "ZEKATI",
+      "originalCategory": "Zekat",
+      "question": "Cila përqindje përdoret zakonisht për zekatin e pasurisë monetare kur plotësohen kushtet?",
+      "options": [
+        "1%",
+        "2.5%",
+        "5%",
+        "10%"
+      ],
+      "correctIndex": 1,
+      "explanation": "Norma e zakonshme është 2.5%.",
+      "sourceText": "Fikh – Zekat",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-076",
+      "locale": "sq",
+      "category": "HAXHI",
+      "originalCategory": "Haxh",
+      "question": "Në cilin qytet gjendet Qabja?",
+      "options": [
+        "Medinë",
+        "Mekë",
+        "Jerusalem",
+        "Taif"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qabja gjendet në Mekë.",
+      "sourceText": "Haxh",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-077",
+      "locale": "sq",
+      "category": "HAXHI",
+      "originalCategory": "Haxh",
+      "question": "Si quhet rrotullimi rreth Qabes?",
+      "options": [
+        "Sa'j",
+        "Tavaf",
+        "Vakfe",
+        "Rami"
+      ],
+      "correctIndex": 1,
+      "explanation": "Quhet Tavaf.",
+      "sourceText": "Fikh – Haxh",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-078",
+      "locale": "sq",
+      "category": "HAXHI",
+      "originalCategory": "Haxh",
+      "question": "Mes cilave dy kodra bëhet Sa'ji?",
+      "options": [
+        "Safa dhe Merve",
+        "Arafat dhe Muzdelife",
+        "Mina dhe Arafat",
+        "Hira dhe Theur"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sa'ji bëhet mes Safas dhe Merves.",
+      "sourceText": "Kur'an 2:158",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-079",
+      "locale": "sq",
+      "category": "HAXHI",
+      "originalCategory": "Haxh",
+      "question": "Cili qëndrim është shtyllë kryesore e Haxhit?",
+      "options": [
+        "Qëndrimi në Arafat",
+        "Vizita në Taif",
+        "Qëndrimi në Hira",
+        "Namazi në Kuba"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qëndrimi në Arafat është thelbësor në Haxh.",
+      "sourceText": "Hadith: Haxhi është Arafati",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-080",
+      "locale": "sq",
+      "category": "HADITHI",
+      "originalCategory": "Hadith",
+      "question": "Sipas hadithit të njohur, veprat vlerësohen sipas:",
+      "options": [
+        "Pasurisë",
+        "Nijetit",
+        "Moshës",
+        "Vendit"
+      ],
+      "correctIndex": 1,
+      "explanation": "Veprat janë sipas nijeteve.",
+      "sourceText": "Sahih Buhari 1",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-081",
+      "locale": "sq",
+      "category": "HADITHI",
+      "originalCategory": "Hadith",
+      "question": "Sipas hadithit, musliman i mirë është ai nga gjuha dhe dora e të cilit janë të sigurt:",
+      "options": [
+        "Vetëm të afërmit",
+        "Muslimanët",
+        "Vetëm udhëtarët",
+        "Vetëm fqinjët"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hadithi përmend sigurinë nga gjuha dhe dora.",
+      "sourceText": "Sahih Buhari / Muslim",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-082",
+      "locale": "sq",
+      "category": "ETIKA",
+      "originalCategory": "Etikë",
+      "question": "Çfarë përgjigjeje i jepet selamit 'Es-selamu alejkum'?",
+      "options": [
+        "Mirupafshim",
+        "Ve alejkum selam",
+        "Allahu ekber",
+        "Subhanallah"
+      ],
+      "correctIndex": 1,
+      "explanation": "Selami kthehet me përshëndetje.",
+      "sourceText": "Kur'an 4:86",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-083",
+      "locale": "sq",
+      "category": "ETIKA",
+      "originalCategory": "Etikë",
+      "question": "Cila cilësi është e kundërta e gënjeshtrës?",
+      "options": [
+        "Sinqeriteti",
+        "Zilia",
+        "Krenaria",
+        "Përtacia"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sinqeriteti është cilësi e lavdëruar.",
+      "sourceText": "Etikë islame",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-084",
+      "locale": "sq",
+      "category": "ETIKA",
+      "originalCategory": "Etikë",
+      "question": "Çfarë urdhëron Kur'ani për prindërit?",
+      "options": [
+        "Mirësjellje dhe respekt",
+        "T'i injorojmë",
+        "Vetëm ndihmë financiare",
+        "Asgjë"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kur'ani urdhëron mirësi ndaj prindërve.",
+      "sourceText": "Kur'an 17:23",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-085",
+      "locale": "sq",
+      "category": "ETIKA",
+      "originalCategory": "Etikë",
+      "question": "A lejohet përgojimi?",
+      "options": [
+        "Po, gjithmonë",
+        "Jo, në parim është i ndaluar",
+        "Vetëm natën",
+        "Vetëm në udhëtim"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kur'ani e ndalon përgojimin.",
+      "sourceText": "Kur'an 49:12",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-086",
+      "locale": "sq",
+      "category": "HISTORI ISLAME",
+      "originalCategory": "Histori",
+      "question": "Kush ishte halifi i parë pas vdekjes së Pejgamberit ﷺ?",
+      "options": [
+        "Omeri r.a.",
+        "Ebu Bekri r.a.",
+        "Othmani r.a.",
+        "Aliu r.a."
+      ],
+      "correctIndex": 1,
+      "explanation": "Ebu Bekri r.a. ishte halifi i parë.",
+      "sourceText": "Histori Islame",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-087",
+      "locale": "sq",
+      "category": "HISTORI ISLAME",
+      "originalCategory": "Histori",
+      "question": "Kush ishte halifi i dytë?",
+      "options": [
+        "Omeri r.a.",
+        "Aliu r.a.",
+        "Othmani r.a.",
+        "Ebu Bekri r.a."
+      ],
+      "correctIndex": 0,
+      "explanation": "Omeri r.a. ishte halifi i dytë.",
+      "sourceText": "Histori Islame",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-088",
+      "locale": "sq",
+      "category": "HISTORI ISLAME",
+      "originalCategory": "Histori",
+      "question": "Kush ishte halifi i tretë?",
+      "options": [
+        "Aliu r.a.",
+        "Othmani r.a.",
+        "Omeri r.a.",
+        "Muavija r.a."
+      ],
+      "correctIndex": 1,
+      "explanation": "Othmani r.a. ishte halifi i tretë.",
+      "sourceText": "Histori Islame",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-089",
+      "locale": "sq",
+      "category": "HISTORI ISLAME",
+      "originalCategory": "Histori",
+      "question": "Kush ishte halifi i katërt nga Hulefai Rashidin?",
+      "options": [
+        "Aliu r.a.",
+        "Omeri r.a.",
+        "Ebu Bekri r.a.",
+        "Othmani r.a."
+      ],
+      "correctIndex": 0,
+      "explanation": "Aliu r.a. ishte halifi i katërt.",
+      "sourceText": "Histori Islame",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-090",
+      "locale": "sq",
+      "category": "HISTORI ISLAME",
+      "originalCategory": "Histori",
+      "question": "Nën cilin halif filloi mbledhja e Kur'anit në një përmbledhje pas Jemames?",
+      "options": [
+        "Ebu Bekri r.a.",
+        "Othmani r.a.",
+        "Aliu r.a.",
+        "Muavija r.a."
+      ],
+      "correctIndex": 0,
+      "explanation": "U bë në kohën e Ebu Bekrit r.a.",
+      "sourceText": "Histori e Mushafit",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-091",
+      "locale": "sq",
+      "category": "HISTORI ISLAME",
+      "originalCategory": "Histori",
+      "question": "Nën cilin halif u dërguan kopje të standardizuara të Mushafit?",
+      "options": [
+        "Omeri r.a.",
+        "Othmani r.a.",
+        "Aliu r.a.",
+        "Ebu Bekri r.a."
+      ],
+      "correctIndex": 1,
+      "explanation": "U bë në kohën e Othmanit r.a.",
+      "sourceText": "Histori e Mushafit",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-092",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cili pejgamber ndërtoi anijen me urdhrin e Allahut?",
+      "options": [
+        "Nuhu a.s.",
+        "Ibrahimi a.s.",
+        "Musa a.s.",
+        "Jusufi a.s."
+      ],
+      "correctIndex": 0,
+      "explanation": "Nuhu a.s. ndërtoi anijen.",
+      "sourceText": "Kur'an 11:37",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-093",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cili pejgamber u hodh në zjarr nga populli i tij?",
+      "options": [
+        "Ibrahimi a.s.",
+        "Junusi a.s.",
+        "Musa a.s.",
+        "Jusufi a.s."
+      ],
+      "correctIndex": 0,
+      "explanation": "Ibrahimi a.s. u hodh në zjarr.",
+      "sourceText": "Kur'an 21:68-69",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-094",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cili pejgamber u gëlltit nga peshku?",
+      "options": [
+        "Junusi a.s.",
+        "Nuhu a.s.",
+        "Hudi a.s.",
+        "Salihu a.s."
+      ],
+      "correctIndex": 0,
+      "explanation": "Junusi a.s. u gëlltit nga peshku.",
+      "sourceText": "Kur'an 37:139-148",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-095",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cili pejgamber interpretoi ëndrrën e mbretit në Egjipt?",
+      "options": [
+        "Jusufi a.s.",
+        "Ismaili a.s.",
+        "Luti a.s.",
+        "Ejubi a.s."
+      ],
+      "correctIndex": 0,
+      "explanation": "Jusufi a.s. interpretoi ëndrrën.",
+      "sourceText": "Kur'an 12:43-49",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-096",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cili pejgamber njihet si Kelimullah?",
+      "options": [
+        "Musa a.s.",
+        "Davudi a.s.",
+        "Sulejmani a.s.",
+        "Jahja a.s."
+      ],
+      "correctIndex": 0,
+      "explanation": "Musa a.s. është ai të cilit Allahu i foli.",
+      "sourceText": "Kur'an 4:164",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-097",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cili pejgamber ngriti themelet e Qabes së bashku me Ismailin a.s.?",
+      "options": [
+        "Ibrahimi a.s.",
+        "Nuhu a.s.",
+        "Musa a.s.",
+        "Davudi a.s."
+      ],
+      "correctIndex": 0,
+      "explanation": "Ibrahimi dhe Ismaili a.s. ngritën themelet.",
+      "sourceText": "Kur'an 2:127",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-098",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cila sure përmban tregimin e banorëve të shpellës?",
+      "options": [
+        "El-Kehf",
+        "El-Mulk",
+        "En-Nebe",
+        "El-Felek"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tregimi gjendet në El-Kehf.",
+      "sourceText": "Kur'an 18:9-26",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-099",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cila sure mbyll Mushafin?",
+      "options": [
+        "El-Felek",
+        "En-Nas",
+        "El-Ihlas",
+        "En-Nasr"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sureja e fundit është En-Nas.",
+      "sourceText": "Kur'an – Sureja 114",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    },
+    {
+      "id": "frankenthal-100",
+      "locale": "sq",
+      "category": "KURANI",
+      "originalCategory": "Kuran",
+      "question": "Cili është ajeti më i gjatë në Kur'an?",
+      "options": [
+        "Ajetul-Kursij",
+        "Ajeti i borxhit 2:282",
+        "Ajeti i dritës",
+        "Ajeti i agjërimit"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ajeti 2:282, i njohur si ajeti i borxhit, është ajeti më i gjatë.",
+      "sourceText": "Kur'an 2:282",
+      "origin": "Shtuar për bankën 100-pyetëshe",
+      "sheetStatus": "OK",
+      "reviewStatus": "needs_independent_source_review"
+    }
+  ]
+}
