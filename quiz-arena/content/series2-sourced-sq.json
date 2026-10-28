@@ -1087,6 +1087,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 50,
+      "id": "series2-050-musa-marriage-madyan",
+      "category": "Historia Islame",
+      "subcategory": "Profetët",
+      "question": "Me cilën vajzë u martua Musai (a.s.) pasi u largua nga Egjipti dhe mbërriti në Medjen?",
+      "options": [
+        "Me vajzën e Faraonit",
+        "Me motrën e Harunit",
+        "Me njërën nga dy vajzat e një burri të drejtë në Medjen",
+        "Me vajzën e Nemrudit"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kurani (El-Kasas 28:22–28) rrëfen se Musai (a.s.) ndihmoi dy vajza në Medjen dhe babai i tyre i ofroi martesën me njërën prej tyre, kundrejt shërbimit për tetë ose dhjetë vjet. Kurani nuk e emërton babanë; identifikimi i tij me Shuajbin (a.s.) është mendim i disa komentuesve, jo fakt i shprehur në tekstin kuranor.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "El-Kasas 28:22–28"
+        },
+        {
+          "work": "Ibn Kethir",
+          "locator": "Tefsiri i El-Kasas 28:27, diskutimi i identitetit të babait"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
