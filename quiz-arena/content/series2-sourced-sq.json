@@ -114,6 +114,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 11,
+      "id": "series2-011-yusuf-grandfather",
+      "category": "Historia Islame",
+      "subcategory": "Historitë e pejgamberëve / Familja e Jusufit",
+      "question": "Cili pejgamber ishte gjyshi i Profetit Jusuf (a.s.)?",
+      "options": [
+        "Profeti Ibrahim (a.s.)",
+        "Profeti Is'hak (a.s.)",
+        "Profeti Jakub (a.s.)",
+        "Profeti Ismail (a.s.)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Rrjedha familjare është Ibrahim → Is'hak → Jakub → Jusuf (alejhimus-selam). Is'haku ishte gjyshi i Jusufit, Jakubi babai, ndërsa Ibrahimi stërgjyshi. Ismaili ishte vëllai i Is'hakut, jo gjyshi i Jusufit.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "Jusuf 12:38"
+        },
+        {
+          "work": "Sahih el-Buhari",
+          "locator": "Hadithi 3390"
+        }
+      ],
+      "reviewStatus": "source_references_identified"
     }
   ]
 }
