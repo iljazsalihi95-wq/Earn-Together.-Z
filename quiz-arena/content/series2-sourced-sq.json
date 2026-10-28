@@ -214,6 +214,32 @@
         }
       ],
       "reviewStatus": "traditional_report_not_primary_verified"
+    },
+    {
+      "order": 16,
+      "id": "series2-016-first-battle-kosovo",
+      "category": "Historia Islame",
+      "subcategory": "Perandoria Osmane / Historia e Ballkanit",
+      "question": "Në cilin vit u zhvillua Beteja e Parë e Kosovës, ku forcat osmane nën Sulltan Muratin I u përballën me koalicionin ballkanik?",
+      "options": [
+        "Në vitin 1453 e.s.",
+        "Në vitin 1444 e.s.",
+        "Në vitin 1389 e.s.",
+        "Në vitin 1354 e.s."
+      ],
+      "correctIndex": 2,
+      "explanation": "Beteja e Parë e Kosovës u zhvillua më 1389 në Fushë Kosovë. Forcat osmane nën Sulltan Muratin I u përballën me koalicionin ballkanik të udhëhequr nga princi Llazar Hrebeljanoviq. Murati dhe Llazari humbën jetën në lidhje me betejën. Data tradicionale është 15 qershor 1389 sipas kalendarit julian. Viti 1453 lidhet me Kostandinopojën, 1444 me Varnën dhe 1354 me vendosjen osmane në Galipoli.",
+      "sources": [
+        {
+          "work": "Encyclopaedia Britannica",
+          "locator": "Battle of Kosovo (1389)"
+        },
+        {
+          "work": "Historia e Perandorisë Osmane",
+          "locator": "Sundimi i Muratit I; Beteja e Kosovës"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
