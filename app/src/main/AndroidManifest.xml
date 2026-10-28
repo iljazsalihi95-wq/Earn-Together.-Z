@@ -18,6 +18,7 @@
 <activity android:name=".Html5GamesActivity" android:theme="@android:style/Theme.Material.Light.NoActionBar.Fullscreen" android:configChanges="orientation|screenSize|keyboardHidden" android:exported="false"/>
 <activity android:name=".AyetOfferwallActivity" android:exported="false"/>
 <activity android:name=".WalletActivity" android:exported="false"/>
+<activity android:name=".QuizArenaActivity" android:exported="false" android:screenOrientation="portrait" android:theme="@android:style/Theme.Material.Light.NoActionBar.Fullscreen"/>
 <activity android:name=".MainActivity" android:exported="true">
 <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
 </activity>
