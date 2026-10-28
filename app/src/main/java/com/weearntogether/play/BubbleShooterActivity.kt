@@ -75,10 +75,16 @@ class BubbleShooterActivity : Activity() {
         val status=statusChip(ui("HD 2D  •  AUTO-SAVE  •  250 LEVELS","HD 2D  •  AUTO-RUAJTJE  •  250 NIVELE","HD 2D  •  AUTO-SPEICHERN  •  250 LEVEL","HD 2D  •  SALVATAGGIO AUTO  •  250 LIVELLI"))
         host.addView(status,FrameLayout.LayoutParams(dp(250),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
         val guide=guideChip()
-        guide.text="VIDEO BONUS • HIQ 3 RRESHTAT E FUNDIT";guide.setOnClickListener{ads.rewarded(onGameplayReward={game.videoRescue()})}
+        guide.text=ui("VIDEO BONUS • REMOVE LAST 3 ROWS","VIDEO BONUS • HIQ 3 RRESHTAT E FUNDIT","VIDEO-BONUS • LETZTE 3 REIHEN ENTFERNEN","VIDEO BONUS • RIMUOVI LE ULTIME 3 RIGHE")
+        fun fadeGuide(){guide.postDelayed({if(!isFinishing)guide.animate().alpha(.38f).setDuration(700).start()},3500)}
+        guide.setOnClickListener{
+            guide.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            guide.animate().alpha(1f).setDuration(180).withEndAction{
+                if(!ads.rewarded(onGameplayReward={game.videoRescue()},onFinished={fadeGuide()}))fadeGuide()
+            }.start()
+        }
         host.addView(guide,FrameLayout.LayoutParams(dp(310),dp(30),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(72)})
         guide.postDelayed({if(!isFinishing)guide.animate().alpha(.38f).setDuration(700).start()},5500)
-        guide.setOnClickListener{guide.animate().alpha(1f).setDuration(180).withEndAction{guide.postDelayed({if(!isFinishing)guide.animate().alpha(.38f).setDuration(700).start()},3500)}.start()}
         val swap=chip("⇄  "+ui("SWAP","NDËRRO","TAUSCH","SCAMBIA"),true){game.swapBubble()}.apply{contentDescription=ui("Swap current and next bubble","Ndërro flluskën aktuale me tjetrën","Aktuelle und nächste Blase tauschen","Scambia la bolla attuale con la prossima")}
         host.addView(swap,FrameLayout.LayoutParams(dp(122),dp(48),Gravity.BOTTOM or Gravity.END).apply{rightMargin=dp(14);bottomMargin=dp(16)})
         setContentView(host)
