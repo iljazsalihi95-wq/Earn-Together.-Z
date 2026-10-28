@@ -240,6 +240,54 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 17,
+      "id": "series2-017-rise-from-sujud",
+      "category": "Fikhu Hanefi",
+      "subcategory": "Namazi / Mënyra e faljes",
+      "question": "Sipas mënyrës së rekomanduar në fikhun Hanefi, gjatë ngritjes nga sexhdja për në këmbë, cilat pjesë ngrihen fillimisht nga toka?",
+      "options": [
+        "Të gjitha njëkohësisht",
+        "Fillimisht balli dhe hunda, pastaj duart, pastaj gjunjët",
+        "Duart të fundit",
+        "Fillimisht gjunjët"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sipas përshkrimit hanefi, gjatë ngritjes nga sexhdja ngrihet fillimisht koka, pastaj duart dhe më pas gjunjët, kur personi ka mundësi fizike. Kjo nuk është kusht për vlefshmërinë e namazit.",
+      "sources": [
+        {
+          "work": "Literatura e fikhut Hanefi",
+          "locator": "Përshkrimi i ngritjes nga sexhdja; kërkohet verifikim i pasazhit konkret"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 18,
+      "id": "series2-018-idols-around-kabah",
+      "category": "Historia Islame",
+      "subcategory": "Sira / Çlirimi i Mekës",
+      "question": "Sa idhuj gjendeshin rreth Qabesë gjatë Çlirimit të Mekës?",
+      "options": [
+        "100 idhuj",
+        "500 idhuj",
+        "70 idhuj",
+        "360 idhuj"
+      ],
+      "correctIndex": 3,
+      "explanation": "Sipas hadithit të Abdullah ibn Mesudit, rreth Qabesë gjendeshin 360 idhuj kur Pejgamberi ﷺ hyri në Mekë në vitin 8 hixhri. Ai i rrëzonte duke recituar fjalët e Kuranit nga El-Isra 17:81: 'Erdhi e vërteta dhe u zhduk e pavërteta'. Hadithi flet shprehimisht për idhujt rreth Qabesë.",
+      "sources": [
+        {
+          "work": "Sahih el-Buhari",
+          "locator": "Hadithi 2478"
+        },
+        {
+          "work": "Kurani",
+          "locator": "El-Isra 17:81"
+        }
+      ],
+      "reviewStatus": "source_references_identified"
     }
   ]
 }
