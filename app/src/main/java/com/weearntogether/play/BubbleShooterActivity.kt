@@ -61,17 +61,19 @@ class BubbleShooterActivity : Activity() {
         val host=FrameLayout(this).apply{setBackgroundColor(0xff070d20.toInt());isClickable=true;isFocusable=true;addView(game,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))}
         val header=View(this).apply{background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff0a1a3b.toInt(),0xff241050.toInt(),0xff071a38.toInt())).apply{setStroke(dp(1),0x5569cfff)};elevation=dp(4).toFloat()}
         host.addView(header,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(108),Gravity.TOP))
-        val title=TextView(this).apply{text="BUBBLE SHOOTER";textSize=18f;setTextColor(Color.WHITE);gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.08f;elevation=dp(8).toFloat()}
-        host.addView(title,FrameLayout.LayoutParams(dp(180),dp(46),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(8)})
-        val back=chip("‹  "+ui("BACK","PRAPA","ZURÜCK","INDIETRO")){finish()}
+        val title=TextView(this).apply{text=ui("BUBBLE SHOOTER","GJUETARI I FLLUSKAVE","BLASEN-SHOOTER","SPARA BOLLE");textSize=18f;setTextColor(Color.WHITE);gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.06f;elevation=dp(8).toFloat();contentDescription=text}
+        host.addView(title,FrameLayout.LayoutParams(dp(190),dp(46),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(8)})
+        val back=chip("‹  "+ui("BACK","PRAPA","ZURÜCK","INDIETRO")){finish()}.apply{contentDescription=ui("Back","Kthehu prapa","Zurück","Indietro")}
         host.addView(back,FrameLayout.LayoutParams(dp(104),dp(46),Gravity.TOP or Gravity.START).apply{leftMargin=dp(12);topMargin=dp(8)})
-        val restart=chip("↻  "+ui("RESTART","RIFILLO","NEUSTART","RIPROVA"),true){confirmRestart()}
+        val restart=chip("↻  "+ui("RESTART","RIFILLO","NEUSTART","RIPROVA"),true){confirmRestart()}.apply{contentDescription=ui("Restart level","Rifillo nivelin","Level neu starten","Riavvia livello")}
         host.addView(restart,FrameLayout.LayoutParams(dp(126),dp(46),Gravity.TOP or Gravity.END).apply{rightMargin=dp(12);topMargin=dp(8)})
         val status=statusChip(ui("HD 2D  •  AUTO-SAVE  •  250 LEVELS","HD 2D  •  AUTO-RUAJTJE  •  250 NIVELE","HD 2D  •  AUTO-SPEICHERN  •  250 LEVEL","HD 2D  •  SALVATAGGIO AUTO  •  250 LIVELLI"))
         host.addView(status,FrameLayout.LayoutParams(dp(250),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
         val guide=guideChip()
         host.addView(guide,FrameLayout.LayoutParams(dp(310),dp(30),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(72)})
-        val swap=chip("⇄  "+ui("SWAP","NDËRRO","TAUSCH","SCAMBIA"),true){game.swapBubble()}
+        guide.postDelayed({if(!isFinishing)guide.animate().alpha(.38f).setDuration(700).start()},5500)
+        guide.setOnClickListener{guide.animate().alpha(1f).setDuration(180).withEndAction{guide.postDelayed({if(!isFinishing)guide.animate().alpha(.38f).setDuration(700).start()},3500)}.start()}
+        val swap=chip("⇄  "+ui("SWAP","NDËRRO","TAUSCH","SCAMBIA"),true){game.swapBubble()}.apply{contentDescription=ui("Swap current and next bubble","Ndërro flluskën aktuale me tjetrën","Aktuelle und nächste Blase tauschen","Scambia la bolla attuale con la prossima")}
         host.addView(swap,FrameLayout.LayoutParams(dp(122),dp(48),Gravity.BOTTOM or Gravity.END).apply{rightMargin=dp(14);bottomMargin=dp(16)})
         setContentView(host)
     }
