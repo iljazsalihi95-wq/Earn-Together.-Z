@@ -71,7 +71,7 @@ class QuizArenaActivity : Activity(), TextToSpeech.OnInitListener {
             if(finished){choosing=true;categoryMenu=true;finished=false;invalidate();return true}
             if(selected!=-1){advance();return true}
             if(y in 504f..754f&&x in 25f..395f){val n=((y-504f)/65f).toInt();if(n in 0..3&&n !in removed)answer(n)}
-            else if(y in 777f..833f){if(x<195f&&!helpUsed){helpUsed=true;val wrong=(0..3).filter{it!=bank[index].correct}.shuffled().take(2);removed=wrong.toSet();invalidate()}else if(x>=195f)speakCurrent()}
+            else if(y in 777f..833f){if(x<195f&&!helpUsed){helpUsed=true;val wrong=(0..3).filter{it!=session[index].correct}.shuffled().take(2);removed=wrong.toSet();invalidate()}else if(x>=195f)speakCurrent()}
             return true}
     }
 }
