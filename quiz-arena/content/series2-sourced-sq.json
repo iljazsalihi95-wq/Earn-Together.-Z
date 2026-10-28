@@ -581,6 +581,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 31,
+      "id": "series2-031-tarawih-ramadan",
+      "category": "Fikhu Hanefi",
+      "subcategory": "Namazet e Ramazanit",
+      "question": "Si quhet namazi i natës gjatë muajit të Ramazanit?",
+      "options": [
+        "Vitër",
+        "Teravi",
+        "Tehexhud",
+        "Duha"
+      ],
+      "correctIndex": 1,
+      "explanation": "Teravia (تراويح) është namazi i veçantë që falet netëve të Ramazanit pas jacisë. Në medhhebin Hanefi është sunnet muekkede; praktika tradicionale hanefije është 20 rekate. Vitri është namaz i veçantë vaxhib sipas hanefive; tehexhudi është namaz vullnetar nate, ndërsa duha falet paradite.",
+      "sources": [
+        {
+          "work": "Sahih el-Buhari",
+          "locator": "Kapitujt e namazit të Ramazanit (Salat et-Teravih)"
+        },
+        {
+          "work": "El-Merginani",
+          "locator": "El-Hidaje, kapitulli i Teravisë"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
