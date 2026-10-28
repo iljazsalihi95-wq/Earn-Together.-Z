@@ -97,8 +97,10 @@ class PremiumHomeActivity : Activity() {
         nav("◉","Lojëra"){};nav("♧","Oferta"){startActivity(Intent(this,AyetOfferwallActivity::class.java))};nav("▣","Portofoli"){startActivity(Intent(this,WalletActivity::class.java))};nav("☺","Profili"){startActivity(Intent(this,MainActivity::class.java).putExtra("open_profile",true))}
         host.addView(bar,FrameLayout.LayoutParams(-1,dp(78),Gravity.BOTTOM).apply{leftMargin=dp(10);rightMargin=dp(10);bottomMargin=dp(10)})
     }
-    private fun showRewarded(){ads.rewarded()}
-    override fun onResume(){super.onResume();if(::ads.isInitialized)ads.resume()}
+    private fun showRewarded(){ads.rewarded(onGameplayReward={coinText.text="★ Në pritje";refreshBalance()})}
+    private fun refreshBalance(){if(!accounts.isSignedIn()||!::coinText.isInitialized)return;CloudWorker.executor.execute{val balance=runCatching{BackendClient().request("getBalance",org.json.JSONObject().put("session_token",accounts.requireToken()))}.getOrNull();runOnUiThread{if(!isFinishing&&!isDestroyed&&balance!=null){val pending=balance.optLong("pending_coins");coinText.text="★ ${balance.optLong("verified_coins")}"+if(pending>0)" (+$pending)" else "";coinText.contentDescription="Monedha të verifikuara dhe në pritje"}}}}
+
+    override fun onResume(){super.onResume();if(::ads.isInitialized)ads.resume();refreshBalance()}
     override fun onPause(){if(::ads.isInitialized)ads.pause();super.onPause()}
     override fun onDestroy(){if(::ads.isInitialized)ads.destroy();super.onDestroy()}
 }
