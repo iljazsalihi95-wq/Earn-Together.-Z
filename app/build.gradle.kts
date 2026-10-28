@@ -23,6 +23,10 @@ android {
         val ciRunNumber = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull()
         versionCode = ciRunNumber ?: 1
         versionName = if (ciRunNumber != null) "0.1.$ciRunNumber" else "0.1.0"
+        manifestPlaceholders["admobAppId"] = "ca-app-pub-9794339868092490~8746086148"
+        buildConfigField("String", "ADMOB_REWARDED_ID", "\"ca-app-pub-9794339868092490/5988060865\"")
+        buildConfigField("String", "ADMOB_BANNER_ID", "\"ca-app-pub-9794339868092490/3807573908\"")
+        buildConfigField("String", "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-9794339868092490/2167189172\"")
         buildConfigField("String", "LEVELPLAY_APP_KEY", "\"28e1c919d\"")
         buildConfigField("String", "LEVELPLAY_REWARDED_AD_UNIT", "\"ui8a3ve6ggugacuo\"")
         buildConfigField("String", "LEVELPLAY_INTERSTITIAL_AD_UNIT", "\"onmeefn82676cjk8\"")
@@ -51,4 +55,5 @@ dependencies {
     // in the APK so impressions are attributed to the actual native Android app.
     implementation("com.unity3d.ads-mediation:mediation-sdk:9.5.0")
     implementation("com.unity3d.ads-mediation:unityads-adapter:5.15.0")
+    implementation("com.google.android.gms:play-services-ads:23.6.0")
 }
