@@ -40,6 +40,12 @@ class BubbleShooterActivity : Activity() {
         background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xdd102a54.toInt(),0xdd24164d.toInt(),0xdd0b5f9f.toInt())).apply{cornerRadius=dp(16).toFloat();setStroke(dp(1),0x88ffc857.toInt())}
     }
 
+    private fun guideChip()=TextView(this).apply {
+        text=ui("AIM • RELEASE TO SHOOT • MATCH 3+ • SWAP WHEN NEEDED","SHËNJO • LËSHO PËR TË GJUJTUR • BASHKO 3+ • NDËRRO KUR DUHET","ZIELEN • LOSLASSEN • 3+ TREFFEN • BEI BEDARF TAUSCHEN","MIRA • RILASCIA • ABBINA 3+ • SCAMBIA SE SERVE")
+        textSize=9.5f; setTextColor(0xffd9e8ff.toInt()); gravity=Gravity.CENTER; setTypeface(null,Typeface.BOLD); letterSpacing=.025f; elevation=dp(5).toFloat(); setPadding(dp(8),0,dp(8),0)
+        background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xdd0c244b.toInt(),0xdd2b155a.toInt(),0xdd0b477d.toInt())).apply{cornerRadius=dp(15).toFloat();setStroke(dp(1),0x6678cfff)}
+    }
+
     private fun confirmRestart(){
         if(dialogOpen)return; dialogOpen=true
         val dialog=AlertDialog.Builder(this).setTitle(ui("Restart level?","Rifillo nivelin?","Level neu starten?","Riavviare il livello?"))
@@ -63,6 +69,8 @@ class BubbleShooterActivity : Activity() {
         host.addView(restart,FrameLayout.LayoutParams(dp(126),dp(46),Gravity.TOP or Gravity.END).apply{rightMargin=dp(12);topMargin=dp(8)})
         val status=statusChip(ui("HD 2D  •  AUTO-SAVE  •  250 LEVELS","HD 2D  •  AUTO-RUAJTJE  •  250 NIVELE","HD 2D  •  AUTO-SPEICHERN  •  250 LEVEL","HD 2D  •  SALVATAGGIO AUTO  •  250 LIVELLI"))
         host.addView(status,FrameLayout.LayoutParams(dp(250),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
+        val guide=guideChip()
+        host.addView(guide,FrameLayout.LayoutParams(dp(310),dp(30),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(72)})
         val swap=chip("⇄  "+ui("SWAP","NDËRRO","TAUSCH","SCAMBIA"),true){game.swapBubble()}
         host.addView(swap,FrameLayout.LayoutParams(dp(122),dp(48),Gravity.BOTTOM or Gravity.END).apply{rightMargin=dp(14);bottomMargin=dp(16)})
         setContentView(host)
