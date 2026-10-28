@@ -288,6 +288,32 @@
         }
       ],
       "reviewStatus": "source_references_identified"
+    },
+    {
+      "order": 20,
+      "id": "series2-020-izhar-halqi",
+      "category": "Kurani",
+      "subcategory": "Texhvid / Nuni sakin dhe tenvini",
+      "question": "Si quhet rregulli i texhvidit kur Nuni me sukun (نْ) ose tenvini pasohet nga njëra prej gjashtë shkronjave të grykës?",
+      "options": [
+        "Iklab",
+        "Idgam",
+        "Idh-har",
+        "Ihfad"
+      ],
+      "correctIndex": 2,
+      "explanation": "Idh-har Halqi (الإظهار الحلقي) do të thotë shqiptim i qartë. Ai zbatohet kur nuni sakin ose tenvini pasohet nga ء ه ع ح غ خ. Shembull: مِنْ هَادٍ (min hadin), ku nuni shqiptohet qartë para shkronjës ه. Iklabi lidhet me ب, idgami me bashkimin dhe ihfaja me fshehjen e tingullit.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "Er-Ra'd 13:33 (مِنْ هَادٍ)"
+        },
+        {
+          "work": "Rregullat klasike të texhvidit",
+          "locator": "Bab en-nun es-sakine ve et-tenvin: el-izhar el-halqi"
+        }
+      ],
+      "reviewStatus": "source_references_identified"
     }
   ]
 }
