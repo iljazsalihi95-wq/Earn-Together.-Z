@@ -687,6 +687,32 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 35,
+      "id": "series2-035-imam-muslim-nishapur",
+      "category": "Shkencat Islame",
+      "subcategory": "Dijetarët e Hadithit",
+      "question": "Në cilin qytet historik të Horasanit (Iranit të sotëm) lindi Imam Muslimi, autori i Sahihut?",
+      "options": [
+        "Në Bagdad",
+        "Në Buhara",
+        "Në Nishapur",
+        "Në Samarkand"
+      ],
+      "correctIndex": 2,
+      "explanation": "Imam Muslim ibn el-Haxhxhaxh en-Nejsaburi lindi në Nishapur, në rajonin historik të Horasanit. Buhara është vendlindja e Imam Buhariut, jo e Imam Muslimit.",
+      "sources": [
+        {
+          "work": "Edh-Dhehebi",
+          "locator": "Sijer A'lam en-Nubela, biografia e Imam Muslimit"
+        },
+        {
+          "work": "Ibn Haxher el-Askalani",
+          "locator": "Tehdhib et-Tehdhib, Muslim ibn el-Haxhxhaxh"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
