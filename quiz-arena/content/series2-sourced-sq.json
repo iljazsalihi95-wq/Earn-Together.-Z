@@ -140,6 +140,32 @@
         }
       ],
       "reviewStatus": "source_references_identified"
+    },
+    {
+      "order": 13,
+      "id": "series2-013-wife-of-imran",
+      "category": "Kurani",
+      "subcategory": "Historitë kuranore / Familja e Imranit",
+      "question": "Cila grua e devotshme u zotua t'ia kushtonte fëmijën në barkun e saj shërbimit të vendit të adhurimit në Bejtul-Makdis?",
+      "options": [
+        "Haxhera",
+        "Sara",
+        "Gruaja e Imranit (nëna e Merjemes)",
+        "Asija"
+      ],
+      "correctIndex": 2,
+      "explanation": "Gruaja e Imranit, nëna e Merjemes, u zotua që fëmija i saj t'i kushtohej shërbimit të vendit të adhurimit. Allahu e përmend zotimin e saj në Ali Imran 3:35; në 3:37 tregohet kujdestaria e Zekerijas për Merjemen. Ajeti 3:35 nuk e përmend shprehimisht emrin 'Mesxhidul Aksa', prandaj formulimi i pyetjes është saktësuar.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "Ali Imran 3:35–37"
+        },
+        {
+          "work": "Tefsir Ibn Kethir",
+          "locator": "Komentimi i Ali Imran 3:35"
+        }
+      ],
+      "reviewStatus": "source_references_identified"
     }
   ]
 }
