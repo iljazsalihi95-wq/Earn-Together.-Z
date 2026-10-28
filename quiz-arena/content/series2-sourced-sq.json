@@ -444,6 +444,37 @@
         }
       ],
       "reviewStatus": "source_references_identified"
+    },
+    {
+      "order": 26,
+      "id": "series2-026-sunnah-muakkadah-rakat",
+      "category": "Fikhu Hanefi",
+      "subcategory": "Namazi / Sunnetet muekkede",
+      "question": "Sa rekate sunnet muekkede falen rregullisht gjatë ditës sipas medhhebit Hanefi?",
+      "originalQuestion": "Sa rekate sunnet janë gjithsej gjatë ditës të quajtura 'Muekkede'?",
+      "options": [
+        "10 ose 12",
+        "15",
+        "8",
+        "14"
+      ],
+      "correctIndex": 0,
+      "explanation": "Në praktikën e njohur hanefije falen 12 rekate sunnet muekkede të lidhura me farzet: 2 para sabahut, 4 para dhe 2 pas drekës, 2 pas akshamit dhe 2 pas jacisë. Në hadithe ka transmetime për 10 rekate (Buhariu 1180) dhe 12 rekate (Muslimi 728); alternativa '10 ose 12' pasqyron këto transmetime, por pyetja e fokusuar te praktika hanefije duhet të ofrojë '12 rekate' si alternativë më vete.",
+      "sources": [
+        {
+          "work": "Sahih el-Buhari",
+          "locator": "Hadithi 1180"
+        },
+        {
+          "work": "Sahih Muslim",
+          "locator": "Hadithi 728"
+        },
+        {
+          "work": "Literatura e fikhut Hanefi",
+          "locator": "Sunnetet e rregullta të pesë namazeve; referenca specifike për t'u kontrolluar"
+        }
+      ],
+      "reviewStatus": "needs_question_options_revision"
     }
   ]
 }
