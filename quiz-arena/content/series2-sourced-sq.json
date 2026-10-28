@@ -58,6 +58,36 @@
         }
       ],
       "reviewStatus": "needs_source_passage_check"
+    },
+    {
+      "order": 9,
+      "id": "series2-009-hunayn-taif",
+      "category": "Historia Islame",
+      "subcategory": "Sira / Betejat",
+      "question": "Në cilin vit hixhri ndodhën Beteja e Hunejnit dhe Rrethimi i Taifit, menjëherë pas Çlirimit të Mekës?",
+      "options": [
+        "Në vitin 8 hixhri",
+        "Në vitin 6 hixhri",
+        "Në vitin 10 hixhri",
+        "Në vitin 4 hixhri"
+      ],
+      "correctIndex": 0,
+      "explanation": "Çlirimi i Mekës ndodhi në Ramazan të vitit 8 hixhri. Më pas, në Sheval të po atij viti, ndodhi Beteja e Hunejnit dhe pas saj Rrethimi i Taifit. Kurani e përmend Hunejnin në Et-Teube 9:25. Viti 10 hixhri lidhet me Haxhin e Lamtumirës, jo me këto ngjarje.",
+      "sources": [
+        {
+          "work": "Kurani",
+          "locator": "Et-Teube 9:25 (përmendja e Hunejnit)"
+        },
+        {
+          "work": "Ibn Hisham, Es-Sira en-Nebevijje",
+          "locator": "Ngjarjet pas Çlirimit të Mekës, Hunejni dhe Taifi"
+        },
+        {
+          "work": "Ibn Kethir, El-Bidaje ve en-Nihaje",
+          "locator": "Ngjarjet e vitit 8 hixhri"
+        }
+      ],
+      "reviewStatus": "needs_source_passage_check"
     }
   ]
 }
