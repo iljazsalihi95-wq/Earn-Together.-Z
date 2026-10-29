@@ -74,19 +74,22 @@ class BubbleShooterActivity : Activity() {
         host.addView(restart,FrameLayout.LayoutParams(dp(126),dp(46),Gravity.TOP or Gravity.END).apply{rightMargin=dp(12);topMargin=dp(8)})
         val status=statusChip(ui("HD 2D  •  AUTO-SAVE  •  250 LEVELS","HD 2D  •  AUTO-RUAJTJE  •  250 NIVELE","HD 2D  •  AUTO-SPEICHERN  •  250 LEVEL","HD 2D  •  SALVATAGGIO AUTO  •  250 LIVELLI"))
         host.addView(status,FrameLayout.LayoutParams(dp(250),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
+
+        // Gameplay instructions stay visible. Rewarded rescue is a separate opt-in control so an ad label never replaces the game tutorial.
         val guide=guideChip()
-        guide.text=ui("VIDEO BONUS • REMOVE LAST 3 ROWS","VIDEO BONUS • HIQ 3 RRESHTAT E FUNDIT","VIDEO-BONUS • LETZTE 3 REIHEN ENTFERNEN","VIDEO BONUS • RIMUOVI LE ULTIME 3 RIGHE")
-        fun fadeGuide(){guide.postDelayed({if(!isFinishing)guide.animate().alpha(.38f).setDuration(700).start()},3500)}
-        guide.setOnClickListener{
-            guide.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-            guide.animate().alpha(1f).setDuration(180).withEndAction{
-                if(!ads.rewarded(onGameplayReward={game.videoRescue()},onFinished={fadeGuide()}))fadeGuide()
-            }.start()
+        host.addView(guide,FrameLayout.LayoutParams(dp(330),dp(30),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(72)})
+
+        val videoBonus=TextView(this).apply{
+            text=ui("VIDEO BONUS • REMOVE LAST 3 ROWS","VIDEO BONUS • HIQ 3 RRESHTAT E FUNDIT","VIDEO-BONUS • LETZTE 3 REIHEN ENTFERNEN","VIDEO BONUS • RIMUOVI LE ULTIME 3 RIGHE")
+            contentDescription=text;textSize=10.5f;setTextColor(0xff07152c.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.025f
+            isClickable=true;isFocusable=true;elevation=dp(9).toFloat()
+            background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xffffe27a.toInt(),0xffffb62e.toInt(),0xffffd65d.toInt())).apply{cornerRadius=dp(18).toFloat();setStroke(dp(1),0xffffefae.toInt())}
+            setOnClickListener{performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);ads.rewarded(onGameplayReward={game.videoRescue()})}
         }
-        host.addView(guide,FrameLayout.LayoutParams(dp(310),dp(30),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(72)})
-        guide.postDelayed({if(!isFinishing)guide.animate().alpha(.38f).setDuration(700).start()},5500)
+        host.addView(videoBonus,FrameLayout.LayoutParams(dp(220),dp(42),Gravity.BOTTOM or Gravity.START).apply{leftMargin=dp(14);bottomMargin=dp(16)})
+
         val swap=chip("⇄  "+ui("SWAP","NDËRRO","TAUSCH","SCAMBIA"),true){game.swapBubble()}.apply{contentDescription=ui("Swap current and next bubble","Ndërro flluskën aktuale me tjetrën","Aktuelle und nächste Blase tauschen","Scambia la bolla attuale con la prossima")}
-        host.addView(swap,FrameLayout.LayoutParams(dp(122),dp(48),Gravity.BOTTOM or Gravity.END).apply{rightMargin=dp(14);bottomMargin=dp(16)})
+        host.addView(swap,FrameLayout.LayoutParams(dp(122),dp(42),Gravity.BOTTOM or Gravity.END).apply{rightMargin=dp(14);bottomMargin=dp(16)})
         setContentView(host)
     }
 
