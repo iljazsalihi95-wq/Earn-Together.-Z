@@ -38,8 +38,15 @@ class BlockPuzzleActivity : Activity() {
     }
 
     private fun statusChip(text:String)=TextView(this).apply{
-        this.text=text;textSize=10f;setTextColor(0xffffd66b.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.06f;elevation=dp(6).toFloat()
+        this.text=text;textSize=10f;setTextColor(0xffffd66b.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.04f;elevation=dp(6).toFloat()
         background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xdd102a54.toInt(),0xdd24164d.toInt(),0xdd0b5f9f.toInt())).apply{cornerRadius=dp(16).toFloat();setStroke(dp(1),0x88ffc857.toInt())}
+    }
+
+    private fun savedProgressLabel():String{
+        val prefs=ProgressPreferences.open(this,"block_puzzle")
+        val level=prefs.getInt("level",1).coerceIn(1,250)
+        val best=prefs.getInt("best",0).coerceAtLeast(0)
+        return ui("AUTO-SAVE • LEVEL $level/250 • BEST $best","AUTO-RUAJTJE • NIVELI $level/250 • REKORDI $best","AUTO-SPEICHERN • LEVEL $level/250 • BEST $best","SALVATAGGIO AUTO • LIVELLO $level/250 • BEST $best")
     }
 
     override fun onCreate(savedInstanceState:Bundle?){
@@ -57,8 +64,8 @@ class BlockPuzzleActivity : Activity() {
         host.addView(back,FrameLayout.LayoutParams(dp(104),dp(46),Gravity.TOP or Gravity.START).apply{leftMargin=dp(12);topMargin=dp(8)})
         val restart=chip("↻  "+ui("RESTART","RIFILLO","NEUSTART","RIPROVA"),true){confirmRestart()}
         host.addView(restart,FrameLayout.LayoutParams(dp(126),dp(46),Gravity.TOP or Gravity.END).apply{rightMargin=dp(12);topMargin=dp(8)})
-        val status=statusChip(ui("NATIVE HD 2D  •  AUTO-SAVE  •  250 LEVELS","NATIVE HD 2D  •  AUTO-RUAJTJE  •  250 NIVELE","NATIVE HD 2D  •  AUTO-SPEICHERN  •  250 LEVEL","NATIVE HD 2D  •  SALVATAGGIO AUTO  •  250 LIVELLI"))
-        host.addView(status,FrameLayout.LayoutParams(dp(280),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
+        val status=statusChip(savedProgressLabel())
+        host.addView(status,FrameLayout.LayoutParams(dp(300),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
 
         val guide=TextView(this).apply{
             text=ui("DRAG A PIECE TO THE BOARD  •  CLEAR ROWS & COLUMNS","TËRHIQ PJESËN NË TABELË  •  PASTRO RRESHTA & KOLONA","STEIN AUFS FELD ZIEHEN  •  REIHEN & SPALTEN LÖSCHEN","TRASCINA IL PEZZO  •  COMPLETA RIGHE E COLONNE")
