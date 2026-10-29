@@ -47,6 +47,12 @@ class NativeExperienceTest {
             inst.runOnMainSync{a.onBackPressed()};assertTrue(views(a.window.decorView).filterIsInstance<Button>().any{it.text.contains("VAZHDO USHTRIMIN OFFLINE")})
         }finally{inst.runOnMainSync{a.finish()};ArenaCloudActivity.qaTransport=null}
     }
+    @Test fun expiredTimerAndMissingAudioKeepOfflineControlsUsable(){
+        val store=ArenaOfflineStore(inst.targetContext,"guest");val state=store.start("");state.put("remaining_ms",1);store.save(state)
+        val a=launch(ArenaCloudActivity::class.java)
+        try{android.os.SystemClock.sleep(250);inst.waitForIdleSync();val saved=store.saved()!!;assertEquals(-1,saved.getJSONArray("answers").getJSONObject(0).getInt("choice"));assertNotNull(saved.optJSONObject("feedback"));inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="DËGJO SHPJEGIMIN AI"}.performClick()};inst.waitForIdleSync();assertTrue(views(a.window.decorView).filterIsInstance<Button>().any{it.text=="VAZHDO ›"&&it.isEnabled})
+        }finally{inst.runOnMainSync{a.finish()}}
+    }
     @Test fun liveRecoveryPreservesSeparateOfflineSession(){
         val local=ArenaOfflineStore(inst.targetContext,"guest").start("");val id=local.getString("session_id")
         ArenaCloudActivity.qaTransport={action,_->if(action=="arenaBootstrap")org.json.JSONObject("{\"available\":12,\"categories\":[\"Logic\"],\"progress\":{\"level\":1,\"points\":0}}") else throw BackendException("TEST_ONLY","unsupported fixture")}
