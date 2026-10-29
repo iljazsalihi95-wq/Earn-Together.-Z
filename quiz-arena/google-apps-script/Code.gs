@@ -9,7 +9,7 @@ const ARENA_PROGRESS_TABS=['Arena - Lojtaret','Arena - Sesionet','Arena - Nivele
 function getQuizSpreadsheet_(){return SpreadsheetApp.openById(QUIZ_SHEET);}
 function arenaError_(code){throw new Error(code);}
 function arenaJson_(v){return ContentService.createTextOutput(JSON.stringify(v)).setMimeType(ContentService.MimeType.JSON);}
-function doGet(){return arenaJson_({success:true,service:'quiz-arena',version:4,authenticatedActions:true,voice:'onyx'});}
+function doGet(){return arenaJson_({success:true,service:'quiz-arena',version:5,authenticatedActions:true,voice:'onyx'});}
 function doPost(e){try{const p=JSON.parse(e.postData.contents);return arenaJson_(arenaRoute_(p));}catch(e){const code=/^[A-Z_]+$/.test(e.message)?e.message:'SERVER_ERROR';return arenaJson_({success:false,error:code,message:code});}}
 function arenaHash_(s){return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,s).map(b=>('0'+((b+256)%256).toString(16)).slice(-2)).join('');}
 function arenaIdentity_(p){
@@ -45,7 +45,8 @@ function arenaPlayer_(id){return arenaRows_('Arena - Lojtaret').slice(1).find(r=
 function arenaState_(id){const done=arenaRows_('Arena - Progresi').slice(1).filter(r=>r[0]===id&&r[7]==='PO');return {level:Math.min(20,1+Math.max(0,...done.map(r=>Number(r[1])))),points:done.reduce((s,r)=>s+Number(r[2]),0),completed:done.map(r=>Number(r[1]))};}
 function arenaSession_(id,user){const rows=arenaRows_('Arena - Sesionet'),i=rows.findIndex((r,j)=>j>0&&r[0]===id&&r[1]===user);if(i<1)arenaError_('SESSION_NOT_FOUND');let state;try{state=JSON.parse(rows[i][12]);}catch(_){arenaError_('SESSION_INVALID');}return {row:i+1,values:rows[i],state};}
 function arenaSave_(s){s.values[12]=JSON.stringify(s.state);getQuizSpreadsheet_().getSheetByName('Arena - Sesionet').getRange(s.row,1,1,13).setValues([s.values]);}
-function arenaPublic_(s){const a=s.state,q=a.questions[a.index];return {session_id:s.values[0],level:a.level,score:a.score,correct:a.correct,index:a.index,total:a.questions.length,finished:a.finished||false,passed:a.passed||false,config:a.config,question:q?{id:q.id,category:q.category,prompt:q.question,choices:q.choices,recitation:q.recitation}:null,feedback:a.feedback||null,remaining_ms:Math.max(0,a.deadline-Date.now())};}
+function arenaBeginQuestion_(a,presentation){a.presentation=!!presentation;a.presentationUntil=presentation?Date.now()+90000:0;a.deadline=Date.now()+a.config.seconds*1000+(presentation?90000:0);}
+function arenaPublic_(s){const a=s.state,q=a.questions[a.index];if(a.feedback&&typeof a.feedback.choice!=='number'){const last=(a.answers||[]).find(x=>x.id===q.id);if(last)a.feedback.choice=last.choice;}return {session_id:s.values[0],level:a.level,score:a.score,correct:a.correct,index:a.index,total:a.questions.length,finished:a.finished||false,passed:a.passed||false,config:a.config,question:q?{id:q.id,category:q.category,prompt:q.question,choices:q.choices,recitation:q.recitation}:null,feedback:a.feedback||null,presentation_pending:!!a.presentation&&!a.feedback&&Date.now()<a.presentationUntil,presentation_remaining_ms:Math.max(0,(a.presentationUntil||0)-Date.now()),remaining_ms:a.presentation&&Date.now()<a.presentationUntil?a.config.seconds*1000:Math.max(0,a.deadline-Date.now())};}
 function arenaRoute_(p){
  const u=arenaIdentity_(p),lock=LockService.getScriptLock();
  // Copy the owned session under the short gameplay lock; synthesis runs after release.
@@ -70,21 +71,23 @@ function arenaRoute_(p){
   let bank=arenaBank_(locale).filter(q=>!p.category||q.category===p.category);if(bank.length<config.count)arenaError_('NOT_ENOUGH_APPROVED_QUESTIONS');
   for(let i=bank.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[bank[i],bank[j]]=[bank[j],bank[i]];}
   const state={questions:bank.slice(0,config.count),locale,level,config,index:0,score:0,correct:0,answers:[],deadline:Date.now()+config.seconds*1000,feedback:null,finished:false};
+  state.presentationEnabled=p.protocol===2;arenaBeginQuestion_(state,state.presentationEnabled);
   const id=Utilities.getUuid(),row=[id,u.id,new Date(),' ',arenaSafe_(p.category||'ALL'),level,config.count,0,0,0,0,'ACTIVE',JSON.stringify(state)];sh.appendRow(row);return Object.assign({success:true},arenaPublic_({values:row,state}));
  }
  const s=arenaSession_(String(p.session_id||''),u.id),a=s.state;
+ if(p.action==='arenaReady'){if(p.question_id!==a.questions[a.index].id)return Object.assign({success:true},arenaPublic_(s));if(a.presentation&&!a.feedback&&!a.finished){a.presentation=false;a.deadline=Math.min(a.deadline,Date.now()+a.config.seconds*1000);arenaSave_(s);}return Object.assign({success:true},arenaPublic_(s));}
  if(p.action==='arenaResume')return Object.assign({success:true},arenaPublic_(s));
  if(p.action==='arenaAnswer'){
   if(a.finished)return Object.assign({success:true},arenaPublic_(s));const q=a.questions[a.index];
   if(p.question_id!==q.id)arenaError_('QUESTION_CHANGED');if(a.feedback)return Object.assign({success:true},arenaPublic_(s));
   if(!Number.isInteger(p.choice)||p.choice < -1||p.choice>3)arenaError_('INVALID_CHOICE');const choice=Date.now()>a.deadline?-1:p.choice,right=choice===q.correct;
-  if(right){a.correct++;a.score+=a.config.points;}a.answers.push({id:q.id,choice,right});a.feedback={right,correct:q.correct,explanation:q.explanation,source:q.source};arenaSave_(s);return Object.assign({success:true},arenaPublic_(s));
+  if(right){a.correct++;a.score+=a.config.points;}a.answers.push({id:q.id,choice,right});a.feedback={right,choice,reason:choice===-1?'timeout':right?'correct':'incorrect',correct:q.correct,explanation:q.explanation,source:q.source};arenaSave_(s);return Object.assign({success:true},arenaPublic_(s));
  }
  if(p.action==='arenaNext'){
   // Replaying a timed-out Next returns the current question, without skipping it.
   if(p.question_id&&p.question_id!==a.questions[a.index].id)return Object.assign({success:true},arenaPublic_(s));
   if(a.finished)return Object.assign({success:true},arenaPublic_(s));if(!a.feedback)arenaError_('ANSWER_FIRST');
-  if(a.index<a.questions.length-1){a.index++;a.feedback=null;a.deadline=Date.now()+a.config.seconds*1000;arenaSave_(s);return Object.assign({success:true},arenaPublic_(s));}
+  if(a.index<a.questions.length-1){a.index++;a.feedback=null;a.presentationEnabled=a.presentationEnabled||p.protocol===2;arenaBeginQuestion_(a,a.presentationEnabled);arenaSave_(s);return Object.assign({success:true},arenaPublic_(s));}
   a.finished=true;a.passed=a.correct/a.questions.length*100>=a.config.pass;if(a.correct===a.questions.length)a.score+=a.config.bonus;
   s.values[3]=new Date();s.values[7]=a.correct;s.values[8]=a.questions.length-a.correct;s.values[9]=a.score;s.values[10]=Math.round((Date.now()-new Date(s.values[2]).getTime())/1000);s.values[11]='FINISHED';
   // Progress row is the idempotency authority; replaying a level never adds points twice.

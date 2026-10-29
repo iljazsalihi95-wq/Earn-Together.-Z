@@ -25,14 +25,14 @@ class ArenaOfflineStore(private val context:Context,user:String){
         val s=JSONObject().put("offline",true).put("session_id","offline-"+java.util.UUID.randomUUID()).put("locale","sq").put("level",level).put("category",category).put("config",config).put("local_questions",qs).put("index",0).put("total",qs.length()).put("score",0).put("correct",0).put("answers",JSONArray()).put("finished",false)
         select(s);save(s);return s
     }
-    private fun select(s:JSONObject){s.put("question",s.getJSONArray("local_questions").getJSONObject(s.getInt("index")));s.remove("feedback");s.put("remaining_ms",s.getJSONObject("config").getLong("seconds")*1000)}
+    private fun select(s:JSONObject){s.put("question",s.getJSONArray("local_questions").getJSONObject(s.getInt("index")));s.remove("feedback");s.remove("timed_out");s.remove("answer_pending");s.remove("local_choice");s.put("presentation_pending",true);s.put("presentation_remaining_ms",90000);s.put("remaining_ms",s.getJSONObject("config").getLong("seconds")*1000)}
     fun save(s:JSONObject){require(valid(s));prefs.edit().putString("session",s.toString()).commit()}
     fun answer(s:JSONObject,choice:Int):JSONObject{
         if(s.optBoolean("finished")||s.optJSONObject("feedback")!=null)return s
         val q=s.getJSONObject("question");require(choice==-1||choice in 0 until q.getJSONArray("choices").length());val right=choice==q.getInt("correct")
         if(right){s.put("correct",s.getInt("correct")+1);s.put("score",s.getInt("score")+s.getJSONObject("config").getInt("points"))}
         s.getJSONArray("answers").put(JSONObject().put("id",q.getString("id")).put("choice",choice).put("right",right))
-        s.put("feedback",JSONObject().put("right",right).put("correct",q.getInt("correct")).put("explanation",q.getString("explanation")).put("source",q.optString("source")));save(s);return s
+        s.put("feedback",JSONObject().put("right",right).put("choice",choice).put("reason",if(choice==-1)"timeout" else if(right)"correct" else "incorrect").put("correct",q.getInt("correct")).put("explanation",q.getString("explanation")).put("source",q.optString("source")));save(s);return s
     }
     fun next(s:JSONObject):JSONObject{
         if(s.optBoolean("finished"))return s;require(s.optJSONObject("feedback")!=null)

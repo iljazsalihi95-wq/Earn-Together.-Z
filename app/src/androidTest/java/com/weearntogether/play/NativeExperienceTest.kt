@@ -73,9 +73,11 @@ class NativeExperienceTest {
         }finally{inst.runOnMainSync{a.finish()};ArenaCloudActivity.qaTransport=null}
     }
     @Test fun expiredTimerAndMissingAudioKeepOfflineControlsUsable(){
-        val store=ArenaOfflineStore(inst.targetContext,"guest");val state=store.start("");state.put("remaining_ms",1);store.save(state)
+        val store=ArenaOfflineStore(inst.targetContext,"guest");val state=store.start("");state.put("remaining_ms",1).put("presentation_pending",false);store.save(state)
         val a=launch(ArenaCloudActivity::class.java)
-        try{android.os.SystemClock.sleep(250);inst.waitForIdleSync();val saved=store.saved()!!;assertEquals(-1,saved.getJSONArray("answers").getJSONObject(0).getInt("choice"));assertNotNull(saved.optJSONObject("feedback"));inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="DËGJO SHPJEGIMIN AI"}.performClick()};inst.waitForIdleSync();assertTrue(views(a.window.decorView).filterIsInstance<Button>().any{it.text=="VAZHDO ›"&&it.isEnabled})
+        try{android.os.SystemClock.sleep(250);inst.waitForIdleSync();val saved=store.saved()!!;assertEquals(0,saved.getJSONArray("answers").length());assertNull(saved.optJSONObject("feedback"));assertTrue(saved.optBoolean("timed_out"));assertFalse(views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.isEnabled)
+            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="SHFAQ PËRGJIGJEN DHE SHPJEGIMIN"}.performClick()};inst.waitForIdleSync();assertEquals(-1,store.saved()!!.getJSONObject("feedback").getInt("choice"));assertTrue(views(a.window.decorView).filterIsInstance<TextView>().any{it.text=="KOHA PËRFUNDOI • PA PËRGJIGJE"})
+            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="DËGJO SHPJEGIMIN AI"}.performClick()};inst.waitForIdleSync();assertTrue(views(a.window.decorView).filterIsInstance<Button>().any{it.text=="VAZHDO ›"&&it.isEnabled})
         }finally{inst.runOnMainSync{a.finish()}}
     }
     @Test fun liveRecoveryPreservesSeparateOfflineSession(){
@@ -99,7 +101,7 @@ class NativeExperienceTest {
             else->throw BackendException("TEST_ONLY","unsupported fixture")
         }}
         val a=launch(ArenaCloudActivity::class.java)
-        fun waitFor(text:String){val end=android.os.SystemClock.elapsedRealtime()+5000;while(android.os.SystemClock.elapsedRealtime()<end){inst.waitForIdleSync();if(views(a.window.decorView).filterIsInstance<TextView>().any{it.text.contains(text)})return;android.os.SystemClock.sleep(40)};fail("Missing UI: $text")}
+        fun waitFor(text:String){val end=android.os.SystemClock.elapsedRealtime()+5000;while(android.os.SystemClock.elapsedRealtime()<end){inst.waitForIdleSync();if(views(a.window.decorView).any{(it is TextView&&it.text.contains(text))||(it is QuizArenaScene&&it.questionPrompt.contains(text))})return;android.os.SystemClock.sleep(40)};fail("Missing UI: $text")}
         try{
             waitFor("HYR NË ARENË")
             inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("HYR NË ARENË")}.performClick()};waitFor("First LIVE question")
@@ -108,6 +110,33 @@ class NativeExperienceTest {
             assertTrue(ctx.getSharedPreferences("arena_cloud_guest",0).contains("pending_next"))
             inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="RIPROVO / VAZHDO LIVE"}.performClick()};waitFor("Second LIVE question")
             assertEquals(2,nextCalls);assertFalse(ctx.getSharedPreferences("arena_cloud_guest",0).contains("pending_next"));shot("08-arena-live-next-recovered")
+        }finally{inst.runOnMainSync{a.finish()};ArenaCloudActivity.qaTransport=null}
+    }
+    @Test fun liveStudioAutoReadsThenStartsClockAndNeverAutoSelects(){
+        val ctx=inst.targetContext;var readyCalls=0;var answerCalls=0;var voiceCalls=0
+        val wav=java.nio.ByteBuffer.allocate(40044).order(java.nio.ByteOrder.LITTLE_ENDIAN).apply{put("RIFF".toByteArray());putInt(40036);put("WAVEfmt ".toByteArray());putInt(16);putShort(1);putShort(1);putInt(8000);putInt(16000);putShort(2);putShort(16);put("data".toByteArray());putInt(40000)}.array()
+        fun state(presentation:Boolean,answered:Boolean=false)=org.json.JSONObject().put("session_id","qa-presentation").put("level",1).put("score",0).put("correct",0).put("index",0).put("total",2).put("remaining_ms",1000).put("presentation_pending",presentation).put("presentation_remaining_ms",90000).put("config",org.json.JSONObject().put("points",100).put("seconds",1)).put("question",org.json.JSONObject().put("id","q1").put("category","Logic").put("prompt","Pyetja në ekranin qendror të studios").put("choices",org.json.JSONArray(listOf("One","Two","Three","Four")))).apply{if(answered)put("feedback",org.json.JSONObject().put("right",false).put("choice",-1).put("reason","timeout").put("correct",1).put("explanation","Explanation after explicit request").put("source","Fixture"))}
+        ArenaCloudActivity.qaTransport={action,p->when(action){
+            "arenaBootstrap"->org.json.JSONObject("{\"available\":12,\"categories\":[\"Logic\"],\"progress\":{\"level\":1,\"points\":0}}")
+            "arenaRegister"->org.json.JSONObject()
+            "arenaStart"->state(true)
+            "arenaVoice"->{voiceCalls++;org.json.JSONObject().put("audio",android.util.Base64.encodeToString(wav,android.util.Base64.NO_WRAP))}
+            "arenaReady"->{readyCalls++;assertEquals(2,p.getInt("protocol"));state(false)}
+            "arenaAnswer"->{answerCalls++;assertEquals(-1,p.getInt("choice"));state(false,true)}
+            else->throw BackendException("TEST_ONLY","unsupported fixture")
+        }}
+        val a=launch(ArenaCloudActivity::class.java)
+        fun waitUntil(condition:()->Boolean){val end=android.os.SystemClock.elapsedRealtime()+6000;while(android.os.SystemClock.elapsedRealtime()<end){inst.waitForIdleSync();if(condition())return;android.os.SystemClock.sleep(30)};fail("Studio state did not arrive")}
+        try{
+            waitUntil{views(a.window.decorView).filterIsInstance<Button>().any{it.text.startsWith("HYR NË ARENË")}}
+            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("HYR NË ARENË")}.performClick()}
+            waitUntil{views(a.window.decorView).filterIsInstance<QuizArenaScene>().any{it.speaking}}
+            val scene=views(a.window.decorView).filterIsInstance<QuizArenaScene>().first();assertTrue(scene.questionPrompt.contains("ekranin qendror"));assertEquals("LEXIM",scene.timerText);assertEquals(0,readyCalls);assertEquals(0,answerCalls);assertFalse(views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.isEnabled);shot("09-studio-reading-question")
+            waitUntil{readyCalls==1&&views(a.window.decorView).filterIsInstance<QuizArenaScene>().any{it.timerText=="00:01"}};shot("10-studio-answer-clock")
+            waitUntil{views(a.window.decorView).filterIsInstance<Button>().any{it.text=="SHFAQ PËRGJIGJEN DHE SHPJEGIMIN"}}
+            assertEquals(0,answerCalls);assertFalse(views(a.window.decorView).filterIsInstance<Button>().any{it.text=="VAZHDO ›"})
+            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="SHFAQ PËRGJIGJEN DHE SHPJEGIMIN"}.performClick()}
+            waitUntil{views(a.window.decorView).filterIsInstance<TextView>().any{it.text=="KOHA PËRFUNDOI • PA PËRGJIGJE"}};assertEquals(1,answerCalls);assertTrue(voiceCalls>=1);shot("11-studio-timeout-explicit-explanation")
         }finally{inst.runOnMainSync{a.finish()};ArenaCloudActivity.qaTransport=null}
     }
     @Test fun premiumArenaHasRealPlayerLanguageAndResumeControls(){val a=launch(ArenaCloudActivity::class.java);try{

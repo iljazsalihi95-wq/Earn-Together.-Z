@@ -47,3 +47,13 @@ const questionAudio=call('arenaVoice',{session_id:v.session_id,phase:'question'}
 assert.equal(call('arenaVoice',{session_id:v.session_id,phase:'question'}).cache_key,questionAudio.cache_key);assert.equal(speechCalls,calls);
 assert.equal(lockHeld,false);assert.equal([...props.keys()].filter(k=>k.startsWith('voicelease:')).length,0);
 console.log('PASS male voice, synthesis without gameplay lock, simultaneous Next, duplicate voice lease, idempotent Next replay and private audio reuse');
+
+// Presentation consumes no answer time; Ready can shorten but never extend/reset the server clock.
+cache.clear();user='presentation-user';call('arenaRegister',{name:'Presenter test'});
+let presented=call('arenaStart',{level:1,protocol:2});assert.equal(presented.presentation_pending,true);assert.equal(presented.remaining_ms,30000);assert.equal(presented.feedback,null);
+const ready=call('arenaReady',{session_id:presented.session_id,question_id:presented.question.id});assert.equal(ready.presentation_pending,false);assert.ok(ready.remaining_ms<=30000);
+const firstDeadline=JSON.parse(tables['Arena - Sesionet'].find(r=>r[0]===presented.session_id)[12]).deadline;
+call('arenaReady',{session_id:presented.session_id,question_id:presented.question.id});assert.equal(JSON.parse(tables['Arena - Sesionet'].find(r=>r[0]===presented.session_id)[12]).deadline,firstDeadline);
+const timed=call('arenaAnswer',{session_id:presented.session_id,question_id:presented.question.id,choice:-1});assert.equal(timed.feedback.choice,-1);assert.equal(timed.feedback.reason,'timeout');assert.equal(timed.score,0);
+const second=call('arenaNext',{session_id:presented.session_id,question_id:presented.question.id,protocol:2});assert.equal(second.presentation_pending,true);assert.equal(second.feedback,null);
+console.log('PASS presentation phase, server-authoritative Ready, immutable replay deadline and explicit timeout reason');
