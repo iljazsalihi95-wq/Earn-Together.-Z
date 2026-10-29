@@ -43,7 +43,9 @@ class BlockPuzzleActivity : Activity() {
     }
 
     private fun savedProgressLabel():String{
-        val prefs=ProgressPreferences.open(this,"block_puzzle")
+        // PremiumBlockPuzzleView persists to block_puzzle_hd2d. Read the same store here so
+        // the header always reflects the board/campaign the player will actually resume.
+        val prefs=ProgressPreferences.open(this,"block_puzzle_hd2d")
         val level=prefs.getInt("level",1).coerceIn(1,250)
         val best=prefs.getInt("best",0).coerceAtLeast(0)
         return ui("AUTO-SAVE • LEVEL $level/250 • BEST $best","AUTO-RUAJTJE • NIVELI $level/250 • REKORDI $best","AUTO-SPEICHERN • LEVEL $level/250 • BEST $best","SALVATAGGIO AUTO • LIVELLO $level/250 • BEST $best")
