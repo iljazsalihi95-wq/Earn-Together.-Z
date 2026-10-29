@@ -84,7 +84,7 @@ function arenaRoute_(p){
   s.values[3]=new Date();s.values[7]=a.correct;s.values[8]=a.questions.length-a.correct;s.values[9]=a.score;s.values[10]=Math.round((Date.now()-new Date(s.values[2]).getTime())/1000);s.values[11]='FINISHED';
   // Progress row is the idempotency authority; replaying a level never adds points twice.
   const sh=getQuizSpreadsheet_().getSheetByName('Arena - Progresi'),rows=sh.getDataRange().getValues(),old=rows.findIndex((r,i)=>i>0&&r[0]===u.id&&Number(r[1])===a.level);
-  if(old<1||rows[old][7]!=='PO'){const row=[u.id,a.level,a.score,a.correct,a.questions.length-a.correct,new Date(),s.values[0],a.passed?'PO':'JO','JO','PO'];if(old>0)sh.getRange(old+1,1,1,10).setValues([row]);else sh.appendRow(row);}
+  if(a.passed&&(old<1||rows[old][7]!=='PO')){const row=[u.id,a.level,a.score,a.correct,a.questions.length-a.correct,new Date(),s.values[0],'PO','JO','PO'];if(old>0)sh.getRange(old+1,1,1,10).setValues([row]);else sh.appendRow(row);}
   arenaSave_(s);const players=getQuizSpreadsheet_().getSheetByName('Arena - Lojtaret'),pr=players.getDataRange().getValues(),pi=pr.findIndex(r=>r[0]===u.id),progress=arenaState_(u.id);if(pi>0){pr[pi][5]=progress.points;pr[pi][6]=progress.level;pr[pi][7]=progress.completed.length;pr[pi][8]=arenaRows_('Arena - Sesionet').slice(1).filter(r=>r[1]===u.id&&r[11]==='FINISHED').length;pr[pi][9]=new Date();players.getRange(pi+1,1,1,11).setValues([pr[pi]]);}
   return Object.assign({success:true,progress},arenaPublic_(s));
  }
