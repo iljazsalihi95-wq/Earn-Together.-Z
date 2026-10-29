@@ -85,6 +85,31 @@ class NativeExperienceTest {
         try{android.os.SystemClock.sleep(400);inst.waitForIdleSync();assertEquals(id,ArenaOfflineStore(inst.targetContext,"guest").saved()!!.getString("session_id"));inst.runOnMainSync{a.onBackPressed()};inst.waitForIdleSync();assertTrue(views(a.window.decorView).filterIsInstance<TextView>().any{it.text.contains("ARENA LIVE")});assertTrue(views(a.window.decorView).filterIsInstance<Button>().any{it.text.contains("VAZHDO USHTRIMIN OFFLINE")})
         }finally{inst.runOnMainSync{a.finish()};ArenaCloudActivity.qaTransport=null}
     }
+    @Test fun timedOutLiveNextCanRetryWithoutSkippingQuestion(){
+        val ctx=inst.targetContext;ctx.getSharedPreferences("arena_cloud_guest",0).edit().putBoolean("audio",false).commit()
+        var index=0;var nextCalls=0
+        fun state(feedback:Boolean=false)=org.json.JSONObject().put("session_id","qa-live").put("level",1).put("score",if(feedback||index>0)100 else 0).put("correct",if(feedback||index>0)1 else 0).put("index",index).put("total",2).put("remaining_ms",60000).put("config",org.json.JSONObject().put("points",100)).put("question",org.json.JSONObject().put("id","q$index").put("category","Logic").put("prompt",if(index==0)"First LIVE question" else "Second LIVE question").put("choices",org.json.JSONArray(listOf("One","Two","Three","Four")))).apply{if(feedback)put("feedback",org.json.JSONObject().put("right",true).put("correct",0).put("explanation","Educational explanation").put("source","Fixture"))}
+        ArenaCloudActivity.qaTransport={action,p->when(action){
+            "arenaBootstrap"->org.json.JSONObject("{\"available\":12,\"categories\":[\"Logic\"],\"progress\":{\"level\":1,\"points\":0}}")
+            "arenaRegister"->org.json.JSONObject()
+            "arenaStart"->state()
+            "arenaAnswer"->state(true)
+            "arenaNext"->{assertEquals("q0",p.getString("question_id"));index=1;nextCalls++;if(nextCalls==1)throw BackendException("TIMEOUT","response lost after server advanced");state()}
+            "arenaResume"->state()
+            else->throw BackendException("TEST_ONLY","unsupported fixture")
+        }}
+        val a=launch(ArenaCloudActivity::class.java)
+        fun waitFor(text:String){val end=android.os.SystemClock.elapsedRealtime()+5000;while(android.os.SystemClock.elapsedRealtime()<end){inst.waitForIdleSync();if(views(a.window.decorView).filterIsInstance<TextView>().any{it.text.contains(text)})return;android.os.SystemClock.sleep(40)};fail("Missing UI: $text")}
+        try{
+            waitFor("HYR NË ARENË")
+            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("HYR NË ARENË")}.performClick()};waitFor("First LIVE question")
+            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.performClick()};waitFor("Educational explanation")
+            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="VAZHDO ›"}.performClick()};waitFor("RIPROVO / VAZHDO LIVE")
+            assertTrue(ctx.getSharedPreferences("arena_cloud_guest",0).contains("pending_next"))
+            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="RIPROVO / VAZHDO LIVE"}.performClick()};waitFor("Second LIVE question")
+            assertEquals(2,nextCalls);assertFalse(ctx.getSharedPreferences("arena_cloud_guest",0).contains("pending_next"));shot("08-arena-live-next-recovered")
+        }finally{inst.runOnMainSync{a.finish()};ArenaCloudActivity.qaTransport=null}
+    }
     @Test fun premiumArenaHasRealPlayerLanguageAndResumeControls(){val a=launch(ArenaCloudActivity::class.java);try{
         val list=views(a.window.decorView);assertTrue(list.any{it is StudioArtwork});assertTrue(list.any{it is EditText});assertEquals(2,list.filterIsInstance<android.widget.Spinner>().size);assertTrue(list.filterIsInstance<TextView>().any{it.text.toString()=="TESTIM DHE MËSIM"});assertTrue(list.filterIsInstance<Button>().any{it.text.contains("AVATARIN")});shot("05-premium-arena-home")
     }finally{inst.runOnMainSync{a.finish()}}}

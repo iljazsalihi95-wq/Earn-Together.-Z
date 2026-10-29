@@ -9,7 +9,7 @@ const ARENA_PROGRESS_TABS=['Arena - Lojtaret','Arena - Sesionet','Arena - Nivele
 function getQuizSpreadsheet_(){return SpreadsheetApp.openById(QUIZ_SHEET);}
 function arenaError_(code){throw new Error(code);}
 function arenaJson_(v){return ContentService.createTextOutput(JSON.stringify(v)).setMimeType(ContentService.MimeType.JSON);}
-function doGet(){return arenaJson_({success:true,service:'quiz-arena',version:3,authenticatedActions:true});}
+function doGet(){return arenaJson_({success:true,service:'quiz-arena',version:4,authenticatedActions:true,voice:'onyx'});}
 function doPost(e){try{const p=JSON.parse(e.postData.contents);return arenaJson_(arenaRoute_(p));}catch(e){const code=/^[A-Z_]+$/.test(e.message)?e.message:'SERVER_ERROR';return arenaJson_({success:false,error:code,message:code});}}
 function arenaHash_(s){return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,s).map(b=>('0'+((b+256)%256).toString(16)).slice(-2)).join('');}
 function arenaIdentity_(p){
@@ -47,7 +47,10 @@ function arenaSession_(id,user){const rows=arenaRows_('Arena - Sesionet'),i=rows
 function arenaSave_(s){s.values[12]=JSON.stringify(s.state);getQuizSpreadsheet_().getSheetByName('Arena - Sesionet').getRange(s.row,1,1,13).setValues([s.values]);}
 function arenaPublic_(s){const a=s.state,q=a.questions[a.index];return {session_id:s.values[0],level:a.level,score:a.score,correct:a.correct,index:a.index,total:a.questions.length,finished:a.finished||false,passed:a.passed||false,config:a.config,question:q?{id:q.id,category:q.category,prompt:q.question,choices:q.choices,recitation:q.recitation}:null,feedback:a.feedback||null,remaining_ms:Math.max(0,a.deadline-Date.now())};}
 function arenaRoute_(p){
- const u=arenaIdentity_(p),lock=LockService.getScriptLock();lock.waitLock(30000);
+ const u=arenaIdentity_(p),lock=LockService.getScriptLock();
+ // Copy the owned session under the short gameplay lock; synthesis runs after release.
+ if(p.action==='arenaVoice'){let snapshot;lock.waitLock(5000);try{snapshot=arenaSession_(String(p.session_id||''),u.id);}finally{lock.releaseLock();}return arenaVoice_(u,snapshot,p);}
+ lock.waitLock(15000);
  try{
  const locale=String(p.locale||'sq');
  if(p.action==='arenaBootstrap'){
@@ -78,6 +81,8 @@ function arenaRoute_(p){
   if(right){a.correct++;a.score+=a.config.points;}a.answers.push({id:q.id,choice,right});a.feedback={right,correct:q.correct,explanation:q.explanation,source:q.source};arenaSave_(s);return Object.assign({success:true},arenaPublic_(s));
  }
  if(p.action==='arenaNext'){
+  // Replaying a timed-out Next returns the current question, without skipping it.
+  if(p.question_id&&p.question_id!==a.questions[a.index].id)return Object.assign({success:true},arenaPublic_(s));
   if(a.finished)return Object.assign({success:true},arenaPublic_(s));if(!a.feedback)arenaError_('ANSWER_FIRST');
   if(a.index<a.questions.length-1){a.index++;a.feedback=null;a.deadline=Date.now()+a.config.seconds*1000;arenaSave_(s);return Object.assign({success:true},arenaPublic_(s));}
   a.finished=true;a.passed=a.correct/a.questions.length*100>=a.config.pass;if(a.correct===a.questions.length)a.score+=a.config.bonus;
@@ -88,28 +93,41 @@ function arenaRoute_(p){
   arenaSave_(s);const players=getQuizSpreadsheet_().getSheetByName('Arena - Lojtaret'),pr=players.getDataRange().getValues(),pi=pr.findIndex(r=>r[0]===u.id),progress=arenaState_(u.id);if(pi>0){pr[pi][5]=progress.points;pr[pi][6]=progress.level;pr[pi][7]=progress.completed.length;pr[pi][8]=arenaRows_('Arena - Sesionet').slice(1).filter(r=>r[1]===u.id&&r[11]==='FINISHED').length;pr[pi][9]=new Date();players.getRange(pi+1,1,1,11).setValues([pr[pi]]);}
   return Object.assign({success:true,progress},arenaPublic_(s));
  }
- if(p.action==='arenaVoice')return arenaVoice_(u,s,p);
  arenaError_('INVALID_ACTION');
  }finally{lock.releaseLock();}
 }
 function arenaVoice_(u,s,p){
  const a=s.state,q=a.questions[a.index];if(!q||a.finished)arenaError_('NO_QUESTION');const explanation=p.phase==='explanation';if(explanation&&!a.feedback)arenaError_('ANSWER_FIRST');
- // Never synthesize Quran recitation; only narrator text, without Arabic verse fields.
+ // Narration only; authentic Quran recitation remains a separate recording.
  const reactions={sq:['Saktë.','Këtë herë jo.'],de:['Richtig.','Leider nicht.'],en:['Correct.','Not this time.'],tr:['Doğru.','Bu sefer olmadı.']};
  const text=explanation?(reactions[a.locale][a.feedback.right?0:1]+' '+q.choices[q.correct]+'. '+q.explanation):(q.question+'. '+q.choices.map((x,i)=>String.fromCharCode(65+i)+'. '+x).join('. '));
- if(text.length>3500)arenaError_('VOICE_TOO_LONG');const props=PropertiesService.getScriptProperties(),model=props.getProperty('ARENA_VOICE_MODEL')||'gpt-4o-mini-tts',voice='marin';
- const hash=arenaHash_(a.locale+'|'+model+'|'+voice+'|'+text),media=getQuizSpreadsheet_().getSheetByName('Arena - Media'),rows=media.getDataRange().getValues(),cached=rows.slice(1).find(r=>r[0]===hash&&r[8]==='PRIVATE_READY');
- if(cached){const f=DriveApp.getFileById(String(cached[5]));return {success:true,audio:Utilities.base64Encode(f.getBlob().getBytes()),cache_key:hash,ai_generated:true};}
- // Durable daily limits. All voice calls arrive under the script lock, including cache lookup.
- const day=new Date().toISOString().slice(0,10),userKey='voice:'+day+':'+arenaHash_(u.id),globalKey='voice:'+day+':global';
- const used=Number(props.getProperty(userKey)||0),all=Number(props.getProperty(globalKey)||0);if(used>=20||all>=100)arenaError_('VOICE_DAILY_LIMIT');const key=props.getProperty('OPENAI_API_KEY');if(!key)arenaError_('VOICE_UNAVAILABLE');
- props.setProperty(userKey,String(used+1));props.setProperty(globalKey,String(all+1));
- const languages={sq:'Albanian',de:'German',en:'English',tr:'Turkish'};
- const r=UrlFetchApp.fetch('https://api.openai.com/v1/audio/speech',{method:'post',contentType:'application/json',headers:{Authorization:'Bearer '+key},payload:JSON.stringify({model,voice,input:text,instructions:'Speak naturally in '+languages[a.locale]+', as a warm television quiz presenter. Pause between question and each option. Do not add facts or recite scripture.',response_format:'mp3'}),muteHttpExceptions:true});
- if(r.getResponseCode()!==200)arenaError_('VOICE_UNAVAILABLE');const blob=r.getBlob();if(blob.getBytes().length>1000000)arenaError_('VOICE_TOO_LARGE');
- let folderId=props.getProperty('ARENA_PRIVATE_AUDIO_FOLDER');if(!folderId){folderId=DriveApp.createFolder('Quiz Arena Private Audio').getId();props.setProperty('ARENA_PRIVATE_AUDIO_FOLDER',folderId);}const file=DriveApp.getFolderById(folderId).createFile(blob.setName(hash+'.mp3')); // inherits private folder; never set public sharing
- media.appendRow([hash,'AI_NARRATOR',a.level,q.category,q.id,file.getId(),'OpenAI generated narrator',a.locale,'PRIVATE_READY',explanation?'explanation':'question']);
- return {success:true,audio:Utilities.base64Encode(blob.getBytes()),cache_key:hash,ai_generated:true};
+ if(text.length>3500)arenaError_('VOICE_TOO_LONG');const props=PropertiesService.getScriptProperties(),model=props.getProperty('ARENA_VOICE_MODEL')||'gpt-4o-mini-tts',voice='onyx';
+ const instructions='Speak naturally in '+({sq:'Albanian',de:'German',en:'English',tr:'Turkish'}[a.locale])+', as a warm adult male television quiz presenter, with a clear resonant lower register. Pause between question and each option. Do not add facts or recite scripture.';
+ const hash=arenaHash_('male-v2|'+a.locale+'|'+model+'|'+voice+'|'+instructions+'|'+text),media=getQuizSpreadsheet_().getSheetByName('Arena - Media');
+ const lock=LockService.getScriptLock(),leaseKey='voicelease:'+hash,lease=Date.now()+':'+Utilities.getUuid();let key;
+ lock.waitLock(5000);
+ try{
+  const cached=media.getDataRange().getValues().slice(1).find(r=>r[0]===hash&&r[8]==='PRIVATE_READY');
+  if(cached){const bytes=DriveApp.getFileById(String(cached[5])).getBlob().getBytes();return {success:true,audio:Utilities.base64Encode(bytes),cache_key:hash,ai_generated:true,voice};}
+  const pending=props.getProperty(leaseKey);if(pending&&Date.now()-Number(pending.split(':')[0])<90000)arenaError_('VOICE_PENDING');
+  const day=new Date().toISOString().slice(0,10),userKey='voice:'+day+':'+arenaHash_(u.id),globalKey='voice:'+day+':global';
+  const used=Number(props.getProperty(userKey)||0),all=Number(props.getProperty(globalKey)||0);if(used>=20||all>=100)arenaError_('VOICE_DAILY_LIMIT');key=props.getProperty('OPENAI_API_KEY');if(!key)arenaError_('VOICE_UNAVAILABLE');
+  props.setProperty(userKey,String(used+1));props.setProperty(globalKey,String(all+1));props.setProperty(leaseKey,lease);
+ }finally{lock.releaseLock();}
+ try{
+  // Slow OpenAI request MUST NOT hold the gameplay lock.
+  const r=UrlFetchApp.fetch('https://api.openai.com/v1/audio/speech',{method:'post',contentType:'application/json',headers:{Authorization:'Bearer '+key},payload:JSON.stringify({model,voice,input:text,instructions,response_format:'mp3'}),muteHttpExceptions:true});
+  if(r.getResponseCode()!==200)arenaError_('VOICE_UNAVAILABLE');const blob=r.getBlob(),bytes=blob.getBytes();if(bytes.length>1000000)arenaError_('VOICE_TOO_LARGE');
+  lock.waitLock(5000);
+  try{
+   let folderId=props.getProperty('ARENA_PRIVATE_AUDIO_FOLDER');if(!folderId){folderId=DriveApp.createFolder('Quiz Arena Private Audio').getId();props.setProperty('ARENA_PRIVATE_AUDIO_FOLDER',folderId);}
+   const file=DriveApp.getFolderById(folderId).createFile(blob.setName(hash+'.mp3'));
+   media.appendRow([hash,'AI_NARRATOR',a.level,q.category,q.id,file.getId(),'OpenAI generated male narrator',a.locale,'PRIVATE_READY',explanation?'explanation':'question']);
+  }finally{lock.releaseLock();}
+  return {success:true,audio:Utilities.base64Encode(bytes),cache_key:hash,ai_generated:true,voice};
+ }finally{
+  lock.waitLock(5000);try{if(props.getProperty(leaseKey)===lease)props.deleteProperty(leaseKey);}finally{lock.releaseLock();}
+ }
 }
 function testQuizSetup(){const report={tabs:QUIZ_TABS.concat(ARENA_PROGRESS_TABS).map(name=>({name,exists:!!getQuizSpreadsheet_().getSheetByName(name)})),questions:Object.fromEntries(['sq','de','en','tr'].map(locale=>[locale,arenaBank_(locale).length])),levels:arenaLevels_().length,voiceKeyConfigured:!!PropertiesService.getScriptProperties().getProperty('OPENAI_API_KEY')};console.log(JSON.stringify(report));return report;}
 function testArenaProgressTabs(){return testQuizSetup().tabs;}
@@ -119,11 +137,9 @@ function testArenaNarration(){
  const q=arenaBank_('sq').find(q=>q.id.startsWith('WET-'))||arenaBank_('sq')[0];
  if(!q)arenaError_('NO_QUESTION');
  const s={state:{questions:[q],index:0,locale:'sq',level:1,finished:false,feedback:{right:true}}};
- const lock=LockService.getScriptLock();lock.waitLock(30000);
- try{const question=arenaVoice_({id:'owner-editor-smoke'},s,{phase:'question'});
+ const question=arenaVoice_({id:'owner-editor-smoke'},s,{phase:'question'});
  const explanation=arenaVoice_({id:'owner-editor-smoke'},s,{phase:'explanation'});
  const reused=arenaVoice_({id:'owner-editor-smoke'},s,{phase:'question'});
- const report={success:true,questionBytes:Utilities.base64Decode(question.audio).length,explanationBytes:Utilities.base64Decode(explanation.audio).length,cacheReused:question.cache_key===reused.cache_key,aiGenerated:question.ai_generated&&explanation.ai_generated};
+ const report={success:true,questionBytes:Utilities.base64Decode(question.audio).length,explanationBytes:Utilities.base64Decode(explanation.audio).length,cacheReused:question.cache_key===reused.cache_key,aiGenerated:question.ai_generated&&explanation.ai_generated,voice:question.voice};
  console.log(JSON.stringify(report));return report;
- }finally{lock.releaseLock();}
 }

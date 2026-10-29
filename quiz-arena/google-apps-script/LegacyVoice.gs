@@ -21,7 +21,7 @@
 
 const ARENA_VOICE_CONFIG = {
   model: "gpt-4o-mini-tts",
-  voice: "coral",
+  voice: "onyx",
   format: "mp3",
   speed: 0.96,
   maxCharacters: 1200,
