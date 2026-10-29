@@ -35,7 +35,7 @@ class QuizBank(private val context:Context) {
     }
     fun parse(rows:JSONArray):List<QuizArenaActivity.Question> {
         val out=mutableListOf<QuizArenaActivity.Question>()
-        for(i in 0 until rows.length()) { val r=rows.getJSONArray(i);if(r.optString(1).uppercase(Locale.ROOT)!="PO")continue
+        for(i in 0 until rows.length()) { val r=rows.optJSONArray(i)?:continue;if(r.optString(1).trim().uppercase(Locale.ROOT)!="PO")continue
             if(r.optString(13).uppercase(Locale.ROOT).contains("RISHIKIM"))continue
             val choices=(4..8).map { r.optString(it).takeUnless { v->v=="null" }?:"" };val populated=choices.withIndex().filter { it.value.isNotBlank() };val oldCorrect=r.optString(9).trim().uppercase(Locale.ROOT).firstOrNull()?.minus('A') ?: -1
             val correct=populated.indexOfFirst { it.index==oldCorrect };val prompt=r.optString(3)
