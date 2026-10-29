@@ -22,6 +22,7 @@ jobs:
           node backend/tests/google-auth.test.cjs
           node backend/tests/wallet.test.cjs
           node backend/tests/quiz-arena.test.cjs
+          node backend/tests/arena-premium.test.cjs
       - name: Test bundled HTML5 game mechanics
         run: node --test tests/html5-games.test.cjs tests/html5-arcade.test.cjs
       - name: Test HTML5 interface in Chromium

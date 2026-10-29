@@ -13,7 +13,7 @@ object CloudWorker { val executor = Executors.newSingleThreadExecutor() }
 /** Authentication never waits behind queued game-save requests. */
 object AuthWorker { val executor = Executors.newSingleThreadExecutor() }
 class BackendException(val code: String, message: String) : Exception(message)
-class BackendClient {
+class BackendClient(private val endpoint: String = ENDPOINT) {
     companion object {
         private val DEADLINES = Executors.newSingleThreadScheduledExecutor()
         const val REQUEST_TIMEOUT_MS = 60_000L
@@ -22,7 +22,7 @@ class BackendClient {
     private val deadlines = DEADLINES
     fun request(action: String, data: JSONObject = JSONObject()): JSONObject {
         val payload = JSONObject(data.toString()).put("action", action).toString().toByteArray(Charsets.UTF_8)
-        var url = URL(ENDPOINT)
+        var url = URL(endpoint)
         var body: ByteArray? = payload
         val deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(REQUEST_TIMEOUT_MS)
         repeat(5) {
@@ -54,7 +54,7 @@ class BackendClient {
                     if (code != 200) throw BackendException("NETWORK", "Server unavailable ($code). Try again.")
                     val text = connection.inputStream.bufferedReader().use { reader ->
                         val out = StringBuilder(); val buffer = CharArray(4096)
-                        while (true) { if (expired.get() || System.nanoTime() >= deadline) throw timedOut(); val n = reader.read(buffer); if (n < 0) break; out.append(buffer, 0, n); if (out.length > 250_000) throw Exception("Response too large") }
+                        while (true) { if (expired.get() || System.nanoTime() >= deadline) throw timedOut(); val n = reader.read(buffer); if (n < 0) break; out.append(buffer, 0, n); if (out.length > 2_000_000) throw Exception("Response too large") }
                         out.toString()
                     }
                     val result = try { JSONObject(text) } catch (_: Exception) { throw BackendException("NETWORK", "Server did not return JSON. Try again.") }

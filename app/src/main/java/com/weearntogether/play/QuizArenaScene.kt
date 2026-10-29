@@ -14,9 +14,10 @@ class QuizArenaScene(context:Context):View(context){
     override fun onDetachedFromWindow(){attached=false;super.onDetachedFromWindow()}
     override fun onDraw(c:Canvas){super.onDraw(c);val save=c.save();c.scale(width/720f,height/340f);val time=android.os.SystemClock.uptimeMillis();val phase=time/650.0
         c.drawBitmap(studio,Rect(0,(studio.height*.068f).toInt(),studio.width,(studio.height*.776f).toInt()),RectF(0f,0f,720f,340f),p)
+        p.shader=RadialGradient((360+140*sin(phase)).toFloat(),80f,340f,intArrayOf(if(reaction<0)0x446f1636 else 0x3346bfff,Color.TRANSPARENT),null,Shader.TileMode.CLAMP);c.drawRect(0f,0f,720f,260f,p);p.shader=null
         val frame=when{reaction>0->3;reaction<0->5;speaking->if((time/220)%2==0L)1 else 6;else->if((time/2600)%2==0L)2 else 7}
         val src=Rect((frame%4)*host.width/4,(frame/4)*host.height/2,(frame%4+1)*host.width/4,(frame/4+1)*host.height/2)
-        c.save();c.clipRect(495f,4f,645f,142f);c.drawBitmap(host,src,RectF(495f,4f,645f,213f),p);c.restore()
+        c.save();c.clipRect(495f,4f,645f,142f);c.translate(0f,(sin(phase*2)*1.8).toFloat());c.drawBitmap(host,src,RectF(495f,4f,645f,213f),p);c.restore()
         val photo=portrait
         if(photo!=null){val r=RectF(75f,35f,183f,146f);p.color=Color.WHITE;c.drawRoundRect(70f,30f,188f,151f,20f,20f,p);c.save();val clip=Path().apply{addRoundRect(r,15f,15f,Path.Direction.CW)};c.clipPath(clip);val size=minOf(photo.width,photo.height);c.drawBitmap(photo,Rect((photo.width-size)/2,(photo.height-size)/2,(photo.width+size)/2,(photo.height+size)/2),r,p);c.restore()}
         else {p.color=0xff4a91df.toInt();c.drawCircle(129f,93f,43f,p);p.color=Color.WHITE;p.textAlign=Paint.Align.CENTER;p.textSize=44f;p.typeface=Typeface.DEFAULT_BOLD;c.drawText(playerName.take(1).uppercase(),129f,109f,p)}

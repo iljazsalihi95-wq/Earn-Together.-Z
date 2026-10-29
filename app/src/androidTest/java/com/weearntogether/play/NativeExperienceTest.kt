@@ -21,6 +21,9 @@ class NativeExperienceTest {
     }
     private fun views(v:View):List<View> = listOf(v)+if(v is ViewGroup)(0 until v.childCount).flatMap{views(v.getChildAt(it))} else emptyList()
     private fun shot(name:String){inst.waitForIdleSync();android.os.SystemClock.sleep(500);inst.waitForIdleSync();val bitmap=inst.uiAutomation.takeScreenshot();assertNotNull(bitmap);val dir=java.io.File(inst.targetContext.getExternalFilesDir(null),"native-qa").apply{mkdirs()};java.io.File(dir,"$name.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}}
+    @Test fun premiumArenaHasRealPlayerLanguageAndResumeControls(){val a=launch(ArenaCloudActivity::class.java);try{
+        val list=views(a.window.decorView);assertTrue(list.any{it is StudioArtwork});assertTrue(list.any{it is EditText});assertEquals(2,list.filterIsInstance<android.widget.Spinner>().size);assertTrue(list.filterIsInstance<TextView>().any{it.text.toString()=="TESTIM DHE MËSIM"});assertTrue(list.filterIsInstance<Button>().any{it.text.contains("AVATARIN")});shot("05-premium-arena-home")
+    }finally{inst.runOnMainSync{a.finish()}}}
     @Test fun homeShowsIllustratedCardsAndBallSort(){val a=launch(PremiumHomeActivity::class.java);try{
         val list=views(a.window.decorView);assertTrue(list.any{it is StudioArtwork});assertTrue(list.filterIsInstance<TextView>().any{it.text.toString()=="Ball Sort"});assertFalse(list.filterIsInstance<TextView>().any{it.text.contains("NATIVE HD 2D +")});shot("01-home")
     }finally{inst.runOnMainSync{a.finish()}}}

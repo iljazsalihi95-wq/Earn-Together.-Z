@@ -22,7 +22,8 @@
 <activity android:name=".AyetOfferwallActivity" android:exported="false"/>
 <activity android:name=".WalletActivity" android:exported="false"/>
 <activity android:name=".BallSortActivity" android:exported="false" android:screenOrientation="portrait"/>
-<activity android:name=".QuizArenaActivity" android:exported="false" android:screenOrientation="portrait" android:theme="@android:style/Theme.Material.Light.NoActionBar.Fullscreen"/>
+<activity android:name=".ArenaCloudActivity" android:exported="false" android:screenOrientation="portrait" />
+        <activity android:name=".QuizArenaActivity" android:exported="false" android:screenOrientation="portrait" android:theme="@android:style/Theme.Material.Light.NoActionBar.Fullscreen"/>
 <activity android:name=".MainActivity" android:exported="false"/>
 </application>
 </manifest>
