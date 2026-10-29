@@ -21,6 +21,7 @@ import java.util.Locale
 class BlockPuzzleActivity : Activity() {
     private lateinit var ads:NativeGameAds
     private lateinit var game: PremiumBlockPuzzleView
+    private lateinit var status: TextView
     private val loyalty by lazy { LoyaltyProgress(this) }
     private var dialogOpen=false
     private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt()
@@ -51,10 +52,18 @@ class BlockPuzzleActivity : Activity() {
         return ui("AUTO-SAVE • LEVEL $level/250 • BEST $best","AUTO-RUAJTJE • NIVELI $level/250 • REKORDI $best","AUTO-SPEICHERN • LEVEL $level/250 • BEST $best","SALVATAGGIO AUTO • LIVELLO $level/250 • BEST $best")
     }
 
+    private fun refreshSavedProgress(){
+        if(::status.isInitialized){
+            status.text=savedProgressLabel()
+            status.contentDescription=status.text
+        }
+    }
+
     override fun onCreate(savedInstanceState:Bundle?){
         super.onCreate(savedInstanceState);ads=NativeGameAds(this,"block");requestWindowFeature(Window.FEATURE_NO_TITLE);window.statusBarColor=Color.TRANSPARENT;window.navigationBarColor=Color.TRANSPARENT;window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);enterImmersive()
         game=PremiumBlockPuzzleView(this){
             loyalty.recordGameProgress(10)
+            refreshSavedProgress()
             ads.naturalBreak()
         }
         val host=FrameLayout(this).apply{setBackgroundColor(0xff070d20.toInt());isClickable=true;isFocusable=true;addView(game,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))}
@@ -66,7 +75,7 @@ class BlockPuzzleActivity : Activity() {
         host.addView(back,FrameLayout.LayoutParams(dp(104),dp(46),Gravity.TOP or Gravity.START).apply{leftMargin=dp(12);topMargin=dp(8)})
         val restart=chip("↻  "+ui("RESTART","RIFILLO","NEUSTART","RIPROVA"),true){confirmRestart()}
         host.addView(restart,FrameLayout.LayoutParams(dp(126),dp(46),Gravity.TOP or Gravity.END).apply{rightMargin=dp(12);topMargin=dp(8)})
-        val status=statusChip(savedProgressLabel())
+        status=statusChip(savedProgressLabel()).apply{contentDescription=text}
         host.addView(status,FrameLayout.LayoutParams(dp(300),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
 
         val guide=TextView(this).apply{
@@ -81,7 +90,7 @@ class BlockPuzzleActivity : Activity() {
             contentDescription=text;textSize=11f;setTextColor(0xff07152c.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.035f
             isClickable=true;isFocusable=true;elevation=dp(9).toFloat()
             background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xffffe27a.toInt(),0xffffb62e.toInt(),0xffffd65d.toInt())).apply{cornerRadius=dp(18).toFloat();setStroke(dp(1),0xffffefae.toInt())}
-            setOnClickListener{performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);ads.rewarded(onGameplayReward={game.videoRescue()})}
+            setOnClickListener{performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);ads.rewarded(onGameplayReward={game.videoRescue();refreshSavedProgress()})}
         }
         host.addView(videoBonus,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(38),Gravity.BOTTOM).apply{leftMargin=dp(20);rightMargin=dp(20);bottomMargin=dp(6)})
         setContentView(host)
@@ -91,11 +100,11 @@ class BlockPuzzleActivity : Activity() {
         if(dialogOpen)return;dialogOpen=true
         val dialog=AlertDialog.Builder(this).setTitle(ui("Restart level?","Rifillo nivelin?","Level neu starten?","Riavviare il livello?"))
             .setMessage(ui("The current board restarts. Saved best progress stays intact.","Tabela aktuale rifillon. Progresi më i mirë mbetet i ruajtur.","Das aktuelle Spielfeld startet neu. Der Bestfortschritt bleibt gespeichert.","La griglia attuale riparte. I migliori progressi restano salvati."))
-            .setNegativeButton(ui("CANCEL","ANULO","ABBRECHEN","ANNULLA"),null).setPositiveButton(ui("RESTART","RIFILLO","NEUSTART","RIPROVA")){_,_->game.restart()}.create()
-        dialog.setOnDismissListener{dialogOpen=false;enterImmersive()};dialog.show()
+            .setNegativeButton(ui("CANCEL","ANULO","ABBRECHEN","ANNULLA"),null).setPositiveButton(ui("RESTART","RIFILLO","NEUSTART","RIPROVA")){_,_->game.restart();refreshSavedProgress()}.create()
+        dialog.setOnDismissListener{dialogOpen=false;refreshSavedProgress();enterImmersive()};dialog.show()
     }
     override fun onWindowFocusChanged(hasFocus:Boolean){super.onWindowFocusChanged(hasFocus);if(hasFocus&&!dialogOpen)enterImmersive()}
-    override fun onResume(){super.onResume();if(::ads.isInitialized)ads.resume();if(!dialogOpen)enterImmersive()}
+    override fun onResume(){super.onResume();if(::ads.isInitialized)ads.resume();refreshSavedProgress();if(!dialogOpen)enterImmersive()}
     private fun enterImmersive(){if(android.os.Build.VERSION.SDK_INT>=30){window.setDecorFitsSystemWindows(false);window.insetsController?.let{it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars());it.systemBarsBehavior=WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE}}else{@Suppress("DEPRECATION") window.decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE}}
     override fun onPause(){if(::ads.isInitialized)ads.pause();super.onPause()}
     override fun onDestroy(){if(::ads.isInitialized)ads.destroy();super.onDestroy()}
