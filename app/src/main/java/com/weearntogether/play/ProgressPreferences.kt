@@ -8,8 +8,10 @@ import org.json.JSONObject
 object ProgressPreferences {
     val gameFiles = linkedMapOf(
         "LazyGarden" to listOf("lazy_garden_progress", "lazy_garden_wallet", "lazy_garden_milestone"),
-        "Block Puzzle" to listOf("block_puzzle"),
-        "Bubble Shooter" to listOf("bubble_shooter")
+        // Keep both legacy and Premium HD 2D stores in cloud snapshots. The active native
+        // renderers save to *_hd2d; retaining the legacy names avoids discarding older progress.
+        "Block Puzzle" to listOf("block_puzzle", "block_puzzle_hd2d"),
+        "Bubble Shooter" to listOf("bubble_shooter", "bubble_shooter_hd2d")
     )
     private val extras = listOf("wet_loyalty_progress", "wet_play_history", "color_lines", "neon_stack", "merge2048")
     fun user(context: Context): String? = context.getSharedPreferences("wet_cloud_session", Context.MODE_PRIVATE).getString("user_id", null)
