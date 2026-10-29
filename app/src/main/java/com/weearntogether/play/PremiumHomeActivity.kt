@@ -7,99 +7,61 @@ import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import com.weearntogether.lazygarden.LazyGardenActivity
 import android.widget.*
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.FullScreenContentCallback
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.rewarded.RewardItem
-import com.google.android.gms.ads.rewarded.RewardedAd
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
 /** Premium discovery home using only WET artwork/components. */
 class PremiumHomeActivity : Activity() {
-    private val blue=0xff4d7df3.toInt(); private val ink=0xff202432.toInt(); private val muted=0xff697386.toInt(); private val gold=0xffffbd4a.toInt()
-    private lateinit var ads:NativeGameAds;private lateinit var root:LinearLayout; private lateinit var host:FrameLayout; private var rewarded:RewardedAd?=null; private lateinit var rewardButton:Button; private lateinit var coinText:TextView
+    private val navy=0xff07152f.toInt(); private val blue=0xff3978f6.toInt(); private val purple=0xff713fe8.toInt(); private val ink=0xff202432.toInt(); private val muted=0xff697386.toInt(); private val gold=0xffffc857.toInt()
+    private lateinit var ads:NativeGameAds;private lateinit var root:LinearLayout; private lateinit var host:FrameLayout; private lateinit var rewardButton:Button; private lateinit var coinText:TextView
     private val loyalty by lazy { LoyaltyProgress(this) }; private val accounts by lazy { AccountStore(this) }
     private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt()
     private fun round(color:Int,r:Int=22)=GradientDrawable().apply{setColor(color);cornerRadius=dp(r).toFloat()}
+    private fun premiumGradient(r:Int=22)=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(navy,purple,blue)).apply{cornerRadius=dp(r).toFloat()}
     private fun text(s:String,size:Int,color:Int=ink,bold:Boolean=false)=TextView(this).apply{text=s;textSize=size.toFloat();setTextColor(color);if(bold)setTypeface(null,Typeface.BOLD)}
-    override fun onCreate(state:Bundle?){super.onCreate(state);window.statusBarColor=blue;window.navigationBarColor=Color.WHITE
+    override fun onCreate(state:Bundle?){super.onCreate(state);window.statusBarColor=navy;window.navigationBarColor=navy
         if(!accounts.isSignedIn()&&!(BuildConfig.DEBUG&&intent.getBooleanExtra("native_qa",false))){startActivity(Intent(this,MainActivity::class.java));finish();return}
-        ads=NativeGameAds(this,"home");build();rewardButton.isEnabled=true;rewardButton.text="Shiko"
+        ads=NativeGameAds(this,"home");build();rewardButton.isEnabled=true
     }
     private fun build(){
-        host=FrameLayout(this).apply{setBackgroundColor(Color.WHITE)}
+        host=FrameLayout(this).apply{setBackgroundColor(0xfff5f7ff.toInt())}
         val scroll=ScrollView(this).apply{isFillViewport=true;clipToPadding=false}
         root=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(16),0,dp(16),dp(108))};scroll.addView(root)
         host.addView(scroll,FrameLayout.LayoutParams(-1,-1));setContentView(host)
         host.setOnApplyWindowInsetsListener{v,i->v.setPadding(i.systemWindowInsetLeft,i.systemWindowInsetTop,i.systemWindowInsetRight,i.systemWindowInsetBottom);i};host.requestApplyInsets()
-        header();sectionTitle("★","Zgjedhja e sotme","Arena");featured();rewardCard();sectionTitle("🔥","Më të luajturat","Të gjitha");gameRow();sectionTitle("✦","Eksploro lojërat","Më shumë");compactGames();bottomNav();rewardButton.isEnabled=true;rewardButton.text="Shiko"
+        header();premiumHero();sectionTitle("★","Lojërat tona premium","Native HD 2D");nativeSpotlight();rewardCard();sectionTitle("🔥","Më të luajturat","Të gjitha");gameRow();sectionTitle("✦","Eksploro lojërat","Më shumë");compactGames();bottomNav()
     }
     private fun header(){
-        val h=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(18),dp(12),dp(16),dp(14));background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xff476aef.toInt(),0xff569cf9.toInt()));minimumHeight=dp(80)}
+        val h=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(18),dp(12),dp(16),dp(14));background=premiumGradient(0);minimumHeight=dp(82)}
         val portrait=PlayerPortrait.image(this).apply{setOnClickListener{PlayerPortrait.pick(this@PremiumHomeActivity)}}
         h.addView(portrait,LinearLayout.LayoutParams(dp(48),dp(48)).apply{rightMargin=dp(12)})
-        h.addView(text(accounts.currentName()?:"Lojtari",21,Color.WHITE,true).apply{maxLines=2},LinearLayout.LayoutParams(0,-2,1f))
-        coinText=text("★ ${loyalty.points}",16,Color.WHITE,true);h.addView(coinText)
+        val identity=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL};identity.addView(text("WE EARN TOGETHER",11,gold,true));identity.addView(text(accounts.currentName()?:"Lojtari",20,Color.WHITE,true));h.addView(identity,LinearLayout.LayoutParams(0,-2,1f))
+        coinText=text("★ ${loyalty.points}",16,gold,true).apply{gravity=Gravity.CENTER;background=round(0x33202a55,18);setPadding(dp(12),dp(8),dp(12),dp(8))};h.addView(coinText)
         root.addView(h,LinearLayout.LayoutParams(-1,-2).apply{leftMargin=-dp(16);rightMargin=-dp(16);bottomMargin=dp(14)})
     }
+    private fun premiumHero(){
+        val hero=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(20),dp(18),dp(20),dp(18));background=premiumGradient(24);elevation=dp(5).toFloat()}
+        hero.addView(text("PREMIUM PLAY STUDIO",12,gold,true));hero.addView(text("Luaj. Përparoni. Ruaje progresin.",25,Color.WHITE,true).apply{setPadding(0,dp(7),0,dp(5))});hero.addView(text("Block Puzzle, Bubble Shooter dhe Quiz Arena — lojëra native me progres të ruajtur.",14,0xffdce5ff.toInt()))
+        val b=Button(this).apply{text="HYR NË QUIZ ARENA  ›";isAllCaps=false;textSize=15f;setTextColor(navy);setTypeface(null,Typeface.BOLD);background=round(gold,15);setOnClickListener{startActivity(Intent(this@PremiumHomeActivity,QuizArenaActivity::class.java))}}
+        hero.addView(b,LinearLayout.LayoutParams(-1,dp(48)).apply{topMargin=dp(14)});root.addView(hero,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(18)})
+    }
     override fun onActivityResult(requestCode:Int,resultCode:Int,data:Intent?){super.onActivityResult(requestCode,resultCode,data);if(requestCode==PlayerPortrait.REQUEST){if(PlayerPortrait.receive(this,resultCode,data))build()}}
-
-    private fun sectionTitle(icon:String,title:String,more:String){
-        val r=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL}
-        r.addView(text("$icon  $title",21,ink,true),LinearLayout.LayoutParams(0,-2,1f))
-        r.addView(text("$more ›",12,blue,true).apply{setOnClickListener{startActivity(Intent(this@PremiumHomeActivity,Html5GamesActivity::class.java))}})
-        root.addView(r,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(10);bottomMargin=dp(14)})
+    private fun sectionTitle(icon:String,title:String,more:String){val r=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL};r.addView(text("$icon  $title",20,ink,true),LinearLayout.LayoutParams(0,-2,1f));r.addView(text(more,11,purple,true));root.addView(r,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(8);bottomMargin=dp(12)})}
+    private fun nativeSpotlight(){
+        val row=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL}
+        spotlight(row,"block","BLOCK PUZZLE","250 nivele"){startActivity(Intent(this@PremiumHomeActivity,BlockPuzzleActivity::class.java))}
+        spotlight(row,"bubble","BUBBLE SHOOTER","250 nivele"){startActivity(Intent(this@PremiumHomeActivity,BubbleShooterActivity::class.java))}
+        root.addView(row,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(16)})
     }
-    private fun featured(){
-        val c=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(10),dp(10),dp(12),dp(10));background=round(0xffeff7ff.toInt(),18);elevation=dp(3).toFloat();setOnClickListener{startActivity(Intent(this@PremiumHomeActivity,QuizArenaActivity::class.java))}}
-        c.addView(StudioArtwork(this,"arena").apply{background=round(Color.WHITE,14);clipToOutline=true},LinearLayout.LayoutParams(dp(94),dp(96)).apply{rightMargin=dp(12)})
-        val words=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL};words.addView(text("Quiz Arena",21,ink,true));words.addView(text("LOJA JONË",11,blue,true));words.addView(text("Sfidë diturie • 60 sekonda",13,muted));c.addView(words,LinearLayout.LayoutParams(0,-2,1f))
-        c.addView(Button(this).apply{text="Luaj";isAllCaps=false;textSize=16f;setTextColor(Color.WHITE);background=round(blue,14);setOnClickListener{startActivity(Intent(this@PremiumHomeActivity,QuizArenaActivity::class.java))}},LinearLayout.LayoutParams(dp(72),dp(46)))
-        root.addView(c,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(18)})
-    }
-    private fun rewardCard(){
-        val card=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(14),dp(12),dp(14),dp(10));background=round(0xfff6f8fc.toInt(),18)}
-        val row=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL}
-        row.addView(text("★",32,gold,true),LinearLayout.LayoutParams(dp(44),-2))
-        val words=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL};words.addView(text("Bonus me video",15,muted,true));words.addView(text("Luaj dhe përparoni",18,gold,true));row.addView(words,LinearLayout.LayoutParams(0,-2,1f))
-        rewardButton=Button(this).apply{text="Shiko";isAllCaps=false;textSize=15f;setTextColor(Color.WHITE);background=round(blue,14);setOnClickListener{showRewarded()}};row.addView(rewardButton,LinearLayout.LayoutParams(dp(82),dp(44)));card.addView(row)
-        card.addView(text("Pas videos së plotë • Verifikim në server",11,muted),LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(7)})
-        root.addView(card,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(12)})
-    }
-    private fun gameRow(){val hsv=HorizontalScrollView(this).apply{isHorizontalScrollBarEnabled=false;clipToPadding=false};val row=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL}
-        gameTile(row,"garden","LazyGarden","Restauro pronën"){startActivity(Intent(this,LazyGardenActivity::class.java))}
-        gameTile(row,"block","Block Puzzle","Bashko dhe pastro"){startActivity(Intent(this,BlockPuzzleActivity::class.java))}
-        gameTile(row,"bubble","Bubble Shooter","Shënjo dhe gjuaj"){startActivity(Intent(this,BubbleShooterActivity::class.java))}
-        gameTile(row,"arena","Quiz Arena","Loja jonë"){startActivity(Intent(this,QuizArenaActivity::class.java))}
-        hsv.addView(row);root.addView(hsv,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(20)})}
-
-    private fun gameTile(row:LinearLayout,key:String,title:String,subtitle:String,go:()->Unit){
-        val c=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(5),dp(5),dp(5),dp(8));background=round(Color.WHITE,18);elevation=dp(3).toFloat();setOnClickListener{go()}}
-        c.addView(StudioArtwork(this,key).apply{background=round(blue,14);clipToOutline=true;contentDescription=title},LinearLayout.LayoutParams(-1,dp(232)))
-        c.addView(text(title,18,ink,true).apply{setPadding(dp(8),dp(8),0,0)})
-        c.addView(Button(this).apply{text="LUAJ";textSize=16f;setTextColor(blue);background=round(0xffedf3ff.toInt(),12);setOnClickListener{go()}},LinearLayout.LayoutParams(-1,dp(46)).apply{topMargin=dp(6)})
-        row.addView(c,LinearLayout.LayoutParams(dp(174),-2).apply{rightMargin=dp(12);topMargin=dp(5);bottomMargin=dp(7)})
-    }
-    private fun compactGames(){
-        val ball=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(14),dp(12),dp(14),dp(12));background=round(0xfff2f7ff.toInt(),18);setOnClickListener{startActivity(Intent(this@PremiumHomeActivity,BallSortActivity::class.java))}}
-        ball.addView(BallSortCover(this),LinearLayout.LayoutParams(dp(80),dp(80)).apply{rightMargin=dp(14)});ball.addView(text("Ball Sort",20,ink,true),LinearLayout.LayoutParams(0,-2,1f));ball.addView(text("LUAJ ›",15,blue,true));root.addView(ball,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(12)})
-        val names=listOf("2048" to "2048", "word" to "Word Trails","memory" to "Memory Bloom","cups" to "Cup Shuffle","gamepix" to "GamePix")
-        for((key,title) in names){val c=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(12),dp(10),dp(12),dp(10));background=round(0xfff7f8fb.toInt(),18);setOnClickListener{when(key){"cups"->startActivity(Intent(this@PremiumHomeActivity,CupShuffleActivity::class.java));"gamepix"->startActivity(Intent(this@PremiumHomeActivity,GamePixActivity::class.java));else->startActivity(Intent(this@PremiumHomeActivity,Html5GamesActivity::class.java).putExtra("game",key))}}};c.addView(GameArtwork(this,key),LinearLayout.LayoutParams(dp(60),dp(60)).apply{rightMargin=dp(14)});c.addView(text(title,18,ink,true),LinearLayout.LayoutParams(0,-2,1f));c.addView(text("LUAJ ›",14,blue,true));root.addView(c,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(10)})}
-    }
-    private fun bottomNav(){
-        val bar=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER;background=round(Color.WHITE,26);elevation=dp(12).toFloat();setPadding(dp(8),dp(6),dp(8),dp(6))}
-        fun nav(icon:String,label:String,go:()->Unit){val v=text("$icon\n$label",12,blue,true).apply{gravity=Gravity.CENTER;setOnClickListener{go()}};bar.addView(v,LinearLayout.LayoutParams(0,dp(60),1f))}
-        nav("◉","Lojëra"){};nav("♧","Oferta"){startActivity(Intent(this,AyetOfferwallActivity::class.java))};nav("▣","Portofoli"){startActivity(Intent(this,WalletActivity::class.java))};nav("☺","Profili"){startActivity(Intent(this,MainActivity::class.java).putExtra("open_profile",true))}
-        host.addView(bar,FrameLayout.LayoutParams(-1,dp(78),Gravity.BOTTOM).apply{leftMargin=dp(10);rightMargin=dp(10);bottomMargin=dp(10)})
-    }
+    private fun spotlight(row:LinearLayout,key:String,title:String,sub:String,go:()->Unit){val c=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(7),dp(7),dp(7),dp(10));background=ColorDrawableCompat(premiumGradient(20));elevation=dp(4).toFloat();setOnClickListener{go()}};c.addView(StudioArtwork(this,key).apply{background=round(0x22ffffff,14);clipToOutline=true},LinearLayout.LayoutParams(-1,dp(126)));c.addView(text(title,15,Color.WHITE,true).apply{setPadding(dp(5),dp(9),0,0)});c.addView(text(sub,11,gold,true).apply{setPadding(dp(5),dp(2),0,0)});row.addView(c,LinearLayout.LayoutParams(0,-2,1f).apply{rightMargin=dp(7);leftMargin=dp(2)})}
+    private fun ColorDrawableCompat(g:GradientDrawable)=g
+    private fun rewardCard(){val card=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(14),dp(12),dp(14),dp(10));background=round(0xfffff8e8.toInt(),18)};val row=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL};row.addView(text("★",30,gold,true),LinearLayout.LayoutParams(dp(42),-2));val words=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL};words.addView(text("Bonus me video",15,ink,true));words.addView(text("Vetëm pas verifikimit",12,muted));row.addView(words,LinearLayout.LayoutParams(0,-2,1f));rewardButton=Button(this).apply{text="Shiko";isAllCaps=false;textSize=14f;setTextColor(Color.WHITE);background=round(purple,14);setOnClickListener{showRewarded()}};row.addView(rewardButton,LinearLayout.LayoutParams(dp(82),dp(44)));card.addView(row);card.addView(text("Asnjë shpërblim monetar nuk premtohet; progresi/bonusi regjistrohet vetëm sipas verifikimit të sistemit.",10,muted),LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(6)});root.addView(card,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(16)})}
+    private fun gameRow(){val hsv=HorizontalScrollView(this).apply{isHorizontalScrollBarEnabled=false;clipToPadding=false};val row=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL};gameTile(row,"garden","LazyGarden"){startActivity(Intent(this,LazyGardenActivity::class.java))};gameTile(row,"block","Block Puzzle"){startActivity(Intent(this,BlockPuzzleActivity::class.java))};gameTile(row,"bubble","Bubble Shooter"){startActivity(Intent(this,BubbleShooterActivity::class.java))};gameTile(row,"arena","Quiz Arena"){startActivity(Intent(this,QuizArenaActivity::class.java))};hsv.addView(row);root.addView(hsv,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(20)})}
+    private fun gameTile(row:LinearLayout,key:String,title:String,go:()->Unit){val c=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(5),dp(5),dp(5),dp(8));background=round(Color.WHITE,18);elevation=dp(3).toFloat();setOnClickListener{go()}};c.addView(StudioArtwork(this,key).apply{background=premiumGradient(14);clipToOutline=true;contentDescription=title},LinearLayout.LayoutParams(-1,dp(168)));c.addView(text(title,17,ink,true).apply{setPadding(dp(8),dp(8),0,0)});c.addView(text("LUAJ  ›",13,purple,true).apply{setPadding(dp(8),dp(5),0,0)});row.addView(c,LinearLayout.LayoutParams(dp(166),dp(232)).apply{rightMargin=dp(12);bottomMargin=dp(7)})}
+    private fun compactGames(){val ball=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(14),dp(12),dp(14),dp(12));background=round(0xffeef2ff.toInt(),18);setOnClickListener{startActivity(Intent(this@PremiumHomeActivity,BallSortActivity::class.java))}};ball.addView(BallSortCover(this),LinearLayout.LayoutParams(dp(72),dp(72)).apply{rightMargin=dp(14)});ball.addView(text("Ball Sort",19,ink,true),LinearLayout.LayoutParams(0,-2,1f));ball.addView(text("LUAJ ›",14,purple,true));root.addView(ball,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(10)});val names=listOf("2048" to "2048", "word" to "Word Trails","memory" to "Memory Bloom","cups" to "Cup Shuffle","gamepix" to "GamePix");for((key,title) in names){val c=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(12),dp(9),dp(12),dp(9));background=round(Color.WHITE,16);setOnClickListener{when(key){"cups"->startActivity(Intent(this@PremiumHomeActivity,CupShuffleActivity::class.java));"gamepix"->startActivity(Intent(this@PremiumHomeActivity,GamePixActivity::class.java));else->startActivity(Intent(this@PremiumHomeActivity,Html5GamesActivity::class.java).putExtra("game",key))}}};c.addView(GameArtwork(this,key),LinearLayout.LayoutParams(dp(56),dp(56)).apply{rightMargin=dp(12)});c.addView(text(title,17,ink,true),LinearLayout.LayoutParams(0,-2,1f));c.addView(text("LUAJ ›",13,purple,true));root.addView(c,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(9)})}}
+    private fun bottomNav(){val bar=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER;background=premiumGradient(26);elevation=dp(14).toFloat();setPadding(dp(8),dp(6),dp(8),dp(6))};fun nav(icon:String,label:String,go:()->Unit){val v=text("$icon\n$label",12,Color.WHITE,true).apply{gravity=Gravity.CENTER;setOnClickListener{go()}};bar.addView(v,LinearLayout.LayoutParams(0,dp(60),1f))};nav("◉","Lojëra"){};nav("♧","Oferta"){startActivity(Intent(this,AyetOfferwallActivity::class.java))};nav("▣","Portofoli"){startActivity(Intent(this,WalletActivity::class.java))};nav("☺","Profili"){startActivity(Intent(this,MainActivity::class.java).putExtra("open_profile",true))};host.addView(bar,FrameLayout.LayoutParams(-1,dp(78),Gravity.BOTTOM).apply{leftMargin=dp(10);rightMargin=dp(10);bottomMargin=dp(10)})}
     private fun showRewarded(){ads.rewarded(onGameplayReward={coinText.text="★ Në pritje";refreshBalance()})}
-    private fun refreshBalance(){if(!accounts.isSignedIn()||!::coinText.isInitialized)return;CloudWorker.executor.execute{val balance=runCatching{BackendClient().request("getBalance",org.json.JSONObject().put("session_token",accounts.requireToken()))}.getOrNull();runOnUiThread{if(!isFinishing&&!isDestroyed&&balance!=null){val pending=balance.optLong("pending_coins");coinText.text="★ ${balance.optLong("verified_coins")}"+if(pending>0)" (+$pending)" else "";coinText.contentDescription="Monedha të verifikuara dhe në pritje"}}}}
-
+    private fun refreshBalance(){if(!accounts.isSignedIn()||!::coinText.isInitialized)return;CloudWorker.executor.execute{val balance=runCatching{BackendClient().request("getBalance",org.json.JSONObject().put("session_token",accounts.requireToken()))}.getOrNull();runOnUiThread{if(!isFinishing&&!isDestroyed&&balance!=null){val pending=balance.optLong("pending_coins");coinText.text="★ ${balance.optLong("verified_coins")}"+if(pending>0)" (+$pending)" else ""}}}}
     override fun onResume(){super.onResume();if(::ads.isInitialized)ads.resume();refreshBalance()}
     override fun onPause(){if(::ads.isInitialized)ads.pause();super.onPause()}
     override fun onDestroy(){if(::ads.isInitialized)ads.destroy();super.onDestroy()}
