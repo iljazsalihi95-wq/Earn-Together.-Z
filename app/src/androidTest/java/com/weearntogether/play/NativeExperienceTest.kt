@@ -26,6 +26,28 @@ class NativeExperienceTest {
         inst.targetContext.getSharedPreferences("arena_offline_v1_guest",0).edit().clear().commit()
         inst.targetContext.getSharedPreferences("arena_cloud_guest",0).edit().clear().commit()
     }
+    @Test fun premiumHomeDestinationsLaunchWithoutRuntimeCrash(){
+        val destinations=listOf(
+            BlockPuzzleActivity::class.java,
+            BubbleShooterActivity::class.java,
+            BallSortActivity::class.java,
+            CupShuffleActivity::class.java,
+            QuizArenaActivity::class.java,
+            ArenaCloudActivity::class.java,
+            Html5GamesActivity::class.java,
+            GamePixActivity::class.java,
+            AyetOfferwallActivity::class.java,
+            WalletActivity::class.java,
+            MainActivity::class.java
+        )
+        destinations.forEach { type ->
+            val a=launch(type)
+            try {
+                assertFalse("${type.simpleName} finished during launch",a.isFinishing)
+                assertNotNull("${type.simpleName} did not create a window",a.window?.decorView)
+            } finally { inst.runOnMainSync{a.finish()} }
+        }
+    }
     @Test fun offlineEngineValidatesGradesResumesAndNeverDuplicatesPoints(){
         val ctx=inst.targetContext;ctx.getSharedPreferences("arena_offline_v1_qa_engine",0).edit().clear().commit()
         val store=ArenaOfflineStore(ctx,"qa_engine");assertTrue(store.questions.size>=80);assertTrue(store.questions.any{it.id.startsWith("general-")});assertTrue(store.categories().all{category->store.questions.any{it.category==category}})
