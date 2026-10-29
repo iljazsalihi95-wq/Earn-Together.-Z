@@ -43,7 +43,10 @@ class NativeExperienceTest {
         destinations.forEach { type ->
             val a=launch(type)
             try {
-                assertFalse("${type.simpleName} finished during launch",a.isFinishing)
+                val requiresAccount=type==Html5GamesActivity::class.java||type==WalletActivity::class.java
+                if(requiresAccount&&!AccountStore(inst.targetContext).isSignedIn()){
+                    assertTrue("${type.simpleName} must retain its signed-out access guard",a.isFinishing)
+                }else assertFalse("${type.simpleName} finished during launch",a.isFinishing)
                 assertNotNull("${type.simpleName} did not create a window",a.window?.decorView)
             } finally { inst.runOnMainSync{a.finish()} }
         }
