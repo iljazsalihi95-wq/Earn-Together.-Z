@@ -59,13 +59,22 @@ class BlockPuzzleActivity : Activity() {
         host.addView(restart,FrameLayout.LayoutParams(dp(126),dp(46),Gravity.TOP or Gravity.END).apply{rightMargin=dp(12);topMargin=dp(8)})
         val status=statusChip(ui("NATIVE HD 2D  •  AUTO-SAVE  •  250 LEVELS","NATIVE HD 2D  •  AUTO-RUAJTJE  •  250 NIVELE","NATIVE HD 2D  •  AUTO-SPEICHERN  •  250 LEVEL","NATIVE HD 2D  •  SALVATAGGIO AUTO  •  250 LIVELLI"))
         host.addView(status,FrameLayout.LayoutParams(dp(280),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
+
         val guide=TextView(this).apply{
             text=ui("DRAG A PIECE TO THE BOARD  •  CLEAR ROWS & COLUMNS","TËRHIQ PJESËN NË TABELË  •  PASTRO RRESHTA & KOLONA","STEIN AUFS FELD ZIEHEN  •  REIHEN & SPALTEN LÖSCHEN","TRASCINA IL PEZZO  •  COMPLETA RIGHE E COLONNE")
             textSize=10f;setTextColor(0xffb8c9ef.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.035f
             background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xcc09172f.toInt(),0xcc241248.toInt(),0xcc09172f.toInt())).apply{cornerRadius=dp(15).toFloat();setStroke(dp(1),0x4458c8ff)}
         }
-        guide.text="VIDEO BONUS • PASTRO NJË RRESHT";guide.setOnClickListener{ads.rewarded(onGameplayReward={game.videoRescue()})}
-        host.addView(guide,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(32),Gravity.BOTTOM).apply{leftMargin=dp(20);rightMargin=dp(20);bottomMargin=dp(6)})
+        host.addView(guide,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(30),Gravity.BOTTOM).apply{leftMargin=dp(20);rightMargin=dp(20);bottomMargin=dp(48)})
+
+        val videoBonus=TextView(this).apply{
+            text=ui("VIDEO BONUS • CLEAR ONE ROW","VIDEO BONUS • PASTRO NJË RRESHT","VIDEO-BONUS • EINE REIHE LÖSCHEN","BONUS VIDEO • CANCELLA UNA RIGA")
+            contentDescription=text;textSize=11f;setTextColor(0xff07152c.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.035f
+            isClickable=true;isFocusable=true;elevation=dp(9).toFloat()
+            background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xffffe27a.toInt(),0xffffb62e.toInt(),0xffffd65d.toInt())).apply{cornerRadius=dp(18).toFloat();setStroke(dp(1),0xffffefae.toInt())}
+            setOnClickListener{performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);ads.rewarded(onGameplayReward={game.videoRescue()})}
+        }
+        host.addView(videoBonus,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(38),Gravity.BOTTOM).apply{leftMargin=dp(20);rightMargin=dp(20);bottomMargin=dp(6)})
         setContentView(host)
     }
 
