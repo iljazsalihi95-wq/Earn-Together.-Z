@@ -24,6 +24,7 @@ class KnifeHitActivity:Activity(){
 }
 
 class KnifeHitView(context:android.content.Context):View(context){
+    private fun dp(value:Int)=(value*resources.displayMetrics.density).toInt()
     private val p=Paint(Paint.ANTI_ALIAS_FLAG);private val prefs=ProgressPreferences.open(context,"knife_hit")
     private var level=prefs.getInt("level",1).coerceIn(1,200);private var best=prefs.getInt("best",1).coerceAtLeast(1);private var score=prefs.getInt("score",0).coerceAtLeast(0)
     private var remaining=0;private var totalBlades=0;private var angle=0f;private var speed=1f;private var direction=1f;private var last=0L;private var hitFlash=0L;private var failFlash=0L;private var levelFlash=0L;private var boss=false;private var targetStyle=0
