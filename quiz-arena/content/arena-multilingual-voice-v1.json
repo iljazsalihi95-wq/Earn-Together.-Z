@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 1,
+  "sourceCollection": "quran-hadith-interactive-sq-v1.json",
+  "status": "partial_translations_pending_editorial_review",
+  "defaultLocale": "sq",
+  "supportedLocales": [
+    "sq",
+    "de",
+    "en",
+    "tr"
+  ],
+  "translationRule": "Keep immutable question id and correctIndex; Arabic Quranic source must not be machine-translated; recitation audio is separate verified source.",
+  "tabs": [
+    {
+      "locale": "sq",
+      "title": "Arena - Shqip",
+      "status": "source"
+    },
+    {
+      "locale": "de",
+      "title": "Arena - Deutsch",
+      "status": "partial"
+    },
+    {
+      "locale": "en",
+      "title": "Arena - English",
+      "status": "partial"
+    },
+    {
+      "locale": "tr",
+      "title": "Arena - Türkçe",
+      "status": "partial"
+    }
+  ],
+  "translations": {
+    "interactive-sq-001": {
+      "de": {
+        "question": "Welche Sure beginnt mit dem Vers 'Qul huwa-llahu ahad'?",
+        "options": [
+          "Al-Falaq",
+          "An-Nas",
+          "Al-Ikhlas",
+          "Al-Kawthar"
+        ],
+        "explanation": "Dies ist der erste Vers der Sure Al-Ikhlas (112:1)."
+      },
+      "en": {
+        "question": "Which surah begins with the verse 'Qul huwa Allahu ahad'?",
+        "options": [
+          "Al-Falaq",
+          "An-Nas",
+          "Al-Ikhlas",
+          "Al-Kawthar"
+        ],
+        "explanation": "This is the first verse of Surah Al-Ikhlas (112:1)."
+      },
+      "tr": {
+        "question": "'Kul hüvallâhü ehad' ayetiyle başlayan sure hangisidir?",
+        "options": [
+          "Felak",
+          "Nâs",
+          "İhlâs",
+          "Kevser"
+        ],
+        "explanation": "Bu, İhlâs suresinin ilk ayetidir (112:1)."
+      }
+    },
+    "interactive-sq-002": {
+      "de": {
+        "question": "Welche Sure beginnt mit 'Qul a'udhu bi-rabbi-l-falaq'?",
+        "options": [
+          "An-Nas",
+          "Al-Falaq",
+          "Al-Ikhlas",
+          "Al-Asr"
+        ],
+        "explanation": "Dies ist der erste Vers der Sure Al-Falaq (113:1)."
+      },
+      "en": {
+        "question": "Which surah begins with 'Qul a'udhu bi-rabbil-falaq'?",
+        "options": [
+          "An-Nas",
+          "Al-Falaq",
+          "Al-Ikhlas",
+          "Al-Asr"
+        ],
+        "explanation": "This is the first verse of Surah Al-Falaq (113:1)."
+      },
+      "tr": {
+        "question": "'Kul eûzü birabbil felak' ifadesiyle başlayan sure hangisidir?",
+        "options": [
+          "Nâs",
+          "Felak",
+          "İhlâs",
+          "Asr"
+        ],
+        "explanation": "Bu, Felak suresinin ilk ayetidir (113:1)."
+      }
+    },
+    "interactive-sq-003": {
+      "de": {
+        "question": "Welche Sure beginnt mit 'Qul a'udhu bi-rabbi-n-nas'?",
+        "options": [
+          "An-Nas",
+          "Al-Falaq",
+          "Al-Fatiha",
+          "Al-Kawthar"
+        ],
+        "explanation": "Dies ist der erste Vers der Sure An-Nas (114:1)."
+      },
+      "en": {
+        "question": "Which surah begins with 'Qul a'udhu bi-rabbin-nas'?",
+        "options": [
+          "An-Nas",
+          "Al-Falaq",
+          "Al-Fatiha",
+          "Al-Kawthar"
+        ],
+        "explanation": "This is the first verse of Surah An-Nas (114:1)."
+      },
+      "tr": {
+        "question": "'Kul eûzü birabbin nâs' ifadesiyle başlayan sure hangisidir?",
+        "options": [
+          "Nâs",
+          "Felak",
+          "Fâtiha",
+          "Kevser"
+        ],
+        "explanation": "Bu, Nâs suresinin ilk ayetidir (114:1)."
+      }
+    },
+    "interactive-sq-010": {
+      "de": {
+        "question": "Ergänze den Hadith: 'Die Taten werden nach den ____ beurteilt.'",
+        "options": [
+          "Vermögenswerten",
+          "Absichten",
+          "Lebensjahren",
+          "Orten"
+        ],
+        "explanation": "Der Hadith betont die Bedeutung der Absicht (Niyya)."
+      },
+      "en": {
+        "question": "Complete the hadith: 'Actions are judged by ____.'",
+        "options": [
+          "wealth",
+          "intentions",
+          "age",
+          "location"
+        ],
+        "explanation": "The hadith emphasizes intentions (niyyah)."
+      },
+      "tr": {
+        "question": "Hadisi tamamlayın: 'Ameller ancak ____ göredir.'",
+        "options": [
+          "servete",
+          "niyetlere",
+          "yaşa",
+          "yere"
+        ],
+        "explanation": "Hadis, niyetin önemini vurgular."
+      }
+    },
+    "interactive-sq-012": {
+      "de": {
+        "question": "Ergänze den Hadith: 'Reinheit ist die Hälfte des ____.'",
+        "options": [
+          "Vermögens",
+          "Wissens",
+          "Glaubens",
+          "Reisens"
+        ],
+        "explanation": "Sahih Muslim 223 beschreibt Reinheit als Hälfte des Glaubens."
+      },
+      "en": {
+        "question": "Complete the hadith: 'Purification is half of ____.'",
+        "options": [
+          "wealth",
+          "knowledge",
+          "faith",
+          "travel"
+        ],
+        "explanation": "Sahih Muslim 223 states that purification is half of faith."
+      },
+      "tr": {
+        "question": "Hadisi tamamlayın: 'Temizlik ____ yarısıdır.'",
+        "options": [
+          "servetin",
+          "bilginin",
+          "imanın",
+          "yolculuğun"
+        ],
+        "explanation": "Sahih Müslim 223'te temizliğin imanın yarısı olduğu bildirilir."
+      }
+    }
+  },
+  "voice": {
+    "provider": "server_proxy_required",
+    "configKeysNonSecret": [
+      "QUIZ_VOICE_BASE_URL",
+      "QUIZ_VOICE_DEFAULT_LOCALE",
+      "QUIZ_VOICE_ENABLED"
+    ],
+    "apiSecretStorage": "server_environment_only",
+    "neverStoreIn": [
+      "Android gradle.properties",
+      "BuildConfig",
+      "APK",
+      "GitHub repository"
+    ],
+    "quranRecitation": "verified licensed human recitation only; no generated Quran audio by default",
+    "fallback": "localized device TTS for non-Quran UI text",
+    "cacheKey": "questionId+locale+voiceVersion",
+    "request": {
+      "questionId": "string",
+      "locale": "sq|de|en|tr",
+      "segment": "question|option|explanation"
+    },
+    "response": {
+      "audioUrl": "short-lived HTTPS URL",
+      "expiresAt": "ISO8601",
+      "voiceVersion": "string"
+    }
+  }
+}
