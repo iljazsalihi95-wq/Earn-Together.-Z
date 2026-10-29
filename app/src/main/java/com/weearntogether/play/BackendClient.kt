@@ -13,7 +13,7 @@ object CloudWorker { val executor = Executors.newSingleThreadExecutor() }
 /** Authentication never waits behind queued game-save requests. */
 object AuthWorker { val executor = Executors.newSingleThreadExecutor() }
 class BackendException(val code: String, message: String) : Exception(message)
-class BackendClient(private val endpoint: String = ENDPOINT) {
+class BackendClient(private val endpoint: String = ENDPOINT, private val timeoutMs:Long = REQUEST_TIMEOUT_MS) {
     companion object {
         private val DEADLINES = Executors.newSingleThreadScheduledExecutor()
         const val REQUEST_TIMEOUT_MS = 60_000L
@@ -24,7 +24,7 @@ class BackendClient(private val endpoint: String = ENDPOINT) {
         val payload = JSONObject(data.toString()).put("action", action).toString().toByteArray(Charsets.UTF_8)
         var url = URL(endpoint)
         var body: ByteArray? = payload
-        val deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(REQUEST_TIMEOUT_MS)
+        val deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeoutMs)
         repeat(5) {
             if (Thread.currentThread().isInterrupted || System.nanoTime() >= deadline) throw timedOut()
             require(url.protocol == "https" && url.host in setOf("script.google.com", "script.googleusercontent.com"))

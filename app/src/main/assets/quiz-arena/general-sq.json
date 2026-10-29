@@ -19,10 +19,11 @@
       "explanation": "Mërkuri është planeti më i afërt me Diellin.",
       "sources": [
         {
-          "work": "NASA Solar System Exploration, Mercury"
+          "work": "NASA Science — About the Planets",
+          "url": "https://science.nasa.gov/solar-system/planets/"
         }
       ],
-      "reviewStatus": "needs_editorial_verification"
+      "reviewStatus": "verified_source"
     },
     {
       "id": "general-sq-002",
@@ -82,7 +83,8 @@
           "work": "Llogaritje aritmetike"
         }
       ],
-      "reviewStatus": "needs_editorial_verification"
+      "reviewStatus": "verified_calculation",
+      "verification": "Checked arithmetic or elementary Euclidean geometry, 2026-10-29"
     },
     {
       "id": "general-sq-005",
@@ -262,7 +264,8 @@
           "work": "Gjeometri elementare"
         }
       ],
-      "reviewStatus": "needs_editorial_verification"
+      "reviewStatus": "verified_calculation",
+      "verification": "Checked arithmetic or elementary Euclidean geometry, 2026-10-29"
     },
     {
       "id": "general-sq-014",
@@ -402,7 +405,8 @@
           "work": "Gjeometri elementare"
         }
       ],
-      "reviewStatus": "needs_editorial_verification"
+      "reviewStatus": "verified_calculation",
+      "verification": "Checked arithmetic or elementary Euclidean geometry, 2026-10-29"
     },
     {
       "id": "general-sq-021",
@@ -462,7 +466,8 @@
           "work": "Aritmetikë"
         }
       ],
-      "reviewStatus": "needs_editorial_verification"
+      "reviewStatus": "verified_calculation",
+      "verification": "Checked arithmetic or elementary Euclidean geometry, 2026-10-29"
     },
     {
       "id": "general-sq-024",
@@ -499,10 +504,11 @@
       "explanation": "Saturni njihet për sistemin e gjerë të unazave.",
       "sources": [
         {
-          "work": "NASA Saturn"
+          "work": "NASA Science — About the Planets",
+          "url": "https://science.nasa.gov/solar-system/planets/"
         }
       ],
-      "reviewStatus": "needs_editorial_verification"
+      "reviewStatus": "verified_source"
     },
     {
       "id": "general-sq-029",
