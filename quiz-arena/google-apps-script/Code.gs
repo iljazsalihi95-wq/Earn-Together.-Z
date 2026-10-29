@@ -28,14 +28,14 @@ function arenaBank_(locale){
   for(const r of sh.getDataRange().getDisplayValues().slice(1)){
    if(r[1]!=='PO'||r[13]!=='MIRATUAR'||r[12]!==locale)continue;
    const q={id:String(r[0]),category:r[2],type:r[3],question:r[4],choices:r.slice(5,9),correct:String(r[9]).charCodeAt(0)-65,explanation:r[10],source:r[11],recitation:r[15]||''};
-   if(q.choices.every(x=>x&&x.trim())&&q.correct>=0&&q.correct<4&&q.explanation)out.push(q);
+   if(q.question&&q.choices.every(x=>x&&x.trim())&&q.correct>=0&&q.correct<4&&q.explanation)out.push(q);
   }
  }
  // Preserve the original approved bank; only four-option questions enter competitive rounds.
  if(locale==='sq')for(const r of arenaRows_('Pyetjet').slice(3)){
   if(r[1]!=='PO'||String(r[13]).includes('RISHIKIM')||r[8])continue;
-  const q={id:'sheet-'+String(r[0]),category:String(r[2]),type:'single_select',question:String(r[3]),choices:r.slice(4,8).map(String),correct:String(r[9]).charCodeAt(0)-65,explanation:String(r[10]),source:String(r[11]),recitation:''};
-  if(q.choices.every(Boolean)&&q.correct>=0&&q.correct<4&&q.explanation)out.push(q);
+  const q={id:'sheet-'+String(r[0]),category:String(r[2]),type:'single_select',question:String(r[3]||''),choices:r.slice(4,8).map(String),correct:String(r[9]).charCodeAt(0)-65,explanation:String(r[10]||''),source:String(r[11]||''),recitation:''};
+  if(q.question&&q.choices.every(Boolean)&&q.correct>=0&&q.correct<4&&q.explanation)out.push(q);
  }
  return out.filter((q,i)=>out.findIndex(x=>x.id===q.id||x.question.trim().toLowerCase()===q.question.trim().toLowerCase())===i);
 }
@@ -111,5 +111,5 @@ function arenaVoice_(u,s,p){
  media.appendRow([hash,'AI_NARRATOR',a.level,q.category,q.id,file.getId(),'OpenAI generated narrator',a.locale,'PRIVATE_READY',explanation?'explanation':'question']);
  return {success:true,audio:Utilities.base64Encode(blob.getBytes()),cache_key:hash,ai_generated:true};
 }
-function testQuizSetup(){return {tabs:QUIZ_TABS.concat(ARENA_PROGRESS_TABS).map(name=>({name,exists:!!getQuizSpreadsheet_().getSheetByName(name)})),voiceKeyConfigured:!!PropertiesService.getScriptProperties().getProperty('OPENAI_API_KEY')};}
+function testQuizSetup(){const report={tabs:QUIZ_TABS.concat(ARENA_PROGRESS_TABS).map(name=>({name,exists:!!getQuizSpreadsheet_().getSheetByName(name)})),questions:Object.fromEntries(['sq','de','en','tr'].map(locale=>[locale,arenaBank_(locale).length])),levels:arenaLevels_().length,voiceKeyConfigured:!!PropertiesService.getScriptProperties().getProperty('OPENAI_API_KEY')};console.log(JSON.stringify(report));return report;}
 function testArenaProgressTabs(){return testQuizSetup().tabs;}
