@@ -29,6 +29,7 @@ class ArenaCloudActivity:Activity(){
     private val accounts by lazy{AccountStore(this)}
     private val prefs by lazy{getSharedPreferences("arena_cloud_"+(accounts.currentUserId()?:"guest"),MODE_PRIVATE)}
     private val client=BackendClient("https://script.google.com/macros/s/AKfycbzu9rso0BO_UhLBPi3TMqIQl44tZ12r0n-t143ydmWOoiVMPbm_YA1uF0rImIfEcvaERw/exec",8000)
+    private val voiceClient=BackendClient("https://script.google.com/macros/s/AKfycbzu9rso0BO_UhLBPi3TMqIQl44tZ12r0n-t143ydmWOoiVMPbm_YA1uF0rImIfEcvaERw/exec",60_000)
     private var locale="sq";private var category="";private var session:JSONObject?=null;private var bootstrap:JSONObject?=null
     private var busy=false;private var live=false;private var resumed=false;private var audioEnabled=true
     private var deadline=0L;private var tick=-1;private var timer:android.os.CountDownTimer?=null
@@ -97,7 +98,7 @@ class ArenaCloudActivity:Activity(){
         if(cachedAudio.exists()){runCatching{playCached()}.onFailure{cachedAudio.delete();ttsFallback(phase)};return}
         if(!accounts.isSignedIn()){ttsFallback(phase);return}
         val payload=JSONObject().put("session_id",s.getString("session_id")).put("phase",phase).put("locale",locale).put("session_token",accounts.requireToken())
-        voiceNetwork.execute{val r=runCatching{client.request("arenaVoice",payload)};runOnUiThread{if(isFinishing||isDestroyed||!resumed||generation!=voiceGeneration||version!=modeVersion)return@runOnUiThread
+        voiceNetwork.execute{val r=runCatching{voiceClient.request("arenaVoice",payload)};runOnUiThread{if(isFinishing||isDestroyed||!resumed||generation!=voiceGeneration||version!=modeVersion)return@runOnUiThread
             r.onSuccess{runCatching{cachedAudio.writeBytes(android.util.Base64.decode(it.getString("audio"),android.util.Base64.DEFAULT));playCached()}.onFailure{ttsFallback(phase)}}.onFailure{ttsFallback(phase)}
         }}
     }

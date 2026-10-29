@@ -113,3 +113,17 @@ function arenaVoice_(u,s,p){
 }
 function testQuizSetup(){const report={tabs:QUIZ_TABS.concat(ARENA_PROGRESS_TABS).map(name=>({name,exists:!!getQuizSpreadsheet_().getSheetByName(name)})),questions:Object.fromEntries(['sq','de','en','tr'].map(locale=>[locale,arenaBank_(locale).length])),levels:arenaLevels_().length,voiceKeyConfigured:!!PropertiesService.getScriptProperties().getProperty('OPENAI_API_KEY')};console.log(JSON.stringify(report));return report;}
 function testArenaProgressTabs(){return testQuizSetup().tabs;}
+
+/** Owner/editor smoke test; never routed from doPost. Logs metadata, never audio/key. */
+function testArenaNarration(){
+ const q=arenaBank_('sq').find(q=>q.id.startsWith('WET-'))||arenaBank_('sq')[0];
+ if(!q)arenaError_('NO_QUESTION');
+ const s={state:{questions:[q],index:0,locale:'sq',level:1,finished:false,feedback:{right:true}}};
+ const lock=LockService.getScriptLock();lock.waitLock(30000);
+ try{const question=arenaVoice_({id:'owner-editor-smoke'},s,{phase:'question'});
+ const explanation=arenaVoice_({id:'owner-editor-smoke'},s,{phase:'explanation'});
+ const reused=arenaVoice_({id:'owner-editor-smoke'},s,{phase:'question'});
+ const report={success:true,questionBytes:Utilities.base64Decode(question.audio).length,explanationBytes:Utilities.base64Decode(explanation.audio).length,cacheReused:question.cache_key===reused.cache_key,aiGenerated:question.ai_generated&&explanation.ai_generated};
+ console.log(JSON.stringify(report));return report;
+ }finally{lock.releaseLock();}
+}

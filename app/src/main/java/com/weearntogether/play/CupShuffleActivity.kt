@@ -44,6 +44,8 @@ class CupShuffleActivity : Activity() {
     private var ballCup = 0
     private var busy = true
     private var round = 0
+    private var disposed = false
+    private var shuffleAnimation: AnimatorSet? = null
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
     private fun gradient(a: Int, b: Int, radius: Float) = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(a, b)).apply { cornerRadius = radius }
@@ -125,6 +127,7 @@ class CupShuffleActivity : Activity() {
     }
 
     private fun startRound() {
+        if (disposed || isFinishing) return
         if (cups.size != 3) { handler.postDelayed({ startRound() }, 200); return }
         busy = true; round++
         ballCup = Random.nextInt(3)
@@ -151,6 +154,7 @@ class CupShuffleActivity : Activity() {
     }
 
     private fun shuffleStep(step: Int, total: Int) {
+        if (disposed || isFinishing) return
         if (step >= total) { busy = false; message.text = "CHOOSE THE CUP"; tone.startTone(ToneGenerator.TONE_PROP_ACK, 80); return }
         var a = Random.nextInt(3); var b = Random.nextInt(3)
         while (b == a) b = Random.nextInt(3)
@@ -162,9 +166,10 @@ class CupShuffleActivity : Activity() {
         val animB = ObjectAnimator.ofFloat(cb, View.X, bx, ax)
         val liftA = ObjectAnimator.ofFloat(ca, View.TRANSLATION_Y, 0f, up, 0f)
         val liftB = ObjectAnimator.ofFloat(cb, View.TRANSLATION_Y, 0f, -up, 0f)
-        AnimatorSet().apply {
+        shuffleAnimation = AnimatorSet().apply {
             playTogether(animA, animB, liftA, liftB); this.duration = duration; interpolator = AccelerateDecelerateInterpolator()
             addListener(object : android.animation.AnimatorListenerAdapter() { override fun onAnimationEnd(animation: android.animation.Animator) {
+                if (disposed || isFinishing) return
                 val temp = cups[a]; cups[a] = cups[b]; cups[b] = temp
                 cups.forEachIndexed { idx, cup -> cup.tag = idx }
                 if (ballCup == a) ballCup = b else if (ballCup == b) ballCup = a
@@ -205,5 +210,5 @@ class CupShuffleActivity : Activity() {
 
     private fun restartGame() { handler.removeCallbacksAndMessages(null); score = 0; lives = 3; round = 0; save(); updateHud(); message.text = "Watch the golden ball"; handler.postDelayed({ startRound() }, 450) }
 
-    override fun onDestroy() { handler.removeCallbacksAndMessages(null); tone.release(); save(); ads.destroy(); super.onDestroy() }
+    override fun onDestroy() { disposed = true; handler.removeCallbacksAndMessages(null); shuffleAnimation?.removeAllListeners(); shuffleAnimation?.cancel(); shuffleAnimation = null; cups.forEach { it.animate().cancel() }; tone.release(); save(); ads.destroy(); super.onDestroy() }
 }
