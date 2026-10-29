@@ -131,8 +131,8 @@ class NativeExperienceTest {
             waitUntil{views(a.window.decorView).filterIsInstance<Button>().any{it.text.startsWith("HYR NË ARENË")}}
             inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("HYR NË ARENË")}.performClick()}
             waitUntil{views(a.window.decorView).filterIsInstance<QuizArenaScene>().any{it.speaking}}
-            val scene=views(a.window.decorView).filterIsInstance<QuizArenaScene>().first();assertTrue(scene.questionPrompt.contains("ekranin qendror"));assertEquals("LEXIM",scene.timerText);assertEquals(0,readyCalls);assertEquals(0,answerCalls);assertFalse(views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.isEnabled);shot("09-studio-reading-question")
-            waitUntil{readyCalls==1&&views(a.window.decorView).filterIsInstance<QuizArenaScene>().any{it.timerText=="00:01"}};shot("10-studio-answer-clock")
+            val scene=views(a.window.decorView).filterIsInstance<QuizArenaScene>().first();assertTrue(scene.questionPrompt.contains("ekranin qendror"));assertEquals("00:01",scene.timerText);assertEquals(0,readyCalls);assertEquals(0,answerCalls);assertFalse(views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.isEnabled);shot("09-studio-reading-question")
+            waitUntil{readyCalls==1&&views(a.window.decorView).filterIsInstance<QuizArenaScene>().any{it.timerText=="00:01"&&it.stageStatus=="KOHA E PËRGJIGJES"}};shot("10-studio-answer-clock")
             waitUntil{views(a.window.decorView).filterIsInstance<Button>().any{it.text=="SHFAQ PËRGJIGJEN DHE SHPJEGIMIN"}}
             assertEquals(0,answerCalls);assertFalse(views(a.window.decorView).filterIsInstance<Button>().any{it.text=="VAZHDO ›"})
             inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="SHFAQ PËRGJIGJEN DHE SHPJEGIMIN"}.performClick()}
