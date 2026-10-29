@@ -50,3 +50,12 @@ function synthesizePrivateVoice_(text, voice) {
   if(response.getResponseCode()!==200) throw new Error('Voice request failed: HTTP '+response.getResponseCode());
   return Utilities.base64Encode(response.getBlob().getBytes());
 }
+
+// Quiz Arena Premium: configured player progress tables
+const ARENA_PROGRESS_TABS = ['Arena - Lojtaret', 'Arena - Sesionet', 'Arena - Nivelet', 'Arena - Progresi', 'Arena - Media'];
+function testArenaProgressTabs() {
+  const ss = getQuizSpreadsheet_();
+  const result = ARENA_PROGRESS_TABS.map(name => ({name:name, exists:!!ss.getSheetByName(name)}));
+  Logger.log(JSON.stringify(result));
+  return result;
+}
