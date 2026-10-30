@@ -2,6 +2,7 @@ package com.weearntogether.play
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -44,8 +45,6 @@ class BlockPuzzleActivity : Activity() {
     }
 
     private fun savedProgressLabel():String{
-        // PremiumBlockPuzzleView persists to block_puzzle_hd2d. Read the same store here so
-        // the header always reflects the board/campaign the player will actually resume.
         val prefs=ProgressPreferences.open(this,"block_puzzle_hd2d")
         val level=prefs.getInt("level",1).coerceIn(1,250)
         val best=prefs.getInt("best",0).coerceAtLeast(0)
@@ -53,46 +52,29 @@ class BlockPuzzleActivity : Activity() {
     }
 
     private fun refreshSavedProgress(){
-        if(::status.isInitialized){
-            status.text=savedProgressLabel()
-            status.contentDescription=status.text
-        }
+        if(::status.isInitialized){status.text=savedProgressLabel();status.contentDescription=status.text}
     }
 
     override fun onCreate(savedInstanceState:Bundle?){
         super.onCreate(savedInstanceState);ads=NativeGameAds(this,"block");requestWindowFeature(Window.FEATURE_NO_TITLE);window.statusBarColor=Color.TRANSPARENT;window.navigationBarColor=Color.TRANSPARENT;window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);enterImmersive()
-        game=PremiumBlockPuzzleView(this){
-            loyalty.recordGameProgress(10)
-            refreshSavedProgress()
-            ads.naturalBreak()
-        }
-        val host=FrameLayout(this).apply{setBackgroundColor(0xff070d20.toInt());isClickable=true;isFocusable=true;addView(game,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))}
+        game=PremiumBlockPuzzleView(this){loyalty.recordGameProgress(10);refreshSavedProgress();ads.naturalBreak()}
+        val host=FrameLayout(this).apply{setBackgroundColor(0xff070d20.toInt());isClickable=true;isFocusable=true;addView(game,FrameLayout.LayoutParams(-1,-1))}
         val header=View(this).apply{background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff0a1a3b.toInt(),0xff241050.toInt(),0xff071a38.toInt())).apply{setStroke(dp(1),0x5569cfff)};elevation=dp(4).toFloat()}
-        host.addView(header,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(108),Gravity.TOP))
-        val title=TextView(this).apply{text="BLOCK PUZZLE HD 2D";textSize=17f;setTextColor(Color.WHITE);gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.07f;elevation=dp(8).toFloat()}
-        host.addView(title,FrameLayout.LayoutParams(dp(190),dp(46),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(8)})
-        val back=chip("‹  "+ui("BACK","PRAPA","ZURÜCK","INDIETRO")){finish()}
-        host.addView(back,FrameLayout.LayoutParams(dp(104),dp(46),Gravity.TOP or Gravity.START).apply{leftMargin=dp(12);topMargin=dp(8)})
-        val restart=chip("↻  "+ui("RESTART","RIFILLO","NEUSTART","RIPROVA"),true){confirmRestart()}
-        host.addView(restart,FrameLayout.LayoutParams(dp(126),dp(46),Gravity.TOP or Gravity.END).apply{rightMargin=dp(12);topMargin=dp(8)})
-        status=statusChip(savedProgressLabel()).apply{contentDescription=text}
-        host.addView(status,FrameLayout.LayoutParams(dp(300),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
+        host.addView(header,FrameLayout.LayoutParams(-1,dp(108),Gravity.TOP))
+        host.addView(TextView(this).apply{text="BLOCK PUZZLE HD 2D";textSize=17f;setTextColor(Color.WHITE);gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.07f;elevation=dp(8).toFloat()},FrameLayout.LayoutParams(dp(190),dp(46),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(8)})
+        host.addView(chip("‹  "+ui("BACK","PRAPA","ZURÜCK","INDIETRO")){finish()},FrameLayout.LayoutParams(dp(104),dp(46),Gravity.TOP or Gravity.START).apply{leftMargin=dp(12);topMargin=dp(8)})
+        host.addView(chip("↻  "+ui("RESTART","RIFILLO","NEUSTART","RIPROVA"),true){confirmRestart()},FrameLayout.LayoutParams(dp(126),dp(46),Gravity.TOP or Gravity.END).apply{rightMargin=dp(12);topMargin=dp(8)})
+        status=statusChip(savedProgressLabel()).apply{contentDescription=text};host.addView(status,FrameLayout.LayoutParams(dp(300),dp(32),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(64)})
 
-        val guide=TextView(this).apply{
-            text=ui("DRAG A PIECE TO THE BOARD  •  CLEAR ROWS & COLUMNS","TËRHIQ PJESËN NË TABELË  •  PASTRO RRESHTA & KOLONA","STEIN AUFS FELD ZIEHEN  •  REIHEN & SPALTEN LÖSCHEN","TRASCINA IL PEZZO  •  COMPLETA RIGHE E COLONNE")
-            textSize=10f;setTextColor(0xffb8c9ef.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.035f
-            background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xcc09172f.toInt(),0xcc241248.toInt(),0xcc09172f.toInt())).apply{cornerRadius=dp(15).toFloat();setStroke(dp(1),0x4458c8ff)}
-        }
-        host.addView(guide,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(30),Gravity.BOTTOM).apply{leftMargin=dp(20);rightMargin=dp(20);bottomMargin=dp(48)})
+        val guide=TextView(this).apply{text=ui("DRAG A PIECE TO THE BOARD  •  CLEAR ROWS & COLUMNS","TËRHIQ PJESËN NË TABELË  •  PASTRO RRESHTA & KOLONA","STEIN AUFS FELD ZIEHEN  •  REIHEN & SPALTEN LÖSCHEN","TRASCINA IL PEZZO  •  COMPLETA RIGHE E COLONNE");textSize=10f;setTextColor(0xffb8c9ef.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.035f;background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xcc09172f.toInt(),0xcc241248.toInt(),0xcc09172f.toInt())).apply{cornerRadius=dp(15).toFloat();setStroke(dp(1),0x4458c8ff)}}
+        host.addView(guide,FrameLayout.LayoutParams(-1,dp(30),Gravity.BOTTOM).apply{leftMargin=dp(20);rightMargin=dp(20);bottomMargin=dp(52)})
 
-        val videoBonus=TextView(this).apply{
-            text=ui("VIDEO BONUS • CLEAR ONE ROW","VIDEO BONUS • PASTRO NJË RRESHT","VIDEO-BONUS • EINE REIHE LÖSCHEN","BONUS VIDEO • CANCELLA UNA RIGA")
-            contentDescription=text;textSize=11f;setTextColor(0xff07152c.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.035f
-            isClickable=true;isFocusable=true;elevation=dp(9).toFloat()
-            background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xffffe27a.toInt(),0xffffb62e.toInt(),0xffffd65d.toInt())).apply{cornerRadius=dp(18).toFloat();setStroke(dp(1),0xffffefae.toInt())}
-            setOnClickListener{performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);ads.rewarded(onGameplayReward={game.videoRescue();refreshSavedProgress()})}
-        }
-        host.addView(videoBonus,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,dp(38),Gravity.BOTTOM).apply{leftMargin=dp(20);rightMargin=dp(20);bottomMargin=dp(6)})
+        val videoBonus=TextView(this).apply{text=ui("VIDEO • CLEAR ROW","VIDEO • PASTRO RRESHT","VIDEO • REIHE LÖSCHEN","VIDEO • CANCELLA RIGA");contentDescription=text;textSize=10f;setTextColor(0xff07152c.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);isClickable=true;isFocusable=true;elevation=dp(9).toFloat();background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xffffe27a.toInt(),0xffffb62e.toInt(),0xffffd65d.toInt())).apply{cornerRadius=dp(18).toFloat();setStroke(dp(1),0xffffefae.toInt())};setOnClickListener{performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);ads.rewarded(onGameplayReward={game.videoRescue();refreshSavedProgress()})}}
+        host.addView(videoBonus,FrameLayout.LayoutParams(0,dp(40),Gravity.BOTTOM or Gravity.START).apply{width=dp(174);leftMargin=dp(20);bottomMargin=dp(6)})
+
+        val nextGame=chip(ui("BUBBLES  ›","TOPAT  ›","BUBBLES  ›","BOLLE  ›")){startActivity(Intent(this,BubbleShooterActivity::class.java))}
+        nextGame.contentDescription=ui("Open Bubble Shooter","Hap Bubble Shooter","Bubble Shooter öffnen","Apri Bubble Shooter")
+        host.addView(nextGame,FrameLayout.LayoutParams(dp(146),dp(40),Gravity.BOTTOM or Gravity.END).apply{rightMargin=dp(20);bottomMargin=dp(6)})
         setContentView(host)
     }
 
