@@ -4,10 +4,13 @@ package com.weearntogether.play
 object ArenaAlbanianSpeech {
     private val splitSH = Regex("(?i)([a-zçë])-s-h([a-zçë])")
     private val standaloneSH = Regex("(?i)\\bs-h")
+    private val number114 = Regex("(?<![\\p{L}\\d])114(?![\\p{L}\\d])")
 
     fun forVoice(text:String, locale:String):String {
         if(locale != "sq") return text
         return text
+            .replace(number114, "njëqind e katërmbëdhjetë")
+            .replace(Regex("(?i)\\b114\\s+sure\\b"), "njëqind e katërmbëdhjetë sure")
             .replace(Regex("(?i)mus-haf"), "mus haf")
             .replace(Regex("(?i)as-hab(ë|e)?")) { m -> if(m.value.endsWith("ë",true)) "as habë" else "as habe" }
             .replace(splitSH, "$1s h$2")
