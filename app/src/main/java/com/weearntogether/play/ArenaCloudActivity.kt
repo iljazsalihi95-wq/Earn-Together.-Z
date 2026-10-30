@@ -163,7 +163,7 @@ class ArenaCloudActivity:Activity(){
         val text=if(phase=="explanation"&&f!=null)q.getJSONArray("choices").optString(f.getInt("correct"))+". "+f.optString("explanation") else q.optString("prompt")+". "+(0 until q.getJSONArray("choices").length()).joinToString(". "){"${'A'+it}. "+q.getJSONArray("choices").getString(it)}
         val key=questionKey(s);val generation=voiceGeneration
         tts?.setOnUtteranceProgressListener(object:android.speech.tts.UtteranceProgressListener(){override fun onStart(id:String?){runOnUiThread{if(generation==voiceGeneration){scene?.speaking=true;scene?.stageStatus="PREZANTUESI PO LEXON"}}};override fun onDone(id:String?){runOnUiThread{if(generation==voiceGeneration){scene?.speaking=false;if(phase=="question")finishQuestionReading(key)}}};@Deprecated("TTS callback") override fun onError(id:String?){onDone(id)}})
-        if(tts?.speak(text,android.speech.tts.TextToSpeech.QUEUE_FLUSH,null,"arena-fallback")==android.speech.tts.TextToSpeech.ERROR&&phase=="question")finishQuestionReading(key)
+        if(tts?.speak(ArenaAlbanianSpeech.forVoice(text,lang),android.speech.tts.TextToSpeech.QUEUE_FLUSH,null,"arena-fallback")==android.speech.tts.TextToSpeech.ERROR&&phase=="question")finishQuestionReading(key)
     }
     private fun voice(phase:String){
         if(!audioEnabled)return;val s=session?:return;stopVoice();if(isOfflineSession()){ttsFallback(phase);return}
