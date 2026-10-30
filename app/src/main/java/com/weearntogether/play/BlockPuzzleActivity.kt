@@ -69,12 +69,16 @@ class BlockPuzzleActivity : Activity() {
         val guide=TextView(this).apply{text=ui("DRAG A PIECE TO THE BOARD  •  CLEAR ROWS & COLUMNS","TËRHIQ PJESËN NË TABELË  •  PASTRO RRESHTA & KOLONA","STEIN AUFS FELD ZIEHEN  •  REIHEN & SPALTEN LÖSCHEN","TRASCINA IL PEZZO  •  COMPLETA RIGHE E COLONNE");textSize=10f;setTextColor(0xffb8c9ef.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.035f;background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xcc09172f.toInt(),0xcc241248.toInt(),0xcc09172f.toInt())).apply{cornerRadius=dp(15).toFloat();setStroke(dp(1),0x4458c8ff)}}
         host.addView(guide,FrameLayout.LayoutParams(-1,dp(30),Gravity.BOTTOM).apply{leftMargin=dp(20);rightMargin=dp(20);bottomMargin=dp(52)})
 
-        val videoBonus=TextView(this).apply{text=ui("VIDEO • CLEAR ROW","VIDEO • PASTRO RRESHT","VIDEO • REIHE LÖSCHEN","VIDEO • CANCELLA RIGA");contentDescription=text;textSize=10f;setTextColor(0xff07152c.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);isClickable=true;isFocusable=true;elevation=dp(9).toFloat();background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xffffe27a.toInt(),0xffffb62e.toInt(),0xffffd65d.toInt())).apply{cornerRadius=dp(18).toFloat();setStroke(dp(1),0xffffefae.toInt())};setOnClickListener{performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);ads.rewarded(onGameplayReward={game.videoRescue();refreshSavedProgress()})}}
-        host.addView(videoBonus,FrameLayout.LayoutParams(0,dp(40),Gravity.BOTTOM or Gravity.START).apply{width=dp(174);leftMargin=dp(20);bottomMargin=dp(6)})
+        val videoBonus=TextView(this).apply{text=ui("VIDEO • CLEAR","VIDEO • PASTRO","VIDEO • LÖSCHEN","VIDEO • CANCELLA");contentDescription=text;textSize=9f;setTextColor(0xff07152c.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);isClickable=true;isFocusable=true;elevation=dp(9).toFloat();background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xffffe27a.toInt(),0xffffb62e.toInt(),0xffffd65d.toInt())).apply{cornerRadius=dp(18).toFloat();setStroke(dp(1),0xffffefae.toInt())};setOnClickListener{performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);ads.rewarded(onGameplayReward={game.videoRescue();refreshSavedProgress()})}}
+        host.addView(videoBonus,FrameLayout.LayoutParams(dp(116),dp(40),Gravity.BOTTOM or Gravity.START).apply{leftMargin=dp(10);bottomMargin=dp(6)})
 
-        val nextGame=chip(ui("BUBBLES  ›","TOPAT  ›","BUBBLES  ›","BOLLE  ›")){startActivity(Intent(this,BubbleShooterActivity::class.java))}
+        val knife=chip(ui("KNIFE","THIKA","MESSER","COLTELLI")){startActivity(Intent(this,KnifeHitActivity::class.java))}
+        knife.contentDescription=ui("Open Knife Hit","Hap Knife Hit","Knife Hit öffnen","Apri Knife Hit")
+        host.addView(knife,FrameLayout.LayoutParams(dp(96),dp(40),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(6)})
+
+        val nextGame=chip(ui("BUBBLES ›","TOPAT ›","BUBBLES ›","BOLLE ›")){startActivity(Intent(this,BubbleShooterActivity::class.java))}
         nextGame.contentDescription=ui("Open Bubble Shooter","Hap Bubble Shooter","Bubble Shooter öffnen","Apri Bubble Shooter")
-        host.addView(nextGame,FrameLayout.LayoutParams(dp(146),dp(40),Gravity.BOTTOM or Gravity.END).apply{rightMargin=dp(20);bottomMargin=dp(6)})
+        host.addView(nextGame,FrameLayout.LayoutParams(dp(116),dp(40),Gravity.BOTTOM or Gravity.END).apply{rightMargin=dp(10);bottomMargin=dp(6)})
         setContentView(host)
     }
 
