@@ -13,14 +13,19 @@ class ArenaOfflineStore(private val context:Context,user:String){
         val extra=runCatching{val data=JSONObject(context.assets.open("quiz-arena/general-sq.json").bufferedReader().use{it.readText()}).getJSONArray("questions");(0 until data.length()).mapNotNull{i->val q=data.getJSONObject(i);if(q.optString("reviewStatus") !in setOf("verified","verified_source","verified_calculation"))return@mapNotNull null;val options=q.optJSONArray("options")?:return@mapNotNull null;val sources=q.optJSONArray("sources")?:JSONArray();QuizArenaActivity.Question(q.optString("category"),q.optString("question"),(0 until options.length()).map{options.optString(it)},q.optInt("correctIndex",-1),q.optString("explanation"),q.optString("id"),(0 until sources.length()).joinToString("; "){sources.getJSONObject(it).optString("url",sources.getJSONObject(it).optString("work"))})}}.getOrDefault(emptyList())
         (primary+extra).filter{it.id.isNotBlank()&&it.prompt.isNotBlank()&&it.why.isNotBlank()&&it.source.isNotBlank()&&it.choices.size in 2..5&&it.choices.all(String::isNotBlank)&&it.correct in it.choices.indices}.distinctBy{it.prompt.trim().lowercase(Locale.ROOT)}
     }
-    fun categories()=questions.map{it.category}.distinct().sorted()
+    fun categories()=questions.map{it.category}.filter{it.isNotBlank()}.distinct().sorted()
     fun progress():JSONObject=JSONObject().put("level",prefs.getInt("level",1)).put("points",prefs.getInt("points",0)).put("best",prefs.getInt("best",0))
     fun saved():JSONObject?=runCatching{JSONObject(prefs.getString("session",null)!!)}.getOrNull()?.takeIf{valid(it)&&!it.optBoolean("finished")}
     private fun valid(s:JSONObject):Boolean=runCatching{val qs=s.getJSONArray("local_questions");qs.length()>0&&s.getInt("index") in 0 until qs.length()&&(0 until qs.length()).all{val q=qs.getJSONObject(it);q.getInt("correct") in 0 until q.getJSONArray("choices").length()}}.getOrDefault(false)
     fun start(category:String):JSONObject{
         val pool=questions.filter{category.isEmpty()||it.category==category};require(pool.isNotEmpty())
-        val level=prefs.getInt("level",1);val selected=pool.shuffled().take(minOf(5+(level-1)/4,pool.size))
-        val config=JSONObject().put("seconds",maxOf(20,60-level*2)).put("points",100+level*10).put("bonus",50).put("pass",60).put("video","")
+        val level=prefs.getInt("level",1)
+        // Arena rounds must feel like real quiz rounds, never 2-3 question demos.
+        // Start at 10 questions and grow gradually to 15 when enough verified material exists.
+        val target=(10+(level-1)/3).coerceAtMost(15)
+        val selected=pool.shuffled().take(minOf(target,pool.size))
+        // The answer clock is intentionally fixed at 30 seconds for every offline question.
+        val config=JSONObject().put("seconds",30).put("points",100+level*10).put("bonus",50).put("pass",60).put("video","")
         val qs=JSONArray(selected.map{q->JSONObject().put("id",q.id).put("category",q.category).put("prompt",q.prompt).put("choices",JSONArray(q.choices)).put("correct",q.correct).put("explanation",q.why).put("source",q.source)})
         val s=JSONObject().put("offline",true).put("session_id","offline-"+java.util.UUID.randomUUID()).put("locale","sq").put("level",level).put("category",category).put("config",config).put("local_questions",qs).put("index",0).put("total",qs.length()).put("score",0).put("correct",0).put("answers",JSONArray()).put("finished",false)
         select(s);save(s);return s
