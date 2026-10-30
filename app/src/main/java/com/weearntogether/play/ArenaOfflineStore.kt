@@ -25,7 +25,7 @@ class ArenaOfflineStore(private val context:Context,user:String){
         val s=JSONObject().put("offline",true).put("session_id","offline-"+java.util.UUID.randomUUID()).put("locale","sq").put("level",level).put("category",category).put("config",config).put("local_questions",qs).put("index",0).put("total",qs.length()).put("score",0).put("correct",0).put("answers",JSONArray()).put("finished",false)
         select(s);save(s);return s
     }
-    private fun select(s:JSONObject){s.put("question",s.getJSONArray("local_questions").getJSONObject(s.getInt("index")));s.remove("feedback");s.remove("timed_out");s.remove("answer_pending");s.remove("local_choice");s.put("presentation_pending",true);s.put("presentation_remaining_ms",90000);s.put("remaining_ms",s.getJSONObject("config").getLong("seconds")*1000)}
+    private fun select(s:JSONObject){s.put("question",s.getJSONArray("local_questions").getJSONObject(s.getInt("index")));s.remove("feedback");s.remove("timed_out");s.remove("answer_pending");s.remove("local_choice");s.remove("learning_choice");s.put("presentation_pending",true);s.put("presentation_remaining_ms",90000);s.put("remaining_ms",s.getJSONObject("config").getLong("seconds")*1000)}
     fun save(s:JSONObject){require(valid(s));prefs.edit().putString("session",s.toString()).commit()}
     fun answer(s:JSONObject,choice:Int):JSONObject{
         if(s.optBoolean("finished")||s.optJSONObject("feedback")!=null)return s

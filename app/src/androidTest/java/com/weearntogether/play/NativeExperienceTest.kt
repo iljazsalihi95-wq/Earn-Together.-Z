@@ -75,8 +75,8 @@ class NativeExperienceTest {
     @Test fun expiredTimerAndMissingAudioKeepOfflineControlsUsable(){
         val store=ArenaOfflineStore(inst.targetContext,"guest");val state=store.start("");state.put("remaining_ms",1).put("presentation_pending",false);store.save(state)
         val a=launch(ArenaCloudActivity::class.java)
-        try{android.os.SystemClock.sleep(250);inst.waitForIdleSync();val saved=store.saved()!!;assertEquals(0,saved.getJSONArray("answers").length());assertNull(saved.optJSONObject("feedback"));assertTrue(saved.optBoolean("timed_out"));assertFalse(views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.isEnabled)
-            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="SHFAQ PËRGJIGJEN DHE SHPJEGIMIN"}.performClick()};inst.waitForIdleSync();assertEquals(-1,store.saved()!!.getJSONObject("feedback").getInt("choice"));assertTrue(views(a.window.decorView).filterIsInstance<TextView>().any{it.text=="KOHA PËRFUNDOI • PA PËRGJIGJE"})
+        try{android.os.SystemClock.sleep(250);inst.waitForIdleSync();val saved=store.saved()!!;assertEquals(0,saved.getJSONArray("answers").length());assertNull(saved.optJSONObject("feedback"));assertTrue(saved.optBoolean("timed_out"));assertTrue(views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.isEnabled)
+            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.performClick()};inst.waitForIdleSync();assertEquals(-1,store.saved()!!.getJSONObject("feedback").getInt("choice"));assertEquals(0,store.saved()!!.getInt("learning_choice"));assertEquals(0,store.saved()!!.getInt("score"));assertTrue(views(a.window.decorView).filterIsInstance<TextView>().any{it.text=="KOHA PËRFUNDOI • PA PËRGJIGJE"})
             inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="DËGJO SHPJEGIMIN AI"}.performClick()};inst.waitForIdleSync();assertTrue(views(a.window.decorView).filterIsInstance<Button>().any{it.text=="VAZHDO ›"&&it.isEnabled})
         }finally{inst.runOnMainSync{a.finish()}}
     }
@@ -135,7 +135,7 @@ class NativeExperienceTest {
             waitUntil{readyCalls==1&&views(a.window.decorView).filterIsInstance<QuizArenaScene>().any{it.timerText=="00:01"&&it.stageStatus=="KOHA E PËRGJIGJES"}};shot("10-studio-answer-clock")
             waitUntil{views(a.window.decorView).filterIsInstance<Button>().any{it.text=="SHFAQ PËRGJIGJEN DHE SHPJEGIMIN"}}
             assertEquals(0,answerCalls);assertFalse(views(a.window.decorView).filterIsInstance<Button>().any{it.text=="VAZHDO ›"})
-            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="SHFAQ PËRGJIGJEN DHE SHPJEGIMIN"}.performClick()}
+            inst.runOnMainSync{val option=views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("B   ")};assertTrue(option.isEnabled);option.performClick()}
             waitUntil{views(a.window.decorView).filterIsInstance<TextView>().any{it.text=="KOHA PËRFUNDOI • PA PËRGJIGJE"}};assertEquals(1,answerCalls);assertTrue(voiceCalls>=1);shot("11-studio-timeout-explicit-explanation")
             inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("HAP SHPJEGIMIN")}.performClick()}
             inst.waitForIdleSync()
