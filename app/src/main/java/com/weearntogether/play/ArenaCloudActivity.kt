@@ -121,7 +121,7 @@ class ArenaCloudActivity:Activity(){
         val boundary=(s.optInt("index")+1)%3==0
         if(boundary&&!prefs.getBoolean(key,false)){
             prefs.edit().putBoolean(key,true).apply()
-            if(ads.naturalBreak(advance))return
+            if(runCatching{ads.naturalBreak(advance)}.getOrDefault(false))return
         }
         advance()
     }
@@ -177,7 +177,7 @@ class ArenaCloudActivity:Activity(){
     private fun video(url:String){timer?.cancel();stopVoice();shell();val view=VideoView(this);add(view,230);val controls=MediaController(this);view.setMediaController(controls);controls.setAnchorView(view);view.setVideoURI(android.net.Uri.parse(url));view.setOnPreparedListener{it.start()};view.setOnCompletionListener{home();refresh()};view.setOnErrorListener{_,_,_->status.text="Videoja mungon. Progresi është ruajtur.";true};add(button("KAPËRCE • VAZHDO"){view.stopPlayback();home();refresh()})}
     @Deprecated("Activity back navigation") override fun onBackPressed(){if(session!=null){modeVersion++;home()}else super.onBackPressed()}
     override fun onActivityResult(code:Int,result:Int,data:android.content.Intent?){super.onActivityResult(code,result,data);if(code==PlayerPortrait.REQUEST&&PlayerPortrait.receive(this,result,data))home()}
-    override fun onResume(){super.onResume();resumed=true;ads.resume();if(isOfflineSession()){deadline=android.os.SystemClock.elapsedRealtime()+(session?.optLong("remaining_ms")?:0);render()}else if(session!=null&&!busy){retryAnswer()};if(!qa()){retryHandler.removeCallbacks(retry);retryHandler.postDelayed(retry,1000)}}
+    override fun onResume(){super.onResume();resumed=true;ads.resume();if(isOfflineSession()){deadline=android.os.SystemClock.elapsedRealtime()+(session?.optLong("remaining_ms")?:0);render()}else if(session!=null&&!busy&&!advancing){retryAnswer()};if(!qa()){retryHandler.removeCallbacks(retry);retryHandler.postDelayed(retry,1000)}}
     override fun onPause(){if(session?.optBoolean("presentation_pending")==true)narrationKey="";persistLocal();timer?.cancel();retryHandler.removeCallbacks(retry);resumed=false;stopVoice();applause?.pause();ads.pause();super.onPause()}
     override fun onDestroy(){learningDialog?.dismiss();retryHandler.removeCallbacks(retry);tts?.shutdown();network.shutdownNow();voiceNetwork.shutdownNow();timer?.cancel();stopVoice();sound?.release();applause?.release();ads.destroy();super.onDestroy()}
 }
