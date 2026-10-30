@@ -20,7 +20,31 @@ class BackendClient(private val endpoint: String = ENDPOINT, private val timeout
         const val ENDPOINT = "https://script.google.com/macros/s/AKfycbw4GAz9_Om3YVU1Eil30WgEHvFkvW3ygo4sGqXNG8QBOGitUXGOkXWbntpJO4JybXPr/exec"
     }
     private val deadlines = DEADLINES
+
+    /**
+     * Arena transition calls are state-addressed by session/question ids. A short transport
+     * interruption must not strand the player between questions, so those transition reads
+     * get one bounded reconnect attempt. Answer submission is deliberately excluded to avoid
+     * ever risking a duplicate scored answer.
+     */
     fun request(action: String, data: JSONObject = JSONObject()): JSONObject {
+        val reconnectable = action == "arenaNext" || action == "arenaReady" || action == "arenaResume" || action == "arenaBootstrap"
+        val attempts = if (reconnectable) 2 else 1
+        var lastTransportError: BackendException? = null
+        repeat(attempts) { attempt ->
+            try {
+                return requestOnce(action, data)
+            } catch (e: BackendException) {
+                if (!reconnectable || attempt + 1 >= attempts || e.code !in setOf("NETWORK", "TIMEOUT")) throw e
+                lastTransportError = e
+                if (Thread.currentThread().isInterrupted) throw e
+                Thread.sleep(180L)
+            }
+        }
+        throw lastTransportError ?: BackendException("NETWORK", "Could not reach the account service. Check your connection and try again.")
+    }
+
+    private fun requestOnce(action: String, data: JSONObject): JSONObject {
         val payload = JSONObject(data.toString()).put("action", action).toString().toByteArray(Charsets.UTF_8)
         var url = URL(endpoint)
         var body: ByteArray? = payload
