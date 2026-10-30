@@ -143,7 +143,6 @@ class AyetOfferwallActivity : Activity() {
                 setBusy(false)
                 result.onSuccess { response ->
                     val verifiedUser = response.optString("user_id")
-                    // Refuse stale requests after logout/account change or a mismatched server identity.
                     if (!accounts.isSignedIn() ||
                         accounts.currentUserId() != localUser ||
                         runCatching { accounts.requireToken() }.getOrNull() != sessionToken ||
@@ -154,8 +153,6 @@ class AyetOfferwallActivity : Activity() {
                         return@onSuccess
                     }
                     try {
-                        // Only the backend-confirmed immutable user ID is shared.
-                        // Reinitialize for every verified opening so another account cannot reuse it.
                         AyetSdk.init(this, AyetOfferwallConfig.PLACEMENT_ID, verifiedUser)
                         if (showProgress) {
                             AyetSdk.showRewardStatus(this)
@@ -181,8 +178,8 @@ class AyetOfferwallActivity : Activity() {
 }
 
 internal object AyetOfferwallConfig {
-    const val PLACEMENT_ID = 25740
-    const val ADSLOT_ID = 30651
+    const val PLACEMENT_ID = 25898
+    const val ADSLOT_ID = 30842
     const val ADSLOT_NAME = "We Earn Together Offerwall"
     const val CURRENCY_IDENTIFIER = "WETCOIN"
 }
