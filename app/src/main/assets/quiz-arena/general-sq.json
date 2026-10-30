@@ -299,13 +299,14 @@
         "Helium"
       ],
       "correctIndex": 2,
-      "explanation": "Bimët përdorin dioksidin e karbonit dhe ujin për të prodhuar sheqerna gjatë fotosintezës.",
+      "explanation": "Bimët marrin dioksid karboni nga ajri dhe ujë nga mjedisi. Me energjinë e dritës prodhojnë përbërje që ruajnë energji, ndërsa çlirojnë oksigjen. Prandaj gazi që përdoret në këtë proces është CO₂.",
       "sources": [
         {
-          "work": "Biologji bazë, fotosinteza"
+          "work": "OpenStax — Biology 2e, 8.1 Overview of Photosynthesis",
+          "url": "https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis"
         }
       ],
-      "reviewStatus": "needs_editorial_verification"
+      "reviewStatus": "verified_source"
     },
     {
       "id": "general-sq-016",
@@ -359,13 +360,14 @@
         "10 vjet"
       ],
       "correctIndex": 2,
-      "explanation": "Një vit është afërsisht 365,24 ditë.",
+      "explanation": "Një orbitë e Tokës rreth Diellit zgjat rreth 365,25 ditë. Kjo përcakton vitin. Rrotullimi rreth boshtit përcakton ditën dhe nuk duhet ngatërruar me orbitën.",
       "sources": [
         {
-          "work": "NASA Earth Facts"
+          "work": "NASA Science — Earth Facts",
+          "url": "https://science.nasa.gov/earth/facts/"
         }
       ],
-      "reviewStatus": "needs_editorial_verification"
+      "reviewStatus": "verified_source"
     },
     {
       "id": "general-sq-019",
@@ -440,13 +442,14 @@
         "Hidrogjeni"
       ],
       "correctIndex": 1,
-      "explanation": "Azoti përbën rreth 78% të atmosferës së Tokës.",
+      "explanation": "Azoti përbën rreth 78% të atmosferës pranë sipërfaqes, oksigjeni rreth 21% dhe gazrat e tjera afërsisht 1%. Oksigjeni është thelbësor për frymëmarrjen, por nuk është gazi më i bollshëm.",
       "sources": [
         {
-          "work": "NASA Earth"
+          "work": "NASA Science — Earth Facts",
+          "url": "https://science.nasa.gov/earth/facts/"
         }
       ],
-      "reviewStatus": "needs_editorial_verification"
+      "reviewStatus": "verified_source"
     },
     {
       "id": "general-sq-023",
@@ -529,6 +532,144 @@
         }
       ],
       "reviewStatus": "needs_editorial_verification"
+    },
+    {
+      "id": "premium-sq-030",
+      "order": 27,
+      "category": "Shkencë",
+      "question": "Cili gaz zë afërsisht 21% të atmosferës pranë sipërfaqes së Tokës?",
+      "options": [
+        "Azoti",
+        "Oksigjeni",
+        "Heliumi",
+        "Hidrogjeni"
+      ],
+      "correctIndex": 1,
+      "explanation": "Oksigjeni zë rreth një të pestën e atmosferës. Azoti është më i bollshëm, me rreth 78%. Përqindja më e vogël nuk e zvogëlon rolin e oksigjenit në frymëmarrje.",
+      "sources": [
+        {
+          "work": "NASA Science — Earth Facts",
+          "url": "https://science.nasa.gov/earth/facts/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "difficulty": 1,
+      "language": "sq"
+    },
+    {
+      "id": "premium-sq-031",
+      "order": 28,
+      "category": "Astronomi",
+      "question": "Cili veprim i Tokës përcakton kryesisht alternimin e ditës dhe natës?",
+      "options": [
+        "Rrotullimi rreth boshtit",
+        "Ndryshimi i stinëve",
+        "Lëvizja e Hënës",
+        "Një orbitë e plotë rreth Diellit"
+      ],
+      "correctIndex": 0,
+      "explanation": "Toka rrotullohet rreth boshtit të saj në afërsisht 24 orë. Pjesa e kthyer drejt Diellit ka ditë, ndërsa pjesa tjetër natë. Një orbitë rreth Diellit përcakton vitin.",
+      "sources": [
+        {
+          "work": "NASA Science — Earth Facts",
+          "url": "https://science.nasa.gov/earth/facts/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "difficulty": 1,
+      "language": "sq"
+    },
+    {
+      "id": "premium-sq-032",
+      "order": 29,
+      "category": "Astronomi",
+      "question": "Nga çfarë përbëhen kryesisht grimcat e unazave të Saturnit?",
+      "options": [
+        "Vetëm gaz",
+        "Akull dhe shkëmbinj",
+        "Vetëm ujë i lëngshëm",
+        "Dritë e ngurtësuar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Unazat përmbajnë miliarda copa akulli dhe shkëmbinjsh, shpesh të mbuluara me pluhur. Ato nuk janë një disk i vetëm i ngurtë; janë grimca që orbitojnë planetin.",
+      "sources": [
+        {
+          "work": "NASA Science — Saturn Facts",
+          "url": "https://science.nasa.gov/saturn/facts/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "difficulty": 1,
+      "language": "sq"
+    },
+    {
+      "id": "premium-sq-033",
+      "order": 30,
+      "category": "Biologji",
+      "question": "Në cilën organele zhvillohet fotosinteza te bimët?",
+      "options": [
+        "Bërthama",
+        "Ribozomi",
+        "Kloroplasti",
+        "Lizozomi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kloroplastet përmbajnë strukturat dhe pigmentet që mundësojnë fotosintezën. Klorofili ndihmon në përthithjen e dritës. Kjo energji përdoret për formimin e përbërjeve organike.",
+      "sources": [
+        {
+          "work": "OpenStax — Biology 2e, 8.1 Overview of Photosynthesis",
+          "url": "https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "difficulty": 1,
+      "language": "sq"
+    },
+    {
+      "id": "premium-sq-034",
+      "order": 31,
+      "category": "Biologji",
+      "question": "Cila është forma fillestare e energjisë që shfrytëzohet në fotosintezë?",
+      "options": [
+        "Energjia e dritës",
+        "Energjia e zërit",
+        "Energjia bërthamore e bimës",
+        "Energjia e erës"
+      ],
+      "correctIndex": 0,
+      "explanation": "Fotosinteza shndërron energjinë e dritës në energji kimike të ruajtur në përbërje organike. Bima nuk e krijon energjinë nga asgjë; e shndërron dhe e ruan atë.",
+      "sources": [
+        {
+          "work": "OpenStax — Biology 2e, 8.1 Overview of Photosynthesis",
+          "url": "https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "difficulty": 1,
+      "language": "sq"
+    },
+    {
+      "id": "premium-sq-035",
+      "order": 32,
+      "category": "Shkencë",
+      "question": "Çfarë shkakton kryesisht ciklin vjetor të stinëve në Tokë?",
+      "options": [
+        "Ndryshimi i madhësisë së Diellit",
+        "Pjerrësia e boshtit të Tokës gjatë orbitës",
+        "Fazat e Hënës",
+        "Rrotullimi i reve"
+      ],
+      "correctIndex": 1,
+      "explanation": "Boshti i Tokës është i pjerrët ndaj planit të orbitës. Gjatë vitit, secila hemisferë merr rreze më të drejtpërdrejta dhe ditë më të gjata në periudha të ndryshme. Kjo krijon ciklin e stinëve.",
+      "sources": [
+        {
+          "work": "NASA Science — Earth Facts",
+          "url": "https://science.nasa.gov/earth/facts/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "difficulty": 1,
+      "language": "sq"
     }
   ]
 }
