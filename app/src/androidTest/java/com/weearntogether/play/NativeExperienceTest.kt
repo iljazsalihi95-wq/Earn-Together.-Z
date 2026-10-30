@@ -137,6 +137,16 @@ class NativeExperienceTest {
             assertEquals(0,answerCalls);assertFalse(views(a.window.decorView).filterIsInstance<Button>().any{it.text=="VAZHDO ›"})
             inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="SHFAQ PËRGJIGJEN DHE SHPJEGIMIN"}.performClick()}
             waitUntil{views(a.window.decorView).filterIsInstance<TextView>().any{it.text=="KOHA PËRFUNDOI • PA PËRGJIGJE"}};assertEquals(1,answerCalls);assertTrue(voiceCalls>=1);shot("11-studio-timeout-explicit-explanation")
+            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("HAP SHPJEGIMIN")}.performClick()}
+            inst.waitForIdleSync()
+            val dialogField=ArenaCloudActivity::class.java.getDeclaredField("learningDialog").apply{isAccessible=true}
+            val learning=dialogField.get(a) as android.app.Dialog
+            assertTrue(learning.isShowing)
+            val learningViews=views(learning.window!!.decorView).filterIsInstance<TextView>()
+            assertTrue(learningViews.any{it.text.toString().startsWith("Përgjigjja e saktë:")})
+            assertTrue(learningViews.any{it.text.toString().contains("TESTIM DHE MËSIM")})
+            shot("12-learning-popup")
+            inst.runOnMainSync{learning.dismiss()}
         }finally{inst.runOnMainSync{a.finish()};ArenaCloudActivity.qaTransport=null}
     }
     @Test fun premiumArenaHasRealPlayerLanguageAndResumeControls(){val a=launch(ArenaCloudActivity::class.java);try{

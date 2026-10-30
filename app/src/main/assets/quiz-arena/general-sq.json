@@ -670,6 +670,144 @@
       "reviewStatus": "verified_source",
       "difficulty": 1,
       "language": "sq"
+    },
+    {
+      "id": "premium-sq-036",
+      "order": 33,
+      "category": "Biologji",
+      "question": "Cili gaz çlirohet gjatë fotosintezës së bimëve?",
+      "options": [
+        "Oksigjeni",
+        "Heliumi",
+        "Neoni",
+        "Hidrogjeni"
+      ],
+      "correctIndex": 0,
+      "explanation": "Gjatë fotosintezës çlirohet oksigjen. Bima përdor dritë, ujë dhe dioksid karboni për të formuar përbërje organike që ruajnë energji.",
+      "sources": [
+        {
+          "work": "OpenStax — Biology 2e, 8.1 Overview of Photosynthesis",
+          "url": "https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "difficulty": 1,
+      "language": "sq"
+    },
+    {
+      "id": "premium-sq-037",
+      "order": 34,
+      "category": "Biologji",
+      "question": "Cilat struktura të gjethes rregullojnë shkëmbimin e gazeve?",
+      "options": [
+        "Stomatet",
+        "Rrënjët",
+        "Farat",
+        "Petalet"
+      ],
+      "correctIndex": 0,
+      "explanation": "Stomatet janë hapje të vogla të rregulluara nga qelizat rojtare. Përmes tyre kryhet shkëmbimi i gazeve dhe ndikohet humbja e ujit.",
+      "sources": [
+        {
+          "work": "OpenStax — Biology 2e, 8.1 Overview of Photosynthesis",
+          "url": "https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "difficulty": 1,
+      "language": "sq"
+    },
+    {
+      "id": "premium-sq-038",
+      "order": 35,
+      "category": "Astronomi",
+      "question": "Sa satelitë natyrorë ka Toka?",
+      "options": [
+        "Asnjë",
+        "Një",
+        "Dy",
+        "Katër"
+      ],
+      "correctIndex": 1,
+      "explanation": "Toka ka një satelit natyror: Hënën. Satelitët artificialë janë pajisje të ndërtuara nga njeriu dhe nuk llogariten si satelitë natyrorë.",
+      "sources": [
+        {
+          "work": "NASA Science — Earth Facts",
+          "url": "https://science.nasa.gov/earth/facts/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "difficulty": 1,
+      "language": "sq"
+    },
+    {
+      "id": "premium-sq-039",
+      "order": 36,
+      "category": "Astronomi",
+      "question": "Çfarë përfaqëson afërsisht një njësi astronomike?",
+      "options": [
+        "Distancën mesatare Tokë–Diell",
+        "Diametrin e Tokës",
+        "Distancën Tokë–Hënë",
+        "Një vit kohor"
+      ],
+      "correctIndex": 0,
+      "explanation": "Njësia astronomike përdoret për distancat në Sistemin Diellor. Ajo lidhet me distancën mesatare Tokë–Diell, afërsisht 150 milionë kilometra; nuk është njësi kohe.",
+      "sources": [
+        {
+          "work": "NASA Science — Earth Facts",
+          "url": "https://science.nasa.gov/earth/facts/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "difficulty": 1,
+      "language": "sq"
+    },
+    {
+      "id": "premium-sq-040",
+      "order": 37,
+      "category": "Shkencë",
+      "question": "Cila shtresë ndihmon që shumë meteoroide të digjen para se të arrijnë tokën?",
+      "options": [
+        "Atmosfera",
+        "Bërthama e brendshme",
+        "Korja oqeanike",
+        "Manteli"
+      ],
+      "correctIndex": 0,
+      "explanation": "Pjesa më e madhe e meteoroideve të vogla shpërbëhet gjatë kalimit në atmosferë. Shkëlqimi që shohim quhet meteor; atmosfera ofron kështu edhe mbrojtje.",
+      "sources": [
+        {
+          "work": "NASA Science — Earth Facts",
+          "url": "https://science.nasa.gov/earth/facts/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "difficulty": 1,
+      "language": "sq"
+    },
+    {
+      "id": "premium-sq-041",
+      "order": 38,
+      "category": "Shkencë",
+      "question": "Sa për qind zënë afërsisht së bashku azoti dhe oksigjeni në atmosferën pranë sipërfaqes?",
+      "options": [
+        "50%",
+        "78%",
+        "99%",
+        "21%"
+      ],
+      "correctIndex": 2,
+      "explanation": "Azoti zë rreth 78% dhe oksigjeni rreth 21%; së bashku afërsisht 99%. Pjesa tjetër përfshin argon, dioksid karboni dhe gaze të tjera.",
+      "sources": [
+        {
+          "work": "NASA Science — Earth Facts",
+          "url": "https://science.nasa.gov/earth/facts/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "difficulty": 1,
+      "language": "sq"
     }
   ]
 }
