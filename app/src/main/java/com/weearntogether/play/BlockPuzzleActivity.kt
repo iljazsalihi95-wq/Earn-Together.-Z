@@ -55,7 +55,7 @@ class BlockPuzzleActivity : Activity() {
         return ui("AUTO-SAVE • LEVEL $level/250 • BEST $best", "AUTO-RUAJTJE • NIVELI $level/250 • REKORDI $best", "AUTO-SPEICHERN • LEVEL $level/250 • BEST $best", "SALVATAGGIO AUTO • LIVELLO $level/250 • BEST $best")
     }
 
-    private fun refreshSavedProgress() { if (::status.isInitialized) status.text = savedProgressLabel() }
+    private fun refreshSavedProgress() { if (::status.isInitialized) { status.text = savedProgressLabel(); status.contentDescription = status.text } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,27 +83,28 @@ class BlockPuzzleActivity : Activity() {
             }
             elevation = dp(4).toFloat()
         }
-        host.addView(header, FrameLayout.LayoutParams(-1, dp(108), Gravity.TOP))
+        host.addView(header, FrameLayout.LayoutParams(-1, dp(142), Gravity.TOP))
         host.addView(TextView(this).apply {
             text = "BLOCK PUZZLE • PREMIUM"
+            contentDescription = text
             textSize = 17f
             setTextColor(Color.WHITE)
             gravity = Gravity.CENTER
             setTypeface(null, Typeface.BOLD)
             letterSpacing = .06f
-        }, FrameLayout.LayoutParams(dp(210), dp(46), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(8) })
-        host.addView(chip("‹  " + ui("BACK", "PRAPA", "ZURÜCK", "INDIETRO")) { finish() }, FrameLayout.LayoutParams(dp(104), dp(46), Gravity.TOP or Gravity.START).apply { leftMargin = dp(12); topMargin = dp(8) })
-        host.addView(chip("↻  " + ui("RESTART", "RIFILLO", "NEUSTART", "RIPROVA"), true) { confirmRestart() }, FrameLayout.LayoutParams(dp(126), dp(46), Gravity.TOP or Gravity.END).apply { rightMargin = dp(12); topMargin = dp(8) })
+        }, FrameLayout.LayoutParams(dp(250), dp(40), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(55) })
+        host.addView(chip("‹  " + ui("BACK", "PRAPA", "ZURÜCK", "INDIETRO")) { finish() }.apply { contentDescription = ui("Back", "Prapa", "Zurück", "Indietro") }, FrameLayout.LayoutParams(dp(104), dp(46), Gravity.TOP or Gravity.START).apply { leftMargin = dp(12); topMargin = dp(8) })
+        host.addView(chip("↻  " + ui("RESTART", "RIFILLO", "NEUSTART", "RIPROVA"), true) { confirmRestart() }.apply { contentDescription = ui("Restart level", "Rifillo nivelin", "Level neu starten", "Riavvia livello") }, FrameLayout.LayoutParams(dp(126), dp(46), Gravity.TOP or Gravity.END).apply { rightMargin = dp(12); topMargin = dp(8) })
 
         status = TextView(this).apply {
-            text = savedProgressLabel(); textSize = 10f; setTextColor(0xffffd66b.toInt()); gravity = Gravity.CENTER; setTypeface(null, Typeface.BOLD)
+            text = savedProgressLabel(); contentDescription = text; textSize = 10f; setTextColor(0xffffd66b.toInt()); gravity = Gravity.CENTER; setTypeface(null, Typeface.BOLD)
             background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(0xdd102a54.toInt(), 0xdd24164d.toInt(), 0xdd0b5f9f.toInt())).apply { cornerRadius = dp(16).toFloat(); setStroke(dp(1), 0x88ffc857.toInt()) }
         }
-        host.addView(status, FrameLayout.LayoutParams(dp(300), dp(32), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(64) })
+        host.addView(status, FrameLayout.LayoutParams(dp(300), dp(32), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(101) })
 
-        val knife = chip(ui("BLADE QUEST", "THIKAT", "MESSER", "COLTELLI")) { startActivity(Intent(this, KnifeHitActivity::class.java)) }
+        val knife = chip(ui("BLADE QUEST", "THIKAT", "MESSER", "COLTELLI")) { startActivity(Intent(this, KnifeHitActivity::class.java)) }.apply { contentDescription = ui("Open Blade Quest", "Hap Blade Quest", "Blade Quest öffnen", "Apri Blade Quest") }
         host.addView(knife, FrameLayout.LayoutParams(dp(118), dp(40), Gravity.BOTTOM or Gravity.START).apply { leftMargin = dp(10); bottomMargin = dp(6) })
-        val nextGame = chip(ui("BUBBLES ›", "TOPAT ›", "BUBBLES ›", "BOLLE ›")) { startActivity(Intent(this, BubbleShooterActivity::class.java)) }
+        val nextGame = chip(ui("BUBBLES ›", "TOPAT ›", "BUBBLES ›", "BOLLE ›")) { startActivity(Intent(this, BubbleShooterActivity::class.java)) }.apply { contentDescription = ui("Open Bubble Shooter", "Hap Bubble Shooter", "Bubble Shooter öffnen", "Apri Bubble Shooter") }
         host.addView(nextGame, FrameLayout.LayoutParams(dp(118), dp(40), Gravity.BOTTOM or Gravity.END).apply { rightMargin = dp(10); bottomMargin = dp(6) })
 
         setContentView(host)
