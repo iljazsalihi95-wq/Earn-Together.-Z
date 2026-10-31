@@ -8,8 +8,6 @@ import org.json.JSONObject
 object ProgressPreferences {
     val gameFiles = linkedMapOf(
         "LazyGarden" to listOf("lazy_garden_progress", "lazy_garden_wallet", "lazy_garden_milestone"),
-        // Keep both legacy and Premium HD 2D stores in cloud snapshots. The active native
-        // renderers save to *_hd2d; retaining the legacy names avoids discarding older progress.
         "Block Puzzle" to listOf("block_puzzle", "block_puzzle_hd2d"),
         "Bubble Shooter" to listOf("bubble_shooter", "bubble_shooter_hd2d")
     )
@@ -19,6 +17,7 @@ object ProgressPreferences {
         val user = user(context)
         val target = forUser(context, name, user)
         if (name == "bubble_shooter_hd2d") migrateBubbleShooterProgress(context, user, target)
+        if (name == "block_puzzle_hd2d") migrateBlockPuzzleProgress(context, user, target)
         return target
     }
     private fun intValue(prefs: SharedPreferences, key: String, fallback: Int): Int {
@@ -32,9 +31,26 @@ object ProgressPreferences {
             else -> fallback
         }
     }
+    private fun normalizeInts(target: SharedPreferences, keys: List<String>) {
+        val edit = target.edit(); var changed = false
+        keys.forEach { key ->
+            val raw = target.all[key] ?: return@forEach
+            if (raw !is Int) {
+                val parsed = when (raw) {
+                    is Long -> raw.coerceIn(Int.MIN_VALUE.toLong(), Int.MAX_VALUE.toLong()).toInt()
+                    is Float -> raw.toInt()
+                    is Number -> raw.toInt()
+                    is String -> raw.toIntOrNull()
+                    else -> null
+                }
+                if (parsed != null) { edit.putInt(key, parsed); changed = true }
+                else { edit.remove(key); changed = true }
+            }
+        }
+        if (changed) edit.apply()
+    }
     private fun migrateBubbleShooterProgress(context: Context, user: String?, target: SharedPreferences) {
-        // Migration must never prevent the game Activity from opening. Older builds/cloud
-        // snapshots can contain numeric progress using a different SharedPreferences type.
+        normalizeInts(target, listOf("best", "level", "best_level", "score", "streak", "pressure", "current", "next"))
         if (target.all.isNotEmpty()) return
         val meta = context.getSharedPreferences("wet_progress_migration", Context.MODE_PRIVATE)
         val marker = "bubble_hd2d_v2_${user ?: "legacy"}"
@@ -43,6 +59,23 @@ object ProgressPreferences {
         if (legacy.all.isNotEmpty()) {
             val best = intValue(legacy, "best", 0).coerceAtLeast(0)
             val level = maxOf(intValue(legacy, "level", 1), intValue(legacy, "best_level", 1)).coerceIn(1, 250)
+            target.edit().putInt("best", best).putInt("level", level).apply()
+        }
+        meta.edit().putBoolean(marker, true).apply()
+    }
+    private fun migrateBlockPuzzleProgress(context: Context, user: String?, target: SharedPreferences) {
+        // Cloud/older APK snapshots may encode numeric fields as Long/Float/String. Normalize
+        // them before PremiumBlockPuzzleView calls SharedPreferences.getInt(), so opening the
+        // native game cannot crash with ClassCastException and the player's progress survives.
+        normalizeInts(target, listOf("score", "best", "level", "lines", "total_lines", "level_lines", "combo"))
+        if (target.all.isNotEmpty()) return
+        val meta = context.getSharedPreferences("wet_progress_migration", Context.MODE_PRIVATE)
+        val marker = "block_hd2d_v2_${user ?: "legacy"}"
+        if (meta.getBoolean(marker, false)) return
+        val legacy = forUser(context, "block_puzzle", user)
+        if (legacy.all.isNotEmpty()) {
+            val best = intValue(legacy, "best", 0).coerceAtLeast(0)
+            val level = intValue(legacy, "level", 1).coerceIn(1, 250)
             target.edit().putInt("best", best).putInt("level", level).apply()
         }
         meta.edit().putBoolean(marker, true).apply()
@@ -56,7 +89,6 @@ object ProgressPreferences {
             val target = forUser(context, name, user)
             if (target.all.isEmpty()) restore(target, snapshot(context.getSharedPreferences(name, Context.MODE_PRIVATE)))
         }
-        // Originals remain untouched as a recovery copy. No passwords are migrated.
         check(meta.edit().putString("legacy_owner", user).putBoolean("migrated_$user", true).commit())
     }
     fun snapshot(prefs: SharedPreferences): JSONObject = JSONObject().apply {
