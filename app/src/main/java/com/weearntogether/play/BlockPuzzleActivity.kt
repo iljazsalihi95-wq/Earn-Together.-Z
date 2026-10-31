@@ -48,6 +48,19 @@ class BlockPuzzleActivity : Activity() {
         setOnClickListener { performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP); action() }
     }
 
+    private fun migrateLegacyProgress() {
+        val premium = ProgressPreferences.open(this, "block_puzzle_hd2d")
+        if (premium.getInt("level", -1) >= 0 || premium.getInt("best", -1) >= 0) return
+        val legacy = ProgressPreferences.open(this, "block_puzzle")
+        val legacyLevel = legacy.getInt("level", -1)
+        val legacyBest = legacy.getInt("best", -1)
+        if (legacyLevel < 0 && legacyBest < 0) return
+        premium.edit()
+            .putInt("level", legacyLevel.coerceIn(1, 250))
+            .putInt("best", legacyBest.coerceAtLeast(0))
+            .apply()
+    }
+
     private fun savedProgressLabel(): String {
         val prefs = ProgressPreferences.open(this, "block_puzzle_hd2d")
         val level = prefs.getInt("level", 1).coerceIn(1, 250)
@@ -65,6 +78,7 @@ class BlockPuzzleActivity : Activity() {
         window.navigationBarColor = Color.TRANSPARENT
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         enterImmersive()
+        migrateLegacyProgress()
 
         game = PremiumBlockPuzzleView(this) {
             loyalty.recordGameProgress(10)
