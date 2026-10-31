@@ -75,7 +75,7 @@ function arenaRoute_(p){
   const id=Utilities.getUuid(),row=[id,u.id,new Date(),' ',arenaSafe_(p.category||'ALL'),level,config.count,0,0,0,0,'ACTIVE',JSON.stringify(state)];sh.appendRow(row);return Object.assign({success:true},arenaPublic_({values:row,state}));
  }
  const s=arenaSession_(String(p.session_id||''),u.id),a=s.state;
- if(p.action==='arenaReady'){if(p.question_id!==a.questions[a.index].id)return Object.assign({success:true},arenaPublic_(s));if(a.presentation&&!a.feedback&&!a.finished){a.presentation=false;a.deadline=Math.min(a.deadline,Date.now()+a.config.seconds*1000);arenaSave_(s);}return Object.assign({success:true},arenaPublic_(s));}
+ if(p.action==='arenaReady'){if(p.question_id!==a.questions[a.index].id)return Object.assign({success:true},arenaPublic_(s));if(a.presentation&&!a.feedback&&!a.finished){a.presentation=false;a.deadline=Date.now()+a.config.seconds*1000;arenaSave_(s);}return Object.assign({success:true},arenaPublic_(s));}
  if(p.action==='arenaResume')return Object.assign({success:true},arenaPublic_(s));
  if(p.action==='arenaAnswer'){
   if(a.finished)return Object.assign({success:true},arenaPublic_(s));const q=a.questions[a.index];
