@@ -77,13 +77,15 @@ class BlockPuzzleActivity : Activity() {
             addView(game, FrameLayout.LayoutParams(-1, -1))
         }
 
+        // Keep the premium chrome compact so the native game's live SCORE/BEST/LEVEL/GOAL
+        // cards (drawn from y=116) remain visible instead of being covered by the host header.
         val header = View(this).apply {
             background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xff0a1a3b.toInt(), 0xff241050.toInt(), 0xff071a38.toInt())).apply {
                 setStroke(dp(1), 0x5569cfff)
             }
             elevation = dp(4).toFloat()
         }
-        host.addView(header, FrameLayout.LayoutParams(-1, dp(142), Gravity.TOP))
+        host.addView(header, FrameLayout.LayoutParams(-1, dp(108), Gravity.TOP))
         host.addView(TextView(this).apply {
             text = "BLOCK PUZZLE • PREMIUM"
             contentDescription = text
@@ -97,10 +99,10 @@ class BlockPuzzleActivity : Activity() {
         host.addView(chip("↻  " + ui("RESTART", "RIFILLO", "NEUSTART", "RIPROVA"), true) { confirmRestart() }.apply { contentDescription = ui("Restart level", "Rifillo nivelin", "Level neu starten", "Riavvia livello") }, FrameLayout.LayoutParams(dp(126), dp(46), Gravity.TOP or Gravity.END).apply { rightMargin = dp(12); topMargin = dp(8) })
 
         status = TextView(this).apply {
-            text = savedProgressLabel(); contentDescription = text; textSize = 10f; setTextColor(0xffffd66b.toInt()); gravity = Gravity.CENTER; setTypeface(null, Typeface.BOLD)
-            background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(0xdd102a54.toInt(), 0xdd24164d.toInt(), 0xdd0b5f9f.toInt())).apply { cornerRadius = dp(16).toFloat(); setStroke(dp(1), 0x88ffc857.toInt()) }
+            text = savedProgressLabel(); contentDescription = text; textSize = 9f; setTextColor(0xffffd66b.toInt()); gravity = Gravity.CENTER; setTypeface(null, Typeface.BOLD)
+            background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(0xdd102a54.toInt(), 0xdd24164d.toInt(), 0xdd0b5f9f.toInt())).apply { cornerRadius = dp(12).toFloat(); setStroke(dp(1), 0x88ffc857.toInt()) }
         }
-        host.addView(status, FrameLayout.LayoutParams(dp(300), dp(32), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(101) })
+        host.addView(status, FrameLayout.LayoutParams(dp(300), dp(24), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(82) })
 
         val knife = chip(ui("BLADE QUEST", "THIKAT", "MESSER", "COLTELLI")) { startActivity(Intent(this, KnifeHitActivity::class.java)) }.apply { contentDescription = ui("Open Blade Quest", "Hap Blade Quest", "Blade Quest öffnen", "Apri Blade Quest") }
         host.addView(knife, FrameLayout.LayoutParams(dp(118), dp(40), Gravity.BOTTOM or Gravity.START).apply { leftMargin = dp(10); bottomMargin = dp(6) })
