@@ -21,18 +21,31 @@ object ProgressPreferences {
         if (name == "bubble_shooter_hd2d") migrateBubbleShooterProgress(context, user, target)
         return target
     }
+    private fun intValue(prefs: SharedPreferences, key: String, fallback: Int): Int {
+        val value = prefs.all[key] ?: return fallback
+        return when (value) {
+            is Int -> value
+            is Long -> value.coerceIn(Int.MIN_VALUE.toLong(), Int.MAX_VALUE.toLong()).toInt()
+            is Float -> value.toInt()
+            is Number -> value.toInt()
+            is String -> value.toIntOrNull() ?: fallback
+            else -> fallback
+        }
+    }
     private fun migrateBubbleShooterProgress(context: Context, user: String?, target: SharedPreferences) {
+        // Migration must never prevent the game Activity from opening. Older builds/cloud
+        // snapshots can contain numeric progress using a different SharedPreferences type.
         if (target.all.isNotEmpty()) return
         val meta = context.getSharedPreferences("wet_progress_migration", Context.MODE_PRIVATE)
-        val marker = "bubble_hd2d_v1_${user ?: "legacy"}"
+        val marker = "bubble_hd2d_v2_${user ?: "legacy"}"
         if (meta.getBoolean(marker, false)) return
         val legacy = forUser(context, "bubble_shooter", user)
         if (legacy.all.isNotEmpty()) {
-            val best = legacy.getInt("best", 0).coerceAtLeast(0)
-            val level = maxOf(legacy.getInt("level", 1), legacy.getInt("best_level", 1)).coerceIn(1, 250)
-            check(target.edit().putInt("best", best).putInt("level", level).commit())
+            val best = intValue(legacy, "best", 0).coerceAtLeast(0)
+            val level = maxOf(intValue(legacy, "level", 1), intValue(legacy, "best_level", 1)).coerceIn(1, 250)
+            target.edit().putInt("best", best).putInt("level", level).apply()
         }
-        check(meta.edit().putBoolean(marker, true).commit())
+        meta.edit().putBoolean(marker, true).apply()
     }
     fun forUser(context: Context, name: String, user: String?): SharedPreferences =
         context.getSharedPreferences(if (user == null) name else "${name}_user_$user", Context.MODE_PRIVATE)
