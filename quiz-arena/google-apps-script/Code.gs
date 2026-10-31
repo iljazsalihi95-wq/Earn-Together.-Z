@@ -9,7 +9,7 @@ const ARENA_PROGRESS_TABS=['Arena - Lojtaret','Arena - Sesionet','Arena - Nivele
 function getQuizSpreadsheet_(){return SpreadsheetApp.openById(QUIZ_SHEET);}
 function arenaError_(code){throw new Error(code);}
 function arenaJson_(v){return ContentService.createTextOutput(JSON.stringify(v)).setMimeType(ContentService.MimeType.JSON);}
-function doGet(){return arenaJson_({success:true,service:'quiz-arena',version:5,authenticatedActions:true,voice:'onyx'});}
+function doGet(){return arenaJson_({success:true,service:'quiz-arena',version:6,authenticatedActions:true,voice:'onyx'});}
 function doPost(e){try{const p=JSON.parse(e.postData.contents);return arenaJson_(arenaRoute_(p));}catch(e){const code=/^[A-Z_]+$/.test(e.message)?e.message:'SERVER_ERROR';return arenaJson_({success:false,error:code,message:code});}}
 function arenaHash_(s){return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,s).map(b=>('0'+((b+256)%256).toString(16)).slice(-2)).join('');}
 function arenaIdentity_(p){
@@ -27,15 +27,15 @@ function arenaBank_(locale){
  for(const tab of QUIZ_TABS){const sh=getQuizSpreadsheet_().getSheetByName(tab);if(!sh)continue;
   for(const r of sh.getDataRange().getDisplayValues().slice(1)){
    if(r[1]!=='PO'||r[13]!=='MIRATUAR'||r[12]!==locale)continue;
-   const q={id:String(r[0]),category:r[2],type:r[3],question:r[4],choices:r.slice(5,9),correct:String(r[9]).charCodeAt(0)-65,explanation:r[10],source:r[11],recitation:r[15]||''};
-   if(q.question&&q.choices.every(x=>x&&x.trim())&&q.correct>=0&&q.correct<4&&q.explanation)out.push(q);
+   const q={id:String(r[0]),category:r[2],type:r[3],question:r[4],choices:r.slice(5,9),correct:String(r[9]).trim().toUpperCase().charCodeAt(0)-65,explanation:r[10],source:r[11],recitation:r[15]||''};
+   if(q.id&&q.question&&q.choices.every(x=>x&&x.trim())&&q.correct>=0&&q.correct<4&&q.explanation&&q.source)out.push(q);
   }
  }
- // Preserve the original approved bank; only four-option questions enter competitive rounds.
+ // Preserve original option positions when compacting two-to-five choice questions.
  if(locale==='sq')for(const r of arenaRows_('Pyetjet').slice(3)){
-  if(r[1]!=='PO'||String(r[13]).includes('RISHIKIM')||r[8])continue;
-  const q={id:'sheet-'+String(r[0]),category:String(r[2]),type:'single_select',question:String(r[3]||''),choices:r.slice(4,8).map(String),correct:String(r[9]).charCodeAt(0)-65,explanation:String(r[10]||''),source:String(r[11]||''),recitation:''};
-  if(q.question&&q.choices.every(Boolean)&&q.correct>=0&&q.correct<4&&q.explanation)out.push(q);
+  if(r[1]!=='PO'||!['OK','MIRATUAR','RIFORMULUAR','KORRIGJUAR NGA KONTRADIKTA'].includes(String(r[13]).trim().toUpperCase()))continue;
+  const q={id:'sheet-'+String(r[0]),category:String(r[2]),type:'single_select',question:String(r[3]||''),choices:r.slice(4,9).map(x=>String(x||'').trim()),correct:String(r[9]).trim().toUpperCase().charCodeAt(0)-65,explanation:String(r[10]||''),source:String(r[11]||''),recitation:''};
+  const populated=q.choices.map((text,index)=>({text,index})).filter(x=>x.text);q.correct=populated.findIndex(x=>x.index===q.correct);q.choices=populated.map(x=>x.text);if(q.id!=='sheet-'&&q.question&&q.choices.length>=2&&q.choices.length<=5&&q.correct>=0&&q.explanation&&q.source)out.push(q);
  }
  return out.filter((q,i)=>out.findIndex(x=>x.id===q.id||x.question.trim().toLowerCase()===q.question.trim().toLowerCase())===i);
 }
@@ -80,8 +80,8 @@ function arenaRoute_(p){
  if(p.action==='arenaAnswer'){
   if(a.finished)return Object.assign({success:true},arenaPublic_(s));const q=a.questions[a.index];
   if(p.question_id!==q.id)arenaError_('QUESTION_CHANGED');if(a.feedback)return Object.assign({success:true},arenaPublic_(s));
-  if(!Number.isInteger(p.choice)||p.choice < -1||p.choice>3)arenaError_('INVALID_CHOICE');const choice=Date.now()>a.deadline?-1:p.choice,right=choice===q.correct;
-  if(right){a.correct++;a.score+=a.config.points;}a.answers.push({id:q.id,choice,right});a.feedback={right,choice,reason:choice===-1?'timeout':right?'correct':'incorrect',correct:q.correct,explanation:q.explanation,source:q.source};arenaSave_(s);return Object.assign({success:true},arenaPublic_(s));
+  if(!Number.isInteger(p.choice)||p.choice < -1||p.choice>=q.choices.length)arenaError_('INVALID_CHOICE');if(a.presentation&&Date.now()<a.presentationUntil)arenaError_('PRESENTATION_PENDING');if(p.choice===-1&&Date.now()<a.deadline)arenaError_('TIMEOUT_NOT_REACHED');const choice=Date.now()>=a.deadline?-1:p.choice,right=choice===q.correct;
+  if(right){a.correct++;a.score+=a.config.points;}a.answers.push({id:q.id,choice,right});a.feedback={right,choice,submitted_choice:p.choice,reason:choice===-1?'timeout':right?'correct':'incorrect',correct:q.correct,explanation:q.explanation,source:q.source};arenaSave_(s);return Object.assign({success:true},arenaPublic_(s));
  }
  if(p.action==='arenaNext'){
   // Replaying a timed-out Next returns the current question, without skipping it.
@@ -100,18 +100,18 @@ function arenaRoute_(p){
  }finally{lock.releaseLock();}
 }
 function arenaVoice_(u,s,p){
- const a=s.state,q=a.questions[a.index];if(!q||a.finished)arenaError_('NO_QUESTION');const explanation=p.phase==='explanation';if(explanation&&!a.feedback)arenaError_('ANSWER_FIRST');
+ const a=s.state,q=a.questions[a.index];if(p.question_id&&p.question_id!==q?.id)arenaError_('QUESTION_CHANGED');if(!q||a.finished)arenaError_('NO_QUESTION');const explanation=p.phase==='explanation';if(explanation&&!a.feedback)arenaError_('ANSWER_FIRST');
  // Narration only; authentic Quran recitation remains a separate recording.
  const reactions={sq:['Saktë.','Këtë herë jo.'],de:['Richtig.','Leider nicht.'],en:['Correct.','Not this time.'],tr:['Doğru.','Bu sefer olmadı.']};
- const text=explanation?(reactions[a.locale][a.feedback.right?0:1]+' '+q.choices[q.correct]+'. '+q.explanation):(q.question+'. '+q.choices.map((x,i)=>String.fromCharCode(65+i)+'. '+x).join('. '));
- if(text.length>3500)arenaError_('VOICE_TOO_LONG');const props=PropertiesService.getScriptProperties(),model=props.getProperty('ARENA_VOICE_MODEL')||'gpt-4o-mini-tts',voice='onyx';
- const instructions='Speak naturally in '+({sq:'Albanian',de:'German',en:'English',tr:'Turkish'}[a.locale])+', as a warm adult male television quiz presenter, with a clear resonant lower register. Pause between question and each option. Do not add facts or recite scripture.';
- const hash=arenaHash_('male-v2|'+a.locale+'|'+model+'|'+voice+'|'+instructions+'|'+text),media=getQuizSpreadsheet_().getSheetByName('Arena - Media');
+ const rawText=explanation?((a.feedback.reason==='timeout'?({sq:'Koha përfundoi.',de:'Die Zeit ist abgelaufen.',en:'Time expired.',tr:'Süre doldu.'}[a.locale]):reactions[a.locale][a.feedback.right?0:1])+' '+q.choices[q.correct]+'. '+q.explanation):(q.question+'. '+q.choices.map((x,i)=>String.fromCharCode(65+i)+'. '+x).join('. '));
+ const text=arenaNormalizeVoice_(rawText,a.locale);if(text.length>3500)arenaError_('VOICE_TOO_LONG');const props=PropertiesService.getScriptProperties(),model=props.getProperty('ARENA_VOICE_MODEL')||'gpt-4o-mini-tts',voice='onyx';
+ const instructions=(a.locale==='sq'?'Use native standard Albanian pronunciation. Say sure with s, never shure. Respect ç, ë and Albanian digraphs gj, ll, nj, rr, sh, th, xh, zh. Islamic names: Allahu, Kurani, ajet, hadith, Pejgamberi, Muhamedi, Ibrahimi, Selman el-Farisiu, Ebu Bekri, Omeri, Othmani, Aliu, sahabët, namazi, zekati, haxhi, Ramazani, hixhreti, Hanefi, Maturidije. Read the supplied normalized number words exactly; never substitute a different number. ':'')+'Speak naturally in '+({sq:'Albanian',de:'German',en:'English',tr:'Turkish'}[a.locale])+', as a warm adult male television quiz presenter, with a clear resonant lower register. Pause between question and each option. Do not add facts or recite scripture.';
+ const hash=arenaHash_('sq-v3|'+q.id+'|'+(explanation?'explanation':'question')+'|'+a.locale+'|'+model+'|'+voice+'|'+instructions+'|'+text),media=getQuizSpreadsheet_().getSheetByName('Arena - Media');
  const lock=LockService.getScriptLock(),leaseKey='voicelease:'+hash,lease=Date.now()+':'+Utilities.getUuid();let key;
  lock.waitLock(5000);
  try{
   const cached=media.getDataRange().getValues().slice(1).find(r=>r[0]===hash&&r[8]==='PRIVATE_READY');
-  if(cached){const bytes=DriveApp.getFileById(String(cached[5])).getBlob().getBytes();return {success:true,audio:Utilities.base64Encode(bytes),cache_key:hash,ai_generated:true,voice};}
+  if(cached){const bytes=DriveApp.getFileById(String(cached[5])).getBlob().getBytes();return {success:true,audio:Utilities.base64Encode(bytes),cache_key:hash,ai_generated:true,voice,question_id:q.id,normalization_version:'sq-v3'};}
   const pending=props.getProperty(leaseKey);if(pending&&Date.now()-Number(pending.split(':')[0])<90000)arenaError_('VOICE_PENDING');
   const day=new Date().toISOString().slice(0,10),userKey='voice:'+day+':'+arenaHash_(u.id),globalKey='voice:'+day+':global';
   const used=Number(props.getProperty(userKey)||0),all=Number(props.getProperty(globalKey)||0);if(used>=20||all>=100)arenaError_('VOICE_DAILY_LIMIT');key=props.getProperty('OPENAI_API_KEY');if(!key)arenaError_('VOICE_UNAVAILABLE');
@@ -127,7 +127,7 @@ function arenaVoice_(u,s,p){
    const file=DriveApp.getFolderById(folderId).createFile(blob.setName(hash+'.mp3'));
    media.appendRow([hash,'AI_NARRATOR',a.level,q.category,q.id,file.getId(),'OpenAI generated male narrator',a.locale,'PRIVATE_READY',explanation?'explanation':'question']);
   }finally{lock.releaseLock();}
-  return {success:true,audio:Utilities.base64Encode(bytes),cache_key:hash,ai_generated:true,voice};
+  return {success:true,audio:Utilities.base64Encode(bytes),cache_key:hash,ai_generated:true,voice,question_id:q.id,normalization_version:'sq-v3'};
  }finally{
   lock.waitLock(5000);try{if(props.getProperty(leaseKey)===lease)props.deleteProperty(leaseKey);}finally{lock.releaseLock();}
  }

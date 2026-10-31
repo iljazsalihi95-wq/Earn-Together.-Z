@@ -120,7 +120,7 @@ class NativeExperienceTest {
             "arenaBootstrap"->org.json.JSONObject("{\"available\":12,\"categories\":[\"Logic\"],\"progress\":{\"level\":1,\"points\":0}}")
             "arenaRegister"->org.json.JSONObject()
             "arenaStart"->state(true)
-            "arenaVoice"->{voiceCalls++;org.json.JSONObject().put("audio",android.util.Base64.encodeToString(wav,android.util.Base64.NO_WRAP))}
+            "arenaVoice"->{voiceCalls++;org.json.JSONObject().put("question_id",p.getString("question_id")).put("audio",android.util.Base64.encodeToString(wav,android.util.Base64.NO_WRAP))}
             "arenaReady"->{readyCalls++;assertEquals(2,p.getInt("protocol"));state(false)}
             "arenaAnswer"->{answerCalls++;assertEquals(-1,p.getInt("choice"));state(false,true)}
             else->throw BackendException("TEST_ONLY","unsupported fixture")

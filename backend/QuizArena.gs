@@ -6,8 +6,8 @@ const ARENA_SHEET_ID='1UZjTbjKVszSL6mfcQJwQKoIlyiqJ_liZxTQ18l7M_Xk';
 function arenaQuestions_(){
  const db=SpreadsheetApp.openById(ARENA_SHEET_ID),extra=db.getSheetByName('Arena - Pyetjet e tua');
  const rows=db.getSheetByName('Pyetjet').getDataRange().getDisplayValues().slice(3).concat(extra?extra.getDataRange().getDisplayValues().slice(1):[]);
- return rows.filter(r=>r[1]==='PO'&&!String(r[13]).includes('RISHIKIM')).map(r=>{
-  const choices=r.slice(4,9).map((v,i)=>({v,i})).filter(x=>x.v),correct=choices.findIndex(x=>x.i===String(r[9]).charCodeAt(0)-65);
+ return rows.filter(r=>r[1]==='PO'&&['OK','MIRATUAR','RIFORMULUAR','KORRIGJUAR NGA KONTRADIKTA'].includes(String(r[13]).trim().toUpperCase())).map(r=>{
+  const choices=r.slice(4,9).map((v,i)=>({v,i})).filter(x=>x.v),correct=choices.findIndex(x=>x.i===String(r[9]).trim().toUpperCase().charCodeAt(0)-65);
   return {id:'sheet-'+r[0],question:r[3],category:r[2],choices:choices.map(x=>x.v),correct,explanation:r[10],source:r[11]};
  }).filter(q=>q.choices.length>=2&&q.choices.length<=5&&q.correct>=0);
 }

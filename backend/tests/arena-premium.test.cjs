@@ -11,7 +11,7 @@ const tables={
 const sheets=Object.fromEntries(Object.entries(tables).map(([name,rows])=>[name,{getDataRange:()=>({getValues:()=>rows.map(r=>r.slice()),getDisplayValues:()=>rows.map(r=>r.map(String))}),getRange:(row,col,n,w)=>({setValues:values=>values.forEach((r,i)=>{rows[row-1+i]=r.slice()})}),appendRow:r=>rows.push(r.slice())}]));
 let user='user1',sequence=0,apiCalls=0,lockHeld=false,speechCalls=0,onSpeech=null;const files=new Map();const props=new Map(),cache=new Map();
 const context={console,Date,Math,JSON,Set,Number,String,Error,SpreadsheetApp:{openById:()=>({getSheetByName:n=>sheets[n]})},LockService:{getScriptLock:()=>({waitLock(){assert.equal(lockHeld,false,'nested/gameplay lock held during voice');lockHeld=true},releaseLock(){lockHeld=false}})},CacheService:{getScriptCache:()=>({get:k=>cache.get(k),put:(k,v)=>cache.set(k,v)})},PropertiesService:{getScriptProperties:()=>({getProperty:k=>props.get(k),setProperty:(k,v)=>props.set(k,v),deleteProperty:k=>props.delete(k)})},Utilities:{getUuid:()=>`session-${++sequence}`,DigestAlgorithm:{SHA_256:'sha256'},computeDigest:(_,s)=>[...require('node:crypto').createHash('sha256').update(s).digest()],base64Encode:b=>Buffer.from(b).toString('base64')},DriveApp:{getFileById:id=>files.get(id),getFolderById:()=>({createFile:blob=>{const id='file-'+files.size;const file={getId:()=>id,getBlob:()=>blob};files.set(id,file);return file}}),createFolder:()=>({getId:()=> 'private-folder'})},UrlFetchApp:{fetch:(url,options)=>{if(url.includes('/audio/speech')){assert.equal(lockHeld,false,'OpenAI must run outside the gameplay lock');speechCalls++;const payload=JSON.parse(options.payload);assert.equal(payload.voice,'onyx');if(onSpeech){const hook=onSpeech;onSpeech=null;hook()}const bytes=Buffer.from('mp3-test-fixture');const blob={getBytes:()=>bytes,setName(){return this}};return {getResponseCode:()=>200,getBlob:()=>blob}}apiCalls++;return {getContentText:()=>JSON.stringify({success:true,profile:{user_id:user,username:'Player'}})}}}};
-vm.createContext(context);vm.runInContext(fs.readFileSync('quiz-arena/google-apps-script/Code.gs','utf8'),context);
+vm.createContext(context);vm.runInContext(fs.readFileSync('quiz-arena/google-apps-script/AlbanianSpeech.gs','utf8'),context);vm.runInContext(fs.readFileSync('quiz-arena/google-apps-script/Code.gs','utf8'),context);
 const call=(action,p={})=>JSON.parse(JSON.stringify(context.arenaRoute_({action,session_token:'valid-token-12345678901234567890',...p})));
 assert.throws(()=>context.arenaRoute_({action:'arenaBootstrap'}),/AUTH_REQUIRED/);
 assert.equal(call('arenaBootstrap').available,2);assert.equal(call('arenaBootstrap',{locale:'de'}).available,0);
@@ -54,6 +54,35 @@ let presented=call('arenaStart',{level:1,protocol:2});assert.equal(presented.pre
 const ready=call('arenaReady',{session_id:presented.session_id,question_id:presented.question.id});assert.equal(ready.presentation_pending,false);assert.ok(ready.remaining_ms<=30000);
 const firstDeadline=JSON.parse(tables['Arena - Sesionet'].find(r=>r[0]===presented.session_id)[12]).deadline;
 call('arenaReady',{session_id:presented.session_id,question_id:presented.question.id});assert.equal(JSON.parse(tables['Arena - Sesionet'].find(r=>r[0]===presented.session_id)[12]).deadline,firstDeadline);
+assert.throws(()=>call('arenaAnswer',{session_id:presented.session_id,question_id:presented.question.id,choice:-1}),/TIMEOUT_NOT_REACHED/);
+const stored= tables['Arena - Sesionet'].find(r=>r[0]===presented.session_id);const expired=JSON.parse(stored[12]);expired.deadline=Date.now()-1;stored[12]=JSON.stringify(expired);
 const timed=call('arenaAnswer',{session_id:presented.session_id,question_id:presented.question.id,choice:-1});assert.equal(timed.feedback.choice,-1);assert.equal(timed.feedback.reason,'timeout');assert.equal(timed.score,0);
 const second=call('arenaNext',{session_id:presented.session_id,question_id:presented.question.id,protocol:2});assert.equal(second.presentation_pending,true);assert.equal(second.feedback,null);
 console.log('PASS presentation phase, server-authoritative Ready, immutable replay deadline and explicit timeout reason');
+
+// Exact production Sheet row 14: preserve option D (zero-based index 3).
+tables.Pyetjet.push(['11','PO','Sira','Kush i propozoi Pejgamberit ﷺ hapjen e Hendekut?','Omeri r.a.','Othmani r.a.','Aliu r.a.','Selman el-Farisi r.a.','','D','Selman el-Farisi r.a. propozoi hapjen e hendekut.','Sira – Hendeku','','OK']);
+assert.equal(context.arenaBank_('sq').find(q=>q.id==='sheet-11').correct,3);
+cache.clear();user='selman-test';call('arenaRegister',{name:'Selman test'});
+let selman=call('arenaStart',{level:1,protocol:2});
+const sr=tables['Arena - Sesionet'].find(r=>r[0]===selman.session_id),st=JSON.parse(sr[12]);st.questions=[context.arenaBank_('sq').find(q=>q.id==='sheet-11')];sr[12]=JSON.stringify(st);
+assert.throws(()=>call('arenaAnswer',{session_id:selman.session_id,question_id:'sheet-11',choice:3}),/PRESENTATION_PENDING/);
+call('arenaReady',{session_id:selman.session_id,question_id:'sheet-11'});
+selman=call('arenaAnswer',{session_id:selman.session_id,question_id:'sheet-11',choice:3});assert.equal(selman.feedback.right,true);assert.equal(selman.feedback.correct,3);assert.equal(selman.feedback.choice,3);
+assert.equal(call('arenaAnswer',{session_id:selman.session_id,question_id:'sheet-11',choice:0}).score,100);
+for(const [n,w] of [[108,'njëqind e tetë'],[114,'njëqind e katërmbëdhjetë'],[120,'njëqind e njëzet'],[2026,'dy mijë e njëzet e gjashtë']])assert.equal(context.arenaNormalizeVoice_(String(n),'sq'),w);
+assert.equal(context.arenaNormalizeVoice_('a.s. R. A. xh.sh. ﷺ','sq'),'alejhi selam radijallahu anhu xhel-le shanuhu sal-lallahu alejhi ve sel-lem');
+assert.equal(context.arenaNormalizeVoice_('2:255','sq'),'surja dy, ajeti dyqind e pesëdhjetë e pesë');
+assert.equal(context.arenaNormalizeVoice_('sure shkencë rast','sq'),'sure shkencë rast');
+console.log('PASS Selman D, no answers while reading, no early timeout, duplicate protection, Albanian normalization');
+
+// Late correct answers are timeout, never a false knowledge error; retain the attempted choice.
+cache.clear();user='late-selman';call('arenaRegister',{name:'Late Selman'});
+let late=call('arenaStart',{level:1,protocol:2});const lr=tables['Arena - Sesionet'].find(r=>r[0]===late.session_id),ls=JSON.parse(lr[12]);ls.questions=[context.arenaBank_('sq').find(q=>q.id==='sheet-11')];ls.presentation=false;ls.deadline=Date.now()-1;lr[12]=JSON.stringify(ls);
+late=call('arenaAnswer',{session_id:late.session_id,question_id:'sheet-11',choice:3});assert.equal(late.feedback.reason,'timeout');assert.equal(late.feedback.submitted_choice,3);assert.equal(late.score,0);
+assert.throws(()=>call('arenaVoice',{session_id:late.session_id,question_id:'other-question'}),/QUESTION_CHANGED/);
+const lateAudio=call('arenaVoice',{session_id:late.session_id,question_id:'sheet-11',phase:'explanation'});assert.equal(lateAudio.question_id,'sheet-11');
+const oldKey=lateAudio.cache_key;const currentRow=tables['Arena - Sesionet'].find(r=>r[0]===late.session_id);const edited=JSON.parse(currentRow[12]);edited.questions[0].explanation+=' Changed text';currentRow[12]=JSON.stringify(edited);
+assert.notEqual(call('arenaVoice',{session_id:late.session_id,question_id:'sheet-11',phase:'explanation'}).cache_key,oldKey);
+assert.equal(context.arenaNormalizeVoice_('as ra rast sure','sq'),'as ra rast sure');
+console.log('PASS late correct choice retained as timeout, wrong-question audio rejected, changed text invalidates cache');

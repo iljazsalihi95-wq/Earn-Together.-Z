@@ -193,7 +193,7 @@ function generateArenaVoice(
   segment = String(segment || "question")
     .toLowerCase();
 
-  text = String(text || "").trim();
+  text = arenaNormalizeVoice_(String(text || "").trim(), locale);
 
   if (!text) {
     throw new Error("Teksti është bosh.");
