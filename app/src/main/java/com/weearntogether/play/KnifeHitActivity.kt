@@ -1,6 +1,7 @@
 package com.weearntogether.play
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -17,7 +18,12 @@ class KnifeHitActivity:Activity(){
         top.addView(Button(this).apply{text="‹";textSize=24f;setTextColor(Color.WHITE);setBackgroundColor(Color.TRANSPARENT);setOnClickListener{finish()}},LinearLayout.LayoutParams(dp(54),dp(48)))
         top.addView(TextView(this).apply{text="BLADE QUEST • HD 2D";textSize=18f;setTextColor(0xffffc857.toInt());setTypeface(null,Typeface.BOLD);gravity=Gravity.CENTER},LinearLayout.LayoutParams(0,dp(48),1f))
         top.addView(Button(this).apply{text="↻";textSize=20f;setTextColor(Color.WHITE);setBackgroundColor(Color.TRANSPARENT);setOnClickListener{game.restartLevel()}},LinearLayout.LayoutParams(dp(54),dp(48)))
-        root.addView(top);game=KnifeHitView(this);root.addView(game,LinearLayout.LayoutParams(-1,0,1f));setContentView(root)
+        root.addView(top);game=KnifeHitView(this);root.addView(game,LinearLayout.LayoutParams(-1,0,1f))
+        val nav=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER;setPadding(dp(12),dp(6),dp(12),dp(10));background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xff09152f.toInt(),0xff241050.toInt(),0xff0b3562.toInt())).apply{setStroke(dp(1),0x6658c8ff)}}
+        fun navButton(label:String,action:()->Unit)=TextView(this).apply{text=label;textSize=12f;setTextColor(Color.WHITE);gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);isClickable=true;isFocusable=true;background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff153b7a.toInt(),0xff6b2ea6.toInt(),0xffb9872d.toInt())).apply{cornerRadius=dp(20).toFloat();setStroke(dp(1),0x99ffd66b.toInt())};setOnClickListener{performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);action()}}
+        nav.addView(navButton("BLOCK PUZZLE ›"){startActivity(Intent(this,BlockPuzzleActivity::class.java))},LinearLayout.LayoutParams(0,dp(42),1f).apply{rightMargin=dp(6)})
+        nav.addView(navButton("BUBBLE SHOOTER ›"){startActivity(Intent(this,BubbleShooterActivity::class.java))},LinearLayout.LayoutParams(0,dp(42),1f).apply{leftMargin=dp(6)})
+        root.addView(nav,LinearLayout.LayoutParams(-1,dp(58)));setContentView(root)
     }
     private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt()
     override fun onResume(){super.onResume();if(::ads.isInitialized)ads.resume()};override fun onPause(){if(::ads.isInitialized)ads.pause();super.onPause()};override fun onDestroy(){if(::ads.isInitialized)ads.destroy();super.onDestroy()}
