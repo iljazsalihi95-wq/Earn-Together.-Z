@@ -18,10 +18,10 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import java.util.Locale
 
-/** Immersive host for the native touch-driven Block Puzzle. */
+/** Immersive host for the premium native touch-driven Block Puzzle. */
 class BlockPuzzleActivity : Activity() {
     private lateinit var ads: NativeGameAds
-    private lateinit var game: BlockPuzzleView
+    private lateinit var game: PremiumBlockPuzzleView
     private lateinit var status: TextView
     private val loyalty by lazy { LoyaltyProgress(this) }
     private var dialogOpen = false
@@ -49,7 +49,7 @@ class BlockPuzzleActivity : Activity() {
     }
 
     private fun savedProgressLabel(): String {
-        val prefs = ProgressPreferences.open(this, "block_puzzle")
+        val prefs = ProgressPreferences.open(this, "block_puzzle_hd2d")
         val level = prefs.getInt("level", 1).coerceIn(1, 250)
         val best = prefs.getInt("best", 0).coerceAtLeast(0)
         return ui("AUTO-SAVE • LEVEL $level/250 • BEST $best", "AUTO-RUAJTJE • NIVELI $level/250 • REKORDI $best", "AUTO-SPEICHERN • LEVEL $level/250 • BEST $best", "SALVATAGGIO AUTO • LIVELLO $level/250 • BEST $best")
@@ -66,7 +66,7 @@ class BlockPuzzleActivity : Activity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         enterImmersive()
 
-        game = BlockPuzzleView(this) {
+        game = PremiumBlockPuzzleView(this) {
             loyalty.recordGameProgress(10)
             refreshSavedProgress()
             ads.naturalBreak()
@@ -77,8 +77,6 @@ class BlockPuzzleActivity : Activity() {
             addView(game, FrameLayout.LayoutParams(-1, -1))
         }
 
-        // Keep the premium chrome compact so the native game's live SCORE/BEST/LEVEL/GOAL
-        // cards (drawn from y=116) remain visible instead of being covered by the host header.
         val header = View(this).apply {
             background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xff0a1a3b.toInt(), 0xff241050.toInt(), 0xff071a38.toInt())).apply {
                 setStroke(dp(1), 0x5569cfff)
