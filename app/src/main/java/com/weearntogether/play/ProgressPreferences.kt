@@ -89,7 +89,8 @@ object ProgressPreferences {
             val target = forUser(context, name, user)
             if (target.all.isEmpty()) restore(target, snapshot(context.getSharedPreferences(name, Context.MODE_PRIVATE)))
         }
-        check(meta.edit().putString("legacy_owner", user).putBoolean("migrated_$user", true).commit())
+        // A transient storage write failure must not terminate gameplay. The next launch can retry.
+        meta.edit().putString("legacy_owner", user).putBoolean("migrated_$user", true).apply()
     }
     fun snapshot(prefs: SharedPreferences): JSONObject = JSONObject().apply {
         prefs.all.toSortedMap().forEach { (key, value) ->
@@ -114,7 +115,8 @@ object ProgressPreferences {
                 is Number -> if (key.endsWith("_at")) edit.putLong(key, value.toLong()) else edit.putInt(key, value.toInt())
             }
         }
-        check(edit.commit())
+        // Persist asynchronously: failure should leave a recoverable save, never crash a game Activity.
+        edit.apply()
     }
     fun state(context: Context, user: String, game: String): JSONObject = JSONObject().apply {
         gameFiles.getValue(game).forEach { name -> put(name, snapshot(forUser(context, name, user))) }
