@@ -15,7 +15,25 @@ object ProgressPreferences {
     )
     private val extras = listOf("wet_loyalty_progress", "wet_play_history", "color_lines", "neon_stack", "merge2048")
     fun user(context: Context): String? = context.getSharedPreferences("wet_cloud_session", Context.MODE_PRIVATE).getString("user_id", null)
-    fun open(context: Context, name: String): SharedPreferences = forUser(context, name, user(context))
+    fun open(context: Context, name: String): SharedPreferences {
+        val user = user(context)
+        val target = forUser(context, name, user)
+        if (name == "bubble_shooter_hd2d") migrateBubbleShooterProgress(context, user, target)
+        return target
+    }
+    private fun migrateBubbleShooterProgress(context: Context, user: String?, target: SharedPreferences) {
+        if (target.all.isNotEmpty()) return
+        val meta = context.getSharedPreferences("wet_progress_migration", Context.MODE_PRIVATE)
+        val marker = "bubble_hd2d_v1_${user ?: "legacy"}"
+        if (meta.getBoolean(marker, false)) return
+        val legacy = forUser(context, "bubble_shooter", user)
+        if (legacy.all.isNotEmpty()) {
+            val best = legacy.getInt("best", 0).coerceAtLeast(0)
+            val level = maxOf(legacy.getInt("level", 1), legacy.getInt("best_level", 1)).coerceIn(1, 250)
+            check(target.edit().putInt("best", best).putInt("level", level).commit())
+        }
+        check(meta.edit().putBoolean(marker, true).commit())
+    }
     fun forUser(context: Context, name: String, user: String?): SharedPreferences =
         context.getSharedPreferences(if (user == null) name else "${name}_user_$user", Context.MODE_PRIVATE)
     fun migrateLegacy(context: Context, user: String) {
