@@ -50,7 +50,10 @@ object ProgressPreferences {
         if (changed) edit.apply()
     }
     private fun migrateBubbleShooterProgress(context: Context, user: String?, target: SharedPreferences) {
-        normalizeInts(target, listOf("best", "level", "best_level", "score", "streak", "pressure", "current", "next"))
+        // Every numeric field read with SharedPreferences.getInt() must be normalized. Older
+        // cloud snapshots can contain Long/Float/String values; "misses" was previously omitted
+        // and could therefore crash PremiumBubbleShooterView while restoring a saved round.
+        normalizeInts(target, listOf("best", "level", "best_level", "score", "streak", "pressure", "misses", "current", "next"))
         if (target.all.isNotEmpty()) return
         val meta = context.getSharedPreferences("wet_progress_migration", Context.MODE_PRIVATE)
         val marker = "bubble_hd2d_v2_${user ?: "legacy"}"
