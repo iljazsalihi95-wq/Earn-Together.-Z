@@ -19,6 +19,11 @@ object ProgressPreferences {
         val target = forUser(context, name, user)
         if (name == "bubble_shooter_hd2d") migrateBubbleShooterProgress(context, user, target)
         if (name == "block_puzzle_hd2d") migrateBlockPuzzleProgress(context, user, target)
+        // Legacy activities still read these files with SharedPreferences.getInt(). Normalize
+        // restored/cloud values before those reads so an older Long/Float/String save cannot
+        // terminate a native game while its premium progress is being migrated.
+        if (name == "block_puzzle") normalizeInts(target, listOf("level", "best", "score", "lines", "combo"))
+        if (name == "bubble_shooter") normalizeInts(target, listOf("level", "best_level", "best", "score", "streak", "pressure", "misses", "current", "next"))
         if (name == "knife_hit") normalizeInts(target, listOf("level", "best", "score"))
         return target
     }
@@ -52,9 +57,6 @@ object ProgressPreferences {
         if (changed) edit.apply()
     }
     private fun migrateBubbleShooterProgress(context: Context, user: String?, target: SharedPreferences) {
-        // Every numeric field read with SharedPreferences.getInt() must be normalized. Older
-        // cloud snapshots can contain Long/Float/String values; "misses" was previously omitted
-        // and could therefore crash PremiumBubbleShooterView while restoring a saved round.
         normalizeInts(target, listOf("best", "level", "best_level", "score", "streak", "pressure", "misses", "current", "next"))
         if (target.all.isNotEmpty()) return
         val meta = context.getSharedPreferences("wet_progress_migration", Context.MODE_PRIVATE)
@@ -69,9 +71,6 @@ object ProgressPreferences {
         meta.edit().putBoolean(marker, true).apply()
     }
     private fun migrateBlockPuzzleProgress(context: Context, user: String?, target: SharedPreferences) {
-        // Cloud/older APK snapshots may encode numeric fields as Long/Float/String. Normalize
-        // them before PremiumBlockPuzzleView calls SharedPreferences.getInt(), so opening the
-        // native game cannot crash with ClassCastException and the player's progress survives.
         normalizeInts(target, listOf("score", "best", "level", "lines", "total_lines", "level_lines", "combo"))
         if (target.all.isNotEmpty()) return
         val meta = context.getSharedPreferences("wet_progress_migration", Context.MODE_PRIVATE)
@@ -94,7 +93,6 @@ object ProgressPreferences {
             val target = forUser(context, name, user)
             if (target.all.isEmpty()) restore(target, snapshot(context.getSharedPreferences(name, Context.MODE_PRIVATE)))
         }
-        // A transient storage write failure must not terminate gameplay. The next launch can retry.
         meta.edit().putString("legacy_owner", user).putBoolean("migrated_$user", true).apply()
     }
     fun snapshot(prefs: SharedPreferences): JSONObject = JSONObject().apply {
@@ -120,7 +118,6 @@ object ProgressPreferences {
                 is Number -> if (key.endsWith("_at")) edit.putLong(key, value.toLong()) else edit.putInt(key, value.toInt())
             }
         }
-        // Persist asynchronously: failure should leave a recoverable save, never crash a game Activity.
         edit.apply()
     }
     fun state(context: Context, user: String, game: String): JSONObject = JSONObject().apply {
