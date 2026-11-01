@@ -9,7 +9,8 @@ object ProgressPreferences {
     val gameFiles = linkedMapOf(
         "LazyGarden" to listOf("lazy_garden_progress", "lazy_garden_wallet", "lazy_garden_milestone"),
         "Block Puzzle" to listOf("block_puzzle", "block_puzzle_hd2d"),
-        "Bubble Shooter" to listOf("bubble_shooter", "bubble_shooter_hd2d")
+        "Bubble Shooter" to listOf("bubble_shooter", "bubble_shooter_hd2d"),
+        "Blade Quest" to listOf("knife_hit")
     )
     private val extras = listOf("wet_loyalty_progress", "wet_play_history", "color_lines", "neon_stack", "merge2048")
     fun user(context: Context): String? = context.getSharedPreferences("wet_cloud_session", Context.MODE_PRIVATE).getString("user_id", null)
@@ -18,6 +19,7 @@ object ProgressPreferences {
         val target = forUser(context, name, user)
         if (name == "bubble_shooter_hd2d") migrateBubbleShooterProgress(context, user, target)
         if (name == "block_puzzle_hd2d") migrateBlockPuzzleProgress(context, user, target)
+        if (name == "knife_hit") normalizeInts(target, listOf("level", "best", "score"))
         return target
     }
     private fun intValue(prefs: SharedPreferences, key: String, fallback: Int): Int {
