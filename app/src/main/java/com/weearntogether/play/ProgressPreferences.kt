@@ -20,9 +20,9 @@ object ProgressPreferences {
         if (name == "bubble_shooter_hd2d") migrateBubbleShooterProgress(context, user, target)
         if (name == "block_puzzle_hd2d") migrateBlockPuzzleProgress(context, user, target)
         // Legacy activities still read these files with SharedPreferences.getInt(). Normalize
-        // restored/cloud values before those reads so an older Long/Float/String save cannot
-        // terminate a native game while its premium progress is being migrated.
-        if (name == "block_puzzle") normalizeInts(target, listOf("level", "best", "score", "lines", "combo"))
+        // every persistent numeric counter before those reads so older cloud/JSON snapshots
+        // cannot terminate a native game with ClassCastException.
+        if (name == "block_puzzle") normalizeInts(target, listOf("level", "best", "score", "lines", "total_lines", "level_lines", "combo", "best_combo", "reshuffles"))
         if (name == "bubble_shooter") normalizeInts(target, listOf("level", "best_level", "best", "score", "streak", "pressure", "misses", "current", "next"))
         if (name == "knife_hit") normalizeInts(target, listOf("level", "best", "score"))
         return target
@@ -71,7 +71,7 @@ object ProgressPreferences {
         meta.edit().putBoolean(marker, true).apply()
     }
     private fun migrateBlockPuzzleProgress(context: Context, user: String?, target: SharedPreferences) {
-        normalizeInts(target, listOf("score", "best", "level", "lines", "total_lines", "level_lines", "combo"))
+        normalizeInts(target, listOf("score", "best", "level", "lines", "total_lines", "level_lines", "combo", "best_combo", "reshuffles"))
         if (target.all.isNotEmpty()) return
         val meta = context.getSharedPreferences("wet_progress_migration", Context.MODE_PRIVATE)
         val marker = "block_hd2d_v2_${user ?: "legacy"}"
