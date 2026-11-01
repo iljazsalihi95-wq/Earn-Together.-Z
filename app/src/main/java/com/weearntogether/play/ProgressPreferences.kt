@@ -6,13 +6,15 @@ import org.json.JSONObject
 
 /** Existing unscoped saves are retained. Each online player gets an isolated offline cache. */
 object ProgressPreferences {
+    // Only backend-supported games belong here: CloudProgress iterates this map and uploads
+    // every key as a server game identifier. Local-only games stay in extras until the backend
+    // explicitly supports their identifier.
     val gameFiles = linkedMapOf(
         "LazyGarden" to listOf("lazy_garden_progress", "lazy_garden_wallet", "lazy_garden_milestone"),
         "Block Puzzle" to listOf("block_puzzle", "block_puzzle_hd2d"),
-        "Bubble Shooter" to listOf("bubble_shooter", "bubble_shooter_hd2d"),
-        "Blade Quest" to listOf("knife_hit")
+        "Bubble Shooter" to listOf("bubble_shooter", "bubble_shooter_hd2d")
     )
-    private val extras = listOf("wet_loyalty_progress", "wet_play_history", "color_lines", "neon_stack", "merge2048")
+    private val extras = listOf("wet_loyalty_progress", "wet_play_history", "color_lines", "neon_stack", "merge2048", "knife_hit")
     fun user(context: Context): String? = context.getSharedPreferences("wet_cloud_session", Context.MODE_PRIVATE).getString("user_id", null)
     fun open(context: Context, name: String): SharedPreferences {
         val user = user(context)
