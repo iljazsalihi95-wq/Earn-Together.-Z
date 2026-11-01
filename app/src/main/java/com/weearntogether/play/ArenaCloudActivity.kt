@@ -160,8 +160,8 @@ class ArenaCloudActivity:Activity(){
     private fun stopVoice(){tts?.stop();voiceGeneration++;player?.release();player=null;scene?.speaking=false}
     private fun ttsFallback(phase:String){
         if(!audioEnabled)return;val s=session?:return;val q=s.optJSONObject("question")?:return
-        if(!isOfflineSession()){status.text="Zëri mashkullor AI nuk u ngarkua. Mund ta riprovosh; loja vazhdon.";if(phase=="question")finishQuestionReading(questionKey(s));return}
-        val lang=if(isOfflineSession())"sq" else locale
+        if(!isOfflineSession())status.text="Audioja AI nuk u ngarkua. Po provoj leximin zanor të pajisjes."
+        val lang=locale
         if(!ttsReady||(tts?.isLanguageAvailable(java.util.Locale(lang))?:-1)<0){status.text="Audioja nuk është e disponueshme. Loja vazhdon me tekst.";if(phase=="question")finishQuestionReading(questionKey(s));return}
         tts?.language=java.util.Locale(lang);val f=s.optJSONObject("feedback")
         val text=if(phase=="explanation"&&f!=null)q.getJSONArray("choices").optString(f.getInt("correct"))+". "+f.optString("explanation") else q.optString("prompt")+". "+(0 until q.getJSONArray("choices").length()).joinToString(". "){"${'A'+it}. "+q.getJSONArray("choices").getString(it)}
@@ -173,7 +173,7 @@ class ArenaCloudActivity:Activity(){
         if(!audioEnabled)return;val s=session?:return;stopVoice();if(isOfflineSession()){ttsFallback(phase);return}
         val generation=voiceGeneration;val version=modeVersion
         val q=s.optJSONObject("question")?:return
-        val cacheKey=java.security.MessageDigest.getInstance("SHA-256").digest(("sq-v3|"+locale+q.toString()+s.optJSONObject("feedback").toString()+phase).toByteArray()).joinToString(""){"%02x".format(it)}
+        val cacheKey=java.security.MessageDigest.getInstance("SHA-256").digest(("sq-v3|"+locale+q.toString()+(s.optJSONObject("feedback")?.toString()?:"")+phase).toByteArray()).joinToString(""){"%02x".format(it)}
         val cachedAudio=java.io.File(cacheDir,"arena-voice-$cacheKey.mp3")
         fun playCached(){player=android.media.MediaPlayer().apply{setDataSource(cachedAudio.absolutePath);setOnPreparedListener{if(generation==voiceGeneration&&resumed&&session===s){scene?.speaking=true;scene?.stageStatus="PREZANTUESI PO LEXON";it.start()}};setOnCompletionListener{if(generation==voiceGeneration&&resumed&&session===s){scene?.speaking=false;if(phase=="question")finishQuestionReading(questionKey(s))}};setOnErrorListener{_,_,_->cachedAudio.delete();ttsFallback(phase);true};prepareAsync()}}
         if(cachedAudio.exists()){runCatching{playCached()}.onFailure{cachedAudio.delete();ttsFallback(phase)};return}
