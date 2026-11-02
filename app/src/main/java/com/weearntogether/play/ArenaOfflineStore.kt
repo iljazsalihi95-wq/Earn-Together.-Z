@@ -8,10 +8,36 @@ import java.util.Locale
 /** Device-only practice. Never writes CloudProgress, wallet receipts, or LIVE ranking. */
 class ArenaOfflineStore(private val context:Context,user:String){
     private val prefs=context.getSharedPreferences("arena_offline_v1_"+user,Context.MODE_PRIVATE)
+    private fun verifiedMathQuestions():List<QuizArenaActivity.Question>{
+        data class MathQ(val prompt:String,val choices:List<String>,val correct:Int,val explanation:String)
+        val rows=listOf(
+            MathQ("Sa është 18 + 27?",listOf("35","45","55","46"),1,"18 + 27 = 45."),
+            MathQ("Sa është 72 - 38?",listOf("34","44","36","32"),0,"72 - 38 = 34."),
+            MathQ("Sa është 9 × 8?",listOf("63","72","81","64"),1,"9 × 8 = 72."),
+            MathQ("Sa është 144 ÷ 12?",listOf("10","11","12","14"),2,"144 ÷ 12 = 12."),
+            MathQ("Sa është 25% e numrit 80?",listOf("15","20","25","30"),1,"25% është një e katërta; 80 ÷ 4 = 20."),
+            MathQ("Sa është 3/4 e numrit 40?",listOf("20","25","30","35"),2,"40 ÷ 4 = 10 dhe 10 × 3 = 30."),
+            MathQ("Një trekëndësh ka kënde 50° dhe 60°. Sa është këndi i tretë?",listOf("60°","70°","80°","90°"),1,"Shuma e këndeve të trekëndëshit është 180°; 180 - 50 - 60 = 70°."),
+            MathQ("Sa është perimetri i një drejtkëndëshi me gjatësi 8 cm dhe gjerësi 5 cm?",listOf("13 cm","26 cm","40 cm","30 cm"),1,"Perimetri është 2 × (8 + 5) = 26 cm."),
+            MathQ("Sa është sipërfaqja e një drejtkëndëshi 7 cm × 6 cm?",listOf("13 cm²","36 cm²","42 cm²","48 cm²"),2,"Sipërfaqja është 7 × 6 = 42 cm²."),
+            MathQ("Sa është 2³?",listOf("6","8","9","12"),1,"2³ = 2 × 2 × 2 = 8."),
+            MathQ("Cili numër është 15 më i madh se 37?",listOf("42","47","52","62"),2,"37 + 15 = 52."),
+            MathQ("Sa minuta janë 2 orë e 30 minuta?",listOf("120","130","150","180"),2,"2 orë janë 120 minuta; 120 + 30 = 150."),
+            MathQ("Nëse 5 fletore kushtojnë 15 €, sa kushton një fletore?",listOf("2 €","3 €","4 €","5 €"),1,"15 ÷ 5 = 3 € për fletore."),
+            MathQ("Sa është mesatarja e numrave 4, 6 dhe 8?",listOf("5","6","7","8"),1,"(4 + 6 + 8) ÷ 3 = 18 ÷ 3 = 6."),
+            MathQ("Sa është 0,5 × 60?",listOf("20","30","40","50"),1,"0,5 është gjysma; gjysma e 60 është 30."),
+            MathQ("Sa është 10% e numrit 350?",listOf("25","30","35","40"),2,"10% e 350 është 350 ÷ 10 = 35."),
+            MathQ("Një katror ka perimetër 36 cm. Sa është gjatësia e një brinje?",listOf("6 cm","8 cm","9 cm","12 cm"),2,"Katrori ka katër brinjë të barabarta; 36 ÷ 4 = 9 cm."),
+            MathQ("Sa është 7 × 6 - 10?",listOf("22","32","36","42"),1,"Së pari 7 × 6 = 42, pastaj 42 - 10 = 32."),
+            MathQ("Cili është numri pasues në vargun 5, 10, 15, 20, ...?",listOf("21","24","25","30"),2,"Vargu rritet me 5; pas 20 vjen 25."),
+            MathQ("Sa është 1/5 e numrit 100?",listOf("10","20","25","50"),1,"100 ÷ 5 = 20.")
+        )
+        return rows.mapIndexed{i,q->QuizArenaActivity.Question("Matematikë",q.prompt,q.choices,q.correct,q.explanation,"arena-math-${101+i}","Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht")}
+    }
     val questions:List<QuizArenaActivity.Question> by lazy {
         val primary=runCatching{val rows=JSONObject(context.assets.open("quiz-arena/sheet-snapshot.json").bufferedReader().use{it.readText()}).getJSONArray("rows");QuizBank(context).parse(rows)}.getOrDefault(emptyList())
         val extra=runCatching{val data=JSONObject(context.assets.open("quiz-arena/general-sq.json").bufferedReader().use{it.readText()}).getJSONArray("questions");(0 until data.length()).mapNotNull{i->val q=data.getJSONObject(i);if(q.optString("reviewStatus") !in setOf("verified","verified_source","verified_calculation"))return@mapNotNull null;val options=q.optJSONArray("options")?:return@mapNotNull null;val sources=q.optJSONArray("sources")?:JSONArray();QuizArenaActivity.Question(q.optString("category"),q.optString("question"),(0 until options.length()).map{options.optString(it)},q.optInt("correctIndex",-1),q.optString("explanation"),q.optString("id"),(0 until sources.length()).joinToString("; "){sources.getJSONObject(it).optString("url",sources.getJSONObject(it).optString("work"))})}}.getOrDefault(emptyList())
-        (primary+extra).filter{it.id.isNotBlank()&&it.prompt.isNotBlank()&&it.why.isNotBlank()&&it.source.isNotBlank()&&it.choices.size in 2..5&&it.choices.all(String::isNotBlank)&&it.correct in it.choices.indices}.distinctBy{it.prompt.trim().lowercase(Locale.ROOT)}
+        (primary+extra+verifiedMathQuestions()).filter{it.id.isNotBlank()&&it.prompt.isNotBlank()&&it.why.isNotBlank()&&it.source.isNotBlank()&&it.choices.size in 2..5&&it.choices.all(String::isNotBlank)&&it.correct in it.choices.indices}.distinctBy{it.prompt.trim().lowercase(Locale.ROOT)}
     }
     fun categories()=questions.map{it.category}.filter{it.isNotBlank()}.distinct().sorted()
     fun progress():JSONObject=JSONObject().put("level",prefs.getInt("level",1)).put("points",prefs.getInt("points",0)).put("best",prefs.getInt("best",0))
