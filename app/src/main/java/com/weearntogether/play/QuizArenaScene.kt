@@ -39,11 +39,11 @@ class QuizArenaScene(context:Context):View(context){
         val speechTime=(time-speechStarted).coerceAtLeast(0);val reactionTime=(time-reactionStarted).coerceAtLeast(0)
         // Presenter movement is intentionally restrained: subtle mouth/hand changes while
         // speaking, a short congratulatory nod on a correct answer and a calm reset otherwise.
-        val talkSequence=intArrayOf(0,1,0,6,0,1,0,7)
-        val frame=when{speaking->talkSequence[((speechTime/430)%talkSequence.size).toInt()];reaction>0->if(reactionTime<900)3 else 2;reaction<0->if(reactionTime<700)5 else 7;else->if((time/3200)%2==0L)2 else 7}
+        val talkSequence=intArrayOf(0,1,6,1,7,0,6,1,7,0,1,6)
+        val frame=when{speaking->talkSequence[((speechTime/230)%talkSequence.size).toInt()];reaction>0->if(reactionTime<900)3 else 2;reaction<0->if(reactionTime<700)5 else 7;else->if((time/3200)%2==0L)2 else 7}
         val src=Rect((frame%4)*host.width/4,(frame/4)*host.height/2,(frame%4+1)*host.width/4,(frame/4+1)*host.height/2)
-        val hostBounce=when{speaking->sin(speechTime/330.0)*1.6;reaction>0&&reactionTime<900->-abs(sin(reactionTime/260.0))*3.2;else->sin(phase*1.2)*.7}.toFloat()
-        val hostTilt=when{speaking->sin(speechTime/420.0)*.55;reaction>0&&reactionTime<900->sin(reactionTime/300.0)*.8;reaction<0&&reactionTime<700->sin(reactionTime/600.0)*-.35;else->0.0}.toFloat()
+        val hostBounce=when{speaking->sin(speechTime/240.0)*3.5;reaction>0&&reactionTime<900->-abs(sin(reactionTime/260.0))*3.2;else->sin(phase*1.2)*.7}.toFloat()
+        val hostTilt=when{speaking->sin(speechTime/350.0)*1.6;reaction>0&&reactionTime<900->sin(reactionTime/300.0)*.8;reaction<0&&reactionTime<700->sin(reactionTime/600.0)*-.35;else->0.0}.toFloat()
         c.save();c.clipRect(496f,0f,692f,186f);c.rotate(hostTilt,594f,168f);c.translate(0f,hostBounce);c.drawBitmap(host,src,RectF(501f,2f,686f,236f),p);c.restore()
         val photo=portrait
         if(photo!=null){val r=RectF(75f,25f,183f,133f);p.color=Color.WHITE;c.drawRoundRect(70f,20f,188f,138f,20f,20f,p);c.save();val clip=Path().apply{addRoundRect(r,15f,15f,Path.Direction.CW)};c.clipPath(clip);val size=minOf(photo.width,photo.height);c.drawBitmap(photo,Rect((photo.width-size)/2,(photo.height-size)/2,(photo.width+size)/2,(photo.height+size)/2),r,p);c.restore()}
