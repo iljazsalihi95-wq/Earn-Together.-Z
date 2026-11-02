@@ -1,0 +1,6 @@
+name = "quiz-arena-backend"
+main = "quiz-arena/cloudflare-worker/src/index.js"
+compatibility_date = "2026-11-02"
+
+[vars]
+APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzu9rso0BO_UhLBPi3TMqIQl44tZ12r0n-t143ydmWOoiVMPbm_YA1uF0rImIfEcvaERw/exec"
