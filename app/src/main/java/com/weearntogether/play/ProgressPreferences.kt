@@ -11,7 +11,7 @@ object ProgressPreferences {
         "Block Puzzle" to listOf("block_puzzle", "block_puzzle_hd2d"),
         "Bubble Shooter" to listOf("bubble_shooter", "bubble_shooter_hd2d")
     )
-    private val extras = listOf("wet_loyalty_progress", "wet_play_history", "color_lines", "neon_stack", "merge2048", "knife_hit")
+    private val extras = listOf("wet_loyalty_progress", "wet_play_history", "color_lines", "neon_stack", "merge2048", "knife_hit", "ball_sort")
     fun user(context: Context): String? = context.getSharedPreferences("wet_cloud_session", Context.MODE_PRIVATE).getString("user_id", null)
     fun open(context: Context, name: String): SharedPreferences {
         val user = user(context)
@@ -24,6 +24,7 @@ object ProgressPreferences {
         if (name == "block_puzzle_hd2d") normalizeCsv(target, "offers", 3, -1..11)
         if (name == "bubble_shooter_hd2d") normalizeCsv(target, "grid", 99, 0..5)
         if (name == "knife_hit") normalizeInts(target, listOf("level", "best", "score"))
+        if (name == "ball_sort") normalizeInts(target, listOf("level", "moves", "rewarded_undos"))
         return target
     }
     private fun intValue(prefs: SharedPreferences, key: String, fallback: Int): Int {
