@@ -6,9 +6,6 @@ import org.json.JSONObject
 
 /** Existing unscoped saves are retained. Each online player gets an isolated offline cache. */
 object ProgressPreferences {
-    // Only backend-supported games belong here: CloudProgress iterates this map and uploads
-    // every key as a server game identifier. Local-only games stay in extras until the backend
-    // explicitly supports their identifier.
     val gameFiles = linkedMapOf(
         "LazyGarden" to listOf("lazy_garden_progress", "lazy_garden_wallet", "lazy_garden_milestone"),
         "Block Puzzle" to listOf("block_puzzle", "block_puzzle_hd2d"),
@@ -21,11 +18,8 @@ object ProgressPreferences {
         val target = forUser(context, name, user)
         if (name == "bubble_shooter_hd2d") migrateBubbleShooterProgress(context, user, target)
         if (name == "block_puzzle_hd2d") migrateBlockPuzzleProgress(context, user, target)
-        // Legacy activities still read these files with SharedPreferences.getInt(). Normalize
-        // every persistent numeric counter before those reads so older cloud/JSON snapshots
-        // cannot terminate a native game with ClassCastException.
-        if (name == "block_puzzle") normalizeInts(target, listOf("level", "best", "score", "lines", "total_lines", "level_lines", "combo", "best_combo", "reshuffles"))
-        if (name == "bubble_shooter") normalizeInts(target, listOf("level", "best_level", "best", "score", "streak", "pressure", "misses", "current", "next"))
+        if (name == "block_puzzle" || name == "block_puzzle_hd2d") normalizeInts(target, listOf("level", "best", "score", "lines", "total_lines", "level_lines", "combo", "best_combo", "reshuffles"))
+        if (name == "bubble_shooter" || name == "bubble_shooter_hd2d") normalizeInts(target, listOf("level", "best_level", "best", "score", "streak", "pressure", "misses", "current", "next"))
         if (name == "knife_hit") normalizeInts(target, listOf("level", "best", "score"))
         return target
     }
@@ -36,7 +30,7 @@ object ProgressPreferences {
             is Long -> value.coerceIn(Int.MIN_VALUE.toLong(), Int.MAX_VALUE.toLong()).toInt()
             is Float -> value.toInt()
             is Number -> value.toInt()
-            is String -> value.toIntOrNull() ?: fallback
+            is String -> value.trim().toIntOrNull() ?: fallback
             else -> fallback
         }
     }
@@ -49,7 +43,7 @@ object ProgressPreferences {
                     is Long -> raw.coerceIn(Int.MIN_VALUE.toLong(), Int.MAX_VALUE.toLong()).toInt()
                     is Float -> raw.toInt()
                     is Number -> raw.toInt()
-                    is String -> raw.toIntOrNull()
+                    is String -> raw.trim().toIntOrNull()
                     else -> null
                 }
                 if (parsed != null) { edit.putInt(key, parsed); changed = true }
