@@ -20,6 +20,9 @@ object ProgressPreferences {
         if (name == "block_puzzle_hd2d") migrateBlockPuzzleProgress(context, user, target)
         if (name == "block_puzzle" || name == "block_puzzle_hd2d") normalizeInts(target, listOf("level", "best", "score", "lines", "total_lines", "level_lines", "combo", "best_combo", "reshuffles"))
         if (name == "bubble_shooter" || name == "bubble_shooter_hd2d") normalizeInts(target, listOf("level", "best_level", "best", "score", "streak", "pressure", "misses", "current", "next"))
+        if (name == "block_puzzle_hd2d") normalizeCsv(target, "board", 64, 0..5)
+        if (name == "block_puzzle_hd2d") normalizeCsv(target, "offers", 3, -1..11)
+        if (name == "bubble_shooter_hd2d") normalizeCsv(target, "grid", 99, 0..5)
         if (name == "knife_hit") normalizeInts(target, listOf("level", "best", "score"))
         return target
     }
@@ -51,6 +54,13 @@ object ProgressPreferences {
             }
         }
         if (changed) edit.apply()
+    }
+    private fun normalizeCsv(target: SharedPreferences, key: String, expected: Int, allowed: IntRange) {
+        val raw = target.all[key] ?: return
+        val text = raw as? String
+        val values = text?.split(',')?.map { it.trim().toIntOrNull() }
+        val valid = values != null && values.size == expected && values.all { it != null && it in allowed }
+        if (!valid) target.edit().remove(key).apply()
     }
     private fun migrateBubbleShooterProgress(context: Context, user: String?, target: SharedPreferences) {
         normalizeInts(target, listOf("best", "level", "best_level", "score", "streak", "pressure", "misses", "current", "next"))
