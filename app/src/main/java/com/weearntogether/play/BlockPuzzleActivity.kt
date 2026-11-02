@@ -3,6 +3,7 @@ package com.weearntogether.play
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -32,14 +33,8 @@ class BlockPuzzleActivity : Activity() {
     }
 
     private fun chip(text: String, accent: Boolean = false, action: () -> Unit) = TextView(this).apply {
-        this.text = text
-        textSize = 13f
-        setTextColor(if (accent) 0xff07152c.toInt() else Color.WHITE)
-        gravity = Gravity.CENTER
-        setTypeface(null, Typeface.BOLD)
-        isClickable = true
-        isFocusable = true
-        elevation = dp(10).toFloat()
+        this.text = text; textSize = 13f; setTextColor(if (accent) 0xff07152c.toInt() else Color.WHITE); gravity = Gravity.CENTER
+        setTypeface(null, Typeface.BOLD); isClickable = true; isFocusable = true; elevation = dp(10).toFloat()
         background = if (accent) GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xffffdf72.toInt(), 0xffffb72f.toInt())).apply {
             cornerRadius = dp(23).toFloat(); setStroke(dp(1), 0xffffedaa.toInt())
         } else GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xf0162d5b.toInt(), 0xf00a72c7.toInt())).apply {
@@ -48,59 +43,54 @@ class BlockPuzzleActivity : Activity() {
         setOnClickListener { performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP); action() }
     }
 
+    /** Cloud/legacy restores can contain numeric values encoded with a different primitive type. */
+    private fun savedInt(prefs: SharedPreferences, key: String, fallback: Int): Int = when (val value = prefs.all[key]) {
+        is Int -> value
+        is Long -> value.coerceIn(Int.MIN_VALUE.toLong(), Int.MAX_VALUE.toLong()).toInt()
+        is Float -> value.toInt()
+        is Double -> value.toInt()
+        is Number -> value.toInt()
+        is String -> value.trim().toIntOrNull() ?: fallback
+        else -> fallback
+    }
+
     private fun migrateLegacyProgress() {
         val premium = ProgressPreferences.open(this, "block_puzzle_hd2d")
-        if (premium.getInt("level", -1) >= 0 || premium.getInt("best", -1) >= 0) return
+        if (savedInt(premium, "level", -1) >= 0 || savedInt(premium, "best", -1) >= 0) return
         val legacy = ProgressPreferences.open(this, "block_puzzle")
-        val legacyLevel = legacy.getInt("level", -1)
-        val legacyBest = legacy.getInt("best", -1)
+        val legacyLevel = savedInt(legacy, "level", -1)
+        val legacyBest = savedInt(legacy, "best", -1)
         if (legacyLevel < 0 && legacyBest < 0) return
         premium.edit().putInt("level", legacyLevel.coerceIn(1, 250)).putInt("best", legacyBest.coerceAtLeast(0)).apply()
     }
 
     private fun savedProgressLabel(): String {
         val prefs = ProgressPreferences.open(this, "block_puzzle_hd2d")
-        val level = prefs.getInt("level", 1).coerceIn(1, 250)
-        val best = prefs.getInt("best", 0).coerceAtLeast(0)
+        val level = savedInt(prefs, "level", 1).coerceIn(1, 250)
+        val best = savedInt(prefs, "best", 0).coerceAtLeast(0)
         return ui("AUTO-SAVE • LEVEL $level/250 • BEST $best", "AUTO-RUAJTJE • NIVELI $level/250 • REKORDI $best", "AUTO-SPEICHERN • LEVEL $level/250 • BEST $best", "SALVATAGGIO AUTO • LIVELLO $level/250 • BEST $best")
     }
 
     private fun refreshSavedProgress() { if (::status.isInitialized) { status.text = savedProgressLabel(); status.contentDescription = status.text } }
+    private fun openGame(target: Class<out Activity>) { startActivity(Intent(this, target).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         ads = NativeGameAds(this, "block")
-        window.statusBarColor = Color.TRANSPARENT
-        window.navigationBarColor = Color.TRANSPARENT
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        enterImmersive()
-        migrateLegacyProgress()
+        window.statusBarColor = Color.TRANSPARENT; window.navigationBarColor = Color.TRANSPARENT
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); enterImmersive(); migrateLegacyProgress()
 
-        game = PremiumBlockPuzzleView(this) {
-            loyalty.recordGameProgress(10)
-            refreshSavedProgress()
-            ads.naturalBreak()
-        }
-
-        val host = FrameLayout(this).apply {
-            setBackgroundColor(0xff070d20.toInt())
-            addView(game, FrameLayout.LayoutParams(-1, -1))
-        }
-
+        game = PremiumBlockPuzzleView(this) { loyalty.recordGameProgress(10); refreshSavedProgress(); ads.naturalBreak() }
+        val host = FrameLayout(this).apply { setBackgroundColor(0xff070d20.toInt()); addView(game, FrameLayout.LayoutParams(-1, -1)) }
         val header = View(this).apply {
             background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xff0a1a3b.toInt(), 0xff241050.toInt(), 0xff071a38.toInt())).apply { setStroke(dp(1), 0x5569cfff) }
             elevation = dp(4).toFloat()
         }
         host.addView(header, FrameLayout.LayoutParams(-1, dp(108), Gravity.TOP))
         host.addView(TextView(this).apply {
-            text = "BLOCK PUZZLE • PREMIUM"
-            contentDescription = text
-            textSize = 17f
-            setTextColor(Color.WHITE)
-            gravity = Gravity.CENTER
-            setTypeface(null, Typeface.BOLD)
-            letterSpacing = .06f
+            text = "BLOCK PUZZLE • PREMIUM"; contentDescription = text; textSize = 17f; setTextColor(Color.WHITE); gravity = Gravity.CENTER
+            setTypeface(null, Typeface.BOLD); letterSpacing = .06f
         }, FrameLayout.LayoutParams(dp(250), dp(28), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(48) })
         host.addView(chip("‹  " + ui("BACK", "PRAPA", "ZURÜCK", "INDIETRO")) { finish() }.apply { contentDescription = ui("Back", "Prapa", "Zurück", "Indietro") }, FrameLayout.LayoutParams(dp(104), dp(42), Gravity.TOP or Gravity.START).apply { leftMargin = dp(12); topMargin = dp(6) })
         host.addView(chip("↻  " + ui("RESTART", "RIFILLO", "NEUSTART", "RIPROVA"), true) { confirmRestart() }.apply { contentDescription = ui("Restart level", "Rifillo nivelin", "Level neu starten", "Riavvia livello") }, FrameLayout.LayoutParams(dp(126), dp(42), Gravity.TOP or Gravity.END).apply { rightMargin = dp(12); topMargin = dp(6) })
@@ -111,11 +101,10 @@ class BlockPuzzleActivity : Activity() {
         }
         host.addView(status, FrameLayout.LayoutParams(dp(300), dp(24), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(80) })
 
-        val knife = chip(ui("BLADE QUEST", "THIKAT", "MESSER", "COLTELLI")) { startActivity(Intent(this, KnifeHitActivity::class.java)) }.apply { contentDescription = ui("Open Blade Quest", "Hap Blade Quest", "Blade Quest öffnen", "Apri Blade Quest") }
+        val knife = chip(ui("BLADE QUEST", "THIKAT", "MESSER", "COLTELLI")) { openGame(KnifeHitActivity::class.java) }.apply { contentDescription = ui("Open Blade Quest", "Hap Blade Quest", "Blade Quest öffnen", "Apri Blade Quest") }
         host.addView(knife, FrameLayout.LayoutParams(dp(118), dp(40), Gravity.BOTTOM or Gravity.START).apply { leftMargin = dp(10); bottomMargin = dp(6) })
-        val nextGame = chip(ui("BUBBLES ›", "TOPAT ›", "BUBBLES ›", "BOLLE ›")) { startActivity(Intent(this, BubbleShooterActivity::class.java)) }.apply { contentDescription = ui("Open Bubble Shooter", "Hap Bubble Shooter", "Bubble Shooter öffnen", "Apri Bubble Shooter") }
+        val nextGame = chip(ui("BUBBLES ›", "TOPAT ›", "BUBBLES ›", "BOLLE ›")) { openGame(BubbleShooterActivity::class.java) }.apply { contentDescription = ui("Open Bubble Shooter", "Hap Bubble Shooter", "Bubble Shooter öffnen", "Apri Bubble Shooter") }
         host.addView(nextGame, FrameLayout.LayoutParams(dp(118), dp(40), Gravity.BOTTOM or Gravity.END).apply { rightMargin = dp(10); bottomMargin = dp(6) })
-
         setContentView(host)
     }
 
@@ -126,10 +115,8 @@ class BlockPuzzleActivity : Activity() {
             .setTitle(ui("Restart level?", "Rifillo nivelin?", "Level neu starten?", "Riavviare il livello?"))
             .setMessage(ui("The current board restarts. Your best score stays saved.", "Tabela aktuale rifillon. Rekordi më i mirë mbetet i ruajtur.", "Das aktuelle Spielfeld startet neu. Der Bestwert bleibt gespeichert.", "La griglia riparte. Il record resta salvato."))
             .setNegativeButton(ui("CANCEL", "ANULO", "ABBRECHEN", "ANNULLA"), null)
-            .setPositiveButton(ui("RESTART", "RIFILLO", "NEUSTART", "RIPROVA")) { _, _ -> game.restart(); refreshSavedProgress() }
-            .create()
-        dialog.setOnDismissListener { dialogOpen = false; refreshSavedProgress(); enterImmersive() }
-        dialog.show()
+            .setPositiveButton(ui("RESTART", "RIFILLO", "NEUSTART", "RIPROVA")) { _, _ -> game.restart(); refreshSavedProgress() }.create()
+        dialog.setOnDismissListener { dialogOpen = false; refreshSavedProgress(); enterImmersive() }; dialog.show()
     }
 
     override fun onResume() { super.onResume(); if (::ads.isInitialized) ads.resume(); refreshSavedProgress(); if (!dialogOpen) enterImmersive() }
@@ -140,10 +127,7 @@ class BlockPuzzleActivity : Activity() {
     private fun enterImmersive() {
         if (android.os.Build.VERSION.SDK_INT >= 30) {
             window.setDecorFitsSystemWindows(false)
-            window.insetsController?.let {
-                it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
+            window.insetsController?.let { it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars()); it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE }
         } else {
             @Suppress("DEPRECATION")
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
