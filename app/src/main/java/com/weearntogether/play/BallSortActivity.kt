@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.*
 import android.graphics.drawable.GradientDrawable
 import android.animation.ValueAnimator
+import android.content.Intent
 import kotlin.math.sin
 
 class BallSortActivity:Activity(){
@@ -15,12 +16,13 @@ class BallSortActivity:Activity(){
     private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt()
     override fun onCreate(state:Bundle?){super.onCreate(state);ads=NativeGameAds(this,"ball_sort");rewardedUndos=prefs.getInt("rewarded_undos",0);val level=prefs.getInt("level",1);val saved=runCatching{val a=org.json.JSONArray(prefs.getString("board",null));(0 until a.length()).map{i->val r=a.getJSONArray(i);(0 until r.length()).map{r.getInt(it)}}}.getOrNull();game=BallSortGame(level,saved);game.moves=prefs.getInt("moves",0);show()}
     private fun show(){val root=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(18),dp(12),dp(18),dp(14));background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff0c1b3c.toInt(),0xff291d58.toInt(),0xff091b35.toInt()))};root.setOnApplyWindowInsetsListener{v,i->v.setPadding(dp(18)+i.systemWindowInsetLeft,dp(12)+i.systemWindowInsetTop,dp(18)+i.systemWindowInsetRight,dp(14)+i.systemWindowInsetBottom);i}
-        val top=LinearLayout(this);fun btn(s:String,go:()->Unit)=Button(this).apply{text=s;isAllCaps=false;setTextColor(Color.WHITE);textSize=15f;setTypeface(null,Typeface.BOLD);background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff24579c.toInt(),0xff43327d.toInt())).apply{cornerRadius=dp(15).toFloat();setStroke(dp(1),0x667dbaff)};setOnClickListener{go()}}
-        top.addView(btn("‹ Ballina"){finish()},LinearLayout.LayoutParams(0,dp(52),1f));top.addView(btn("↶ Kthe"){if(!board.busy&&(game.moves<=5||rewardedUndos>0)&&game.undo()){if(game.moves>=5)rewardedUndos--;save();board.selected=-1;board.invalidate();status()}},LinearLayout.LayoutParams(0,dp(52),1f));root.addView(top)
+        fun btn(s:String,go:()->Unit)=Button(this).apply{text=s;isAllCaps=false;setTextColor(Color.WHITE);textSize=15f;setTypeface(null,Typeface.BOLD);background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff24579c.toInt(),0xff43327d.toInt())).apply{cornerRadius=dp(15).toFloat();setStroke(dp(1),0x667dbaff)};setOnClickListener{performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);go()}}
+        val top=LinearLayout(this);top.addView(btn("‹ Ballina"){finish()},LinearLayout.LayoutParams(0,dp(52),1f));top.addView(btn("↶ Kthe"){if(!board.busy&&(game.moves<=5||rewardedUndos>0)&&game.undo()){if(game.moves>=5)rewardedUndos--;save();board.selected=-1;board.invalidate();status()}},LinearLayout.LayoutParams(0,dp(52),1f));root.addView(top)
         root.addView(TextView(this).apply{text="BALL SORT";textSize=30f;setTextColor(0xffffd278.toInt());gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD)})
         hud=TextView(this).apply{textSize=16f;setTextColor(Color.WHITE);gravity=Gravity.CENTER;setPadding(0,dp(10),0,dp(10))};root.addView(hud)
         board=BallSortBoard(this,game){save();status();if(game.won())android.app.AlertDialog.Builder(this).setTitle("Nivel i përfunduar!").setMessage("Të gjitha ngjyrat u renditën në ${game.moves} lëvizje.").setCancelable(false).setPositiveButton("NIVELI TJETËR"){_,_->game=BallSortGame(game.level+1);save();show();ads.naturalBreak()}.show()};root.addView(board,LinearLayout.LayoutParams(-1,0,1f))
         root.addView(TextView(this).apply{text="Prek tubin burim, pastaj tubin pritës.\nVetëm topa të së njëjtës ngjyrë vendosen bashkë.";textSize=14f;setTextColor(0xffc0cdef.toInt());gravity=Gravity.CENTER;setPadding(0,dp(10),0,dp(10))})
+        val games=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL};games.addView(btn("BLOCK PUZZLE"){save();startActivity(Intent(this,BlockPuzzleActivity::class.java))},LinearLayout.LayoutParams(0,dp(50),1f).apply{marginEnd=dp(5)});games.addView(btn("BUBBLE SHOOTER"){save();startActivity(Intent(this,BubbleShooterActivity::class.java))},LinearLayout.LayoutParams(0,dp(50),1f).apply{marginStart=dp(5)});root.addView(games,LinearLayout.LayoutParams(-1,dp(50)).apply{bottomMargin=dp(8)})
         root.addView(btn("RIFILLO NIVELIN"){if(!board.busy)android.app.AlertDialog.Builder(this).setTitle("Rifillo nivelin?").setNegativeButton("Anulo",null).setPositiveButton("Rifillo"){_,_->game=BallSortGame(game.level);save();show()}.show()});root.addView(btn("VIDEO • +3 KTHIME"){ads.rewarded(onGameplayReward={rewardedUndos+=3;save();Toast.makeText(this,"+3 kthime bonus",Toast.LENGTH_SHORT).show()})});ads.banner(root);setContentView(root);status()
     }
     private fun status(){hud.text="NIVELI ${game.level}    •    ${game.moves} LËVIZJE"}
