@@ -10,7 +10,8 @@ class BallSortGame(val level:Int, saved:List<List<Int>>?=null){
     val capacity=4
     val colors=(3+(level-1)/3).coerceAtMost(9)
     val emptyTubes=when { level<12->2; level<45->2; else->3 }
-    var tubes:MutableList<MutableList<Int>> = saved?.map { it.toMutableList() }?.toMutableList()
+    private val restored=saved?.takeIf(::validSavedBoard)
+    var tubes:MutableList<MutableList<Int>> = restored?.map { it.toMutableList() }?.toMutableList()
         ?: MutableList(colors+emptyTubes){i->if(i<colors)MutableList(capacity){i} else mutableListOf()}
         private set
     val history=mutableListOf<List<List<Int>>>()
@@ -18,7 +19,20 @@ class BallSortGame(val level:Int, saved:List<List<Int>>?=null){
     var lastPourCount=0
         private set
 
-    init{if(saved==null)scramble()}
+    init{if(restored==null)scramble()}
+
+    /** Reject malformed/partial cloud or legacy saves before native rendering.
+     * A valid board has the expected tube count, never exceeds tube capacity and still
+     * contains exactly four balls of every level colour. Invalid saves regenerate from
+     * the deterministic level seed instead of crashing or creating an impossible puzzle.
+     */
+    private fun validSavedBoard(board:List<List<Int>>):Boolean{
+        if(board.size!=colors+emptyTubes)return false
+        if(board.any{it.size>capacity||it.any{color->color !in 0 until colors}})return false
+        val counts=IntArray(colors)
+        board.flatten().forEach{counts[it]++}
+        return counts.all{it==capacity}
+    }
 
     fun won()=tubes.all { it.isEmpty() || (it.size==capacity && it.distinct().size==1) }
 
