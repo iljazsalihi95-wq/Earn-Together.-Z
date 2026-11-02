@@ -82,9 +82,27 @@ class BallSortGame(val level:Int, saved:List<List<Int>>?=null){
                 tubes[b].add(tubes[a].removeAt(tubes[a].lastIndex))
             }
         }
+        ensurePlayableStart()
+    }
+
+    /** A generated level must never open already completed. Random reversible mixing can
+     * occasionally return to a solved arrangement. In that case split two solved stacks
+     * into the spare tubes. Both splits are directly reversible, so the level remains
+     * solvable while being guaranteed to require player input.
+     */
+    private fun ensurePlayableStart(){
+        if(!won())return
+        val spare=tubes.indices.filter{tubes[it].isEmpty()}.take(2)
+        val sources=tubes.indices.filter{tubes[it].size==capacity}.take(spare.size)
+        for(i in sources.indices){
+            val from=sources[i];val to=spare[i]
+            tubes[to].add(tubes[from].removeAt(tubes[from].lastIndex))
+        }
+        // Defensive fallback for any future level layout with fewer completely empty tubes.
         if(won()){
-            val a=tubes.indexOfFirst{it.isNotEmpty()};val b=tubes.indexOfFirst{it.isEmpty()}
-            if(a>=0&&b>=0)tubes[b].add(tubes[a].removeAt(tubes[a].lastIndex))
+            val from=tubes.indexOfFirst{it.size==capacity}
+            val to=tubes.indexOfFirst{it.size<capacity&&it.indices.none()}
+            if(from>=0&&to>=0)tubes[to].add(tubes[from].removeAt(tubes[from].lastIndex))
         }
     }
 }
