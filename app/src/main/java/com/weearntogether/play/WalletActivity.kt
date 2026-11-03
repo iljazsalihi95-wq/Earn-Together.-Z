@@ -41,6 +41,14 @@ class WalletActivity:Activity(){
         box("VERIFIED COINS",b.optLong("verified_coins").toString(),"Eligible coins may be allocated to an approved, funded period.")
         box("AVAILABLE CASH",euro(b.optLong("available_cents")),"Verified cash after reservations and completed payments.")
         box("TOTAL EARNED",euro(b.optLong("total_earned_cents")));box("TOTAL PAID",euro(b.optLong("total_paid_cents")));box("PENDING CASH OUT",euro(b.optLong("pending_cashout_cents")))
+        // Informational economy preview only. The backend remains the sole authority for balances.
+        // These proposed rates are NOT active grants, money or cash-out eligibility.
+        box("GAME ECONOMY • PROPOSED", "10 GameCoins = 1 RewardCoin",
+            "Completed rewarded video: proposed 100 GameCoins + 10 RewardCoins.\\n" +
+            "Completed level: proposed 10 GameCoins + 1 RewardCoin.")
+        root.addView(text("PROPOSED REDEMPTION • NOT ACTIVE",14,gold,true))
+        root.addView(text("10,000 RewardCoins = €1.00 · 20,000 = €2.00 · 30,000 = €3.00 · 40,000 = €4.00.\\n" +
+            "No automatic conversion or payout. Requires partner approval, funded revenue, server verification and anti-fraud checks.",12,muted))
         button("CASH OUT",b.optBoolean("cashout_allowed")){cashout()};if(!b.optBoolean("cashout_allowed"))root.addView(text("Minimum cash out is €5.00",13,muted))
         button("OFFERS & REWARDS • ayeT"){startActivity(Intent(this,AyetOfferwallActivity::class.java))};button("COIN HISTORY"){coinHistory(0)};button("TRANSACTION HISTORY"){transactionHistory(0)};button("CASH OUT HISTORY"){cashoutHistory(0)};button("REFRESH PROFILE"){profile()}
     }}
