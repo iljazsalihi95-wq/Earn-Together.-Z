@@ -88,7 +88,7 @@ class BlockPuzzleActivity : Activity() {
         window.statusBarColor = Color.TRANSPARENT; window.navigationBarColor = Color.TRANSPARENT
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); enterImmersive(); migrateLegacyProgress()
 
-        game = PremiumBlockPuzzleView(this) { loyalty.recordGameProgress(10); refreshSavedProgress(); ads.naturalBreak() }
+        game = PremiumBlockPuzzleView(this) { completedLevel -> GameCoinStore(this).awardCompletedLevel("block_puzzle_hd2d",completedLevel); loyalty.recordGameProgress(10); refreshSavedProgress(); ads.naturalBreak() }
         val host = FrameLayout(this).apply { setBackgroundColor(0xff070d20.toInt()); addView(game, FrameLayout.LayoutParams(-1, -1)) }
         val header = View(this).apply {
             background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xff0a1a3b.toInt(), 0xff241050.toInt(), 0xff071a38.toInt())).apply { setStroke(dp(1), 0x5569cfff) }
