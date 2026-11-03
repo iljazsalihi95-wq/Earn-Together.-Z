@@ -83,7 +83,7 @@ class ArenaCloudActivity:Activity(){
         if(feedback!=null){scene?.apply{timerText=if(feedback.optInt("choice",-2)==-1)"PA PËRGJIGJE" else if(feedback.getBoolean("right"))"SAKTË" else "GABIM";stageStatus="TESTIM DHE MËSIM"};add(label(if(feedback.optInt("choice",s.optInt("local_choice",-2))==-1)"KOHA PËRFUNDOI • PA PËRGJIGJE" else if(feedback.getBoolean("right"))"✓ SAKTË" else "GABIM • PËRGJIGJJA E SAKTË: ${'A'+feedback.getInt("correct")}",20,gold));val selected=feedback.optInt("choice",s.optInt("local_choice",-2));if(selected>=0)add(label("Zgjedhja jote: ${'A'+selected} • ${choices.optString(selected)}",14,blue));if(s.has("learning_choice"))add(label(lateChoiceText(s),16,blue));if(selected==-1)add(label("Përgjigjja e saktë: ${'A'+feedback.getInt("correct")} • ${choices.optString(feedback.getInt("correct"))}",16,gold));add(label(feedback.getString("explanation"),17));add(label(feedback.optString("source"),12,blue));add(button("DËGJO SHPJEGIMIN AI"){voice("explanation")});add(button("HAP SHPJEGIMIN • TESTIM DHE MËSIM"){showLearning(s)});add(button("VAZHDO ›"){continueAfterLearning(s)});if(audioEnabled)voice("explanation");if(!qa()&&learningShown!=questionKey(s)){learningShown=questionKey(s);root.post{if(session===s&&!isFinishing&&!isDestroyed)showLearning(s)}}}
         else if(s.optBoolean("presentation_pending")){beginQuestionReading(s)}
         else if(s.optBoolean("timed_out")){timeoutControls()}
-        else{val clock=label("",15,gold);fun update(){val sec=((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000;scene?.apply{timerText="%02d:%02d".format(sec/60,sec%60);stageStatus="KOHA E PËRGJIGJES";remainingFraction=(sec.toFloat()/(config.optInt("seconds",30).coerceAtLeast(1))).coerceIn(0f,1f)};clock.text="⏱ ${((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000}s • ${config.getInt("points")} pikë për saktë"};update();timer=object:android.os.CountDownTimer((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(1),200){override fun onTick(ms:Long){update();val sec=(ms/1000).toInt();if(sec!=tick){tick=sec;if(audioEnabled&&sec>0)sound?.startTone(if(sec<=10)android.media.ToneGenerator.TONE_PROP_BEEP else android.media.ToneGenerator.TONE_PROP_BEEP2,if(sec<=10)95 else 35)}};override fun onFinish(){clock.text="Koha përfundoi • Asnjë përgjigje nuk u zgjodh";if(resumed)expireQuestion()}}.start();add(button("DËGJO PYETJEN AI"){voice("question")});val rec=q.optString("recitation");if(rec.startsWith("https://"))add(button("DËGJO RECITIMIN AUTENTIK"){playUrl(rec)});add(button("RIPROVO / SINKRONIZO"){retryAnswer()});if(audioEnabled&&narrationKey!=questionKey(s)){narrationKey=questionKey(s);voice("question")}}
+        else{val clock=label("",15,gold);fun update(){val sec=((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000;scene?.apply{timerText="%02d:%02d".format(sec/60,sec%60);stageStatus="KOHA E PËRGJIGJES";remainingFraction=(sec.toFloat()/(config.optInt("seconds",30).coerceAtLeast(1))).coerceIn(0f,1f)};clock.text="⏱ ${((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000}s • ${config.getInt("points")} pikë për saktë"};update();timer=object:android.os.CountDownTimer((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(1),200){override fun onTick(ms:Long){update();val sec=(ms/1000).toInt();if(sec!=tick){tick=sec;if(audioEnabled&&sec>0)sound?.startTone(if(sec<=10)android.media.ToneGenerator.TONE_PROP_BEEP else android.media.ToneGenerator.TONE_PROP_BEEP2,if(sec<=10)95 else 35)}};override fun onFinish(){clock.text="Koha përfundoi • Asnjë përgjigje nuk u zgjodh";if(resumed)expireQuestion()}}.start();add(button("TELEFONO SHOKUN • 1 HERË"){phoneFriend(s)});add(button("DËGJO PYETJEN AI"){voice("question")});val rec=q.optString("recitation");if(rec.startsWith("https://"))add(button("DËGJO RECITIMIN AUTENTIK"){playUrl(rec)});add(button("RIPROVO / SINKRONIZO"){retryAnswer()});if(audioEnabled&&narrationKey!=questionKey(s)){narrationKey=questionKey(s);voice("question")}}
     }
 
     private fun showLearning(s:JSONObject){
@@ -129,6 +129,28 @@ class ArenaCloudActivity:Activity(){
         advance()
     }
 
+    /** A clearly simulated lifeline. Never reads server answer keys before submission. */
+    private fun phoneFriend(s:JSONObject){
+        val q=s.optJSONObject("question")?:return
+        val key="friend_used_"+questionKey(s)
+        if(prefs.getBoolean(key,false)){status.text="Telefonata me shokun është përdorur për këtë pyetje.";return}
+        prefs.edit().putBoolean(key,true).apply()
+        val choices=q.optJSONArray("choices")?:return
+        if(choices.length()==0)return
+        val guess=Math.floorMod(q.optString("id").hashCode(),choices.length())
+        val playerName=prefs.getString("name","Lojtari").orEmpty().take(40)
+        val message="Alo! Prezantuesi po telefonon për "+playerName+". Pyetja është: "+q.optString("prompt")+". Unë do të provoja alternativën "+('A'+guess)+", "+choices.optString(guess)+". Ky është vetëm mendimi im, jo përgjigje e garantuar."
+        val dialog=android.app.AlertDialog.Builder(this)
+            .setTitle("TELEFONO SHOKUN • SIMULIM")
+            .setMessage("Po lidhet telefonata…\\n\\n"+message)
+            .setPositiveButton("KUPTOVA",null)
+            .create()
+        dialog.show()
+        if(audioEnabled&&ttsReady){
+            tts?.language=java.util.Locale(locale)
+            tts?.speak(ArenaAlbanianSpeech.forVoice(message,locale),android.speech.tts.TextToSpeech.QUEUE_FLUSH,null,"arena-friend")
+        }
+    }
     private fun beginQuestionReading(s:JSONObject){
         scene?.apply{timerText="%02d:%02d".format(s.getJSONObject("config").getInt("seconds")/60,s.getJSONObject("config").getInt("seconds")%60);stageStatus="LEXIM • KOHA E NDALUR";remainingFraction=1f}
         add(button("KALO LEXIMIN • FILLO KOHËN"){stopVoice();finishQuestionReading(questionKey(s))})
