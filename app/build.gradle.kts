@@ -25,7 +25,7 @@ android {
         versionCode = ciRunNumber ?: 1
         versionName = if (ciRunNumber != null) "0.1.$ciRunNumber" else "0.1.0"
         manifestPlaceholders["admobAppId"] = "ca-app-pub-9794339868092490~8746086148"
-        val arenaWorkerUrl = System.getenv("QUIZ_ARENA_WORKER_URL")?.trim()?.trimEnd('/') ?: ""
+        val arenaWorkerUrl = System.getenv("QUIZ_ARENA_WORKER_URL")?.trim()?.trimEnd('/')?.takeIf { it.isNotBlank() } ?: "https://quiz-arena-backend.lazisalihi.workers.dev"
         require(arenaWorkerUrl.isEmpty() || (arenaWorkerUrl.startsWith("https://") && arenaWorkerUrl.contains(".workers.dev"))) { "QUIZ_ARENA_WORKER_URL must be a HTTPS Cloudflare Worker URL" }
         buildConfigField("String", "QUIZ_ARENA_WORKER_URL", "\"" + arenaWorkerUrl + "\"")
         buildConfigField("String", "ADMOB_REWARDED_ID", "\"ca-app-pub-9794339868092490/5988060865\"")
