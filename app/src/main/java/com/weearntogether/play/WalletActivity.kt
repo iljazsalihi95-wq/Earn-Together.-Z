@@ -50,6 +50,12 @@ class WalletActivity:Activity(){
         root.addView(text("PROPOSED REDEMPTION • NOT ACTIVE",14,gold,true))
         root.addView(text("10,000 RewardCoins = €1.00 · 20,000 = €2.00 · 30,000 = €3.00 · 40,000 = €4.00.\\n" +
             "No automatic conversion or payout. Requires partner approval, funded revenue, server verification and anti-fraud checks.",12,muted))
+        // Preview only: RewardCoins are not cash and are not converted locally.
+        val rewardCoins=b.optLong("verified_coins",0L).coerceAtLeast(0L)
+        val previewCents=rewardCoins / 100L // 10,000 coins per EUR; integer cents, rounded down.
+        box("REWARDCOINS → EUR • PREVIEW",euro(previewCents),
+            "$rewardCoins verified coins × €0.0001 (proposed). This is NOT available cash.")
+        root.addView(text("Only the server-confirmed AVAILABLE CASH balance can be requested via PayPal. A preview cannot be withdrawn.",12,muted))
         button("CASH OUT",b.optBoolean("cashout_allowed")){cashout()};if(!b.optBoolean("cashout_allowed"))root.addView(text("Minimum cash out is €5.00",13,muted))
         button("OFFERS & REWARDS • ayeT"){startActivity(Intent(this,AyetOfferwallActivity::class.java))};button("COIN HISTORY"){coinHistory(0)};button("TRANSACTION HISTORY"){transactionHistory(0)};button("CASH OUT HISTORY"){cashoutHistory(0)};button("REFRESH PROFILE"){profile()}
     }}
