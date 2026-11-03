@@ -47,7 +47,7 @@ class NativeGameAds(private val activity:Activity,private val game:String){
         rewarded=null;receipts?.prepare(game)
         ad.fullScreenContentCallback=object:FullScreenContentCallback(){override fun onAdDismissedFullScreenContent(){onFinished();if(!disposed)loadRewarded()};override fun onAdFailedToShowFullScreenContent(error:AdError){onFinished();if(!disposed)loadRewarded()}}
         var granted=false
-        ad.show(activity){if(!granted&&!disposed){granted=true;receipts?.completed(game);onGameplayReward();Toast.makeText(activity,"Video u përfundua. Bonusi pret verifikimin e serverit.",Toast.LENGTH_LONG).show()}}
+        ad.show(activity){if(!granted&&!disposed){granted=true;receipts?.completed(game);GameCoinStore(activity).awardCompletedVideo();onGameplayReward();Toast.makeText(activity,"Video u përfundua. Bonusi pret verifikimin e serverit.",Toast.LENGTH_LONG).show()}}
         return true
     }
     fun naturalBreak(onFinished:()->Unit={}):Boolean{if(qa||disposed||activity.isFinishing||activity.isDestroyed||System.currentTimeMillis()-lastBreak<90_000)return false;val ad=interstitial?:return false;interstitial=null;lastBreak=System.currentTimeMillis();ad.fullScreenContentCallback=object:FullScreenContentCallback(){override fun onAdDismissedFullScreenContent(){onFinished();if(!disposed)loadInterstitial()};override fun onAdFailedToShowFullScreenContent(error:AdError){onFinished();if(!disposed)loadInterstitial()}};ad.show(activity);return true}
