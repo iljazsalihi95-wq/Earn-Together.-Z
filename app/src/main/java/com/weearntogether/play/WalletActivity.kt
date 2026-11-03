@@ -37,6 +37,7 @@ class WalletActivity:Activity(){
         val name=p.getString("username");header.addView(TextView(this).apply{text=name.take(1).uppercase(Locale.ROOT);gravity=Gravity.CENTER;textSize=28f;setTextColor(bg);background=shape(gold,40);setTypeface(null,Typeface.BOLD)},LinearLayout.LayoutParams(dp(64),dp(64)))
         val identity=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(14),0,0,0)};identity.addView(text(name,21,Color.WHITE,true));identity.addView(text(p.getString("email"),13));header.addView(identity,LinearLayout.LayoutParams(0,-2,1f));root.addView(header,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(16)})
         root.addView(text("User ID: "+p.getString("user_id"),11,muted));root.addView(text("Joined: "+p.optString("joined_date").take(10),12,muted))
+        box("GAMECOINS • DEVICE PILOT",GameCoinStore(this).balance().toString(),"Local game currency only. No cash value; not synced across devices.")
         box("PENDING COINS",b.optLong("pending_coins").toString(),"Awaiting independent verification. No cash value promised.")
         box("VERIFIED COINS",b.optLong("verified_coins").toString(),"Eligible coins may be allocated to an approved, funded period.")
         box("AVAILABLE CASH",euro(b.optLong("available_cents")),"Verified cash after reservations and completed payments.")
