@@ -162,7 +162,7 @@ class NativeExperienceTest {
         inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.performClick()};inst.waitForIdleSync();shot("03-quiz-answer")
     }finally{inst.runOnMainSync{a.finish()}}}
     @Test fun ballSortHasRealRulesAndUndoAcrossLevels(){for(level in 1..100){val game=BallSortGame(level);val counts=game.tubes.flatten().groupingBy{it}.eachCount();assertEquals(game.colors,counts.size);assertTrue(counts.values.all{it==4});assertFalse(game.won());assertTrue(game.tubes.all{it.size<=4})}
-        val g=BallSortGame(1,listOf(listOf(0,1),listOf(1),listOf(0),emptyList(),emptyList()));assertFalse(g.move(0,2));val before=g.tubes.map{it.toList()};assertTrue(g.move(0,1));assertTrue(g.undo());assertEquals(before,g.tubes)
+        val g=BallSortGame(1,listOf(listOf(0,1),listOf(1),listOf(0,0,2),listOf(1,1,2),listOf(0,2,2)));assertFalse(g.move(0,2));val before=g.tubes.map{it.toList()};assertTrue(g.move(0,1));assertTrue(g.undo());assertEquals(before,g.tubes)
         val a=launch(BallSortActivity::class.java);try{assertTrue(views(a.window.decorView).any{it is BallSortBoard});shot("04-ball-sort")}finally{inst.runOnMainSync{a.finish()}}
     }
 }
