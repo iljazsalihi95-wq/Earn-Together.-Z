@@ -5,7 +5,9 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Pin the runner so Playwright/Chromium does not unexpectedly move to an
+    # unsupported ubuntu-latest image (for example Ubuntu 26.04).
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
