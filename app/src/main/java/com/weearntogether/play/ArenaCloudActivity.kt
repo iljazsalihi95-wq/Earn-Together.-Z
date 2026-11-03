@@ -177,8 +177,12 @@ class ArenaCloudActivity:Activity(){
         val cachedAudio=java.io.File(cacheDir,"arena-voice-$cacheKey.mp3")
         fun playCached(){player=android.media.MediaPlayer().apply{setDataSource(cachedAudio.absolutePath);setOnPreparedListener{if(generation==voiceGeneration&&resumed&&session===s){scene?.speaking=true;scene?.stageStatus="PREZANTUESI PO LEXON";it.start()}};setOnCompletionListener{if(generation==voiceGeneration&&resumed&&session===s){scene?.speaking=false;if(phase=="question")finishQuestionReading(questionKey(s))}};setOnErrorListener{_,_,_->cachedAudio.delete();ttsFallback(phase);true};prepareAsync()}}
         if(cachedAudio.exists()){runCatching{playCached()}.onFailure{cachedAudio.delete();ttsFallback(phase)};return}
-        val workerUrl=BuildConfig.QUIZ_ARENA_WORKER_URL
-        if(workerUrl.isNotBlank()&&!qa()){
+        val workerUrl=BuildConfig.QUIZ_ARENA_WORKER_URL.trimEnd('/')
+        val trustedWorker=runCatching{
+            val uri=java.net.URI(workerUrl)
+            uri.scheme=="https"&&uri.host=="quiz-arena-backend.lazisalihi.workers.dev"&&uri.rawUserInfo==null&&uri.port==-1&&uri.rawQuery==null&&uri.rawFragment==null
+        }.getOrDefault(false)
+        if(trustedWorker&&!qa()){
             val choices=q.optJSONArray("choices")?:org.json.JSONArray()
             val feedback=s.optJSONObject("feedback")
             val rawText=if(phase=="explanation"&&feedback!=null){
@@ -194,7 +198,18 @@ class ArenaCloudActivity:Activity(){
                         connection.doOutput=true;connection.setRequestProperty("Content-Type","application/json")
                         connection.outputStream.use{it.write(JSONObject().put("input",speechText).put("voice","onyx").toString().toByteArray(Charsets.UTF_8))}
                         if(connection.responseCode !in 200..299)throw java.io.IOException("Worker speech HTTP ${connection.responseCode}")
-                        val audio=connection.inputStream.use{it.readBytes()}
+                        if(!connection.contentType.orEmpty().lowercase(java.util.Locale.ROOT).startsWith("audio/"))throw java.io.IOException("Worker did not return audio")
+                        val audio=connection.inputStream.use{input->
+                            val buffer=ByteArray(8192)
+                            val output=java.io.ByteArrayOutputStream()
+                            while(true){
+                                val count=input.read(buffer)
+                                if(count<0)break
+                                if(output.size()+count>8*1024*1024)throw java.io.IOException("Worker audio exceeds 8 MB")
+                                output.write(buffer,0,count)
+                            }
+                            output.toByteArray()
+                        }
                         if(audio.size<100)throw java.io.IOException("Empty Worker speech")
                         audio
                     }finally{connection.disconnect()}
