@@ -27,7 +27,7 @@ android {
         manifestPlaceholders["admobAppId"] = "ca-app-pub-9794339868092490~8746086148"
         val arenaWorkerUrl = System.getenv("QUIZ_ARENA_WORKER_URL")?.trim()?.trimEnd('/') ?: ""
         require(arenaWorkerUrl.isEmpty() || (arenaWorkerUrl.startsWith("https://") && arenaWorkerUrl.contains(".workers.dev"))) { "QUIZ_ARENA_WORKER_URL must be a HTTPS Cloudflare Worker URL" }
-        buildConfigField("String", "QUIZ_ARENA_WORKER_URL", "\\\"" + arenaWorkerUrl + "\\\"")
+        buildConfigField("String", "QUIZ_ARENA_WORKER_URL", "\"" + arenaWorkerUrl + "\"")
         buildConfigField("String", "ADMOB_REWARDED_ID", "\"ca-app-pub-9794339868092490/5988060865\"")
         buildConfigField("String", "ADMOB_BANNER_ID", "\"ca-app-pub-9794339868092490/3807573908\"")
         buildConfigField("String", "ADMOB_INTERSTITIAL_ID", "\"ca-app-pub-9794339868092490/2167189172\"")
