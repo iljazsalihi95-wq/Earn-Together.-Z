@@ -56,12 +56,19 @@ class BlockPuzzleActivity : Activity() {
 
     private fun migrateLegacyProgress() {
         val premium = ProgressPreferences.open(this, "block_puzzle_hd2d")
-        if (savedInt(premium, "level", -1) >= 0 || savedInt(premium, "best", -1) >= 0) return
+        val premiumLevel = savedInt(premium, "level", -1)
+        val premiumBest = savedInt(premium, "best", -1)
+        if (premiumLevel >= 0 && premiumBest >= 0) return
+
         val legacy = ProgressPreferences.open(this, "block_puzzle")
         val legacyLevel = savedInt(legacy, "level", -1)
         val legacyBest = savedInt(legacy, "best", -1)
         if (legacyLevel < 0 && legacyBest < 0) return
-        premium.edit().putInt("level", legacyLevel.coerceIn(1, 250)).putInt("best", legacyBest.coerceAtLeast(0)).apply()
+
+        premium.edit().apply {
+            if (premiumLevel < 0 && legacyLevel >= 0) putInt("level", legacyLevel.coerceIn(1, 250))
+            if (premiumBest < 0 && legacyBest >= 0) putInt("best", legacyBest.coerceAtLeast(0))
+        }.apply()
     }
 
     private fun savedProgressLabel(): String {
