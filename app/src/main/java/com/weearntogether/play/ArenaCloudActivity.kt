@@ -177,6 +177,35 @@ class ArenaCloudActivity:Activity(){
         val cachedAudio=java.io.File(cacheDir,"arena-voice-$cacheKey.mp3")
         fun playCached(){player=android.media.MediaPlayer().apply{setDataSource(cachedAudio.absolutePath);setOnPreparedListener{if(generation==voiceGeneration&&resumed&&session===s){scene?.speaking=true;scene?.stageStatus="PREZANTUESI PO LEXON";it.start()}};setOnCompletionListener{if(generation==voiceGeneration&&resumed&&session===s){scene?.speaking=false;if(phase=="question")finishQuestionReading(questionKey(s))}};setOnErrorListener{_,_,_->cachedAudio.delete();ttsFallback(phase);true};prepareAsync()}}
         if(cachedAudio.exists()){runCatching{playCached()}.onFailure{cachedAudio.delete();ttsFallback(phase)};return}
+        val workerUrl=BuildConfig.QUIZ_ARENA_WORKER_URL
+        if(workerUrl.isNotBlank()&&!qa()){
+            val choices=q.optJSONArray("choices")?:org.json.JSONArray()
+            val feedback=s.optJSONObject("feedback")
+            val rawText=if(phase=="explanation"&&feedback!=null){
+                val correct=feedback.optInt("correct",-1)
+                (if(correct in 0 until choices.length())"Përgjigjja e saktë është ${'A'+correct}. ${choices.optString(correct)}. " else "")+feedback.optString("explanation")
+            }else q.optString("prompt")+". "+(0 until choices.length()).joinToString(". "){"${'A'+it}. ${choices.optString(it)}"}
+            val speechText=ArenaAlbanianSpeech.forVoice(rawText,locale)
+            voiceNetwork.execute{
+                val result=runCatching{
+                    val connection=(java.net.URL(workerUrl+"/api/ai/speech").openConnection() as java.net.HttpURLConnection)
+                    try{
+                        connection.requestMethod="POST";connection.connectTimeout=12000;connection.readTimeout=45000
+                        connection.doOutput=true;connection.setRequestProperty("Content-Type","application/json")
+                        connection.outputStream.use{it.write(JSONObject().put("input",speechText).put("voice","onyx").toString().toByteArray(Charsets.UTF_8))}
+                        if(connection.responseCode !in 200..299)throw java.io.IOException("Worker speech HTTP ${connection.responseCode}")
+                        val audio=connection.inputStream.use{it.readBytes()}
+                        if(audio.size<100)throw java.io.IOException("Empty Worker speech")
+                        audio
+                    }finally{connection.disconnect()}
+                }
+                runOnUiThread{
+                    if(isFinishing||isDestroyed||!resumed||generation!=voiceGeneration||version!=modeVersion)return@runOnUiThread
+                    result.onSuccess{audio->runCatching{cachedAudio.writeBytes(audio);playCached()}.onFailure{ttsFallback(phase)}}.onFailure{ttsFallback(phase)}
+                }
+            }
+            return
+        }
         if(!accounts.isSignedIn()&&!(qa()&&qaTransport!=null)){ttsFallback(phase);return}
         val payload=JSONObject().put("session_id",s.getString("session_id")).put("phase",phase).put("question_id",q.getString("id")).put("locale",locale);if(accounts.isSignedIn())payload.put("session_token",accounts.requireToken())
         voiceNetwork.execute{val r=runCatching{if(qa()&&qaTransport!=null)qaTransport!!.invoke("arenaVoice",payload) else voiceClient.request("arenaVoice",payload)};runOnUiThread{if(isFinishing||isDestroyed||!resumed||generation!=voiceGeneration||version!=modeVersion)return@runOnUiThread
