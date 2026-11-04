@@ -30,7 +30,10 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         orientation=VERTICAL;gravity=Gravity.CENTER_HORIZONTAL;setPadding(dp(14),dp(108),dp(14),dp(16));background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff071020.toInt(),0xff14265a.toInt(),0xff25104f.toInt(),0xff071020.toInt()))
         hud.apply{setTextColor(Color.WHITE);textSize=15f;gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.04f};addView(hud,LayoutParams(-1,dp(58)))
         fx.apply{textSize=13f;gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);setTextColor(0xffffd56a.toInt());alpha=0f};addView(fx,LayoutParams(-1,dp(28)))
-        boardView.columnCount=8;boardView.rowCount=8;boardView.background=rounded(0xff09152f.toInt(),0x6658c8ff,22);boardView.setPadding(dp(8),dp(8),dp(8),dp(8));addView(boardView,LayoutParams(-1,0,1f).apply{setMargins(0,dp(4),0,dp(12))})
+        boardView.columnCount=8;boardView.rowCount=8;boardView.background=rounded(0xff09152f.toInt(),0x6658c8ff,22);boardView.setPadding(dp(8),dp(8),dp(8),dp(8));// A puzzle board must be square. Weighted vertical sizing stretched its
+        // rows into rectangles while drag placement assumed a regular grid.
+        val boardSide=(resources.displayMetrics.widthPixels-dp(28)).coerceAtLeast(dp(240))
+        addView(boardView,LayoutParams(-1,boardSide).apply{setMargins(0,dp(4),0,dp(12))})
         tray.orientation=HORIZONTAL;tray.gravity=Gravity.CENTER;tray.background=rounded(0xaa101a3a.toInt(),0x55ffc857,22);tray.setPadding(dp(8),dp(8),dp(8),dp(8));addView(tray,LayoutParams(-1,dp(126)))
         buildBoard();restoreOrNew();boardView.setOnDragListener{_,e->handleBoardDrag(e)}
     }
