@@ -23,7 +23,7 @@ import kotlin.random.Random
 class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (Int) -> Unit = {}) : FrameLayout(context) {
  private val prefs=ProgressPreferences.open(context,"bubble_shooter_hd2d"); private val rows=11; private val cols=9; private val grid=Array(rows){IntArray(cols)}
  private val palette=intArrayOf(0xff35c6fa.toInt(),0xffa478ff.toInt(),0xffffc857.toInt(),0xff49e1aa.toInt(),0xffff638f.toInt()); private val field=FrameLayout(context); private val hud=TextView(context); private val danger=TextView(context); private val launcher=TextView(context); private val nextView=TextView(context); private val aimDots=mutableListOf<View>(); private val fxLayer=FrameLayout(context)
- private var score=0;private var best=0;private var level=1;private var streak=0;private var current=1;private var next=2;private var misses=0;private var busy=false;private var cell=1;private var fieldTop=0;private var aiming:Pair<Int,Int>?=null
+ private var score=0;private var best=0;private var level=1;private var streak=0;private var current=1;private var next=2;private var misses=0;private var busy=false;private var cell=1;private var fieldTop=0;private var aiming:Pair<Int,Int>?=null;private var aimPath=emptyList<Pair<Float,Float>>()
  init{setBackgroundColor(0xff071020.toInt());field.background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff07162f.toInt(),0xff1c1042.toInt(),0xff071a38.toInt())).apply{cornerRadius=dp(24).toFloat();setStroke(dp(1),0x6658c8ff)};addView(field,LayoutParams(-1,-1).apply{setMargins(dp(12),dp(116),dp(12),dp(112))});addView(fxLayer,LayoutParams(-1,-1));fxLayer.isClickable=false;hud.apply{setTextColor(Color.WHITE);textSize=14f;gravity=Gravity.CENTER;setTypeface(null,android.graphics.Typeface.BOLD)};addView(hud,LayoutParams(-1,dp(48),Gravity.TOP).apply{topMargin=dp(112)});danger.apply{textSize=11f;gravity=Gravity.CENTER;setTypeface(null,android.graphics.Typeface.BOLD)};addView(danger,LayoutParams(-1,dp(28),Gravity.TOP).apply{topMargin=dp(158)});launcher.gravity=Gravity.CENTER;launcher.text="✦";launcher.textSize=24f;launcher.setTextColor(Color.WHITE);launcher.elevation=dp(16).toFloat();addView(launcher,LayoutParams(dp(62),dp(62),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(34)});nextView.gravity=Gravity.CENTER;nextView.text="•";nextView.textSize=18f;nextView.elevation=dp(12).toFloat();addView(nextView,LayoutParams(dp(40),dp(40),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(46);leftMargin=dp(112)});nextView.apply{isClickable=true;isFocusable=true;contentDescription="Swap current and next bubble";setOnClickListener{swapBubble()}};repeat(18){val d=View(context).apply{visibility=View.GONE;background=GradientDrawable().apply{shape=GradientDrawable.OVAL;setColor(0xeeffffff.toInt());setStroke(dp(1),0xaaffc857.toInt())}};aimDots+=d;addView(d,LayoutParams(dp(7),dp(7)))};restoreOrNew();post{rebuild()}}
  private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt();private fun light(c:Int)=Color.rgb((Color.red(c)+85).coerceAtMost(255),(Color.green(c)+85).coerceAtMost(255),(Color.blue(c)+85).coerceAtMost(255));private fun shade(c:Int)=Color.rgb((Color.red(c)*.55f).toInt(),(Color.green(c)*.55f).toInt(),(Color.blue(c)*.55f).toInt());private fun bubble(c:Int)=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xffffffff.toInt(),light(c),c,shade(c))).apply{shape=GradientDrawable.OVAL;setStroke(dp(2),0xbbffffff.toInt())}
  private fun restoreOrNew(){score=prefs.getInt("score",0).coerceAtLeast(0);best=prefs.getInt("best",0).coerceAtLeast(score);level=prefs.getInt("level",1).coerceIn(1,250);streak=prefs.getInt("streak",0).coerceAtLeast(0);misses=prefs.getInt("misses",0).coerceIn(0,pressureLimit()-1);val raw=prefs.getString("grid",null)?.split(',')?.map{it.toIntOrNull()};val valid=raw?.size==rows*cols&&raw.all{it!=null&&it in 0..palette.size};if(valid){raw!!.forEachIndexed{i,v->grid[i/cols][i%cols]=v!!}}else newBoard();val emptySavedBoard=grid.all{row->row.all{it==0}};if(emptySavedBoard)newBoard();val active=grid.flatMap{it.asList()}.filter{it>0}.toSet();val savedCurrent=prefs.getInt("current",0);val savedNext=prefs.getInt("next",0);current=if(savedCurrent in active)savedCurrent else randomBoardColor();next=if(savedNext in active)savedNext else randomBoardColor();if(!valid||emptySavedBoard||savedCurrent !in active||savedNext !in active)save()}
@@ -39,7 +39,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   if(w>0&&h>0&&oldw>0&&oldh>0&&(w!=oldw||h!=oldh))post{if(isAttachedToWindow&&!busy)rebuild()}
  }
  private fun addBubble(r:Int,c:Int,v:Int){field.addView(TextView(context).apply{gravity=Gravity.CENTER;text="•";textSize=12f;setTextColor(0xccffffff.toInt());background=bubble(palette[v-1]);elevation=dp(7).toFloat()},LayoutParams(cell-dp(4),cell-dp(4)).apply{leftMargin=xFor(r,c);topMargin=yFor(r)})}
- override fun onTouchEvent(e:MotionEvent):Boolean{if(busy)return true;when(e.actionMasked){MotionEvent.ACTION_DOWN,MotionEvent.ACTION_MOVE->{if(e.y<field.top+fieldTop||e.y>height-dp(82)){hideAim();return true};updateAim(e.x,e.y)};MotionEvent.ACTION_UP->{val target=aiming;hideAim();if(target!=null)shoot(target.first,target.second)};MotionEvent.ACTION_CANCEL->hideAim()};return true}
+ override fun onTouchEvent(e:MotionEvent):Boolean{if(busy)return true;when(e.actionMasked){MotionEvent.ACTION_DOWN,MotionEvent.ACTION_MOVE->{if(e.y<field.top+fieldTop||e.y>height-dp(82)){hideAim();return true};updateAim(e.x,e.y)};MotionEvent.ACTION_UP->{val target=aiming;val path=aimPath.toList();hideAim();if(target!=null)shoot(target.first,target.second,path)};MotionEvent.ACTION_CANCEL->hideAim()};return true}
  // Aim at the first bubble encountered by a rising shot, rather than
  // teleporting the projectile to any open cell near the player's finger.
  private fun nearestOpen(x:Float,y:Float):Pair<Int,Int>?{
@@ -121,6 +121,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
       (px-targetX)*(px-targetX)+(py-targetY)*(py-targetY)<=cell*cell*.75f)break
   }
   if(points.isEmpty()){hideAim();return}
+  aimPath=points
   aimDots.forEachIndexed{i,d->
    val index=((i+1f)/(aimDots.size+1f)*points.lastIndex).toInt().coerceIn(0,points.lastIndex)
    val point=points[index]
@@ -129,8 +130,49 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
    d.alpha=.42f+t*.58f;d.scaleX=.7f+t*.45f;d.scaleY=d.scaleX;d.visibility=View.VISIBLE
   }
  }
- private fun hideAim(){aiming=null;aimDots.forEach{it.visibility=View.GONE}}
- private fun shoot(r:Int,c:Int){if(busy || r !in 0 until rows || c !in 0 until cols || grid[r][c]!=0 || !isAttachable(r,c))return;busy=true;val p=View(context).apply{background=bubble(palette[current-1]);elevation=dp(18).toFloat()};val size=cell-dp(4);addView(p,LayoutParams(size,size).apply{leftMargin=width/2-size/2;topMargin=height-dp(94)});val sx=width/2f-size/2;val sy=height-dp(94).toFloat();val tx=field.left+xFor(r,c).toFloat();val ty=field.top+yFor(r).toFloat();ValueAnimator.ofFloat(0f,1f).apply{duration=(270L-level/3L).coerceAtLeast(155L);interpolator=DecelerateInterpolator();addUpdateListener{a->val t=a.animatedValue as Float;p.x=sx+(tx-sx)*t;p.y=sy+(ty-sy)*t};addListener(object:AnimatorListenerAdapter(){override fun onAnimationEnd(a:Animator){removeView(p);settle(r,c)}});start()}}
+ private fun hideAim(){aiming=null;aimPath=emptyList();aimDots.forEach{it.visibility=View.GONE}}
+ // Animate along the same wall-reflected trajectory shown by the aiming dots.
+ // The final segment snaps to the validated hex-grid attachment cell.
+ private fun shoot(r:Int,c:Int,path:List<Pair<Float,Float>>){
+  if(busy || r !in 0 until rows || c !in 0 until cols || grid[r][c]!=0 || !isAttachable(r,c))return
+  busy=true
+  val size=cell-dp(4)
+  val projectile=View(context).apply{background=bubble(palette[current-1]);elevation=dp(18).toFloat()}
+  addView(projectile,LayoutParams(size,size))
+  val start=width/2f to (height-dp(64)).toFloat()
+  val destination=(field.left+xFor(r,c)+size/2f) to (field.top+yFor(r)+size/2f)
+  val centers=ArrayList<Pair<Float,Float>>(path.size+2)
+  centers.add(start)
+  // Reduce redundant samples, but retain every reflection point for a smooth flight.
+  path.forEachIndexed{i,p->if(i%3==0 || i==path.lastIndex)centers.add(p)}
+  centers.add(destination)
+  val lengths=FloatArray(centers.size)
+  for(i in 1 until centers.size){
+   val dx=centers[i].first-centers[i-1].first
+   val dy=centers[i].second-centers[i-1].second
+   lengths[i]=lengths[i-1]+kotlin.math.sqrt(dx*dx+dy*dy)
+  }
+  val total=lengths.last().coerceAtLeast(1f)
+  ValueAnimator.ofFloat(0f,total).apply{
+   duration=(total/(cell.coerceAtLeast(1).toFloat())*48f).toLong().coerceIn(180L,1100L)
+   interpolator=android.view.animation.LinearInterpolator()
+   addUpdateListener{anim->
+    val distance=anim.animatedValue as Float
+    var index=1
+    while(index<lengths.lastIndex && lengths[index]<distance)index++
+    val segment=(lengths[index]-lengths[index-1]).coerceAtLeast(.001f)
+    val fraction=((distance-lengths[index-1])/segment).coerceIn(0f,1f)
+    val a=centers[index-1];val b=centers[index]
+    projectile.x=a.first+(b.first-a.first)*fraction-size/2f
+    projectile.y=a.second+(b.second-a.second)*fraction-size/2f
+   }
+   addListener(object:AnimatorListenerAdapter(){
+    override fun onAnimationEnd(animation:Animator){removeView(projectile);settle(r,c)}
+   })
+   start()
+  }
+ }
+
  private fun settle(r:Int,c:Int){if(r !in 0 until rows || c !in 0 until cols || grid[r][c]!=0 || !isAttachable(r,c)){busy=false;rebuild();return};grid[r][c]=current;val g=flood(r,c,current);if(g.size>=3){val color=current;g.forEach{(rr,cc)->grid[rr][cc]=0};streak++;val magic=streak>=3;val magicCells=if(magic)g.flatMap{(rr,cc)->hexNeighbors(rr,cc)}.filter{(rr,cc)->grid[rr][cc]!=0}.toSet() else emptySet();val magicDrops=magicCells.map{(rr,cc)->Triple(rr,cc,grid[rr][cc])};magicCells.forEach{(rr,cc)->grid[rr][cc]=0};val dropped=disconnectedCells().map{(rr,cc)->Triple(rr,cc,grid[rr][cc])};dropped.forEach{(rr,cc,_)->grid[rr][cc]=0};misses=(misses-2).coerceAtLeast(0);score+=g.size*45*level+(dropped.size+magicCells.size)*75*level+streak*35;if(magic){score+=500*level;streak=0;magicBurstFx(r,c)};popFx(g,color,dropped+magicDrops);performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)}else{streak=0;misses++;score+=10*level};if(misses>=pressureLimit()){if(grid[rows-1].any{it!=0}){score=(score-level*150).coerceAtLeast(0);streak=0;newBoard()}else{pushPressureRow()};misses=0;performHapticFeedback(HapticFeedbackConstants.REJECT)};if(grid.all{row->row.all{it==0}}){val completedLevel=level;if(level<250){level++;score+=level*500;post{onLevelComplete(completedLevel)}};streak=0;newBoard()};if(grid[rows-1].any{it!=0}){score=(score-level*150).coerceAtLeast(0);streak=0;newBoard()};val availableColors=grid.flatMap{it.asList()}.filter{it>0}.toSet();current=if(next in availableColors)next else randomBoardColor();next=randomBoardColor();save();if(g.size>=3)postDelayed({busy=false;rebuild()},520)else{busy=false;rebuild()}}
  private fun magicBurstFx(r:Int,c:Int){val cx=field.left+xFor(r,c)+cell/2;val cy=field.top+yFor(r)+cell/2;repeat(3){ringIndex->val ring=TextView(context).apply{text="✦";gravity=Gravity.CENTER;textSize=(22+ringIndex*8).toFloat();setTextColor(if(ringIndex==1)0xffffc857.toInt() else 0xffa478ff.toInt());alpha=.95f;elevation=dp(30).toFloat()};val s=dp(58+ringIndex*18);fxLayer.addView(ring,LayoutParams(s,s).apply{leftMargin=cx-s/2;topMargin=cy-s/2});ring.scaleX=.2f;ring.scaleY=.2f;ring.animate().scaleX(2.8f).scaleY(2.8f).rotationBy(if(ringIndex%2==0)120f else -120f).alpha(0f).setStartDelay((ringIndex*55).toLong()).setDuration(480).withEndAction{fxLayer.removeView(ring)}.start()};field.animate().rotationBy(1.4f).setDuration(70).withEndAction{field.animate().rotation(0f).setDuration(120).start()}.start()}
  private fun hexNeighbors(r:Int,c:Int):List<Pair<Int,Int>>{val diagonal=if(r%2==0)arrayOf(-1 to -1,-1 to 0,1 to -1,1 to 0)else arrayOf(-1 to 0,-1 to 1,1 to 0,1 to 1);return (arrayOf(0 to -1,0 to 1)+diagonal).map{(dr,dc)->r+dr to c+dc}.filter{(rr,cc)->rr in 0 until rows&&cc in 0 until cols}}
