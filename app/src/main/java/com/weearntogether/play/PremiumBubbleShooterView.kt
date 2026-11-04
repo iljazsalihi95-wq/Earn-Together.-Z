@@ -87,6 +87,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   }
   return best
  }
+ private fun isAttachable(r:Int,c:Int)=r==0||hexNeighbors(r,c).any{(rr,cc)->grid[rr][cc]!=0}
  private fun updateAim(x:Float,y:Float){val target=nearestOpen(x,y)?:run{hideAim();return};aiming=target;val(r,c)=target;val sx=width/2f;val sy=height-dp(64).toFloat();val ex=field.left+xFor(r,c)+cell/2f;val ey=field.top+yFor(r)+cell/2f;aimDots.forEachIndexed{i,d->val t=(i+1f)/(aimDots.size+1f);d.x=sx+(ex-sx)*t;d.y=sy+(ey-sy)*t;d.alpha=.42f+t*.58f;d.scaleX=.7f+t*.45f;d.scaleY=d.scaleX;d.visibility=View.VISIBLE}}
  private fun hideAim(){aiming=null;aimDots.forEach{it.visibility=View.GONE}}
  private fun shoot(r:Int,c:Int){if(grid[r][c]!=0)return;busy=true;val p=View(context).apply{background=bubble(palette[current-1]);elevation=dp(18).toFloat()};val size=cell-dp(4);addView(p,LayoutParams(size,size).apply{leftMargin=width/2-size/2;topMargin=height-dp(94)});val sx=width/2f-size/2;val sy=height-dp(94).toFloat();val tx=field.left+xFor(r,c).toFloat();val ty=field.top+yFor(r).toFloat();ValueAnimator.ofFloat(0f,1f).apply{duration=(270L-level/3L).coerceAtLeast(155L);interpolator=DecelerateInterpolator();addUpdateListener{a->val t=a.animatedValue as Float;p.x=sx+(tx-sx)*t;p.y=sy+(ty-sy)*t};addListener(object:AnimatorListenerAdapter(){override fun onAnimationEnd(a:Animator){removeView(p);settle(r,c)}});start()}}
