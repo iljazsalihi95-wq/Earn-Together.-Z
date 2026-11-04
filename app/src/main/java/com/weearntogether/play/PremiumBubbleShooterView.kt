@@ -32,7 +32,14 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  private fun pressureLimit()=(7-level/60).coerceAtLeast(4)
  private fun xFor(r:Int,c:Int)=dp(8)+c*cell+(if(r%2==1)cell/2 else 0)
  private fun yFor(r:Int)=fieldTop+(r*cell*.86f).toInt()
- private fun rebuild(){field.removeAllViews();cell=((field.width-dp(20))/(cols+0.5f)).toInt().coerceAtLeast(dp(30));fieldTop=dp(72);for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]>0)addBubble(r,c,grid[r][c]);launcher.background=bubble(palette[current-1]);nextView.background=bubble(palette[next-1]);launcher.text=if(streak>=2)"✦" else "•";launcher.animate().cancel();launcher.scaleX=1f;launcher.scaleY=1f;if(streak>=2)launcher.animate().scaleX(1.12f).scaleY(1.12f).setDuration(360).withEndAction{launcher.animate().scaleX(1f).scaleY(1f).setDuration(360).start()}.start();hud.text="SCORE  $score     BEST  $best     LEVEL  $level/250\nSTREAK  x$streak     ${if(streak>=2)"MAGIC READY ✦" else "NEXT"}";danger.text="PRESSURE  $misses/${pressureLimit()}  •  MATCH 3+  •  3 COMBOS = MAGIC";danger.setTextColor(if(misses>=pressureLimit()-1)0xffff638f.toInt() else 0xffffc857.toInt())}
+ private fun rebuild(){field.removeAllViews();// Fit all eleven staggered rows inside the actual playfield, including
+ // short screens, split-screen and landscape. Width-only sizing clipped
+ // lower bubbles and made them impossible to target.
+ fieldTop=dp(72)
+ val widthCell=((field.width-dp(20))/(cols+0.5f)).toInt()
+ val availableHeight=(field.height-fieldTop-dp(12)).coerceAtLeast(1)
+ val heightCell=(availableHeight/(1f+(rows-1)*.86f)).toInt()
+ cell=minOf(widthCell,heightCell).coerceAtLeast(1);for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]>0)addBubble(r,c,grid[r][c]);launcher.background=bubble(palette[current-1]);nextView.background=bubble(palette[next-1]);launcher.text=if(streak>=2)"✦" else "•";launcher.animate().cancel();launcher.scaleX=1f;launcher.scaleY=1f;if(streak>=2)launcher.animate().scaleX(1.12f).scaleY(1.12f).setDuration(360).withEndAction{launcher.animate().scaleX(1f).scaleY(1f).setDuration(360).start()}.start();hud.text="SCORE  $score     BEST  $best     LEVEL  $level/250\nSTREAK  x$streak     ${if(streak>=2)"MAGIC READY ✦" else "NEXT"}";danger.text="PRESSURE  $misses/${pressureLimit()}  •  MATCH 3+  •  3 COMBOS = MAGIC";danger.setTextColor(if(misses>=pressureLimit()-1)0xffff638f.toInt() else 0xffffc857.toInt())}
  /** Reflow the hex grid when split-screen, rotation or display scaling changes. */
  override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
   super.onSizeChanged(w,h,oldw,oldh)
