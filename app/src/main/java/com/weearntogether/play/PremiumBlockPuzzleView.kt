@@ -111,7 +111,26 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         }
         return near ?: (idealR to idealC)
     }
-    private fun updatePreview(e:DragEvent){val offer=(e.localState as? Int)?:return clearPreview();val anchor=dragAnchor(e,offer)?:return clearPreview();val shape=shapes[offers[offer]];val valid=canPlace(shape,anchor.first,anchor.second);val next=shape.map{(x,y)->anchor.first+y to anchor.second+x}.filter{(r,c)->r in 0..7&&c in 0..7}.toSet();if(next==previewCells&&valid==previewValid&&offer==previewOffer)return;clearPreview();previewCells=next;previewValid=valid;previewOffer=offer;previewAnchorR=anchor.first;previewAnchorC=anchor.second;next.forEach{(r,c)->cells[r][c]?.apply{background=previewTile(valid);alpha=1f;scaleX=1f;scaleY=1f}}}
+    private fun updatePreview(e:DragEvent){
+        val offer=(e.localState as? Int)?:return clearPreview()
+        if(offer !in offers.indices || offers[offer] !in shapes.indices)return clearPreview()
+        val anchor=dragAnchor(e,offer)?:return clearPreview()
+        val shape=shapes[offers[offer]]
+        val valid=canPlace(shape,anchor.first,anchor.second)
+        val next=shape.map{(x,y)->anchor.first+y to anchor.second+x}
+            .filter{(r,c)->r in 0..7 && c in 0..7}.toSet()
+        if(next==previewCells && valid==previewValid && offer==previewOffer)return
+        clearPreview()
+        previewCells=next;previewValid=valid;previewOffer=offer
+        previewAnchorR=anchor.first;previewAnchorC=anchor.second
+        // Never paint over occupied tiles: those are real blocks, not empty
+        // targets. A collision must stay visible instead of looking playable.
+        if(valid)next.forEach{(r,c)->
+            if(board[r][c]==0)cells[r][c]?.apply{
+                background=previewTile(true);alpha=1f;scaleX=1f;scaleY=1f
+            }
+        }
+    }
     private fun clearPreview(redraw:Boolean=true){val old=previewCells;previewCells=emptySet();previewValid=false;previewOffer=-1;previewAnchorR=-1;previewAnchorC=-1;if(redraw)old.forEach{(r,c)->cells[r][c]?.apply{val v=board[r][c];background=if(v==0)emptyTile() else filledTile(palette[(v-1).coerceIn(0,palette.lastIndex)]);alpha=if(v==0).72f else 1f;scaleX=1f;scaleY=1f}}}
     private fun handleBoardDrag(e:DragEvent):Boolean{when(e.action){DragEvent.ACTION_DRAG_ENTERED,DragEvent.ACTION_DRAG_LOCATION->updatePreview(e);DragEvent.ACTION_DRAG_EXITED,DragEvent.ACTION_DRAG_ENDED->clearPreview();DragEvent.ACTION_DROP->{if(gameOver)return true;updatePreview(e);val offer=previewOffer;if(offer !in offers.indices||offers[offer]<0)return true;if(!previewValid){performHapticFeedback(HapticFeedbackConstants.REJECT);showFx("NO SPACE",450);clearPreview();return true};val shape=shapes[offers[offer]];val anchorR=previewAnchorR;val anchorC=previewAnchorC;clearPreview();place(offer,shape,anchorR,anchorC)} };return true}
     private fun place(offer:Int,shape:Array<Pair<Int,Int>>,anchorR:Int,anchorC:Int){val color=(offer%palette.size)+1;shape.forEach{(x,y)->board[anchorR+y][anchorC+x]=color};offers[offer]=-1;score+=shape.size*12*level;val rows=(0..7).filter{rr->board[rr].all{it!=0}};val cols=(0..7).filter{cc->(0..7).all{rr->board[rr][cc]!=0}};val cleared=rows.size+cols.size;val completedLevels=mutableListOf<Int>();combo=if(cleared>0)combo+1 else 0;if(cleared>0){animateClear(rows,cols);totalLines+=cleared;levelLines+=cleared;score+=cleared*120*level+combo*50;while(levelLines>=goal()&&level<250){val oldGoal=goal();levelLines-=oldGoal;level++;val completedLevel=level-1;completedLevels.add(completedLevel);score+=level*250;showFx("LEVEL $level  ✦  +${level*250}",950)}};rows.forEach{rr->for(cc in 0..7)board[rr][cc]=0};cols.forEach{cc->for(rr in 0..7)board[rr][cc]=0};if(cleared>0&&combo>=3){magicBlast(anchorR,anchorC,shape)};if(offers.all{it<0})offers=nextOffers();ensurePlayableTray();gameOver=!hasAnyMove();save();completedLevels.forEach { completedLevel -> post { onLevelComplete(completedLevel) } };performHapticFeedback(if(cleared>0)HapticFeedbackConstants.LONG_PRESS else HapticFeedbackConstants.KEYBOARD_TAP);postDelayed({refresh()},if(cleared>0)300 else 0)}
