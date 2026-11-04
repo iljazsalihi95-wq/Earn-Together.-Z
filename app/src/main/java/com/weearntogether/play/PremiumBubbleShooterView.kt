@@ -197,5 +197,26 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  }
  private fun randomBoardColor():Int{val a=mutableListOf<Int>();for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]>0&&grid[r][c] !in a)a+=grid[r][c];return if(a.isEmpty())1+Random.nextInt(palette.size)else a.random()}
  fun swapBubble(){if(busy)return;val t=current;current=next;next=t;save();rebuild()};fun restart(){if(busy)return;score=0;streak=0;misses=0;newBoard();current=randomBoardColor();next=randomBoardColor();save();rebuild()}
- fun videoRescue(){if(busy)return;for(r in (rows-3) until rows)grid[r].fill(0);misses=0;save();rebuild()}
+ fun videoRescue(){
+  if(busy)return
+  // Rescue the actual lowest occupied row. Clearing the last three empty
+  // rows did nothing on most boards while still consuming the rescue action.
+  val lowest=(rows-1 downTo 0).firstOrNull{r->grid[r].any{it!=0}}?:return
+  grid[lowest].fill(0)
+  // Remove floating clusters so the board remains physically consistent.
+  disconnectedCells().forEach{(r,c)->grid[r][c]=0}
+  misses=0
+  streak=0
+  val colors=grid.flatMap{it.asList()}.filter{it>0}.toSet()
+  if(colors.isEmpty()){
+   val completedLevel=level
+   if(level<250){level++;score+=level*500;post{onLevelComplete(completedLevel)}}
+   newBoard()
+  }
+  val active=grid.flatMap{it.asList()}.filter{it>0}.toSet()
+  if(current !in active)current=randomBoardColor()
+  if(next !in active)next=randomBoardColor()
+  save()
+  rebuild()
+ }
 }
