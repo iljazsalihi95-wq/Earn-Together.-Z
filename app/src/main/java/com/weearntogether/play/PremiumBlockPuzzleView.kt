@@ -2,6 +2,8 @@ package com.weearntogether.play
 
 import android.content.ClipData
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Point
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -91,7 +93,27 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         offers[slot]=playable.random()
     }
     private fun refresh(){clearPreview(false);for(r in 0..7)for(c in 0..7){val v=board[r][c];cells[r][c]?.apply{background=if(v==0)emptyTile() else filledTile(palette[(v-1).coerceIn(0,palette.lastIndex)]);alpha=if(v==0).72f else 1f;scaleX=1f;scaleY=1f;rotation=0f}};hud.text=if(gameOver)"RUN COMPLETE   SCORE $score   BEST $best\nTAP RESTART FOR A NEW BOARD" else "SCORE  $score     BEST  $best     LEVEL  $level/250\n${modeName()}  ✦  GOAL $levelLines/${goal()}  ✦  COMBO x$combo${if(combo>=2)"  •  MAGIC READY" else ""}";tray.removeAllViews();offers.forEachIndexed{i,s->tray.addView(if(s<0||gameOver)View(context) else pieceView(i,s),LayoutParams(0,-1,1f).apply{setMargins(dp(5),0,dp(5),0)})};if(gameOver){fx.text="NO MOVES  •  BEST $best";fx.alpha=1f}}
-    private fun pieceView(index:Int,shapeIndex:Int):View{val shape=shapes[shapeIndex];val maxX=shape.maxOf{it.first};val maxY=shape.maxOf{it.second};return GridLayout(context).apply{columnCount=maxX+1;rowCount=maxY+1;gravity=Gravity.CENTER;background=rounded(0x221b83d4,0x3358c8ff,16);isClickable=true;shape.forEach{(x,y)->addView(View(context).apply{background=filledTile(palette[index%palette.size]);elevation=dp(5).toFloat()},GridLayout.LayoutParams(GridLayout.spec(y),GridLayout.spec(x)).apply{width=dp(25);height=dp(25);setMargins(dp(2),dp(2),dp(2),dp(2))})};setOnTouchListener{v,e->if(!gameOver&&e.action==MotionEvent.ACTION_DOWN){v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);v.startDragAndDrop(ClipData.newPlainText("piece",index.toString()),DragShadowBuilder(v),index,0);true}else false}}}
+    private fun pieceView(index:Int,shapeIndex:Int):View{val shape=shapes[shapeIndex];val maxX=shape.maxOf{it.first};val maxY=shape.maxOf{it.second};return GridLayout(context).apply{columnCount=maxX+1;rowCount=maxY+1;gravity=Gravity.CENTER;background=rounded(0x221b83d4,0x3358c8ff,16);isClickable=true;shape.forEach{(x,y)->addView(View(context).apply{background=filledTile(palette[index%palette.size]);elevation=dp(5).toFloat()},GridLayout.LayoutParams(GridLayout.spec(y),GridLayout.spec(x)).apply{width=dp(25);height=dp(25);setMargins(dp(2),dp(2),dp(2),dp(2))})};setOnTouchListener{v,e->if(!gameOver&&e.action==MotionEvent.ACTION_DOWN){v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);v.startDragAndDrop(ClipData.newPlainText("piece",index.toString()),BoardPieceShadow(v,maxX+1,maxY+1),index,0);true}else false}}}
+    // Draw the dragged piece at board-cell size, not at tiny tray-cell size.
+    private inner class BoardPieceShadow(source:View,private val columns:Int,private val rows:Int):View.DragShadowBuilder(source){
+        private var shadowWidth=1
+        private var shadowHeight=1
+        override fun onProvideShadowMetrics(size:Point,touch:Point){
+            val tile=((boardView.width-boardView.paddingLeft-boardView.paddingRight)/8f).coerceAtLeast(dp(16).toFloat())
+            shadowWidth=(tile*columns).toInt().coerceAtLeast(1)
+            shadowHeight=(tile*rows).toInt().coerceAtLeast(1)
+            size.set(shadowWidth,shadowHeight)
+            touch.set(shadowWidth/2,shadowHeight/2)
+        }
+        override fun onDrawShadow(canvas:Canvas){
+            val source=view?:return
+            if(source.width<=0 || source.height<=0)return
+            val save=canvas.save()
+            canvas.scale(shadowWidth/source.width.toFloat(),shadowHeight/source.height.toFloat())
+            source.draw(canvas)
+            canvas.restoreToCount(save)
+        }
+    }
     private fun dragAnchor(e:DragEvent,offer:Int):Pair<Int,Int>?{
         if(offer !in offers.indices || offers[offer] !in shapes.indices || boardView.width<=0 || boardView.height<=0)return null
         val innerW=(boardView.width-boardView.paddingLeft-boardView.paddingRight).coerceAtLeast(8)
