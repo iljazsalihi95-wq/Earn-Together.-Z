@@ -44,7 +44,30 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
     private fun filledTile(color:Int)=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(light(color),color,shade(color))).apply{cornerRadius=dp(10).toFloat();setStroke(dp(2),0x66ffffff)}
     private fun previewTile(valid:Boolean)=GradientDrawable(GradientDrawable.Orientation.TL_BR,if(valid)intArrayOf(0xffb4f6ff.toInt(),0xff36c8ff.toInt()) else intArrayOf(0xffffa0a9.toInt(),0xffff5269.toInt())).apply{cornerRadius=dp(10).toFloat();setStroke(dp(2),Color.WHITE)}
     private fun buildBoard(){boardView.removeAllViews();repeat(8){r->repeat(8){c->val v=TextView(context).apply{gravity=Gravity.CENTER;background=emptyTile();elevation=dp(2).toFloat()};cells[r][c]=v;boardView.addView(v,GridLayout.LayoutParams(GridLayout.spec(r,1,1f),GridLayout.spec(c,1,1f)).apply{width=0;height=0;setMargins(gap,gap,gap,gap)})}}}
-    private fun restoreOrNew(){val raw=prefs.getString("board",null);if(raw!=null){val a=raw.split(',').mapNotNull{it.toIntOrNull()};if(a.size==64)for(i in a.indices)board[i/8][i%8]=a[i]};score=prefs.getInt("score",0);best=prefs.getInt("best",0);level=prefs.getInt("level",1).coerceIn(1,250);totalLines=prefs.getInt("total_lines",prefs.getInt("lines",0));levelLines=prefs.getInt("level_lines",0).coerceAtLeast(0);combo=prefs.getInt("combo",0);val saved=prefs.getString("offers",null)?.split(',')?.mapNotNull{it.toIntOrNull()};offers=if(saved?.size==3)saved.map{it.coerceIn(-1,shapes.lastIndex)}.toIntArray() else nextOffers();if(offers.all{it<0})offers=nextOffers();ensurePlayableTray();gameOver=!hasAnyMove();refresh()}
+    private fun restoreOrNew(){
+        val raw=prefs.getString("board",null)
+        val cells=raw?.split(',')?.map{it.trim().toIntOrNull()}
+        val validBoard=cells?.size==64 && cells.all{it!=null && it in 0..palette.size}
+        if(validBoard) cells!!.forEachIndexed{i,v->board[i/8][i%8]=v!!}
+        score=prefs.getInt("score",0).coerceAtLeast(0)
+        best=prefs.getInt("best",0).coerceAtLeast(score)
+        level=prefs.getInt("level",1).coerceIn(1,250)
+        totalLines=prefs.getInt("total_lines",prefs.getInt("lines",0)).coerceAtLeast(0)
+        levelLines=prefs.getInt("level_lines",0).coerceAtLeast(0)
+        combo=prefs.getInt("combo",0).coerceAtLeast(0)
+        val saved=prefs.getString("offers",null)?.split(',')?.map{it.trim().toIntOrNull()}
+        val validOffers=saved?.size==3 && saved.all{it!=null && it in -1..shapes.lastIndex}
+        offers=if(validOffers) saved!!.map{it!!}.toIntArray() else nextOffers()
+        if(offers.all{it<0}) offers=nextOffers()
+        val beforeRepair=offers.copyOf()
+        ensurePlayableTray()
+        gameOver=!hasAnyMove()
+        // Persist recovered state immediately, otherwise a process restart can
+        // repeatedly regenerate the tray and erase a player's newly repaired move.
+        if(!validBoard || !validOffers || !beforeRepair.contentEquals(offers) ||
+            saved?.all{it == -1}==true) save()
+        refresh()
+    }
     private fun save(){best=max(best,score);prefs.edit().putString("board",board.flatMap{it.asList()}.joinToString(",")).putString("offers",offers.joinToString(",")).putInt("score",score).putInt("best",best).putInt("level",level).putInt("lines",totalLines).putInt("total_lines",totalLines).putInt("level_lines",levelLines).putInt("combo",combo).apply()}
     private fun nextOffers():IntArray{val hard=(level/20).coerceAtMost(5);return IntArray(3){if(Random.nextInt(8)<hard) Random.nextInt(5,shapes.size) else Random.nextInt(shapes.size)}}
     private fun shapeFits(shapeIndex:Int):Boolean{if(shapeIndex !in shapes.indices)return false;val shape=shapes[shapeIndex];for(r in 0..7)for(c in 0..7)if(canPlace(shape,r,c))return true;return false}
