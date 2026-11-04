@@ -93,25 +93,30 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         offers[slot]=playable.random()
     }
     private fun refresh(){clearPreview(false);for(r in 0..7)for(c in 0..7){val v=board[r][c];cells[r][c]?.apply{background=if(v==0)emptyTile() else filledTile(palette[(v-1).coerceIn(0,palette.lastIndex)]);alpha=if(v==0).72f else 1f;scaleX=1f;scaleY=1f;rotation=0f}};hud.text=if(gameOver)"RUN COMPLETE   SCORE $score   BEST $best\nTAP RESTART FOR A NEW BOARD" else "SCORE  $score     BEST  $best     LEVEL  $level/250\n${modeName()}  ✦  GOAL $levelLines/${goal()}  ✦  COMBO x$combo${if(combo>=2)"  •  MAGIC READY" else ""}";tray.removeAllViews();offers.forEachIndexed{i,s->tray.addView(if(s<0||gameOver)View(context) else pieceView(i,s),LayoutParams(0,-1,1f).apply{setMargins(dp(5),0,dp(5),0)})};if(gameOver){fx.text="NO MOVES  •  BEST $best";fx.alpha=1f}}
-    private fun pieceView(index:Int,shapeIndex:Int):View{val shape=shapes[shapeIndex];val maxX=shape.maxOf{it.first};val maxY=shape.maxOf{it.second};return GridLayout(context).apply{columnCount=maxX+1;rowCount=maxY+1;gravity=Gravity.CENTER;background=rounded(0x221b83d4,0x3358c8ff,16);isClickable=true;shape.forEach{(x,y)->addView(View(context).apply{background=filledTile(palette[index%palette.size]);elevation=dp(5).toFloat()},GridLayout.LayoutParams(GridLayout.spec(y),GridLayout.spec(x)).apply{width=dp(25);height=dp(25);setMargins(dp(2),dp(2),dp(2),dp(2))})};setOnTouchListener{v,e->if(!gameOver&&e.action==MotionEvent.ACTION_DOWN){v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);v.startDragAndDrop(ClipData.newPlainText("piece",index.toString()),BoardPieceShadow(v,maxX+1,maxY+1),index,0);true}else false}}}
-    // Draw the dragged piece at board-cell size, not at tiny tray-cell size.
-    private inner class BoardPieceShadow(source:View,private val columns:Int,private val rows:Int):View.DragShadowBuilder(source){
-        private var shadowWidth=1
-        private var shadowHeight=1
+    private fun pieceView(index:Int,shapeIndex:Int):View{val shape=shapes[shapeIndex];val maxX=shape.maxOf{it.first};val maxY=shape.maxOf{it.second};return GridLayout(context).apply{columnCount=maxX+1;rowCount=maxY+1;gravity=Gravity.CENTER;background=rounded(0x221b83d4,0x3358c8ff,16);isClickable=true;shape.forEach{(x,y)->addView(View(context).apply{background=filledTile(palette[index%palette.size]);elevation=dp(5).toFloat()},GridLayout.LayoutParams(GridLayout.spec(y),GridLayout.spec(x)).apply{width=dp(25);height=dp(25);setMargins(dp(2),dp(2),dp(2),dp(2))})};setOnTouchListener{v,e->if(!gameOver&&e.action==MotionEvent.ACTION_DOWN){v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);v.startDragAndDrop(ClipData.newPlainText("piece",index.toString()),BoardPieceShadow(v,shapeIndex,index),index,0);true}else false}}}
+    // The drag shadow must contain ONLY the actual blocks, never the tray card.
+    // Its hotspot and dimensions match the board-cell grid exactly.
+    private inner class BoardPieceShadow(source:View,private val shapeIndex:Int,private val offerIndex:Int):View.DragShadowBuilder(source){
+        private val shape=shapes[shapeIndex]
+        private val columns=shape.maxOf{it.first}+1
+        private val rows=shape.maxOf{it.second}+1
+        private var tile=1f
         override fun onProvideShadowMetrics(size:Point,touch:Point){
-            val tile=((boardView.width-boardView.paddingLeft-boardView.paddingRight)/8f).coerceAtLeast(dp(16).toFloat())
-            shadowWidth=(tile*columns).toInt().coerceAtLeast(1)
-            shadowHeight=(tile*rows).toInt().coerceAtLeast(1)
-            size.set(shadowWidth,shadowHeight)
-            touch.set(shadowWidth/2,shadowHeight/2)
+            val w=(boardView.width-boardView.paddingLeft-boardView.paddingRight)/8f
+            val h=(boardView.height-boardView.paddingTop-boardView.paddingBottom)/8f
+            tile=minOf(w,h).coerceAtLeast(dp(12).toFloat())
+            size.set((tile*columns).toInt().coerceAtLeast(1),(tile*rows).toInt().coerceAtLeast(1))
+            touch.set(size.x/2,size.y/2)
         }
         override fun onDrawShadow(canvas:Canvas){
-            val source=view?:return
-            if(source.width<=0 || source.height<=0)return
-            val save=canvas.save()
-            canvas.scale(shadowWidth/source.width.toFloat(),shadowHeight/source.height.toFloat())
-            source.draw(canvas)
-            canvas.restoreToCount(save)
+            val color=palette[offerIndex%palette.size]
+            shape.forEach{(x,y)->
+                val inset=dp(3).toFloat()
+                val drawable=filledTile(color)
+                drawable.setBounds((x*tile+inset).toInt(),(y*tile+inset).toInt(),
+                    ((x+1)*tile-inset).toInt(),((y+1)*tile-inset).toInt())
+                drawable.draw(canvas)
+            }
         }
     }
     private fun dragAnchor(e:DragEvent,offer:Int):Pair<Int,Int>?{
