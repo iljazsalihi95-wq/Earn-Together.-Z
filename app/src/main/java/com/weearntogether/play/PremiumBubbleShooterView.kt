@@ -95,7 +95,40 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   return best
  }
  private fun isAttachable(r:Int,c:Int)=r==0||hexNeighbors(r,c).any{(rr,cc)->grid[rr][cc]!=0}
- private fun updateAim(x:Float,y:Float){val target=nearestOpen(x,y)?:run{hideAim();return};aiming=target;val(r,c)=target;val sx=width/2f;val sy=height-dp(64).toFloat();val ex=field.left+xFor(r,c)+cell/2f;val ey=field.top+yFor(r)+cell/2f;aimDots.forEachIndexed{i,d->val t=(i+1f)/(aimDots.size+1f);d.x=sx+(ex-sx)*t;d.y=sy+(ey-sy)*t;d.alpha=.42f+t*.58f;d.scaleX=.7f+t*.45f;d.scaleY=d.scaleX;d.visibility=View.VISIBLE}}
+ private fun updateAim(x:Float,y:Float){
+  val target=nearestOpen(x,y)?:run{hideAim();return}
+  aiming=target
+  // Preview the actual bank-shot direction, including wall reflections.
+  // A straight line to the destination falsely suggests shots pass through bubbles.
+  val sx=width/2f;val sy=height-dp(64).toFloat()
+  val dx=x-sx;val dy=y-sy
+  val length=kotlin.math.sqrt(dx*dx+dy*dy).coerceAtLeast(1f)
+  var vx=dx/length;val vy=dy/length
+  val radius=cell*.44f
+  val left=field.left+dp(8)+radius
+  val right=field.right-dp(8)-radius
+  val targetX=field.left+xFor(target.first,target.second)+cell/2f
+  val targetY=field.top+yFor(target.first)+cell/2f
+  val points=mutableListOf<Pair<Float,Float>>()
+  var px=sx;var py=sy
+  val step=(cell*.22f).coerceAtLeast(2f)
+  for(i in 0 until 1500){
+   px+=vx*step;py+=vy*step
+   if(px<left){px=2*left-px;vx=-vx}
+   if(px>right){px=2*right-px;vx=-vx}
+   points.add(px to py)
+   if(py<=field.top+fieldTop+radius ||
+      (px-targetX)*(px-targetX)+(py-targetY)*(py-targetY)<=cell*cell*.75f)break
+  }
+  if(points.isEmpty()){hideAim();return}
+  aimDots.forEachIndexed{i,d->
+   val index=((i+1f)/(aimDots.size+1f)*points.lastIndex).toInt().coerceIn(0,points.lastIndex)
+   val point=points[index]
+   d.x=point.first-dp(3)/2f;d.y=point.second-dp(3)/2f
+   val t=(i+1f)/(aimDots.size+1f)
+   d.alpha=.42f+t*.58f;d.scaleX=.7f+t*.45f;d.scaleY=d.scaleX;d.visibility=View.VISIBLE
+  }
+ }
  private fun hideAim(){aiming=null;aimDots.forEach{it.visibility=View.GONE}}
  private fun shoot(r:Int,c:Int){if(busy || r !in 0 until rows || c !in 0 until cols || grid[r][c]!=0 || !isAttachable(r,c))return;busy=true;val p=View(context).apply{background=bubble(palette[current-1]);elevation=dp(18).toFloat()};val size=cell-dp(4);addView(p,LayoutParams(size,size).apply{leftMargin=width/2-size/2;topMargin=height-dp(94)});val sx=width/2f-size/2;val sy=height-dp(94).toFloat();val tx=field.left+xFor(r,c).toFloat();val ty=field.top+yFor(r).toFloat();ValueAnimator.ofFloat(0f,1f).apply{duration=(270L-level/3L).coerceAtLeast(155L);interpolator=DecelerateInterpolator();addUpdateListener{a->val t=a.animatedValue as Float;p.x=sx+(tx-sx)*t;p.y=sy+(ty-sy)*t};addListener(object:AnimatorListenerAdapter(){override fun onAnimationEnd(a:Animator){removeView(p);settle(r,c)}});start()}}
  private fun settle(r:Int,c:Int){if(r !in 0 until rows || c !in 0 until cols || grid[r][c]!=0 || !isAttachable(r,c)){busy=false;rebuild();return};grid[r][c]=current;val g=flood(r,c,current);if(g.size>=3){val color=current;g.forEach{(rr,cc)->grid[rr][cc]=0};streak++;val magic=streak>=3;val magicCells=if(magic)g.flatMap{(rr,cc)->hexNeighbors(rr,cc)}.filter{(rr,cc)->grid[rr][cc]!=0}.toSet() else emptySet();val magicDrops=magicCells.map{(rr,cc)->Triple(rr,cc,grid[rr][cc])};magicCells.forEach{(rr,cc)->grid[rr][cc]=0};val dropped=disconnectedCells().map{(rr,cc)->Triple(rr,cc,grid[rr][cc])};dropped.forEach{(rr,cc,_)->grid[rr][cc]=0};misses=(misses-2).coerceAtLeast(0);score+=g.size*45*level+(dropped.size+magicCells.size)*75*level+streak*35;if(magic){score+=500*level;streak=0;magicBurstFx(r,c)};popFx(g,color,dropped+magicDrops);performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)}else{streak=0;misses++;score+=10*level};if(misses>=pressureLimit()){if(grid[rows-1].any{it!=0}){score=(score-level*150).coerceAtLeast(0);streak=0;newBoard()}else{pushPressureRow()};misses=0;performHapticFeedback(HapticFeedbackConstants.REJECT)};if(grid.all{row->row.all{it==0}}){val completedLevel=level;if(level<250){level++;score+=level*500;post{onLevelComplete(completedLevel)}};streak=0;newBoard()};if(grid[rows-1].any{it!=0}){score=(score-level*150).coerceAtLeast(0);streak=0;newBoard()};val availableColors=grid.flatMap{it.asList()}.filter{it>0}.toSet();current=if(next in availableColors)next else randomBoardColor();next=randomBoardColor();save();if(g.size>=3)postDelayed({busy=false;rebuild()},520)else{busy=false;rebuild()}}
