@@ -32,8 +32,14 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         fx.apply{textSize=13f;gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);setTextColor(0xffffd56a.toInt());alpha=0f};addView(fx,LayoutParams(-1,dp(28)))
         boardView.columnCount=8;boardView.rowCount=8;boardView.background=rounded(0xff09152f.toInt(),0x6658c8ff,22);boardView.setPadding(dp(8),dp(8),dp(8),dp(8));// A puzzle board must be square. Weighted vertical sizing stretched its
         // rows into rectangles while drag placement assumed a regular grid.
-        val boardSide=(resources.displayMetrics.widthPixels-dp(28)).coerceAtLeast(dp(240))
-        addView(boardView,LayoutParams(-1,boardSide).apply{setMargins(0,dp(4),0,dp(12))})
+        // Fit the square grid in BOTH dimensions. Width-only sizing clipped the
+        // tray and lower board on short displays and landscape devices.
+        val metrics=resources.displayMetrics
+        val availableWidth=(metrics.widthPixels-dp(28)).coerceAtLeast(dp(1))
+        val reservedHeight=dp(108+58+28+126+16+4+12)
+        val availableHeight=(metrics.heightPixels-reservedHeight).coerceAtLeast(dp(1))
+        val boardSide=minOf(availableWidth,availableHeight)
+        addView(boardView,LayoutParams(boardSide,boardSide).apply{setMargins(0,dp(4),0,dp(12))})
         tray.orientation=HORIZONTAL;tray.gravity=Gravity.CENTER;tray.background=rounded(0xaa101a3a.toInt(),0x55ffc857,22);tray.setPadding(dp(8),dp(8),dp(8),dp(8));addView(tray,LayoutParams(-1,dp(126)))
         buildBoard();restoreOrNew();boardView.setOnDragListener{_,e->handleBoardDrag(e)}
     }
