@@ -144,7 +144,13 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   val centers=ArrayList<Pair<Float,Float>>(path.size+2)
   centers.add(start)
   // Reduce redundant samples, but retain every reflection point for a smooth flight.
-  path.forEachIndexed{i,p->if(i%3==0 || i==path.lastIndex)centers.add(p)}
+  // Stop at the first approach to the validated attachment point.
+  // Never animate beyond the hit bubble and then fly backwards to the slot.
+  val stopIndex=path.indexOfFirst{p->
+   val dx=p.first-destination.first;val dy=p.second-destination.second
+   dx*dx+dy*dy <= cell*cell*.75f
+  }.let{if(it<0)path.lastIndex else it}
+  if(stopIndex>=0)path.forEachIndexed{i,p->if(i<=stopIndex && (i%3==0 || i==stopIndex))centers.add(p)}
   centers.add(destination)
   val lengths=FloatArray(centers.size)
   for(i in 1 until centers.size){
