@@ -40,8 +40,53 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  }
  private fun addBubble(r:Int,c:Int,v:Int){field.addView(TextView(context).apply{gravity=Gravity.CENTER;text="•";textSize=12f;setTextColor(0xccffffff.toInt());background=bubble(palette[v-1]);elevation=dp(7).toFloat()},LayoutParams(cell-dp(4),cell-dp(4)).apply{leftMargin=xFor(r,c);topMargin=yFor(r)})}
  override fun onTouchEvent(e:MotionEvent):Boolean{if(busy)return true;when(e.actionMasked){MotionEvent.ACTION_DOWN,MotionEvent.ACTION_MOVE->{if(e.y<field.top+fieldTop||e.y>height-dp(82)){hideAim();return true};updateAim(e.x,e.y)};MotionEvent.ACTION_UP->{val target=aiming;hideAim();if(target!=null)shoot(target.first,target.second)};MotionEvent.ACTION_CANCEL->hideAim()};return true}
- private fun nearestOpen(x:Float,y:Float):Pair<Int,Int>?{var best:Pair<Int,Int>?=null;var dist=Float.MAX_VALUE;for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]==0&&isAttachable(r,c)){val cx=field.left+xFor(r,c)+cell/2f;val cy=field.top+yFor(r)+cell/2f;val d=abs(cx-x)+abs(cy-y);if(d<dist){dist=d;best=r to c}};return best}
- private fun isAttachable(r:Int,c:Int)=r==0||hexNeighbors(r,c).any{(rr,cc)->grid[rr][cc]!=0}
+ // Aim at the first bubble encountered by a rising shot, rather than
+ // teleporting the projectile to any open cell near the player's finger.
+ private fun nearestOpen(x:Float,y:Float):Pair<Int,Int>?{
+  val sx=width/2f;val sy=height-dp(64).toFloat()
+  val dx=x-sx;val dy=y-sy
+  if(dy>=-dp(12) || field.width<=0)return null
+  val length=kotlin.math.sqrt(dx*dx+dy*dy).coerceAtLeast(1f)
+  var vx=dx/length;val vy=dy/length
+  var px=sx;var py=sy
+  val radius=cell*.44f
+  val left=field.left+dp(8)+radius
+  val right=field.right-dp(8)-radius
+  var hitX=sx;var hitY=field.top+fieldTop+radius
+  val step=(cell*.22f).coerceAtLeast(2f)
+  var hit=false
+  for(i in 0 until 1500){
+   px+=vx*step;py+=vy*step
+   if(px<left){px=2*left-px;vx=-vx}
+   if(px>right){px=2*right-px;vx=-vx}
+   hitX=px;hitY=py
+   if(py<=field.top+fieldTop+radius){hit=true;break}
+   var collision=false
+   for(r in 0 until rows){
+    for(c in 0 until cols){
+     if(grid[r][c]==0)continue
+     val cx=field.left+xFor(r,c)+cell/2f
+     val cy=field.top+yFor(r)+cell/2f
+     val xx=px-cx;val yy=py-cy
+     if(xx*xx+yy*yy<=(cell*.88f)*(cell*.88f)){
+      collision=true;break
+     }
+    }
+    if(collision)break
+   }
+   if(collision){hit=true;break}
+  }
+  if(!hit)return null
+  var best:Pair<Int,Int>?=null;var distance=Float.MAX_VALUE
+  for(r in 0 until rows)for(c in 0 until cols){
+   if(grid[r][c]!=0 || !isAttachable(r,c))continue
+   val cx=field.left+xFor(r,c)+cell/2f
+   val cy=field.top+yFor(r)+cell/2f
+   val dd=(cx-hitX)*(cx-hitX)+(cy-hitY)*(cy-hitY)
+   if(dd<distance){distance=dd;best=r to c}
+  }
+  return best
+ }
  private fun updateAim(x:Float,y:Float){val target=nearestOpen(x,y)?:run{hideAim();return};aiming=target;val(r,c)=target;val sx=width/2f;val sy=height-dp(64).toFloat();val ex=field.left+xFor(r,c)+cell/2f;val ey=field.top+yFor(r)+cell/2f;aimDots.forEachIndexed{i,d->val t=(i+1f)/(aimDots.size+1f);d.x=sx+(ex-sx)*t;d.y=sy+(ey-sy)*t;d.alpha=.42f+t*.58f;d.scaleX=.7f+t*.45f;d.scaleY=d.scaleX;d.visibility=View.VISIBLE}}
  private fun hideAim(){aiming=null;aimDots.forEach{it.visibility=View.GONE}}
  private fun shoot(r:Int,c:Int){if(grid[r][c]!=0)return;busy=true;val p=View(context).apply{background=bubble(palette[current-1]);elevation=dp(18).toFloat()};val size=cell-dp(4);addView(p,LayoutParams(size,size).apply{leftMargin=width/2-size/2;topMargin=height-dp(94)});val sx=width/2f-size/2;val sy=height-dp(94).toFloat();val tx=field.left+xFor(r,c).toFloat();val ty=field.top+yFor(r).toFloat();ValueAnimator.ofFloat(0f,1f).apply{duration=(270L-level/3L).coerceAtLeast(155L);interpolator=DecelerateInterpolator();addUpdateListener{a->val t=a.animatedValue as Float;p.x=sx+(tx-sx)*t;p.y=sy+(ty-sy)*t};addListener(object:AnimatorListenerAdapter(){override fun onAnimationEnd(a:Animator){removeView(p);settle(r,c)}});start()}}
