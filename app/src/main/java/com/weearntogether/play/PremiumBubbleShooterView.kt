@@ -53,6 +53,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   val left=field.left+dp(8)+radius
   val right=field.right-dp(8)-radius
   var hitX=sx;var hitY=field.top+fieldTop+radius
+  var collided:Pair<Int,Int>?=null
   val step=(cell*.22f).coerceAtLeast(2f)
   var hit=false
   for(i in 0 until 1500){
@@ -69,6 +70,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
      val cy=field.top+yFor(r)+cell/2f
      val xx=px-cx;val yy=py-cy
      if(xx*xx+yy*yy<=(cell*.88f)*(cell*.88f)){
+      collided=r to c
       collision=true;break
      }
     }
@@ -78,7 +80,12 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   }
   if(!hit)return null
   var best:Pair<Int,Int>?=null;var distance=Float.MAX_VALUE
-  for(r in 0 until rows)for(c in 0 until cols){
+  // Only attach to the bubble actually hit (or the ceiling). Choosing the
+  // nearest legal slot anywhere on the board teleports shots across gaps.
+  val contact=collided
+  val candidates=if(contact!=null)hexNeighbors(contact.first,contact.second)
+      else (0 until cols).map{0 to it}
+  for((r,c) in candidates){
    if(grid[r][c]!=0 || !isAttachable(r,c))continue
    val cx=field.left+xFor(r,c)+cell/2f
    val cy=field.top+yFor(r)+cell/2f
