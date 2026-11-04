@@ -121,31 +121,22 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
     }
     private fun dragAnchor(e:DragEvent,offer:Int):Pair<Int,Int>?{
         if(offer !in offers.indices || offers[offer] !in shapes.indices || boardView.width<=0 || boardView.height<=0)return null
-        val innerW=(boardView.width-boardView.paddingLeft-boardView.paddingRight).coerceAtLeast(8)
-        val innerH=(boardView.height-boardView.paddingTop-boardView.paddingBottom).coerceAtLeast(8)
-        val cellW=innerW/8f;val cellH=innerH/8f
-        val localX=e.x-boardView.paddingLeft;val localY=e.y-boardView.paddingTop
-        val c=floor(localX/cellW).toInt();val row=floor(localY/cellH).toInt()
-        if(row !in 0..7 || c !in 0..7)return null
+        val cellW=(boardView.width-boardView.paddingLeft-boardView.paddingRight)/8f
+        val cellH=(boardView.height-boardView.paddingTop-boardView.paddingBottom)/8f
+        if(cellW<=0f || cellH<=0f)return null
         val shape=shapes[offers[offer]]
-        val width=shape.maxOf{it.first}+1;val height=shape.maxOf{it.second}+1
-        // Drag location is the finger, not the top-left tile. On even-width or
-        // even-height pieces, integer centering biases the shadow by one cell.
-        // Prefer a legal placement nearest the finger so a matching gap is not
-        // falsely rejected by the visual preview.
-        val idealR=row-(height-1)/2;val idealC=c-(width-1)/2
-        val legal=mutableListOf<Pair<Int,Int>>()
-        for(r in 0..8-height)for(col in 0..8-width){
-            if(canPlace(shape,r,col))legal.add(r to col)
-        }
-        val near=legal.filter{(r,col)->
-            val centerR=r+(height-1)/2f;val centerC=col+(width-1)/2f
-            kotlin.math.abs(centerR-row)<=1f && kotlin.math.abs(centerC-c)<=1f
-        }.minByOrNull{(r,col)->
-            val dr=r+(height-1)/2f-row;val dc=col+(width-1)/2f-c
-            dr*dr+dc*dc
-        }
-        return near ?: (idealR to idealC)
+        val width=shape.maxOf{it.first}+1
+        val height=shape.maxOf{it.second}+1
+        // The drag shadow hotspot is its exact center. Compute the top-left
+        // cell from the continuous finger position, not the already-rounded
+        // finger cell. This keeps odd/even pieces aligned with their shadow.
+        val x=(e.x-boardView.paddingLeft)/cellW-width/2f
+        val y=(e.y-boardView.paddingTop)/cellH-height/2f
+        val col=floor(x+0.5f).toInt()
+        val row=floor(y+0.5f).toInt()
+        // Never snap to a different free gap: the placed shape must be exactly
+        // where the player released the visible drag shadow.
+        return row to col
     }
     private fun updatePreview(e:DragEvent){
         val offer=(e.localState as? Int)?:return clearPreview()
