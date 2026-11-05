@@ -167,5 +167,15 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
     private fun canPlace(shape:Array<Pair<Int,Int>>,r:Int,c:Int)=shape.all{(x,y)->r+y in 0..7&&c+x in 0..7&&board[r+y][c+x]==0}
     private fun hasAnyMove():Boolean{for(s in offers)if(s>=0&&shapeFits(s))return true;return false}
     fun restart(){best=max(best,score);for(r in board)r.fill(0);score=0;levelLines=0;combo=0;gameOver=false;offers=nextOffers();ensurePlayableTray();save();refresh()}
- fun videoRescue(){val row=(0..7).maxByOrNull{r->board[r].count{it!=0}}?:return;board[row].fill(0);ensurePlayableTray();gameOver=!hasAnyMove();save();refresh();showFx("VIDEO RESCUE  ✦  ROW CLEARED",900)}
+    fun videoRescue(){
+        // Clear the lowest occupied row, not an arbitrary densest row. An empty
+        // board must not claim a rescue or alter the player's saved progress.
+        val row=(7 downTo 0).firstOrNull { r -> board[r].any { it != 0 } } ?: return
+        board[row].fill(0)
+        ensurePlayableTray()
+        gameOver=!hasAnyMove()
+        save()
+        refresh()
+        showFx("VIDEO RESCUE  ✦  ROW CLEARED",900)
+    }
 }
