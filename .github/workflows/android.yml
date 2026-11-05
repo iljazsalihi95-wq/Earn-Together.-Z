@@ -27,6 +27,18 @@ jobs:
           node backend/tests/arena-premium.test.cjs
           node --test quiz-arena/cloudflare-worker/test/*.test.js
           node tests/arena-bank.test.cjs
+      - name: Validate production Worker bundle
+        run: npx --yes wrangler@4.136.3 deploy --dry-run --config wrangler.toml --outdir /tmp/quiz-arena-worker
+      - name: Upload ready backend update
+        uses: actions/upload-artifact@v4
+        with:
+          name: Quiz-Arena-backend-update
+          path: |
+            /tmp/quiz-arena-worker/
+            quiz-arena/google-apps-script/Code.gs
+            quiz-arena/google-apps-script/AlbanianSpeech.gs
+            docs/QUIZ_ARENA_DEPLOY_SQ.md
+            wrangler.toml
       - name: Compile and test Albanian voice normalization
         shell: bash
         run: |
@@ -67,6 +79,12 @@ jobs:
         env:
           QUIZ_ARENA_WORKER_URL: ${{ vars.QUIZ_ARENA_WORKER_URL }}
         run: gradle --no-daemon assembleDebug
+      - name: Build future release AAB (unsigned)
+        run: gradle --no-daemon bundleRelease
+      - uses: actions/upload-artifact@v4
+        with:
+          name: We-Earn-Together-release-AAB-unsigned
+          path: app/build/outputs/bundle/release/*.aab
       - name: Record public signing certificate fingerprints
         run: gradle --no-daemon signingReport
       - uses: actions/upload-artifact@v4

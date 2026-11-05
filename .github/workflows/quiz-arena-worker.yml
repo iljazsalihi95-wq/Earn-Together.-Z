@@ -1,0 +1,41 @@
+name: Deploy existing Quiz Arena Worker
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: quiz-arena-worker-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check deployment credentials without displaying them
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CF_TOKEN" ] || [ -z "$CF_ACCOUNT" ]; then
+            echo '::error::Configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in this repository Actions secrets. No deployment was attempted.'
+            exit 1
+          fi
+      - name: Validate Worker and arena rules
+        run: |
+          node --test quiz-arena/cloudflare-worker/test/*.test.js
+          node backend/tests/arena-premium.test.cjs
+          node tests/arena-bank.test.cjs
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.136.3'
+          command: deploy --config wrangler.toml --keep-vars
+      - name: Check production capabilities
+        run: |
+          curl --fail --silent --show-error --max-time 20 https://quiz-arena-backend.lazisalihi.workers.dev/health > /tmp/arena-health.json
+          node -e 'const h=require("/tmp/arena-health.json");if(!h.success||h.version!==2||!h.ai_quota_configured)process.exit(1);console.log("Existing Quiz Arena Worker v2 and durable AI quota are active")'

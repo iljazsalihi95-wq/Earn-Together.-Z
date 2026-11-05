@@ -47,16 +47,18 @@ class ArenaOfflineStore(private val context:Context,user:String){
     fun saved():JSONObject?=runCatching{JSONObject(prefs.getString("session",null)!!)}.getOrNull()?.takeIf{valid(it)&&!it.optBoolean("finished")}
     private fun valid(s:JSONObject):Boolean=runCatching{val qs=s.getJSONArray("local_questions");qs.length()>0&&s.getInt("index") in 0 until qs.length()&&(0 until qs.length()).all{val q=qs.getJSONObject(it);q.getInt("correct") in 0 until q.getJSONArray("choices").length()}}.getOrDefault(false)
     fun start(category:String):JSONObject{
-        val categoryPool=questions.filter{category.isEmpty()||it.category==category};require(categoryPool.isNotEmpty());val ceiling=(1+prefs.getInt("level",1)/4).coerceAtMost(3);val pool=categoryPool.filter{it.difficulty<=ceiling}.ifEmpty{categoryPool}
+        val categoryPool=questions.filter{category.isEmpty()||it.category==category};require(categoryPool.isNotEmpty());val ceiling=(1+prefs.getInt("level",1)/4).coerceAtMost(3);val graded=categoryPool.filter{it.difficulty<=ceiling}
         val level=prefs.getInt("level",1)
         // Arena rounds must feel like real quiz rounds, never 2-3 question demos.
         // Start at 10 questions and grow gradually to 15 when enough verified material exists.
         val target=(10+(level-1)/3).coerceAtMost(15)
-        val selected=pool.shuffled().take(minOf(target,pool.size))
+        val pool=if(graded.size>=minOf(target,categoryPool.size))graded else categoryPool
+        val shuffled=pool.shuffled();val selected=shuffled.take(minOf(target,pool.size))
         // The answer clock is intentionally fixed at 30 seconds for every offline question.
         val config=JSONObject().put("seconds",30).put("points",100+level*10).put("bonus",50).put("pass",60).put("video","")
-        val qs=JSONArray(selected.map{q->JSONObject().put("id",q.id).put("category",q.category).put("prompt",q.prompt).put("choices",JSONArray(q.choices)).put("correct",q.correct).put("explanation",q.why).put("source",q.source).put("difficulty",q.difficulty)})
-        val s=JSONObject().put("offline",true).put("session_id","offline-"+java.util.UUID.randomUUID()).put("locale","sq").put("level",level).put("category",category).put("config",config).put("local_questions",qs).put("index",0).put("total",qs.length()).put("score",0).put("correct",0).put("answers",JSONArray()).put("finished",false)
+        fun encoded(q:QuizArenaActivity.Question)=JSONObject().put("id",q.id).put("category",q.category).put("prompt",q.prompt).put("choices",JSONArray(q.choices)).put("correct",q.correct).put("explanation",q.why).put("source",q.source).put("difficulty",q.difficulty)
+        val qs=JSONArray(selected.map{encoded(it)})
+        val s=JSONObject().put("offline",true).put("session_id","offline-"+java.util.UUID.randomUUID()).put("locale","sq").put("level",level).put("category",category).put("config",config).put("local_questions",qs).put("local_reserve",JSONArray(shuffled.drop(selected.size).map{encoded(it)})).put("index",0).put("total",qs.length()).put("score",0).put("correct",0).put("answers",JSONArray()).put("finished",false)
         select(s);save(s);return s
     }
     private fun select(s:JSONObject){s.put("question",s.getJSONArray("local_questions").getJSONObject(s.getInt("index")));s.remove("feedback");s.remove("timed_out");s.remove("answer_pending");s.remove("local_choice");s.remove("learning_choice");s.put("presentation_pending",true);s.put("presentation_remaining_ms",90000);s.put("remaining_ms",s.getJSONObject("config").getLong("seconds")*1000)}

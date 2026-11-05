@@ -32,12 +32,10 @@ internal object ArenaLifelines {
             "hint" -> result.put("text", "Lexo çfarë kërkon pyetja. Krahaso çdo alternativë me njohuritë e tua dhe kontrollo njësitë, datat ose kushtet që përmenden. Ky është orientim lokal, jo përgjigje AI.")
             "switch" -> {
                 val all = s.getJSONArray("local_questions")
-                check(s.getInt("index") + 1 < all.length()) { "NO_REPLACEMENT" }
-                // Swap an unanswered future question into this position. No free points and no
-                // repeated question later: the replaced question occupies its former position.
-                val next = s.getInt("index") + 1
-                val replacement = all.getJSONObject(next)
-                all.put(next, q); all.put(s.getInt("index"), replacement); s.put("question", replacement)
+                val reserve=s.optJSONArray("local_reserve")
+                check(reserve!=null&&reserve.length()>0){"NO_REPLACEMENT"}
+                val replacement=reserve.getJSONObject(0);reserve.remove(0)
+                all.put(s.getInt("index"),replacement);s.put("question",replacement)
                 s.put("presentation_pending", true).put("presentation_remaining_ms", 90000)
             }
         }
