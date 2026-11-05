@@ -46,7 +46,16 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   if(w>0&&h>0&&oldw>0&&oldh>0&&(w!=oldw||h!=oldh))post{if(isAttachedToWindow&&!busy)rebuild()}
  }
  private fun addBubble(r:Int,c:Int,v:Int){field.addView(TextView(context).apply{gravity=Gravity.CENTER;text="•";textSize=12f;setTextColor(0xccffffff.toInt());background=bubble(palette[v-1]);elevation=dp(7).toFloat()},LayoutParams(cell-dp(4),cell-dp(4)).apply{leftMargin=xFor(r,c);topMargin=yFor(r)})}
- override fun onTouchEvent(e:MotionEvent):Boolean{if(busy)return true;when(e.actionMasked){MotionEvent.ACTION_DOWN,MotionEvent.ACTION_MOVE->{if(e.y<field.top+fieldTop||e.y>height-dp(82)){hideAim();return true};updateAim(e.x,e.y)};MotionEvent.ACTION_UP->{val target=aiming;val path=aimPath.toList();hideAim();if(target!=null)shoot(target.first,target.second,path)};MotionEvent.ACTION_CANCEL->hideAim()};return true}
+ override fun onTouchEvent(e:MotionEvent):Boolean{if(busy)return true;when(e.actionMasked){MotionEvent.ACTION_DOWN,MotionEvent.ACTION_MOVE->{if(e.y<field.top+fieldTop||e.y>height-dp(82)){hideAim();return true};updateAim(e.x,e.y)};MotionEvent.ACTION_UP->{
+   // Release outside the playable aiming area cancels the shot rather than
+   // firing at the last valid position seen during a drag.
+   val inside=e.y>=field.top+fieldTop && e.y<=height-dp(82)
+   if(inside)updateAim(e.x,e.y)
+   val target=if(inside)aiming else null
+   val path=if(inside)aimPath.toList() else emptyList()
+   hideAim()
+   if(target!=null)shoot(target.first,target.second,path)
+  };MotionEvent.ACTION_CANCEL->hideAim()};return true}
  // Aim at the first bubble encountered by a rising shot, rather than
  // teleporting the projectile to any open cell near the player's finger.
  private fun nearestOpen(x:Float,y:Float):Pair<Int,Int>?{
