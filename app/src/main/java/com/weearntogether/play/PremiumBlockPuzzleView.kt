@@ -121,7 +121,7 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         selectedOffer=-1
         place(offer,shape,row,col)
     }
-    private fun pieceView(index:Int,shapeIndex:Int):View{val shape=shapes[shapeIndex];val maxX=shape.maxOf{it.first};val maxY=shape.maxOf{it.second};var dragStarted=false;return GridLayout(context).apply{columnCount=maxX+1;rowCount=maxY+1;gravity=Gravity.CENTER;background=rounded(0x221b83d4,0x3358c8ff,16);isClickable=true;shape.forEach{(x,y)->addView(View(context).apply{background=filledTile(palette[index%palette.size]);elevation=dp(5).toFloat()},GridLayout.LayoutParams(GridLayout.spec(y),GridLayout.spec(x)).apply{width=dp(25);height=dp(25);setMargins(dp(2),dp(2),dp(2),dp(2))})};setOnTouchListener{v,e->
+    private fun pieceView(index:Int,shapeIndex:Int):View{val shape=shapes[shapeIndex];val maxX=shape.maxOf{it.first};val maxY=shape.maxOf{it.second};var dragStarted=false;return GridLayout(context).apply{columnCount=maxX+1;rowCount=maxY+1;gravity=Gravity.CENTER;background=if(selectedOffer==index)rounded(0x553f2b70,0xffffc857.toInt(),16) else rounded(0x221b83d4,0x3358c8ff,16);contentDescription="Piece ${index+1}, ${shape.size} blocks";isClickable=true;shape.forEach{(x,y)->addView(View(context).apply{background=filledTile(palette[index%palette.size]);elevation=dp(5).toFloat()},GridLayout.LayoutParams(GridLayout.spec(y),GridLayout.spec(x)).apply{width=dp(25);height=dp(25);setMargins(dp(2),dp(2),dp(2),dp(2))})};setOnTouchListener{v,e->
         if(gameOver || resolvingMove)return@setOnTouchListener false
         when(e.actionMasked){
             MotionEvent.ACTION_DOWN->{dragStarted=false;v.setTag(0x7f000001,e.x to e.y);true}
@@ -141,8 +141,15 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
             }
             MotionEvent.ACTION_UP->{
                 if(!dragStarted && v.getTag(0x7f000001)!=null){
-                    selectedOffer=index
-                    showFx("PIECE SELECTED — TAP A BOARD CELL",1400)
+                    selectedOffer=if(selectedOffer==index)-1 else index
+                    for(slot in 0 until tray.childCount){
+                        val card=tray.getChildAt(slot)
+                        if(offers.getOrNull(slot) != null && offers[slot]>=0){
+                            card.background=if(slot==selectedOffer)rounded(0x553f2b70,0xffffc857.toInt(),16)
+                                else rounded(0x221b83d4,0x3358c8ff,16)
+                        }
+                    }
+                    showFx(if(selectedOffer>=0)"PIECE SELECTED — TAP A BOARD CELL" else "SELECTION CLEARED",1100)
                     v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                 }
                 v.setTag(0x7f000001,null)
