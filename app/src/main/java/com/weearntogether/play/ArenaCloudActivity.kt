@@ -314,10 +314,20 @@ class ArenaCloudActivity:Activity(){
         if(trustedWorker&&!qa()&&accounts.isSignedIn()){
             val choices=q.optJSONArray("choices")?:org.json.JSONArray()
             val feedback=s.optJSONObject("feedback")
-            val rawText=if(phase=="explanation"&&feedback!=null){
-                val correct=feedback.optInt("correct",-1)
-                (if(correct in 0 until choices.length())"Përgjigjja e saktë është ${'A'+correct}. ${choices.optString(correct)}. " else "")+feedback.optString("explanation")
-            }else q.optString("prompt")+". "+(0 until choices.length()).joinToString(". "){"${'A'+it}. ${choices.optString(it)}"}
+            val playerName=prefs.getString("name","Lojtari").orEmpty().take(80)
+            val rawText=when(phase){
+                "phone_intro"->"$"+"{playerName}, po telefonojmë shokun për mendimin e tij. Ai nuk e ka përgjigjen e garantuar."
+                "phone_outro"->"Faleminderit për ndihmën! $"+"{playerName}, tani zgjedhja të mbetet ty."
+                "intro"->"Mirë se erdhe në Quiz Arena Premium, $"+"{playerName}! Je gati për nivelin $"+"{s.optInt(\"level\")}?"
+                "clarify"->dialogueText
+                "friend"->friendText.ifBlank{"Lidhja me shokun nuk u realizua. Mund të vazhdosh lojën."}
+                "result"->"$"+"{playerName}, $"+"{s.optInt(\"correct\")} përgjigje të sakta nga $"+"{s.optInt(\"total\")}. $"+"{s.optInt(\"score\")} pikë."
+                "explanation"->if(feedback!=null){
+                    val correct=feedback.optInt("correct",-1)
+                    (if(correct in 0 until choices.length())"Përgjigjja e saktë është $"+"{'A'+correct}. $"+"{choices.optString(correct)}. " else "")+feedback.optString("explanation")
+                }else "Shpjegimi nuk është ende i disponueshëm."
+                else->q.optString("prompt")+". "+(0 until choices.length()).joinToString(". "){"$"+"{'A'+it}. $"+"{choices.optString(it)}"}
+            }
             val speechText=ArenaAlbanianSpeech.forVoice(rawText,locale)
             voiceNetwork.execute{
                 val result=runCatching{
