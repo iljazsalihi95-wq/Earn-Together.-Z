@@ -55,17 +55,29 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
     private fun filledTile(color:Int)=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(light(color),color,shade(color))).apply{cornerRadius=dp(10).toFloat();setStroke(dp(2),0x66ffffff)}
     private fun previewTile(valid:Boolean)=GradientDrawable().apply{setColor(if(valid)0x2235c6fa else 0x22ff5269);cornerRadius=dp(9).toFloat();setStroke(dp(1),if(valid)0x8858c8ff.toInt() else 0x88ff5269.toInt())}
     private fun buildBoard(){boardView.removeAllViews();repeat(8){r->repeat(8){c->val v=TextView(context).apply{gravity=Gravity.CENTER;background=emptyTile();elevation=dp(2).toFloat()};cells[r][c]=v;boardView.addView(v,GridLayout.LayoutParams(GridLayout.spec(r,1,1f),GridLayout.spec(c,1,1f)).apply{width=0;height=0;setMargins(gap,gap,gap,gap)})}}}
+    // Cloud restores and older releases may encode progress as Long or String.
+    // SharedPreferences.getInt throws ClassCastException for those values.
+    private fun restoredInt(key:String, fallback:Int):Int = when(val value=prefs.all[key]) {
+        is Int -> value
+        is Long -> value.coerceIn(Int.MIN_VALUE.toLong(),Int.MAX_VALUE.toLong()).toInt()
+        is Float -> if(value.isFinite()) value.toInt() else fallback
+        is Double -> if(value.isFinite()) value.coerceIn(Int.MIN_VALUE.toDouble(),Int.MAX_VALUE.toDouble()).toInt() else fallback
+        is Number -> value.toInt()
+        is String -> value.trim().toIntOrNull() ?: fallback
+        else -> fallback
+    }
+
     private fun restoreOrNew(){
         val raw=prefs.getString("board",null)
         val cells=raw?.split(',')?.map{it.trim().toIntOrNull()}
         val validBoard=cells?.size==64 && cells.all{it!=null && it in 0..palette.size}
         if(validBoard) cells!!.forEachIndexed{i,v->board[i/8][i%8]=v!!}
-        score=prefs.getInt("score",0).coerceAtLeast(0)
-        best=prefs.getInt("best",0).coerceAtLeast(score)
-        level=prefs.getInt("level",1).coerceIn(1,250)
-        totalLines=prefs.getInt("total_lines",prefs.getInt("lines",0)).coerceAtLeast(0)
-        levelLines=prefs.getInt("level_lines",0).coerceAtLeast(0)
-        combo=prefs.getInt("combo",0).coerceAtLeast(0)
+        score=restoredInt("score",0).coerceAtLeast(0)
+        best=restoredInt("best",0).coerceAtLeast(score)
+        level=restoredInt("level",1).coerceIn(1,250)
+        totalLines=restoredInt("total_lines",restoredInt("lines",0)).coerceAtLeast(0)
+        levelLines=restoredInt("level_lines",0).coerceAtLeast(0)
+        combo=restoredInt("combo",0).coerceAtLeast(0)
         val saved=prefs.getString("offers",null)?.split(',')?.map{it.trim().toIntOrNull()}
         val validOffers=saved?.size==3 && saved.all{it!=null && it in -1..shapes.lastIndex}
         offers=if(validOffers) saved!!.map{it!!}.toIntArray() else nextOffers()
