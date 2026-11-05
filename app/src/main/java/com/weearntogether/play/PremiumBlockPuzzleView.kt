@@ -121,16 +121,18 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         selectedOffer=-1
         place(offer,shape,row,col)
     }
-    private fun pieceView(index:Int,shapeIndex:Int):View{val shape=shapes[shapeIndex];val maxX=shape.maxOf{it.first};val maxY=shape.maxOf{it.second};return GridLayout(context).apply{columnCount=maxX+1;rowCount=maxY+1;gravity=Gravity.CENTER;background=rounded(0x221b83d4,0x3358c8ff,16);isClickable=true;shape.forEach{(x,y)->addView(View(context).apply{background=filledTile(palette[index%palette.size]);elevation=dp(5).toFloat()},GridLayout.LayoutParams(GridLayout.spec(y),GridLayout.spec(x)).apply{width=dp(25);height=dp(25);setMargins(dp(2),dp(2),dp(2),dp(2))})};setOnTouchListener{v,e->
+    private fun pieceView(index:Int,shapeIndex:Int):View{val shape=shapes[shapeIndex];val maxX=shape.maxOf{it.first};val maxY=shape.maxOf{it.second};var dragStarted=false;return GridLayout(context).apply{columnCount=maxX+1;rowCount=maxY+1;gravity=Gravity.CENTER;background=rounded(0x221b83d4,0x3358c8ff,16);isClickable=true;shape.forEach{(x,y)->addView(View(context).apply{background=filledTile(palette[index%palette.size]);elevation=dp(5).toFloat()},GridLayout.LayoutParams(GridLayout.spec(y),GridLayout.spec(x)).apply{width=dp(25);height=dp(25);setMargins(dp(2),dp(2),dp(2),dp(2))})};setOnTouchListener{v,e->
         if(gameOver || resolvingMove)return@setOnTouchListener false
         when(e.actionMasked){
-            MotionEvent.ACTION_DOWN->{v.setTag(0x7f000001,e.x to e.y);true}
+            MotionEvent.ACTION_DOWN->{dragStarted=false;v.setTag(0x7f000001,e.x to e.y);true}
             MotionEvent.ACTION_MOVE->{
+                if(dragStarted)return@setOnTouchListener true
                 val start=v.getTag(0x7f000001) as? Pair<*,*>
                 val dx=e.x-((start?.first as? Float)?:e.x)
                 val dy=e.y-((start?.second as? Float)?:e.y)
                 if(dx*dx+dy*dy>dp(10)*dp(10)){
                     v.setTag(0x7f000001,null)
+                    dragStarted=true
                     selectedOffer=-1
                     v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                     v.startDragAndDrop(ClipData.newPlainText("piece",index.toString()),BoardPieceShadow(v,shapeIndex,index),index,0)
@@ -138,7 +140,7 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
                 true
             }
             MotionEvent.ACTION_UP->{
-                if(v.getTag(0x7f000001)!=null){
+                if(!dragStarted && v.getTag(0x7f000001)!=null){
                     selectedOffer=index
                     showFx("PIECE SELECTED — TAP A BOARD CELL",1400)
                     v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
