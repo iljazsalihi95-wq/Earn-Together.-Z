@@ -42,7 +42,7 @@ class QuizArenaScene(context:Context):View(context){
         p.shader=RadialGradient((360+140*sin(phase)).toFloat(),80f,480f,intArrayOf(if(reaction<0)0x446f1636 else if(reaction>0)0x446f5f16 else 0x4446bfff,Color.TRANSPARENT),null,Shader.TileMode.CLAMP);c.drawRect(0f,0f,720f,480f,p);p.shader=null
         val speechTime=(time-speechStarted).coerceAtLeast(0);val reactionTime=(time-reactionStarted).coerceAtLeast(0)
         val energy=if(speaking)(speechEnergy?.invoke()?:0f).coerceIn(0f,1f) else 0f
-        c.save();c.translate(525f,-5f);c.scale(.68f,.68f);presenter.draw(c,if(friendSpeaking)0f else energy,speaking&&!friendSpeaking,reaction,time);c.restore()
+        c.save();c.translate(505f,-18f);c.scale(.84f,.84f);presenter.draw(c,if(friendSpeaking)0f else energy,speaking&&!friendSpeaking,reaction,time);c.restore()
         drawPlayer(c)
         p.color=0xe60a1b35.toInt();c.drawRoundRect(40f,147f,218f,180f,10f,10f,p);c.drawRoundRect(500f,147f,688f,180f,10f,10f,p);p.textAlign=Paint.Align.CENTER;p.textSize=17f;p.typeface=Typeface.DEFAULT_BOLD;p.color=0xffffd77e.toInt();c.drawText(playerName.take(21),129f,170f,p);c.drawText(if(speaking)"PREZANTUESJA • AI" else if(reaction>0)"MASHALLAH • SAKTË" else if(reaction<0)"PROVO PËRSËRI" else "PREZANTUESJA",594f,170f,p)
         p.shader=LinearGradient(210f,10f,510f,180f,0xff142958.toInt(),0xff191039.toInt(),Shader.TileMode.CLAMP);c.drawRoundRect(210f,8f,510f,182f,28f,28f,p);p.shader=null;p.style=Paint.Style.STROKE;p.strokeWidth=3f;p.color=if(reaction>0)0xffffe59a.toInt() else 0xffffd77e.toInt();c.drawRoundRect(210f,8f,510f,182f,28f,28f,p);p.style=Paint.Style.FILL
@@ -60,14 +60,14 @@ class QuizArenaScene(context:Context):View(context){
     }
     private fun drawPlayer(c:Canvas){
         p.shader=LinearGradient(72f,111f,186f,161f,suitColor,0xff142039.toInt(),Shader.TileMode.CLAMP)
-        c.drawRoundRect(72f,107f,186f,161f,19f,19f,p);p.shader=null
+        c.drawRoundRect(48f,107f,208f,184f,24f,24f,p);p.shader=null
         p.color=shirtColor;val shirt=Path().apply{moveTo(106f,108f);lineTo(129f,157f);lineTo(153f,108f);close()};c.drawPath(shirt,p)
         p.color=tieColor;val tie=Path().apply{moveTo(125f,113f);lineTo(133f,113f);lineTo(138f,143f);lineTo(129f,154f);lineTo(120f,143f);close()};c.drawPath(tie,p)
-        val face=RectF(91f,24f,167f,113f);val clip=Path().apply{addOval(face,Path.Direction.CW)}
+        val face=RectF(68f,8f,187f,131f);val clip=Path().apply{addOval(face,Path.Direction.CW)}
         c.save();c.clipPath(clip)
         val photo=portrait
         if(photo!=null){val size=minOf(photo.width,photo.height);c.drawBitmap(photo,Rect((photo.width-size)/2,(photo.height-size)/2,(photo.width+size)/2,(photo.height+size)/2),face,p)}
-        else{p.color=0xff376999.toInt();c.drawRect(face,p);p.color=Color.WHITE;p.textAlign=Paint.Align.CENTER;p.textSize=42f;p.typeface=Typeface.DEFAULT_BOLD;c.drawText(playerName.take(1).uppercase(),129f,87f,p)}
+        else{p.color=0xff376999.toInt();c.drawRect(face,p);p.color=Color.WHITE;p.textAlign=Paint.Align.CENTER;p.textSize=42f;p.typeface=Typeface.DEFAULT_BOLD;c.drawText(playerName.take(1).uppercase(),129f,93f,p)}
         c.restore();p.style=Paint.Style.STROKE;p.strokeWidth=2f;p.color=0xffe3bc74.toInt();c.drawOval(face,p);p.style=Paint.Style.FILL
     }
 
