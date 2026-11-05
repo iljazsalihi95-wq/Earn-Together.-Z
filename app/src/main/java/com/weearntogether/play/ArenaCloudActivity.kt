@@ -309,7 +309,17 @@ class ArenaCloudActivity:Activity(){
                 }
                 runOnUiThread{
                     if(isFinishing||isDestroyed||!resumed||generation!=voiceGeneration||version!=modeVersion)return@runOnUiThread
-                    result.onSuccess{audio->voiceNetwork.execute{val envelope=runCatching{cachedAudio.writeBytes(audio);ArenaSpeechEnvelope.decode(cachedAudio)}.getOrNull();runOnUiThread{if(generation==voiceGeneration&&resumed&&session===s){speechEnvelope=envelope;runCatching{playCached()}.onFailure{ttsFallback(phase)}}}}.onFailure{ttsFallback(phase)}
+                    result.onSuccess { audio ->
+                        voiceNetwork.execute {
+                            val envelope=runCatching { cachedAudio.writeBytes(audio);ArenaSpeechEnvelope.decode(cachedAudio) }.getOrNull()
+                            runOnUiThread {
+                                if(generation==voiceGeneration&&resumed&&session===s){
+                                    speechEnvelope=envelope
+                                    runCatching { playCached() }.onFailure { ttsFallback(phase) }
+                                }
+                            }
+                        }
+                    }.onFailure { ttsFallback(phase) }
                 }
             }
             return
