@@ -78,8 +78,8 @@ class ArenaCloudActivity:Activity(){
     }
     override fun onCreate(b:Bundle?){super.onCreate(b);window.statusBarColor=0xff080d27.toInt();window.navigationBarColor=0xff080d27.toInt();locale=prefs.getString("locale","sq")?:"sq";audioEnabled=prefs.getBoolean("audio",true);ads=NativeGameAds(this,"quiz_arena");sound=runCatching{android.media.ToneGenerator(android.media.AudioManager.STREAM_MUSIC,90)}.getOrNull();bootstrap=runCatching{JSONObject(prefs.getString("bootstrap","")?:"")}.getOrNull();tts=android.speech.tts.TextToSpeech(this){result->ttsReady=result==android.speech.tts.TextToSpeech.SUCCESS};home();localStore.saved()?.let{offline=true;accept(it)};if(!qa()||qaTransport!=null)refresh()}
     private fun call(action:String,data:JSONObject=JSONObject(),done:(JSONObject)->Unit){
-        if(busy)return
-        if(!accounts.isSignedIn()&&!(qa()&&qaTransport!=null)){live=false;if(session==null)home();return}
+        if(busy){android.widget.Toast.makeText(this,"Kërkesa e mëparshme është ende në proces.",android.widget.Toast.LENGTH_SHORT).show();return}
+        if(!accounts.isSignedIn()&&!(qa()&&qaTransport!=null)){live=false;android.widget.Toast.makeText(this,"Sesioni LIVE kërkon hyrje në llogari. Hape profilin ose luaj OFFLINE.",android.widget.Toast.LENGTH_LONG).show();if(session==null)home();return}
         busy=true;val version=modeVersion;status.text=when(action){"arenaReady"->"Prezantuesi përfundoi • Po nis koha…";"arenaAnswer"->"Po kontrollohet zgjedhja jote…";"arenaNext"->"Po hapet pyetja tjetër…";else->"Po provohet LIVE… Mund të luash OFFLINE."}
         val payload=JSONObject(data.toString()).put("locale",locale).put("protocol",2)
         if(accounts.isSignedIn())payload.put("session_token",accounts.requireToken())
@@ -163,7 +163,8 @@ class ArenaCloudActivity:Activity(){
         add(button("BISEDO ME PREZANTUESEN"){clarify(s)})
     }
     private fun useLifeline(s:JSONObject,kind:String){
-        if(session!==s||busy)return
+        if(session!==s){status.text="Pyetja ka ndryshuar. Provo ndihmën te pyetja aktuale.";return}
+        if(busy){android.widget.Toast.makeText(this,"Po pritet përgjigjja e serverit. Provo sërish pas pak.",android.widget.Toast.LENGTH_LONG).show();return}
         if(isOfflineSession()){
             runCatching{
                 val r=ArenaLifelines.use(s,kind)
