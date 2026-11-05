@@ -182,9 +182,20 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
     private fun animateClear(rows:List<Int>,cols:List<Int>){val targets=mutableSetOf<TextView>();rows.forEach{r->for(c in 0..7)cells[r][c]?.let{targets+=it}};cols.forEach{c->for(r in 0..7)cells[r][c]?.let{targets+=it}};targets.forEachIndexed{i,v->v.animate().scaleX(1.35f).scaleY(1.35f).alpha(.08f).rotationBy(if(i%2==0)18f else -18f).setDuration(190).start()};showFx(if(combo>=2)"COMBO x$combo  +${rows.size+cols.size} LINES" else "LINE CLEAR  +${rows.size+cols.size}",700)}
     private fun canPlace(shape:Array<Pair<Int,Int>>,r:Int,c:Int)=shape.all{(x,y)->r+y in 0..7&&c+x in 0..7&&board[r+y][c+x]==0}
     private fun hasAnyMove():Boolean{for(s in offers)if(s>=0&&shapeFits(s))return true;return false}
-    fun restart(){renderRevision++;best=max(best,score);for(r in board)r.fill(0);score=0;levelLines=0;combo=0;gameOver=false;offers=nextOffers();ensurePlayableTray();save();refresh()}
+    // A restart/rescue must cancel in-flight clear and magic animations before
+    // repainting the saved board, otherwise old animations can hide new tiles.
+    private fun cancelBoardAnimations(){
+        boardView.animate().cancel()
+        boardView.scaleX=1f;boardView.scaleY=1f
+        for(row in cells)for(cell in row){
+            cell?.animate()?.cancel()
+            cell?.apply{scaleX=1f;scaleY=1f;rotation=0f;alpha=1f}
+        }
+    }
+    fun restart(){renderRevision++;cancelBoardAnimations();best=max(best,score);for(r in board)r.fill(0);score=0;levelLines=0;combo=0;gameOver=false;offers=nextOffers();ensurePlayableTray();save();refresh()}
     fun videoRescue(){
         renderRevision++
+        cancelBoardAnimations()
         // Clear the lowest occupied row, not an arbitrary densest row. An empty
         // board must not claim a rescue or alter the player's saved progress.
         val row=(7 downTo 0).firstOrNull { r -> board[r].any { it != 0 } } ?: return
