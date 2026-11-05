@@ -27,7 +27,7 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
     private val palette=intArrayOf(0xff35c6fa.toInt(),0xffa478ff.toInt(),0xffffc857.toInt(),0xff49e1aa.toInt(),0xffff668f.toInt())
     private val shapes=listOf(arrayOf(0 to 0),arrayOf(0 to 0,1 to 0),arrayOf(0 to 0,1 to 0,2 to 0),arrayOf(0 to 0,0 to 1),arrayOf(0 to 0,0 to 1,0 to 2),arrayOf(0 to 0,1 to 0,0 to 1,1 to 1),arrayOf(0 to 0,1 to 0,2 to 0,1 to 1),arrayOf(0 to 0,0 to 1,1 to 1),arrayOf(1 to 0,0 to 1,1 to 1),arrayOf(0 to 0,1 to 0,2 to 0,0 to 1),arrayOf(0 to 0,1 to 0,2 to 0,2 to 1),arrayOf(0 to 0,1 to 0,0 to 1,1 to 1,0 to 2,1 to 2))
     private var renderRevision=0L; private var resolvingMove=false; private var offers=IntArray(3); private var score=0; private var best=0; private var level=1; private var totalLines=0; private var levelLines=0; private var combo=0; private var gameOver=false; private val gap=dp(3)
-    private var previewCells=emptySet<Pair<Int,Int>>(); private var previewValid=false; private var previewOffer=-1; private var previewAnchorR=-1; private var previewAnchorC=-1
+    private var selectedOffer=-1; private var previewCells=emptySet<Pair<Int,Int>>(); private var previewValid=false; private var previewOffer=-1; private var previewAnchorR=-1; private var previewAnchorC=-1
     init{
         orientation=VERTICAL;gravity=Gravity.CENTER_HORIZONTAL;setPadding(dp(14),dp(108),dp(14),dp(16));background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff071020.toInt(),0xff14265a.toInt(),0xff25104f.toInt(),0xff071020.toInt()))
         hud.apply{setTextColor(Color.WHITE);textSize=15f;gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.04f};addView(hud,LayoutParams(-1,dp(58)))
@@ -54,7 +54,7 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
     private fun emptyTile()=rounded(0xff13254b.toInt(),0x334f9fe8,9)
     private fun filledTile(color:Int)=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(light(color),color,shade(color))).apply{cornerRadius=dp(10).toFloat();setStroke(dp(2),0x66ffffff)}
     private fun previewTile(valid:Boolean)=GradientDrawable().apply{setColor(if(valid)0x2235c6fa else 0x22ff5269);cornerRadius=dp(9).toFloat();setStroke(dp(1),if(valid)0x8858c8ff.toInt() else 0x88ff5269.toInt())}
-    private fun buildBoard(){boardView.removeAllViews();repeat(8){r->repeat(8){c->val v=TextView(context).apply{gravity=Gravity.CENTER;background=emptyTile();elevation=dp(2).toFloat()};cells[r][c]=v;boardView.addView(v,GridLayout.LayoutParams(GridLayout.spec(r,1,1f),GridLayout.spec(c,1,1f)).apply{width=0;height=0;setMargins(gap,gap,gap,gap)})}}}
+    private fun buildBoard(){boardView.removeAllViews();repeat(8){r->repeat(8){c->val v=TextView(context).apply{gravity=Gravity.CENTER;background=emptyTile();elevation=dp(2).toFloat()};cells[r][c]=v;v.setOnClickListener{placeSelectedAt(r,c)};boardView.addView(v,GridLayout.LayoutParams(GridLayout.spec(r,1,1f),GridLayout.spec(c,1,1f)).apply{width=0;height=0;setMargins(gap,gap,gap,gap)})}}}
     // Cloud restores and older releases may encode progress as Long or String.
     // SharedPreferences.getInt throws ClassCastException for those values.
     private fun restoredInt(key:String, fallback:Int):Int = when(val value=prefs.all[key]) {
@@ -108,8 +108,48 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         val slot=remaining.randomOrNull() ?: offers.indices.random()
         offers[slot]=playable.random()
     }
-    private fun refresh(){clearPreview(false);for(r in 0..7)for(c in 0..7){val v=board[r][c];cells[r][c]?.apply{background=if(v==0)emptyTile() else filledTile(palette[(v-1).coerceIn(0,palette.lastIndex)]);alpha=if(v==0).72f else 1f;scaleX=1f;scaleY=1f;rotation=0f}};hud.text=if(gameOver)"RUN COMPLETE   SCORE $score   BEST $best\nTAP RESTART FOR A NEW BOARD" else "SCORE  $score     BEST  $best     LEVEL  $level/250\n${modeName()}  ✦  GOAL $levelLines/${goal()}  ✦  COMBO x$combo${if(combo>=2)"  •  MAGIC READY" else ""}";tray.removeAllViews();offers.forEachIndexed{i,s->tray.addView(if(s<0||gameOver)View(context) else pieceView(i,s),LayoutParams(0,-1,1f).apply{setMargins(dp(5),0,dp(5),0)})};if(gameOver){fx.text="NO MOVES  •  BEST $best";fx.alpha=1f}}
-    private fun pieceView(index:Int,shapeIndex:Int):View{val shape=shapes[shapeIndex];val maxX=shape.maxOf{it.first};val maxY=shape.maxOf{it.second};return GridLayout(context).apply{columnCount=maxX+1;rowCount=maxY+1;gravity=Gravity.CENTER;background=rounded(0x221b83d4,0x3358c8ff,16);isClickable=true;shape.forEach{(x,y)->addView(View(context).apply{background=filledTile(palette[index%palette.size]);elevation=dp(5).toFloat()},GridLayout.LayoutParams(GridLayout.spec(y),GridLayout.spec(x)).apply{width=dp(25);height=dp(25);setMargins(dp(2),dp(2),dp(2),dp(2))})};setOnTouchListener{v,e->if(!gameOver&&!resolvingMove&&e.action==MotionEvent.ACTION_DOWN){v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);v.startDragAndDrop(ClipData.newPlainText("piece",index.toString()),BoardPieceShadow(v,shapeIndex,index),index,0);true}else false}}}
+    private fun refresh(){if(selectedOffer !in offers.indices || (selectedOffer>=0 && offers[selectedOffer]<0))selectedOffer=-1;clearPreview(false);for(r in 0..7)for(c in 0..7){val v=board[r][c];cells[r][c]?.apply{background=if(v==0)emptyTile() else filledTile(palette[(v-1).coerceIn(0,palette.lastIndex)]);alpha=if(v==0).72f else 1f;scaleX=1f;scaleY=1f;rotation=0f}};hud.text=if(gameOver)"RUN COMPLETE   SCORE $score   BEST $best\nTAP RESTART FOR A NEW BOARD" else "SCORE  $score     BEST  $best     LEVEL  $level/250\n${modeName()}  ✦  GOAL $levelLines/${goal()}  ✦  COMBO x$combo${if(combo>=2)"  •  MAGIC READY" else ""}";tray.removeAllViews();offers.forEachIndexed{i,s->tray.addView(if(s<0||gameOver)View(context) else pieceView(i,s),LayoutParams(0,-1,1f).apply{setMargins(dp(5),0,dp(5),0)})};if(gameOver){fx.text="NO MOVES  •  BEST $best";fx.alpha=1f}}
+    private fun placeSelectedAt(row:Int,col:Int){
+        val offer=selectedOffer
+        if(gameOver || resolvingMove || offer !in offers.indices || offers[offer] !in shapes.indices)return
+        val shape=shapes[offers[offer]]
+        if(!canPlace(shape,row,col)){
+            performHapticFeedback(HapticFeedbackConstants.REJECT)
+            showFx("NO SPACE — CHOOSE AN EMPTY AREA",650)
+            return
+        }
+        selectedOffer=-1
+        place(offer,shape,row,col)
+    }
+    private fun pieceView(index:Int,shapeIndex:Int):View{val shape=shapes[shapeIndex];val maxX=shape.maxOf{it.first};val maxY=shape.maxOf{it.second};return GridLayout(context).apply{columnCount=maxX+1;rowCount=maxY+1;gravity=Gravity.CENTER;background=rounded(0x221b83d4,0x3358c8ff,16);isClickable=true;shape.forEach{(x,y)->addView(View(context).apply{background=filledTile(palette[index%palette.size]);elevation=dp(5).toFloat()},GridLayout.LayoutParams(GridLayout.spec(y),GridLayout.spec(x)).apply{width=dp(25);height=dp(25);setMargins(dp(2),dp(2),dp(2),dp(2))})};setOnTouchListener{v,e->
+        if(gameOver || resolvingMove)return@setOnTouchListener false
+        when(e.actionMasked){
+            MotionEvent.ACTION_DOWN->{v.setTag(0x7f000001,e.x to e.y);true}
+            MotionEvent.ACTION_MOVE->{
+                val start=v.getTag(0x7f000001) as? Pair<*,*>
+                val dx=e.x-((start?.first as? Float)?:e.x)
+                val dy=e.y-((start?.second as? Float)?:e.y)
+                if(dx*dx+dy*dy>dp(10)*dp(10)){
+                    v.setTag(0x7f000001,null)
+                    selectedOffer=-1
+                    v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                    v.startDragAndDrop(ClipData.newPlainText("piece",index.toString()),BoardPieceShadow(v,shapeIndex,index),index,0)
+                }
+                true
+            }
+            MotionEvent.ACTION_UP->{
+                if(v.getTag(0x7f000001)!=null){
+                    selectedOffer=index
+                    showFx("PIECE SELECTED — TAP A BOARD CELL",1400)
+                    v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                }
+                v.setTag(0x7f000001,null)
+                true
+            }
+            MotionEvent.ACTION_CANCEL->{v.setTag(0x7f000001,null);true}
+            else->true
+        }
+    }}}
     // The drag shadow must contain ONLY the actual blocks, never the tray card.
     // Its hotspot and dimensions match the board-cell grid exactly.
     private inner class BoardPieceShadow(source:View,private val shapeIndex:Int,private val offerIndex:Int):View.DragShadowBuilder(source){
@@ -194,7 +234,7 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
             cell?.apply{scaleX=1f;scaleY=1f;rotation=0f;alpha=1f}
         }
     }
-    fun restart(){renderRevision++;resolvingMove=false;cancelBoardAnimations();fx.animate().cancel();fx.alpha=0f;fx.text="";best=max(best,score);for(r in board)r.fill(0);score=0;levelLines=0;combo=0;gameOver=false;offers=nextOffers();ensurePlayableTray();save();refresh()}
+    fun restart(){selectedOffer=-1;renderRevision++;resolvingMove=false;cancelBoardAnimations();fx.animate().cancel();fx.alpha=0f;fx.text="";best=max(best,score);for(r in board)r.fill(0);score=0;levelLines=0;combo=0;gameOver=false;offers=nextOffers();ensurePlayableTray();save();refresh()}
     fun videoRescue(){
         renderRevision++
         resolvingMove=false
