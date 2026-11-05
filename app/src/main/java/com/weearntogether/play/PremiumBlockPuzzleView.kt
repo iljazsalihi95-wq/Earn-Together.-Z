@@ -53,7 +53,7 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
     private fun light(c:Int)=Color.rgb((Color.red(c)+70).coerceAtMost(255),(Color.green(c)+70).coerceAtMost(255),(Color.blue(c)+70).coerceAtMost(255))
     private fun emptyTile()=rounded(0xff13254b.toInt(),0x334f9fe8,9)
     private fun filledTile(color:Int)=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(light(color),color,shade(color))).apply{cornerRadius=dp(10).toFloat();setStroke(dp(2),0x66ffffff)}
-    private fun previewTile(valid:Boolean)=GradientDrawable().apply{setColor(if(valid)0x2235c6fa else 0x22ff5269);cornerRadius=dp(9).toFloat();setStroke(dp(1),if(valid)0x8858c8ff.toInt() else 0x88ff5269.toInt())}
+    private fun previewTile()=GradientDrawable().apply{setColor(0x2235c6fa);cornerRadius=dp(9).toFloat();setStroke(dp(1),0x8858c8ff.toInt())}
     private fun buildBoard(){boardView.removeAllViews();repeat(8){r->repeat(8){c->val v=TextView(context).apply{gravity=Gravity.CENTER;background=emptyTile();elevation=dp(2).toFloat()};cells[r][c]=v;v.setOnClickListener{placeSelectedAt(r,c)};boardView.addView(v,GridLayout.LayoutParams(GridLayout.spec(r,1,1f),GridLayout.spec(c,1,1f)).apply{width=0;height=0;setMargins(gap,gap,gap,gap)})}}}
     // Cloud restores and older releases may encode progress as Long or String.
     // SharedPreferences.getInt throws ClassCastException for those values.
@@ -134,6 +134,10 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
                     v.setTag(0x7f000001,null)
                     dragStarted=true
                     selectedOffer=-1
+                    for(slot in 0 until tray.childCount){
+                        if(offers.getOrNull(slot)?.let{it>=0}==true)
+                            tray.getChildAt(slot).background=rounded(0x221b83d4,0x3358c8ff,16)
+                    }
                     v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                     v.startDragAndDrop(ClipData.newPlainText("piece",index.toString()),BoardPieceShadow(v,shapeIndex,index),index,0)
                 }
@@ -215,13 +219,10 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         clearPreview()
         previewCells=next;previewValid=valid;previewOffer=offer
         previewAnchorR=anchor.first;previewAnchorC=anchor.second
-        // Never paint over occupied tiles: those are real blocks, not empty
-        // targets. A collision must stay visible instead of looking playable.
-        // Show both legal (cyan) and blocked (red) landing positions.
-        // Keep existing pieces visible so collisions are never concealed.
-        next.forEach{(r,c)->
+        // Only legal landing positions get an outline; never obscure collisions.
+        if(valid) next.forEach{(r,c)->
             if(board[r][c]==0)cells[r][c]?.apply{
-                background=previewTile(valid);alpha=1f;scaleX=1f;scaleY=1f
+                background=previewTile();alpha=1f;scaleX=1f;scaleY=1f
             }
         }
     }
