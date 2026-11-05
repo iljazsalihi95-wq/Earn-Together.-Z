@@ -51,7 +51,7 @@ class BackendClient(private val endpoint: String = ENDPOINT, private val timeout
         val deadline = System.nanoTime() + TimeUnit.MILLISECONDS.toNanos(timeoutMs)
         repeat(5) {
             if (Thread.currentThread().isInterrupted || System.nanoTime() >= deadline) throw timedOut()
-            require(url.protocol == "https" && url.host in setOf("script.google.com", "script.googleusercontent.com"))
+            require(url.protocol == "https" && url.userInfo == null && url.port == -1 && url.host in setOf("script.google.com", "script.googleusercontent.com", "quiz-arena-backend.lazisalihi.workers.dev"))
             val connection = url.openConnection() as HttpURLConnection
             val expired = AtomicBoolean(false)
             val remainingMs = TimeUnit.NANOSECONDS.toMillis(deadline - System.nanoTime()).coerceAtLeast(1)

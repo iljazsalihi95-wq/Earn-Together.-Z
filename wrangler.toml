@@ -4,3 +4,12 @@ compatibility_date = "2026-11-02"
 
 [vars]
 APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzu9rso0BO_UhLBPi3TMqIQl44tZ12r0n-t143ydmWOoiVMPbm_YA1uF0rImIfEcvaERw/exec"
+
+# Durable, server-side cost caps. Paid routes fail closed if this binding is missing.
+[[durable_objects.bindings]]
+name = "ARENA_QUOTA"
+class_name = "ArenaQuota"
+
+[[migrations]]
+tag = "arena-quota-v1"
+new_sqlite_classes = ["ArenaQuota"]

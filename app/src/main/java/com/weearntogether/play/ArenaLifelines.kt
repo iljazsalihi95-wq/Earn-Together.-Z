@@ -1,0 +1,53 @@
+package com.weearntogether.play
+
+import org.json.JSONArray
+import org.json.JSONObject
+
+/** Practice lifelines live inside the saved round, so closing the app cannot reset them.
+ * Friend and audience explicitly simulate opinions; neither inspects the answer key. */
+internal object ArenaLifelines {
+    val kinds = setOf("fifty", "friend", "audience", "hint", "switch")
+    fun used(s: JSONObject, kind: String) = s.optJSONObject("lifelines")?.has(kind) == true
+    fun use(s: JSONObject, kind: String): JSONObject {
+        require(kind in kinds) { "INVALID_LIFELINE" }
+        check(!s.optBoolean("finished") && s.optJSONObject("feedback") == null && !s.optBoolean("presentation_pending") && !s.optBoolean("timed_out")) { "LIFELINE_UNAVAILABLE" }
+        val used = s.optJSONObject("lifelines") ?: JSONObject().also { s.put("lifelines", it) }
+        check(!used.has(kind)) { "LIFELINE_USED" }
+        val q = s.getJSONObject("question"); val choices = q.getJSONArray("choices")
+        val result = JSONObject().put("kind", kind).put("question_id", q.getString("id"))
+        when (kind) {
+            "fifty" -> {
+                require(choices.length() == 4) { "FOUR_CHOICES_REQUIRED" }
+                result.put("hidden", JSONArray((0..3).filter { it != q.getInt("correct") }.shuffled().take(2)))
+            }
+            "friend" -> {
+                val guess = (0 until choices.length()).random()
+                result.put("text", "Unë do të provoja alternativën ${'A' + guess}, ${choices.getString(guess)}. Ky është vetëm mendim i simuluar, jo garanci.").put("simulated", true)
+            }
+            "audience" -> {
+                val weights = List(choices.length()) { (10..70).random() }; val sum = weights.sum()
+                val votes = weights.map { it * 100 / sum }.toMutableList(); votes[0] += 100 - votes.sum()
+                result.put("votes", JSONArray(votes)).put("simulated", true)
+            }
+            "hint" -> result.put("text", "Lexo çfarë kërkon pyetja. Krahaso çdo alternativë me njohuritë e tua dhe kontrollo njësitë, datat ose kushtet që përmenden. Ky është orientim lokal, jo përgjigje AI.")
+            "switch" -> {
+                val all = s.getJSONArray("local_questions")
+                check(s.getInt("index") + 1 < all.length()) { "NO_REPLACEMENT" }
+                // Swap an unanswered future question into this position. No free points and no
+                // repeated question later: the replaced question occupies its former position.
+                val next = s.getInt("index") + 1
+                val replacement = all.getJSONObject(next)
+                all.put(next, q); all.put(s.getInt("index"), replacement); s.put("question", replacement)
+                s.put("presentation_pending", true).put("presentation_remaining_ms", 90000)
+            }
+        }
+        used.put(kind, result)
+        return result
+    }
+    fun hidden(s: JSONObject): Set<Int> {
+        val r = s.optJSONObject("lifelines")?.optJSONObject("fifty") ?: return emptySet()
+        if (r.optString("question_id") != s.optJSONObject("question")?.optString("id")) return emptySet()
+        val values = r.optJSONArray("hidden") ?: return emptySet()
+        return (0 until values.length()).map { values.getInt(it) }.toSet()
+    }
+}

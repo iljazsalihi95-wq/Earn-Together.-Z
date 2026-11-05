@@ -86,3 +86,19 @@ const oldKey=lateAudio.cache_key;const currentRow=tables['Arena - Sesionet'].fin
 assert.notEqual(call('arenaVoice',{session_id:late.session_id,question_id:'sheet-11',phase:'explanation'}).cache_key,oldKey);
 assert.equal(context.arenaNormalizeVoice_('as ra rast sure','sq'),'as ra rast sure');
 console.log('PASS late correct choice retained as timeout, wrong-question audio rejected, changed text invalidates cache');
+
+// Session-owned lifelines persist, never reveal the key, and cannot reset after restart.
+cache.clear();user='lifeline-user';call('arenaRegister',{name:'Lifeline tester'});
+let life=call('arenaStart',{level:1,protocol:2});
+assert.throws(()=>call('arenaLifeline',{session_id:life.session_id,question_id:life.question.id,kind:'fifty'}),/LIFELINE_UNAVAILABLE/);
+life=call('arenaReady',{session_id:life.session_id,question_id:life.question.id});
+const lifeId=life.session_id,lifeQ=life.question.id,lifeCorrect=lifeQ==='q1'?1:2;
+const fifty=call('arenaLifeline',{session_id:lifeId,question_id:lifeQ,kind:'fifty'});
+assert.equal(fifty.lifeline.hidden.length,2);assert.ok(!fifty.lifeline.hidden.includes(lifeCorrect));assert.equal(fifty.question.correct,undefined);
+assert.deepEqual(call('arenaLifeline',{session_id:lifeId,question_id:lifeQ,kind:'fifty'}).lifeline,fifty.lifeline);
+const friend=call('arenaLifeline',{session_id:lifeId,question_id:lifeQ,kind:'friend'});assert.equal(friend.lifeline.reserved,true);assert.ok(!('correct' in friend.lifeline));
+const audience=call('arenaLifeline',{session_id:lifeId,question_id:lifeQ,kind:'audience'});assert.equal(audience.lifeline.simulated,true);assert.equal(audience.lifeline.votes.reduce((a,b)=>a+b,0),100);
+cache.clear();assert.equal(call('arenaResume',{session_id:lifeId}).lifelines.friend.reserved,true);
+call('arenaAnswer',{session_id:lifeId,question_id:lifeQ,choice:0});life=call('arenaNext',{session_id:lifeId,question_id:lifeQ});life=call('arenaReady',{session_id:lifeId,question_id:life.question.id});
+assert.throws(()=>call('arenaLifeline',{session_id:lifeId,question_id:life.question.id,kind:'friend'}),/LIFELINE_USED/);
+console.log('PASS persistent lifelines: owned session, presentation gate, 50:50, idempotent replay, simulated audience, one friend per round');
