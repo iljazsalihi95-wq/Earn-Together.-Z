@@ -168,9 +168,11 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         previewAnchorR=anchor.first;previewAnchorC=anchor.second
         // Never paint over occupied tiles: those are real blocks, not empty
         // targets. A collision must stay visible instead of looking playable.
-        if(valid)next.forEach{(r,c)->
+        // Show both legal (cyan) and blocked (red) landing positions.
+        // Keep existing pieces visible so collisions are never concealed.
+        next.forEach{(r,c)->
             if(board[r][c]==0)cells[r][c]?.apply{
-                background=previewTile(true);alpha=1f;scaleX=1f;scaleY=1f
+                background=previewTile(valid);alpha=1f;scaleX=1f;scaleY=1f
             }
         }
     }
