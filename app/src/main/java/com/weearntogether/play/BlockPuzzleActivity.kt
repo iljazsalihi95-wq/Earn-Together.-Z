@@ -112,24 +112,35 @@ class BlockPuzzleActivity : Activity() {
         host.addView(knife, FrameLayout.LayoutParams(dp(118), dp(40), Gravity.BOTTOM or Gravity.START).apply { leftMargin = dp(10); bottomMargin = dp(6) })
         val nextGame = chip(ui("BUBBLES ›", "TOPAT ›", "BUBBLES ›", "BOLLE ›")) { openGame(BubbleShooterActivity::class.java) }.apply { contentDescription = ui("Open Bubble Shooter", "Hap Bubble Shooter", "Bubble Shooter öffnen", "Apri Bubble Shooter") }
         host.addView(nextGame, FrameLayout.LayoutParams(dp(118), dp(40), Gravity.BOTTOM or Gravity.END).apply { rightMargin = dp(10); bottomMargin = dp(6) })
+        host.addView(chip(ui("PAUSE","PAUZË","PAUSE","PAUSA")){pauseGame()}.apply{contentDescription="Pause game"},FrameLayout.LayoutParams(dp(68),dp(46),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(8)})
         setContentView(host)
     }
 
+    private fun pauseGame(){
+        if(dialogOpen)return
+        dialogOpen=true;game.setPaused(true)
+        val dialog=AlertDialog.Builder(this).setTitle(ui("Paused","Pauzë","Pause","Pausa"))
+            .setMessage(ui("Your board and progress are kept.","Tabela dhe progresi yt ruhen.","Spielfeld und Fortschritt bleiben erhalten.","La griglia e i progressi sono conservati."))
+            .setPositiveButton(ui("CONTINUE","VAZHDO","WEITER","CONTINUA")){_,_->}
+            .setNegativeButton(ui("HOME","BALLINA","STARTSEITE","HOME")){_,_->finish()}.create()
+        dialog.setOnDismissListener{dialogOpen=false;game.setPaused(!hasWindowFocus());enterImmersive()};dialog.show()
+    }
     private fun confirmRestart() {
         if (dialogOpen) return
         dialogOpen = true
+        game.setPaused(true)
         val dialog = AlertDialog.Builder(this)
             .setTitle(ui("Restart level?", "Rifillo nivelin?", "Level neu starten?", "Riavviare il livello?"))
             .setMessage(ui("The current board restarts. Your best score stays saved.", "Tabela aktuale rifillon. Rekordi më i mirë mbetet i ruajtur.", "Das aktuelle Spielfeld startet neu. Der Bestwert bleibt gespeichert.", "La griglia riparte. Il record resta salvato."))
             .setNegativeButton(ui("CANCEL", "ANULO", "ABBRECHEN", "ANNULLA"), null)
             .setPositiveButton(ui("RESTART", "RIFILLO", "NEUSTART", "RIPROVA")) { _, _ -> game.restart(); refreshSavedProgress() }.create()
-        dialog.setOnDismissListener { dialogOpen = false; refreshSavedProgress(); enterImmersive() }; dialog.show()
+        dialog.setOnDismissListener { dialogOpen = false; game.setPaused(!hasWindowFocus()); refreshSavedProgress(); enterImmersive() }; dialog.show()
     }
 
-    override fun onResume() { super.onResume(); if (::ads.isInitialized) ads.resume(); refreshSavedProgress(); if (!dialogOpen) enterImmersive() }
-    override fun onPause() { if (::ads.isInitialized) ads.pause(); super.onPause() }
+    override fun onResume() { super.onResume(); if (::game.isInitialized) game.setPaused(dialogOpen); if (::ads.isInitialized) ads.resume(); refreshSavedProgress(); if (!dialogOpen) enterImmersive() }
+    override fun onPause() { if (::game.isInitialized) game.setPaused(true); if (::ads.isInitialized) ads.pause(); super.onPause() }
     override fun onDestroy() { if (::ads.isInitialized) ads.destroy(); super.onDestroy() }
-    override fun onWindowFocusChanged(hasFocus: Boolean) { super.onWindowFocusChanged(hasFocus); if (hasFocus && !dialogOpen) enterImmersive() }
+    override fun onWindowFocusChanged(hasFocus: Boolean) { super.onWindowFocusChanged(hasFocus); if (::game.isInitialized) game.setPaused(!hasFocus || dialogOpen); if (hasFocus && !dialogOpen) enterImmersive() }
 
     private fun enterImmersive() {
         if (android.os.Build.VERSION.SDK_INT >= 30) {
