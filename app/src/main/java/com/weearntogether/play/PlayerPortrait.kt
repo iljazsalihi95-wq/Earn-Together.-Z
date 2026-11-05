@@ -25,9 +25,20 @@ object PlayerPortrait {
             val bounds=BitmapFactory.Options().apply { inJustDecodeBounds=true }
             context.contentResolver.openInputStream(uri).use { BitmapFactory.decodeStream(it,null,bounds) }
             var sample=1;while(bounds.outWidth/sample>640||bounds.outHeight/sample>640)sample*=2
-            val bitmap=context.contentResolver.openInputStream(uri).use { BitmapFactory.decodeStream(it,null,BitmapFactory.Options().apply{inSampleSize=sample}) } ?: return false
+            val decoded=context.contentResolver.openInputStream(uri).use { BitmapFactory.decodeStream(it,null,BitmapFactory.Options().apply{inSampleSize=sample}) } ?: return false
+            val orientation=runCatching{context.contentResolver.openInputStream(uri).use{android.media.ExifInterface(it!!).getAttributeInt(android.media.ExifInterface.TAG_ORIENTATION,android.media.ExifInterface.ORIENTATION_NORMAL)}}.getOrDefault(1)
+            val matrix=android.graphics.Matrix().apply{when(orientation){2->setScale(-1f,1f);3->setRotate(180f);4->setScale(1f,-1f);5->{setRotate(90f);postScale(-1f,1f)};6->setRotate(90f);7->{setRotate(270f);postScale(-1f,1f)};8->setRotate(270f)}}
+            val bitmap=if(matrix.isIdentity)decoded else Bitmap.createBitmap(decoded,0,0,decoded.width,decoded.height,matrix,true).also{decoded.recycle()}
             file(context).outputStream().use { bitmap.compress(Bitmap.CompressFormat.WEBP,88,it) };bitmap.recycle();true
         }.getOrDefault(false)
+    }
+    fun adjust(activity:Activity,onSaved:()->Unit){
+        val bitmap=load(activity)?:return onSaved()
+        val crop=PortraitCropView(activity,bitmap)
+        val panel=android.widget.LinearLayout(activity).apply{orientation=1;setPadding(20,12,20,12);addView(android.widget.TextView(activity).apply{text="Lëvize fotografinë dhe zmadhoje me dy gishta. Fytyra ruhet vetëm në telefon.";setPadding(8,8,8,16)});addView(crop,android.widget.LinearLayout.LayoutParams(-1,(activity.resources.displayMetrics.widthPixels*.76f).toInt()))}
+        android.app.AlertDialog.Builder(activity).setTitle("PËRSHTAT PORTRETIN").setView(panel).setPositiveButton("RUAJ"){_,_->
+            val result=crop.result();file(activity).outputStream().use{result.compress(Bitmap.CompressFormat.WEBP,90,it)};result.recycle();bitmap.recycle();onSaved()
+        }.setNegativeButton("MBAJ ORIGJINALIN"){_,_->bitmap.recycle();onSaved()}.setOnCancelListener{bitmap.recycle();onSaved()}.show()
     }
     fun image(context:Context):ImageView=ImageView(context).apply { scaleType=ImageView.ScaleType.CENTER_CROP;setImageBitmap(load(context)?:StudioAssets.get(context,"host").let{Bitmap.createBitmap(it,0,0,it.width/4,it.height/2)});background=GradientDrawable().apply {shape=GradientDrawable.OVAL;setColor(0xffdce9ff.toInt())};clipToOutline=true;contentDescription="Fotoja e lojtarit" }
 }

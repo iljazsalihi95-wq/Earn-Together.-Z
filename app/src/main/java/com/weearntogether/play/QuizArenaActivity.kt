@@ -16,7 +16,7 @@ import java.util.Locale
 
 /** Native arena: animated stage, accessible controls and pause-safe quiz rounds. */
 class QuizArenaActivity : Activity(), TextToSpeech.OnInitListener {
-    data class Question(val category:String,val prompt:String,val choices:List<String>,val correct:Int,val why:String,val id:String="",val source:String="")
+    data class Question(val category:String,val prompt:String,val choices:List<String>,val correct:Int,val why:String,val id:String="",val source:String="",val difficulty:Int=1)
     private lateinit var ads:NativeGameAds
     private var bank=listOf<Question>()
     private lateinit var bankStore:QuizBank

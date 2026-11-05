@@ -17,14 +17,15 @@ class QuizArenaScene(context:Context):View(context){
         set(value){if(value&&!field)speechStarted=android.os.SystemClock.uptimeMillis();field=value;invalidate()}
     var speechEnergy:(()->Float)?=null
     var suitColor=0xff273b68.toInt();var shirtColor=Color.WHITE;var tieColor=0xffc99b4e.toInt()
-    var phoneState=""
+    var phoneState="";var friendSpeaking=false
     var playerName="LOJTARI";var portrait:Bitmap?=null
     var questionPrompt="";var questionCategory="";var questionNumber=""
     var timerText="";var stageStatus="";var remainingFraction=1f
     private var speechStarted=0L;private var reactionStarted=0L
+    private val presenter=ArenaPresenter()
     private val p=Paint(3);private val textPaint=TextPaint(3);private var attached=false
     private var layoutText="";private var questionLayout:StaticLayout?=null
-    private val audience=StudioAssets.get(context,"audience");private val studio=StudioAssets.get(context,"arena");private val host=StudioAssets.get(context,"host")
+    private val audience=StudioAssets.get(context,"audience");private val studio=StudioAssets.get(context,"arena")
     override fun onAttachedToWindow(){super.onAttachedToWindow();attached=true}
     override fun onDetachedFromWindow(){attached=false;super.onDetachedFromWindow()}
     private fun promptLayout():StaticLayout{
@@ -36,22 +37,14 @@ class QuizArenaScene(context:Context):View(context){
         }
         return questionLayout!!
     }
-    override fun onDraw(c:Canvas){super.onDraw(c);val save=c.save();c.scale(width/720f,height/560f);val time=android.os.SystemClock.uptimeMillis();val phase=time/650.0
+    override fun onDraw(c:Canvas){super.onDraw(c);val save=c.save();val scale=minOf(width/720f,height/560f);c.translate((width-720f*scale)/2,(height-560f*scale)/2);c.scale(scale,scale);val time=android.os.SystemClock.uptimeMillis();val phase=time/650.0
         c.drawBitmap(studio,Rect(0,(studio.height*.068f).toInt(),studio.width,(studio.height*.776f).toInt()),RectF(0f,0f,720f,480f),p)
         p.shader=RadialGradient((360+140*sin(phase)).toFloat(),80f,480f,intArrayOf(if(reaction<0)0x446f1636 else if(reaction>0)0x446f5f16 else 0x4446bfff,Color.TRANSPARENT),null,Shader.TileMode.CLAMP);c.drawRect(0f,0f,720f,480f,p);p.shader=null
         val speechTime=(time-speechStarted).coerceAtLeast(0);val reactionTime=(time-reactionStarted).coerceAtLeast(0)
-        // Presenter movement is intentionally restrained: subtle mouth/hand changes while
-        // speaking, a short congratulatory nod on a correct answer and a calm reset otherwise.
         val energy=if(speaking)(speechEnergy?.invoke()?:0f).coerceIn(0f,1f) else 0f
-        val frame=when{speaking->when{energy>.65f->6;energy>.25f->0;energy>.06f->1;else->7};reaction>0->if(reactionTime<900)3 else 2;reaction<0->if(reactionTime<700)5 else 7;else->if((time/3200)%2==0L)2 else 7}
-        val src=Rect((frame%4)*host.width/4,(frame/4)*host.height/2,(frame%4+1)*host.width/4,(frame/4+1)*host.height/2)
-        val hostBounce=when{speaking->sin(speechTime/240.0)*3.5;reaction>0&&reactionTime<900->-abs(sin(reactionTime/260.0))*3.2;else->sin(phase*1.2)*.7}.toFloat()
-        val hostTilt=when{speaking->sin(speechTime/350.0)*1.6;reaction>0&&reactionTime<900->sin(reactionTime/300.0)*.8;reaction<0&&reactionTime<700->sin(reactionTime/600.0)*-.35;else->0.0}.toFloat()
-        c.save();c.clipRect(496f,0f,692f,186f);c.rotate(hostTilt,594f,168f);c.translate(0f,hostBounce);c.drawBitmap(host,src,RectF(501f,2f,686f,236f),p);c.restore()
-        val photo=portrait
-        if(photo!=null){val bob=if(speaking)sin(speechTime/310.0).toFloat()*2f else 0f;c.save();c.translate(0f,bob);p.color=suitColor;c.drawRoundRect(72f,103f,186f,151f,17f,17f,p);p.color=shirtColor;c.drawOval(110f,106f,148f,145f,p);p.color=tieColor;val tie=Path().apply{moveTo(126f,112f);lineTo(133f,112f);lineTo(137f,137f);lineTo(129f,148f);lineTo(121f,137f);close()};c.drawPath(tie,p);p.color=0xff162846.toInt();val lapel=Path().apply{moveTo(72f,107f);lineTo(105f,103f);lineTo(126f,147f);lineTo(76f,147f);close()};c.drawPath(lapel,p);val lapelRight=Path().apply{moveTo(186f,107f);lineTo(153f,103f);lineTo(132f,147f);lineTo(182f,147f);close()};c.drawPath(lapelRight,p);val r=RectF(91f,24f,167f,112f);p.color=Color.WHITE;c.drawRoundRect(70f,20f,188f,138f,20f,20f,p);c.save();val clip=Path().apply{addRoundRect(r,15f,15f,Path.Direction.CW)};c.clipPath(clip);val size=minOf(photo.width,photo.height);c.drawBitmap(photo,Rect((photo.width-size)/2,(photo.height-size)/2,(photo.width+size)/2,(photo.height+size)/2),r,p);c.restore();c.restore()}
-        else{p.color=0xff4a91df.toInt();c.drawCircle(129f,78f,43f,p);p.color=Color.WHITE;p.textAlign=Paint.Align.CENTER;p.textSize=44f;p.typeface=Typeface.DEFAULT_BOLD;c.drawText(playerName.take(1).uppercase(),129f,94f,p)}
-        p.color=0xe60a1b35.toInt();c.drawRoundRect(40f,147f,218f,180f,10f,10f,p);c.drawRoundRect(500f,147f,688f,180f,10f,10f,p);p.textAlign=Paint.Align.CENTER;p.textSize=17f;p.typeface=Typeface.DEFAULT_BOLD;p.color=0xffffd77e.toInt();c.drawText(playerName.take(21),129f,170f,p);c.drawText(if(speaking)"PREZANTUESI • LIVE" else if(reaction>0)"MASHALLAH • SAKTË" else if(reaction<0)"PROVO PËRSËRI" else "PREZANTUESI",594f,170f,p)
+        c.save();c.translate(525f,-5f);c.scale(.68f,.68f);presenter.draw(c,if(friendSpeaking)0f else energy,speaking&&!friendSpeaking,reaction,time);c.restore()
+        drawPlayer(c)
+        p.color=0xe60a1b35.toInt();c.drawRoundRect(40f,147f,218f,180f,10f,10f,p);c.drawRoundRect(500f,147f,688f,180f,10f,10f,p);p.textAlign=Paint.Align.CENTER;p.textSize=17f;p.typeface=Typeface.DEFAULT_BOLD;p.color=0xffffd77e.toInt();c.drawText(playerName.take(21),129f,170f,p);c.drawText(if(speaking)"PREZANTUESJA • AI" else if(reaction>0)"MASHALLAH • SAKTË" else if(reaction<0)"PROVO PËRSËRI" else "PREZANTUESJA",594f,170f,p)
         p.shader=LinearGradient(210f,10f,510f,180f,0xff142958.toInt(),0xff191039.toInt(),Shader.TileMode.CLAMP);c.drawRoundRect(210f,8f,510f,182f,28f,28f,p);p.shader=null;p.style=Paint.Style.STROKE;p.strokeWidth=3f;p.color=if(reaction>0)0xffffe59a.toInt() else 0xffffd77e.toInt();c.drawRoundRect(210f,8f,510f,182f,28f,28f,p);p.style=Paint.Style.FILL
         p.textSize=22f;p.color=0xff80ddff.toInt();c.drawText(questionNumber,360f,44f,p);p.textSize=if(timerText.length>6)29f else 58f;p.color=if(reaction<0)0xffffb0b5.toInt() else if(reaction>0)0xffffe59a.toInt() else Color.WHITE;c.drawText(timerText,360f,112f,p)
         p.textSize=18f;p.color=0xffffd77e.toInt();c.drawText(stageStatus.take(28),360f,148f,p)
@@ -62,7 +55,20 @@ class QuizArenaScene(context:Context):View(context){
         p.color=0xff304669.toInt();c.drawRoundRect(48f,453f,672f,462f,5f,5f,p);p.color=if(remainingFraction<.2f)0xffffac6f.toInt() else 0xff77d7ff.toInt();c.drawRoundRect(48f,453f,48f+624f*remainingFraction.coerceIn(0f,1f),462f,5f,5f,p)
         if(reaction>0&&reactionTime<1600)for(i in 0..20){val x=((i*83)%700+10).toFloat();val y=((phase*72+i*31)%550).toFloat();p.color=when(i%3){0->0xffffd979.toInt();1->0xff65e2ef.toInt();else->0xffd9a6ff.toInt()};c.drawCircle(x,y,if(i%4==0)3.5f else 2.2f,p)}
         val audienceFrame=if(reaction>0&&reactionTime<1200&&(time/320)%2==1L)1 else 0;c.drawBitmap(audience,Rect(0,audienceFrame*audience.height/2,audience.width,(audienceFrame+1)*audience.height/2),RectF(0f,480f,720f,560f),p)
-        if(phoneState.isNotEmpty()){p.color=0xf0201540.toInt();c.drawRoundRect(228f,42f,492f,155f,18f,18f,p);p.color=0xffffd782.toInt();p.textSize=24f;c.drawText("☎",360f,84f,p);p.textSize=18f;c.drawText(phoneState.take(26),360f,124f,p)}
+        if(phoneState.isNotEmpty()){p.color=0xf0201540.toInt();c.drawRoundRect(228f,42f,492f,155f,18f,18f,p);p.color=0xffffd782.toInt();p.textSize=24f;c.drawText(if(friendSpeaking)"SHOKU" else "☎",360f,84f,p);if(friendSpeaking){p.color=0xff7fe2ff.toInt();c.drawRoundRect(278f,91f,278f+164f*energy,97f,3f,3f,p);p.color=0xffffd782.toInt()};p.textSize=18f;c.drawText(phoneState.take(26),360f,124f,p)}
         c.restoreToCount(save);if(attached&&windowVisibility==VISIBLE)postInvalidateDelayed(if(speaking||reaction!=0)40 else 70)
     }
+    private fun drawPlayer(c:Canvas){
+        p.shader=LinearGradient(72f,111f,186f,161f,suitColor,0xff142039.toInt(),Shader.TileMode.CLAMP)
+        c.drawRoundRect(72f,107f,186f,161f,19f,19f,p);p.shader=null
+        p.color=shirtColor;val shirt=Path().apply{moveTo(106f,108f);lineTo(129f,157f);lineTo(153f,108f);close()};c.drawPath(shirt,p)
+        p.color=tieColor;val tie=Path().apply{moveTo(125f,113f);lineTo(133f,113f);lineTo(138f,143f);lineTo(129f,154f);lineTo(120f,143f);close()};c.drawPath(tie,p)
+        val face=RectF(91f,24f,167f,113f);val clip=Path().apply{addOval(face,Path.Direction.CW)}
+        c.save();c.clipPath(clip)
+        val photo=portrait
+        if(photo!=null){val size=minOf(photo.width,photo.height);c.drawBitmap(photo,Rect((photo.width-size)/2,(photo.height-size)/2,(photo.width+size)/2,(photo.height+size)/2),face,p)}
+        else{p.color=0xff376999.toInt();c.drawRect(face,p);p.color=Color.WHITE;p.textAlign=Paint.Align.CENTER;p.textSize=42f;p.typeface=Typeface.DEFAULT_BOLD;c.drawText(playerName.take(1).uppercase(),129f,87f,p)}
+        c.restore();p.style=Paint.Style.STROKE;p.strokeWidth=2f;p.color=0xffe3bc74.toInt();c.drawOval(face,p);p.style=Paint.Style.FILL
+    }
+
 }

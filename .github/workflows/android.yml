@@ -26,6 +26,7 @@ jobs:
           node backend/tests/quiz-arena.test.cjs
           node backend/tests/arena-premium.test.cjs
           node --test quiz-arena/cloudflare-worker/test/*.test.js
+          node tests/arena-bank.test.cjs
       - name: Compile and test Albanian voice normalization
         shell: bash
         run: |

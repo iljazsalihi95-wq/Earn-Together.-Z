@@ -27,7 +27,7 @@ function arenaBank_(locale){
  for(const tab of QUIZ_TABS){const sh=getQuizSpreadsheet_().getSheetByName(tab);if(!sh)continue;
   for(const r of sh.getDataRange().getDisplayValues().slice(1)){
    if(r[1]!=='PO'||r[13]!=='MIRATUAR'||r[12]!==locale)continue;
-   const q={id:String(r[0]),category:r[2],type:r[3],question:r[4],choices:r.slice(5,9),correct:String(r[9]).trim().toUpperCase().charCodeAt(0)-65,explanation:r[10],source:r[11],recitation:r[15]||''};
+   const q={id:String(r[0]),category:r[2],type:r[3],question:r[4],choices:r.slice(5,9),correct:String(r[9]).trim().toUpperCase().charCodeAt(0)-65,explanation:r[10],source:r[11],recitation:r[15]||'',difficulty:Math.max(1,Math.min(3,Number(r[16])||1))};
    if(q.id&&q.question&&q.choices.every(x=>x&&x.trim())&&q.correct>=0&&q.correct<4&&q.explanation&&q.source)out.push(q);
   }
  }
@@ -46,7 +46,7 @@ function arenaState_(id){const done=arenaRows_('Arena - Progresi').slice(1).filt
 function arenaSession_(id,user){const rows=arenaRows_('Arena - Sesionet'),i=rows.findIndex((r,j)=>j>0&&r[0]===id&&r[1]===user);if(i<1)arenaError_('SESSION_NOT_FOUND');let state;try{state=JSON.parse(rows[i][12]);}catch(_){arenaError_('SESSION_INVALID');}return {row:i+1,values:rows[i],state};}
 function arenaSave_(s){s.values[12]=JSON.stringify(s.state);getQuizSpreadsheet_().getSheetByName('Arena - Sesionet').getRange(s.row,1,1,13).setValues([s.values]);}
 function arenaBeginQuestion_(a,presentation){a.presentation=!!presentation;a.presentationUntil=presentation?Date.now()+90000:0;a.deadline=Date.now()+a.config.seconds*1000+(presentation?90000:0);}
-function arenaPublic_(s){const a=s.state,q=a.questions[a.index];if(a.feedback&&typeof a.feedback.choice!=='number'){const last=(a.answers||[]).find(x=>x.id===q.id);if(last)a.feedback.choice=last.choice;}return {session_id:s.values[0],level:a.level,score:a.score,correct:a.correct,index:a.index,total:a.questions.length,finished:a.finished||false,passed:a.passed||false,config:a.config,question:q?{id:q.id,category:q.category,prompt:q.question,choices:q.choices,recitation:q.recitation}:null,feedback:a.feedback||null,lifelines:a.lifelines||{},presentation_pending:!!a.presentation&&!a.feedback&&Date.now()<a.presentationUntil,presentation_remaining_ms:Math.max(0,(a.presentationUntil||0)-Date.now()),remaining_ms:a.presentation&&Date.now()<a.presentationUntil?a.config.seconds*1000:Math.max(0,a.deadline-Date.now())};}
+function arenaPublic_(s){const a=s.state,q=a.questions[a.index];if(a.feedback&&typeof a.feedback.choice!=='number'){const last=(a.answers||[]).find(x=>x.id===q.id);if(last)a.feedback.choice=last.choice;}return {session_id:s.values[0],level:a.level,score:a.score,correct:a.correct,index:a.index,total:a.questions.length,finished:a.finished||false,passed:a.passed||false,config:a.config,question:q?{id:q.id,category:q.category,prompt:q.question,choices:q.choices,recitation:q.recitation,difficulty:q.difficulty||1}:null,feedback:a.feedback||null,lifelines:a.lifelines||{},presentation_pending:!!a.presentation&&!a.feedback&&Date.now()<a.presentationUntil,presentation_remaining_ms:Math.max(0,(a.presentationUntil||0)-Date.now()),remaining_ms:a.presentation&&Date.now()<a.presentationUntil?a.config.seconds*1000:Math.max(0,a.deadline-Date.now())};}
 function arenaRoute_(p){
  const u=arenaIdentity_(p),lock=LockService.getScriptLock();
  // Copy the owned session under the short gameplay lock; synthesis runs after release.
@@ -68,7 +68,7 @@ function arenaRoute_(p){
  if(p.action==='arenaStart'){
   if(!arenaPlayer_(u.id))arenaError_('REGISTER_FIRST');const progress=arenaState_(u.id),level=Number(p.level),config=arenaLevels_().find(x=>x.level===level);if(!config||level>progress.level)arenaError_('LEVEL_LOCKED');
   const sh=getQuizSpreadsheet_().getSheetByName('Arena - Sesionet');const active=sh.getDataRange().getValues().slice(1).find(r=>r[1]===u.id&&r[11]==='ACTIVE');if(active)return Object.assign({success:true},arenaPublic_(arenaSession_(active[0],u.id)));
-  let bank=arenaBank_(locale).filter(q=>!p.category||q.category===p.category);if(bank.length<config.count)arenaError_('NOT_ENOUGH_APPROVED_QUESTIONS');
+  let bank=arenaBank_(locale).filter(q=>!p.category||q.category===p.category);const graded=bank.filter(q=>(q.difficulty||1)<=Math.min(3,1+Math.floor((level-1)/4)));if(graded.length>=config.count)bank=graded;if(bank.length<config.count)arenaError_('NOT_ENOUGH_APPROVED_QUESTIONS');
   for(let i=bank.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[bank[i],bank[j]]=[bank[j],bank[i]];}
   const state={questions:bank.slice(0,config.count),locale,level,config,index:0,score:0,correct:0,answers:[],deadline:Date.now()+config.seconds*1000,feedback:null,finished:false};
   state.category=String(p.category||'');state.presentationEnabled=p.protocol===2;arenaBeginQuestion_(state,state.presentationEnabled);

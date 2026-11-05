@@ -1,0 +1,1679 @@
+{
+  "questions": [
+    {
+      "id": "premium-20261105-sq-001",
+      "category": "Shkencë",
+      "difficulty": 1,
+      "question": "Cila është njësia bazë SI e kohës?",
+      "options": [
+        "Sekonda",
+        "Metri",
+        "Kelvini",
+        "Amperi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Njësia bazë SI e kohës është sekonda.",
+      "sources": [
+        {
+          "url": "https://www.bipm.org/en/measurement-units/si-base-units"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-002",
+      "category": "Shkencë",
+      "difficulty": 1,
+      "question": "Cila është njësia bazë SI e gjatësisë?",
+      "options": [
+        "Kandela",
+        "Metri",
+        "Sekonda",
+        "Moli"
+      ],
+      "correctIndex": 1,
+      "explanation": "Njësia bazë SI e gjatësisë është metri.",
+      "sources": [
+        {
+          "url": "https://www.bipm.org/en/measurement-units/si-base-units"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-003",
+      "category": "Shkencë",
+      "difficulty": 1,
+      "question": "Cila është njësia bazë SI e masës?",
+      "options": [
+        "Metri",
+        "Sekonda",
+        "Kilogrami",
+        "Njutoni"
+      ],
+      "correctIndex": 2,
+      "explanation": "Njësia bazë SI e masës është kilogrami.",
+      "sources": [
+        {
+          "url": "https://www.bipm.org/en/measurement-units/si-base-units"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-004",
+      "category": "Shkencë",
+      "difficulty": 1,
+      "question": "Cila është njësia bazë SI e rrymës elektrike?",
+      "options": [
+        "Volti",
+        "Ohmi",
+        "Vati",
+        "Amperi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Njësia bazë SI e rrymës elektrike është amperi.",
+      "sources": [
+        {
+          "url": "https://www.bipm.org/en/measurement-units/si-base-units"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-005",
+      "category": "Shkencë",
+      "difficulty": 1,
+      "question": "Cila është njësia bazë SI e temperaturës termodinamike?",
+      "options": [
+        "Kelvini",
+        "Grada Celsius",
+        "Xhauli",
+        "Moli"
+      ],
+      "correctIndex": 0,
+      "explanation": "Njësia bazë SI e temperaturës termodinamike është kelvini.",
+      "sources": [
+        {
+          "url": "https://www.bipm.org/en/measurement-units/si-base-units"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-006",
+      "category": "Shkencë",
+      "difficulty": 2,
+      "question": "Cila është njësia bazë SI e sasisë së lëndës?",
+      "options": [
+        "Metri",
+        "Moli",
+        "Kilogrami",
+        "Kandela"
+      ],
+      "correctIndex": 1,
+      "explanation": "Njësia bazë SI e sasisë së lëndës është moli.",
+      "sources": [
+        {
+          "url": "https://www.bipm.org/en/measurement-units/si-base-units"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-007",
+      "category": "Shkencë",
+      "difficulty": 2,
+      "question": "Cila është njësia bazë SI e intensitetit të dritës?",
+      "options": [
+        "Vati",
+        "Lumen",
+        "Kandela",
+        "Luksi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Njësia bazë SI e intensitetit të dritës është kandela.",
+      "sources": [
+        {
+          "url": "https://www.bipm.org/en/measurement-units/si-base-units"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-008",
+      "category": "Shkencë",
+      "difficulty": 2,
+      "question": "Me cilën njësi SI matet madhësia e frekuencës?",
+      "options": [
+        "Xhauli",
+        "Paskali",
+        "Volti",
+        "Herci"
+      ],
+      "correctIndex": 3,
+      "explanation": "Herci është njësia SI e frekuencës.",
+      "sources": [
+        {
+          "url": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-009",
+      "category": "Shkencë",
+      "difficulty": 2,
+      "question": "Me cilën njësi SI matet madhësia e presionit?",
+      "options": [
+        "Paskali",
+        "Amperi",
+        "Vati",
+        "Faradi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Paskali është njësia SI e presionit.",
+      "sources": [
+        {
+          "url": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-010",
+      "category": "Shkencë",
+      "difficulty": 2,
+      "question": "Me cilën njësi SI matet madhësia e energjisë?",
+      "options": [
+        "Teslla",
+        "Xhauli",
+        "Volti",
+        "Herci"
+      ],
+      "correctIndex": 1,
+      "explanation": "Xhauli është njësia SI e energjisë.",
+      "sources": [
+        {
+          "url": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-011",
+      "category": "Shkencë",
+      "difficulty": 2,
+      "question": "Me cilën njësi SI matet madhësia e fuqisë?",
+      "options": [
+        "Kuloni",
+        "Ohmi",
+        "Vati",
+        "Xhauli"
+      ],
+      "correctIndex": 2,
+      "explanation": "Vati është njësia SI e fuqisë.",
+      "sources": [
+        {
+          "url": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-012",
+      "category": "Shkencë",
+      "difficulty": 2,
+      "question": "Me cilën njësi SI matet madhësia e ngarkesës elektrike?",
+      "options": [
+        "Volti",
+        "Herci",
+        "Paskali",
+        "Kuloni"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kuloni është njësia SI e ngarkesës elektrike.",
+      "sources": [
+        {
+          "url": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-013",
+      "category": "Shkencë",
+      "difficulty": 2,
+      "question": "Me cilën njësi SI matet madhësia e diferencës së potencialit elektrik?",
+      "options": [
+        "Volti",
+        "Kuloni",
+        "Faradi",
+        "Metri"
+      ],
+      "correctIndex": 0,
+      "explanation": "Volti është njësia SI e diferencës së potencialit elektrik.",
+      "sources": [
+        {
+          "url": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-014",
+      "category": "Shkencë",
+      "difficulty": 2,
+      "question": "Me cilën njësi SI matet madhësia e kapacitetit elektrik?",
+      "options": [
+        "Herci",
+        "Faradi",
+        "Amperi",
+        "Vati"
+      ],
+      "correctIndex": 1,
+      "explanation": "Faradi është njësia SI e kapacitetit elektrik.",
+      "sources": [
+        {
+          "url": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-015",
+      "category": "Shkencë",
+      "difficulty": 2,
+      "question": "Me cilën njësi SI matet madhësia e përçueshmërisë elektrike?",
+      "options": [
+        "Volti",
+        "Njutoni",
+        "Simensi",
+        "Ohmi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Simensi është njësia SI e përçueshmërisë elektrike.",
+      "sources": [
+        {
+          "url": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-016",
+      "category": "Shkencë",
+      "difficulty": 2,
+      "question": "Me cilën njësi SI matet madhësia e fluksit magnetik?",
+      "options": [
+        "Teslla",
+        "Herci",
+        "Xhauli",
+        "Veberi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Veberi është njësia SI e fluksit magnetik.",
+      "sources": [
+        {
+          "url": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-017",
+      "category": "Astronomi",
+      "difficulty": 1,
+      "question": "Sa planetë ka Sistemi Diellor sipas klasifikimit të IAU-së?",
+      "options": [
+        "8",
+        "9",
+        "10",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sistemi Diellor ka tetë planetë.",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/planets/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-018",
+      "category": "Astronomi",
+      "difficulty": 1,
+      "question": "Cili është planeti më i vogël në Sistemin Diellor?",
+      "options": [
+        "Marsi",
+        "Mërkuri",
+        "Venusi",
+        "Toka"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mërkuri është më i vogli nga tetë planetët.",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/planets/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-019",
+      "category": "Astronomi",
+      "difficulty": 1,
+      "question": "Cili planet është i dyti nga Dielli?",
+      "options": [
+        "Marsi",
+        "Saturni",
+        "Venusi",
+        "Toka"
+      ],
+      "correctIndex": 2,
+      "explanation": "Venusi është planeti i dytë nga Dielli.",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/planets/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-020",
+      "category": "Astronomi",
+      "difficulty": 1,
+      "question": "Cili planet vjen menjëherë pas Tokës duke u larguar nga Dielli?",
+      "options": [
+        "Venusi",
+        "Mërkuri",
+        "Neptuni",
+        "Marsi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Toka është e treta dhe Marsi i katërti nga Dielli.",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/planets/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-021",
+      "category": "Astronomi",
+      "difficulty": 2,
+      "question": "Cili çift përbëhet nga gjigantë akulli?",
+      "options": [
+        "Urani dhe Neptuni",
+        "Jupiteri dhe Saturni",
+        "Venusi dhe Mërkuri",
+        "Toka dhe Marsi"
+      ],
+      "correctIndex": 0,
+      "explanation": "NASA i klasifikon Uranin dhe Neptunin si gjigantë akulli.",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/planets/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-022",
+      "category": "Astronomi",
+      "difficulty": 2,
+      "question": "Mes orbitave të cilëve planetë gjendet brezi kryesor i asteroideve ku ndodhet Ceresi?",
+      "options": [
+        "Saturnit dhe Uranit",
+        "Marsit dhe Jupiterit",
+        "Mërkurit dhe Venusit",
+        "Tokës dhe Marsit"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ceresi ndodhet në brezin e asteroideve mes Marsit dhe Jupiterit.",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/planets/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-023",
+      "category": "Astronomi",
+      "difficulty": 2,
+      "question": "Në cilin vit Plutoni u riklasifikua si planet xhuxh?",
+      "options": [
+        "1989",
+        "2000",
+        "2006",
+        "1969"
+      ],
+      "correctIndex": 2,
+      "explanation": "IAU e riklasifikoi Plutonin në vitin 2006.",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/planets/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-024",
+      "category": "Astronomi",
+      "difficulty": 2,
+      "question": "Çfarë quhet ekzoplanet?",
+      "options": [
+        "Satelit i Tokës",
+        "Asteroid pranë Marsit",
+        "Një lloj komete",
+        "Planet jashtë Sistemit Diellor"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ekzoplaneti është planet jashtë Sistemit Diellor.",
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/solar-system/planets/"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-025",
+      "category": "Histori",
+      "difficulty": 2,
+      "question": "Kush paraqiti më 9 maj 1950 planin për bashkëpunimin evropian të qymyrit dhe çelikut?",
+      "options": [
+        "Robert Shuman",
+        "Isaak Njuton",
+        "Albert Ajnshtajn",
+        "Nikola Tesla"
+      ],
+      "correctIndex": 0,
+      "explanation": "Plani u paraqit nga ministri francez Robert Shuman.",
+      "sources": [
+        {
+          "url": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-026",
+      "category": "Histori",
+      "difficulty": 2,
+      "question": "Cilat industri propozonte të bashkonte Plani Shuman?",
+      "options": [
+        "Tekstilin dhe ushqimin",
+        "Qymyrin dhe çelikun",
+        "Naftën dhe turizmin",
+        "Bujqësinë dhe peshkimin"
+      ],
+      "correctIndex": 1,
+      "explanation": "Plani synonte bashkimin e industrive të qymyrit dhe çelikut.",
+      "sources": [
+        {
+          "url": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-027",
+      "category": "Histori",
+      "difficulty": 2,
+      "question": "Sa shtete nënshkruan traktatin e Komunitetit Evropian të Qymyrit dhe Çelikut në vitin 1951?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "12"
+      ],
+      "correctIndex": 2,
+      "explanation": "Traktatin e vitit 1951 e nënshkruan gjashtë shtete.",
+      "sources": [
+        {
+          "url": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-028",
+      "category": "Histori",
+      "difficulty": 2,
+      "question": "Cili nga këto shtete NUK ishte ndër gjashtë nënshkruesit e traktatit të qymyrit dhe çelikut?",
+      "options": [
+        "Italia",
+        "Belgjika",
+        "Luksemburgu",
+        "Mbretëria e Bashkuar"
+      ],
+      "correctIndex": 3,
+      "explanation": "Gjashtë shtetet ishin Gjermania, Franca, Italia, Holanda, Belgjika dhe Luksemburgu.",
+      "sources": [
+        {
+          "url": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-029",
+      "category": "Histori",
+      "difficulty": 2,
+      "question": "Në cilin qytet u nënshkruan traktatet evropiane të 25 marsit 1957?",
+      "options": [
+        "Romë",
+        "Paris",
+        "Berlin",
+        "Madrid"
+      ],
+      "correctIndex": 0,
+      "explanation": "Traktatet e 25 marsit 1957 u nënshkruan në Romë.",
+      "sources": [
+        {
+          "url": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-030",
+      "category": "Histori",
+      "difficulty": 2,
+      "question": "Në cilin vit u krijua NATO-ja?",
+      "options": [
+        "1945",
+        "1949",
+        "1957",
+        "1962"
+      ],
+      "correctIndex": 1,
+      "explanation": "NATO-ja u krijua më 4 prill 1949.",
+      "sources": [
+        {
+          "url": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-031",
+      "category": "Kulturë",
+      "difficulty": 1,
+      "question": "Në cilën datë BE-ja shënon Ditën e Evropës?",
+      "options": [
+        "1 janar",
+        "8 mars",
+        "9 maj",
+        "24 tetor"
+      ],
+      "correctIndex": 2,
+      "explanation": "Dita e Evropës shënohet më 9 maj, datën e Deklaratës Shuman.",
+      "sources": [
+        {
+          "url": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-032",
+      "category": "Teknologji",
+      "difficulty": 1,
+      "question": "Kush e shpiku World Wide Web-in?",
+      "options": [
+        "Nikola Tesla",
+        "Johanes Kepler",
+        "Alan Turing",
+        "Tim Berners-Li"
+      ],
+      "correctIndex": 3,
+      "explanation": "Tim Berners-Li e shpiku Web-in në CERN.",
+      "sources": [
+        {
+          "url": "https://home.cern/science/computing/the-birth-of-the-web"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-033",
+      "category": "Teknologji",
+      "difficulty": 2,
+      "question": "Në cilin vit u shpik World Wide Web-i në CERN?",
+      "options": [
+        "1989",
+        "2001",
+        "1969",
+        "1975"
+      ],
+      "correctIndex": 0,
+      "explanation": "Web-i u shpik në vitin 1989.",
+      "sources": [
+        {
+          "url": "https://home.cern/science/computing/the-birth-of-the-web"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-034",
+      "category": "Teknologji",
+      "difficulty": 1,
+      "question": "Cila nevojë shkencore nxiti krijimin e Web-it?",
+      "options": [
+        "Ndërtimi i satelitëve",
+        "Shkëmbimi i informacionit mes studiuesve",
+        "Prodhimi i baterive",
+        "Matja e temperaturës"
+      ],
+      "correctIndex": 1,
+      "explanation": "Web-i synonte të lehtësonte shkëmbimin e informacionit shkencor.",
+      "sources": [
+        {
+          "url": "https://home.cern/science/computing/the-birth-of-the-web"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-035",
+      "category": "Teknologji",
+      "difficulty": 3,
+      "question": "Në çfarë kompjuteri u strehua faqja e parë e Web-it?",
+      "options": [
+        "Një tablet iPad",
+        "Një konsolë lojërash",
+        "NeXT i Berners-Lit",
+        "Një telefon Android"
+      ],
+      "correctIndex": 2,
+      "explanation": "Faqja e parë u strehua në kompjuterin NeXT të Berners-Lit.",
+      "sources": [
+        {
+          "url": "https://home.cern/science/computing/the-birth-of-the-web"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-036",
+      "category": "Teknologji",
+      "difficulty": 2,
+      "question": "Çfarë bëri CERN-i me softuerin e Web-it më 30 prill 1993?",
+      "options": [
+        "E fshiu përgjithmonë",
+        "E kufizoi vetëm për një universitet",
+        "E ndaloi përdorimin",
+        "E vendosi në domenin publik"
+      ],
+      "correctIndex": 3,
+      "explanation": "CERN-i e vendosi softuerin e Web-it në domenin publik.",
+      "sources": [
+        {
+          "url": "https://home.cern/science/computing/the-birth-of-the-web"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-037",
+      "category": "Histori",
+      "difficulty": 2,
+      "question": "Sa shtete themeluese kishte OKB-ja në vitin 1945?",
+      "options": [
+        "51",
+        "60",
+        "40",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "OKB-ja kishte 51 shtete themeluese në vitin 1945.",
+      "sources": [
+        {
+          "url": "https://research.un.org/en/unmembers/founders"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-038",
+      "category": "Histori",
+      "difficulty": 2,
+      "question": "Kur hyri në fuqi Karta e OKB-së?",
+      "options": [
+        "25 mars 1957",
+        "24 tetor 1945",
+        "1 janar 1940",
+        "9 maj 1950"
+      ],
+      "correctIndex": 1,
+      "explanation": "Karta hyri në fuqi më 24 tetor 1945.",
+      "sources": [
+        {
+          "url": "https://research.un.org/en/unmembers/founders"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-039",
+      "category": "Histori",
+      "difficulty": 2,
+      "question": "Në cilin qytet u zhvillua konferenca e vitit 1945 ku u miratua Karta e OKB-së?",
+      "options": [
+        "Romë",
+        "Tokio",
+        "San Francisko",
+        "Gjenevë"
+      ],
+      "correctIndex": 2,
+      "explanation": "Konferenca themeluese e vitit 1945 u zhvillua në San Francisko.",
+      "sources": [
+        {
+          "url": "https://research.un.org/en/unmembers/founders"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-040",
+      "category": "Histori",
+      "difficulty": 3,
+      "question": "Cili shtet u bë anëtar themelues i OKB-së pasi nënshkroi Kartën më 15 tetor 1945?",
+      "options": [
+        "Italia",
+        "Spanja",
+        "Kanadaja",
+        "Polonia"
+      ],
+      "correctIndex": 3,
+      "explanation": "Polonia nënshkroi më 15 tetor 1945 dhe është ndër 51 themeluesit.",
+      "sources": [
+        {
+          "url": "https://research.un.org/en/unmembers/founders"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-041",
+      "category": "Teknologji",
+      "difficulty": 1,
+      "question": "Në komunikimin HTTP, kush e nis zakonisht kërkesën?",
+      "options": [
+        "Klienti, p.sh. shfletuesi",
+        "Vetëm printeri",
+        "Serveri pa klient",
+        "Vetëm ruteri"
+      ],
+      "correctIndex": 0,
+      "explanation": "HTTP përdor modelin klient–server; klienti dërgon kërkesën.",
+      "sources": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-042",
+      "category": "Teknologji",
+      "difficulty": 1,
+      "question": "Si quhet mesazhi që serveri kthen pas një kërkese HTTP?",
+      "options": [
+        "Kabllo",
+        "Përgjigje",
+        "Kompilues",
+        "Procesor"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mesazhi i kthyer nga serveri quhet përgjigje HTTP.",
+      "sources": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-043",
+      "category": "Teknologji",
+      "difficulty": 2,
+      "question": "A ruan vetë protokolli HTTP domosdoshmërisht gjendjen mes dy kërkesave?",
+      "options": [
+        "Vetëm natën",
+        "Vetëm për fotografi",
+        "Jo, është pa gjendje",
+        "Po, gjithmonë"
+      ],
+      "correctIndex": 2,
+      "explanation": "HTTP është pa gjendje; sesionet mund të ndërtohen mbi të.",
+      "sources": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-044",
+      "category": "Teknologji",
+      "difficulty": 2,
+      "question": "Cili mekanizëm HTTP përdoret zakonisht për të lidhur kërkesat me një sesion?",
+      "options": [
+        "Ventilatori",
+        "Rezolucioni i ekranit",
+        "Altoparlantët",
+        "Cookies"
+      ],
+      "correctIndex": 3,
+      "explanation": "Cookies mundësojnë lidhjen e kërkesave me kontekstin e një sesioni.",
+      "sources": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-045",
+      "category": "Teknologji",
+      "difficulty": 1,
+      "question": "Cili element HTML përdoret për një lidhje me një faqe tjetër?",
+      "options": [
+        "<a>",
+        "<table>",
+        "<p>",
+        "<img>"
+      ],
+      "correctIndex": 0,
+      "explanation": "Elementi <a> me atributin href krijon një lidhje.",
+      "sources": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-046",
+      "category": "Teknologji",
+      "difficulty": 2,
+      "question": "Cili atribut i elementit <a> jep adresën e lidhjes?",
+      "options": [
+        "height",
+        "href",
+        "alt",
+        "width"
+      ],
+      "correctIndex": 1,
+      "explanation": "Atributi href përcakton destinacionin e lidhjes.",
+      "sources": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-047",
+      "category": "Teknologji",
+      "difficulty": 1,
+      "question": "Cili element HTML fut një fotografi në faqe?",
+      "options": [
+        "<p>",
+        "<h1>",
+        "<img>",
+        "<a>"
+      ],
+      "correctIndex": 2,
+      "explanation": "Elementi <img> fut një imazh në dokumentin HTML.",
+      "sources": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-048",
+      "category": "Teknologji",
+      "difficulty": 2,
+      "question": "Cili atribut i imazhit HTML përmban tekstin alternativ?",
+      "options": [
+        "id",
+        "class",
+        "href",
+        "alt"
+      ],
+      "correctIndex": 3,
+      "explanation": "Atributi alt jep përshkrimin tekstual alternativ të imazhit.",
+      "sources": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-049",
+      "category": "Teknologji",
+      "difficulty": 1,
+      "question": "Cila metodë HTTP përdoret për të kërkuar një paraqitje të një burimi?",
+      "options": [
+        "GET",
+        "CONNECT",
+        "DELETE",
+        "PATCH"
+      ],
+      "correctIndex": 0,
+      "explanation": "GET kërkon një paraqitje të burimit të identifikuar.",
+      "sources": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/GET"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-050",
+      "category": "Teknologji",
+      "difficulty": 1,
+      "question": "Çfarë nënkupton zakonisht statusi HTTP 404?",
+      "options": [
+        "Lidhja u ruajt",
+        "Burimi nuk u gjet",
+        "Kërkesa pati sukses",
+        "Serveri kërkon pagesë"
+      ],
+      "correctIndex": 1,
+      "explanation": "404 tregon se serveri nuk e gjeti burimin e kërkuar.",
+      "sources": [
+        {
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/404"
+        }
+      ],
+      "reviewStatus": "verified_source",
+      "language": "sq",
+      "verificationDate": "2026-11-05"
+    },
+    {
+      "id": "premium-20261105-sq-051",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Sa është −7 + 12?",
+      "options": [
+        "−19",
+        "−5",
+        "5",
+        "19"
+      ],
+      "correctIndex": 2,
+      "explanation": "Nga −7 shtojmë 12 dhe arrijmë në 5.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "-7+12"
+    },
+    {
+      "id": "premium-20261105-sq-052",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Sa është 6 + 4 × 3?",
+      "options": [
+        "24",
+        "21",
+        "30",
+        "18"
+      ],
+      "correctIndex": 3,
+      "explanation": "Shumëzimi kryhet para mbledhjes: 6 + 12 = 18.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "6+4*3"
+    },
+    {
+      "id": "premium-20261105-sq-053",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Sa është (6 + 4) × 3?",
+      "options": [
+        "30",
+        "18",
+        "24",
+        "28"
+      ],
+      "correctIndex": 0,
+      "explanation": "Së pari kllapat japin 10; pastaj 10 × 3 = 30.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "(6+4)*3"
+    },
+    {
+      "id": "premium-20261105-sq-054",
+      "category": "Matematikë",
+      "difficulty": 2,
+      "question": "Nëse 3x + 5 = 20, sa është x?",
+      "options": [
+        "15",
+        "5",
+        "4",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "3x = 15, prandaj x = 5.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "(20-5)//3"
+    },
+    {
+      "id": "premium-20261105-sq-055",
+      "category": "Matematikë",
+      "difficulty": 2,
+      "question": "Sa është 2⁵?",
+      "options": [
+        "10",
+        "25",
+        "32",
+        "64"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 × 2 × 2 × 2 × 2 = 32.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "2**5"
+    },
+    {
+      "id": "premium-20261105-sq-056",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Sa është kubi i numrit 3?",
+      "options": [
+        "18",
+        "81",
+        "9",
+        "27"
+      ],
+      "correctIndex": 3,
+      "explanation": "3³ = 3 × 3 × 3 = 27.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "3**3"
+    },
+    {
+      "id": "premium-20261105-sq-057",
+      "category": "Matematikë",
+      "difficulty": 2,
+      "question": "Sa është vëllimi i kubit me brinjë 4 cm, në cm³?",
+      "options": [
+        "64",
+        "12",
+        "16",
+        "48"
+      ],
+      "correctIndex": 0,
+      "explanation": "Vëllimi i kubit është 4³ = 64 cm³.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "4**3"
+    },
+    {
+      "id": "premium-20261105-sq-058",
+      "category": "Matematikë",
+      "difficulty": 2,
+      "question": "Një trekëndësh ka bazë 10 cm dhe lartësi 6 cm. Sa është sipërfaqja në cm²?",
+      "options": [
+        "32",
+        "30",
+        "60",
+        "16"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sipërfaqja është baza × lartësia ÷ 2 = 30 cm².",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "10*6//2"
+    },
+    {
+      "id": "premium-20261105-sq-059",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Cila është mesatarja e numrave 10, 15 dhe 20?",
+      "options": [
+        "10",
+        "12",
+        "15",
+        "20"
+      ],
+      "correctIndex": 2,
+      "explanation": "Shuma 45 pjesëtohet me 3 dhe jep 15.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "(10+15+20)//3"
+    },
+    {
+      "id": "premium-20261105-sq-060",
+      "category": "Matematikë",
+      "difficulty": 2,
+      "question": "Cila është mediana e listës së renditur 2, 4, 9, 11, 20?",
+      "options": [
+        "11",
+        "20",
+        "4",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "Vlera e mesit në pesë numra të renditur është e treta: 9.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "[2,4,9,11,20][2]"
+    },
+    {
+      "id": "premium-20261105-sq-061",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Një çmim 80 € ulet me 10%. Sa euro mbeten për t’u paguar?",
+      "options": [
+        "72",
+        "8",
+        "70",
+        "78"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ulja është 8 €; 80 − 8 = 72 €.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "80-80*10//100"
+    },
+    {
+      "id": "premium-20261105-sq-062",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Një mall kushton 50 €. Çmimi rritet me 20%. Sa euro bëhet?",
+      "options": [
+        "100",
+        "60",
+        "55",
+        "70"
+      ],
+      "correctIndex": 1,
+      "explanation": "20% e 50 është 10; çmimi i ri është 60 €.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "50+50*20//100"
+    },
+    {
+      "id": "premium-20261105-sq-063",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Sa sekonda janë 4 minuta?",
+      "options": [
+        "120",
+        "180",
+        "240",
+        "400"
+      ],
+      "correctIndex": 2,
+      "explanation": "Çdo minutë ka 60 sekonda; 4 × 60 = 240.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "4*60"
+    },
+    {
+      "id": "premium-20261105-sq-064",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Sa centimetra janë 3 metra?",
+      "options": [
+        "3000",
+        "3",
+        "30",
+        "300"
+      ],
+      "correctIndex": 3,
+      "explanation": "Një metër ka 100 centimetra; 3 × 100 = 300.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "3*100"
+    },
+    {
+      "id": "premium-20261105-sq-065",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Sa gramë janë 2 kilogramë?",
+      "options": [
+        "2000",
+        "20",
+        "200",
+        "20000"
+      ],
+      "correctIndex": 0,
+      "explanation": "Një kilogram ka 1000 gramë; 2 × 1000 = 2000.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "2*1000"
+    },
+    {
+      "id": "premium-20261105-sq-066",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Një automjet ecën me 60 km/orë për 2 orë, pa ndalesë. Sa kilometra përshkon?",
+      "options": [
+        "180",
+        "120",
+        "30",
+        "62"
+      ],
+      "correctIndex": 1,
+      "explanation": "Distanca është shpejtësia × koha: 60 × 2 = 120 km.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "60*2"
+    },
+    {
+      "id": "premium-20261105-sq-067",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Sa faqe ka një kub?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kubi ka dy faqe për secilin nga tri drejtimet: 2 × 3 = 6.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "2*3"
+    },
+    {
+      "id": "premium-20261105-sq-068",
+      "category": "Matematikë",
+      "difficulty": 2,
+      "question": "Sa brinjë ka një kub?",
+      "options": [
+        "8",
+        "16",
+        "6",
+        "12"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kubi ka 4 brinjë sipër, 4 poshtë dhe 4 vertikale: 12.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "4+4+4"
+    },
+    {
+      "id": "premium-20261105-sq-069",
+      "category": "Matematikë",
+      "difficulty": 1,
+      "question": "Sa kulme ka një kub?",
+      "options": [
+        "8",
+        "4",
+        "6",
+        "12"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kubi ka katër kulme në secilën nga dy faqet përballë: 8.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "4*2"
+    },
+    {
+      "id": "premium-20261105-sq-070",
+      "category": "Matematikë",
+      "difficulty": 2,
+      "question": "Sa është pjesëtuesi më i madh i përbashkët i 18 dhe 24?",
+      "options": [
+        "9",
+        "6",
+        "3",
+        "12"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pjesëtuesi më i madh i përbashkët i 18 dhe 24 është 6.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "math.gcd(18,24)"
+    },
+    {
+      "id": "premium-20261105-sq-071",
+      "category": "Matematikë",
+      "difficulty": 2,
+      "question": "Sa është shumëfishi më i vogël i përbashkët i 4 dhe 6?",
+      "options": [
+        "8",
+        "10",
+        "12",
+        "24"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 është numri më i vogël pozitiv që pjesëtohet me 4 dhe me 6.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "math.lcm(4,6)"
+    },
+    {
+      "id": "premium-20261105-sq-072",
+      "category": "Logjikë",
+      "difficulty": 2,
+      "question": "Nëse sot është e hënë, çfarë dite do të jetë pas 17 ditësh?",
+      "options": [
+        "E martë",
+        "E enjte",
+        "E premte",
+        "E diel"
+      ],
+      "correctIndex": 1,
+      "explanation": "17 ditë janë dy javë dhe tri ditë; pas së hënës vjen e enjtja.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "['E hënë','E martë','E mërkurë','E enjte','E premte','E shtunë','E diel'][17%7]"
+    },
+    {
+      "id": "premium-20261105-sq-073",
+      "category": "Logjikë",
+      "difficulty": 2,
+      "question": "Katër persona shtrëngojnë duart me njëri-tjetrin, çdo çift vetëm një herë. Sa shtrëngime bëhen?",
+      "options": [
+        "6",
+        "4",
+        "8",
+        "12"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ka 4 × 3 ÷ 2 = 6 çifte të ndryshme.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "4*3//2"
+    },
+    {
+      "id": "premium-20261105-sq-074",
+      "category": "Logjikë",
+      "difficulty": 2,
+      "question": "Sa rezultate të mundshme ka hedhja e dy monedhave, duke dalluar rendin?",
+      "options": [
+        "8",
+        "4",
+        "2",
+        "3"
+      ],
+      "correctIndex": 1,
+      "explanation": "Rezultatet janë SS, SA, AS dhe AA: katër raste.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "2**2"
+    },
+    {
+      "id": "premium-20261105-sq-075",
+      "category": "Logjikë",
+      "difficulty": 2,
+      "question": "Një kod ka dy shifra nga 0 deri në 9 dhe përsëritja lejohet. Sa kode të ndryshme ka?",
+      "options": [
+        "20",
+        "90",
+        "100",
+        "99"
+      ],
+      "correctIndex": 2,
+      "explanation": "Për çdo vend ka 10 zgjedhje; gjithsej 10 × 10 = 100.",
+      "sources": [
+        {
+          "work": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve"
+        }
+      ],
+      "reviewStatus": "verified_calculation",
+      "language": "sq",
+      "verificationDate": "2026-11-05",
+      "calculation": "10*10"
+    }
+  ]
+}

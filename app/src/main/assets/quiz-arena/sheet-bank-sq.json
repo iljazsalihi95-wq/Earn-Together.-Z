@@ -1,0 +1,3176 @@
+{
+  "sheetId": "1UZjTbjKVszSL6mfcQJwQKoIlyiqJ_liZxTQ18l7M_Xk",
+  "snapshotDate": "2026-11-05",
+  "questions": [
+    {
+      "id": "sheet-1",
+      "category": "Kurban",
+      "question": "Sa persona lejohet të bashkohen në kurbanin e vogël?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "Vetëm 1 person lejohet.",
+      "source": "Fikh – kurbani",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-2",
+      "category": "Sira",
+      "question": "Muhammedi ﷺ është rritur jetim që nga cila moshë?",
+      "options": [
+        "8 vjeç",
+        "4 vjeç",
+        "2 vjeç",
+        "Lindja"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ai mbeti jetim që nga lindja sepse babai i kishte vdekur para lindjes.",
+      "source": "Sira",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-4",
+      "category": "Dijetarë",
+      "question": "Në cilin vit ka lindur dhe ka vdekur Imam Shafiu?",
+      "options": [
+        "150-206 H",
+        "105-165 H",
+        "156-204 H",
+        "150-204 H"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ka lindur vitin 150 H dhe ka vdekur vitin 204 Hixhrije.",
+      "source": "Biografi Imam Shafiu",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-5",
+      "category": "Fikh",
+      "question": "Si quhet namazi i cili falet në kohën e vet?",
+      "options": [
+        "Uda",
+        "Eda",
+        "Salah",
+        "Ida"
+      ],
+      "correctIndex": 1,
+      "explanation": "Namazi quhet Eda kur falet në kohën e vet.",
+      "source": "Fikh – Namazi",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-9",
+      "category": "Sira",
+      "question": "Cila është gruaja e Pejgamberit ﷺ që vdiq e fundit?",
+      "options": [
+        "Hatixhja r.a.",
+        "Ummu Seleme r.a.",
+        "Aishja r.a.",
+        "Fatimja r.a."
+      ],
+      "correctIndex": 1,
+      "explanation": "Ummu Seleme r.a. ishte nga gratë e Pejgamberit ﷺ që jetoi më gjatë.",
+      "source": "Sira",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-10",
+      "category": "Fikh",
+      "question": "Shkenca e Fikhut merret me studimin e dispozitave praktike të Sheriatit?",
+      "options": [
+        "E vërtetë",
+        "E pavërtetë"
+      ],
+      "correctIndex": 0,
+      "explanation": "Fikhu studion dispozitat praktike të Sheriatit.",
+      "source": "Usul el-Fikh",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-11",
+      "category": "Sira",
+      "question": "Kush i propozoi Pejgamberit ﷺ hapjen e Hendekut?",
+      "options": [
+        "Omeri r.a.",
+        "Othmani r.a.",
+        "Aliu r.a.",
+        "Selman el-Farisi r.a."
+      ],
+      "correctIndex": 3,
+      "explanation": "Selman el-Farisi r.a. propozoi hapjen e hendekut.",
+      "source": "Sira – Hendeku",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-13",
+      "category": "Kuran",
+      "question": "Si quheshin pasuesit e Isa alejhis-selamit?",
+      "options": [
+        "Havarijun",
+        "Sahabe",
+        "Ansar",
+        "Tabi'in"
+      ],
+      "correctIndex": 0,
+      "explanation": "Pasuesit e Isa a.s. quhen Havarijun.",
+      "source": "Kur'an 3:52; 5:111",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-15",
+      "category": "Akide",
+      "question": "Isa a.s. ka lindur pa baba, por nuk është djali i Allahut?",
+      "options": [
+        "E pavërtetë",
+        "E vërtetë"
+      ],
+      "correctIndex": 1,
+      "explanation": "Isa a.s. lindi pa baba dhe në Islam është rob dhe i dërguar i Allahut.",
+      "source": "Kur'an 3:45-59; 4:171",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-16",
+      "category": "Haxh",
+      "question": "Si quhet haxhi kur bashkohet Umra dhe Haxhi në një ihram?",
+      "options": [
+        "Haxhi Temettu",
+        "Haxhi Kiran",
+        "Haxhi Ifrad",
+        "Haxhi Farz"
+      ],
+      "correctIndex": 1,
+      "explanation": "Haxhi Kiran është bashkimi i Umres dhe Haxhit në një ihram.",
+      "source": "Fikh – Haxh",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-18",
+      "category": "Kuran",
+      "question": "Sa sexhde të leximit gjenden në Kur’an sipas medhhebit Hanefi?",
+      "options": [
+        "14",
+        "15",
+        "16",
+        "17"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sipas medhhebit Hanefi janë 14 sexhde tilaveti.",
+      "source": "Fikh Hanefi",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-19",
+      "category": "Familje",
+      "question": "Fejesa sipas Islamit është:",
+      "options": [
+        "Kontratë",
+        "Mashtrim",
+        "Marrëveshje",
+        "Premtim"
+      ],
+      "correctIndex": 3,
+      "explanation": "Fejesa është premtim për martesë, jo kontrata e nikahut.",
+      "source": "Fikh – Familje",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-21",
+      "category": "Fikh Hanefi",
+      "question": "Si duhet vepruar nëse harrohet tekbiri i kunutit në namazin e Vitrit?",
+      "options": [
+        "Duhet të përsëritet namazi",
+        "Duhet të bëjë sehvi sexhde"
+      ],
+      "correctIndex": 1,
+      "explanation": "Për lënien e një vaxhibi nga harresa bëhet sehvi sexhde.",
+      "source": "Fikh Hanefi – Vitr",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-22",
+      "category": "Kuran",
+      "question": "Cili i dërguar i Allahut u rrit në shtëpinë e Faraonit?",
+      "options": [
+        "Sulejmani a.s.",
+        "Nuhu a.s.",
+        "Davudi a.s.",
+        "Musa a.s."
+      ],
+      "correctIndex": 3,
+      "explanation": "Musa a.s. u mor dhe u rrit në shtëpinë e Faraonit.",
+      "source": "Kur'an 28:7-13",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-23",
+      "category": "Histori",
+      "question": "Në cilin vend të Evropës myslimanët sunduan për shumë shekuj në periudhën e Andaluzisë?",
+      "options": [
+        "Turqi",
+        "Abisini",
+        "Azi",
+        "Spanjë",
+        "Marok"
+      ],
+      "correctIndex": 3,
+      "explanation": "Andaluzia përfshinte pjesë të Gadishullit Iberik.",
+      "source": "Histori Islame",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-26",
+      "category": "Kuran",
+      "question": "Cila është sureja e vetme e emërtuar me emrin e një gruaje?",
+      "options": [
+        "Sureja Merjem",
+        "Sureja Haxh",
+        "Sureja Nisa",
+        "Sureja Jusuf"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sureja Merjem mban emrin e Merjemes a.s.",
+      "source": "Kur'an – Sureja 19",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-30",
+      "category": "Akide",
+      "question": "Besimi në melaiket nuk është kusht i besimit?",
+      "options": [
+        "E pavërtetë",
+        "E vërtetë"
+      ],
+      "correctIndex": 0,
+      "explanation": "Besimi në melaiket është nga shtyllat e imanit.",
+      "source": "Kur'an 2:285; Hadithi i Xhibrilit",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-31",
+      "category": "Sira",
+      "question": "Cila është xhamia e njohur si xhamia e parë e ndërtuar nga muslimanët pas Hixhretit?",
+      "options": [
+        "Xhamia Kuba",
+        "Mesxhidul Aksa",
+        "Xhamia e Pejgamberit ﷺ"
+      ],
+      "correctIndex": 0,
+      "explanation": "Xhamia Kuba njihet si xhamia e parë e ndërtuar pas Hixhretit.",
+      "source": "Kur'an 9:108; Sira",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-33",
+      "category": "Fikh Hanefi",
+      "question": "Cila nga këto është rukn/farz i namazit sipas fikhut Hanefi?",
+      "options": [
+        "Leximi i Kur’anit",
+        "Thënia Amin",
+        "Semi'allahu limen hamideh",
+        "Leximi i Fatihasë si e tillë"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kiraeti është farz; Fatiha është vaxhib në fikhun Hanefi.",
+      "source": "Fikh Hanefi",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-34",
+      "category": "Fikh Hanefi",
+      "question": "Çfarë duhet bërë nëse gjatë namazit harrohet një vaxhib?",
+      "options": [
+        "Nuk duhet bërë asgjë",
+        "Duhet bërë sehvi sexhde",
+        "Duhet falur gjysmën e namazit",
+        "Duhet përsëritur namazi gjithmonë"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kur vaxhibi lihet nga harresa, bëhet sehvi sexhde.",
+      "source": "Fikh Hanefi",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-35",
+      "category": "Haxh",
+      "question": "Telbije quhet thënia “Lebbejke Allahumme lebbejk…”?",
+      "options": [
+        "E vërtetë",
+        "E pavërtetë"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kjo thënie quhet Telbije.",
+      "source": "Haxh – Telbije",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-36",
+      "category": "Kuran",
+      "question": "Sa sure ka Kur'ani?",
+      "options": [
+        "114",
+        "110",
+        "120",
+        "99"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kur'ani përbëhet nga 114 sure.",
+      "source": "Kur'an – struktura",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-37",
+      "category": "Kuran",
+      "question": "Cila është sureja e parë në Mushaf?",
+      "options": [
+        "El-Bekare",
+        "El-Fatiha",
+        "En-Nas",
+        "El-Alek"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sureja e parë është El-Fatiha.",
+      "source": "Kur'an – Sureja 1",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-38",
+      "category": "Kuran",
+      "question": "Cila është sureja më e gjatë në Kur'an?",
+      "options": [
+        "Ali Imran",
+        "En-Nisa",
+        "El-Bekare",
+        "El-Maide"
+      ],
+      "correctIndex": 2,
+      "explanation": "El-Bekare është sureja më e gjatë.",
+      "source": "Kur'an – Sureja 2",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-39",
+      "category": "Kuran",
+      "question": "Cila është sureja më e shkurtër në Kur'an?",
+      "options": [
+        "El-Kevther",
+        "El-Asr",
+        "El-Ihlas",
+        "En-Nasr"
+      ],
+      "correctIndex": 0,
+      "explanation": "El-Kevther ka tre ajete.",
+      "source": "Kur'an – Sureja 108",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-41",
+      "category": "Kuran",
+      "question": "Në cilin muaj u shpall Kur'ani sipas Kur'anit?",
+      "options": [
+        "Muharrem",
+        "Ramazan",
+        "Shaban",
+        "Dhul-Hixhe"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kur'ani përmend Ramazanin si muajin e shpalljes.",
+      "source": "Kur'an 2:185",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-42",
+      "category": "Kuran",
+      "question": "Cila sure nuk fillon me Bismilah?",
+      "options": [
+        "Et-Teube",
+        "Jasin",
+        "El-Mulk",
+        "El-Kehf"
+      ],
+      "correctIndex": 0,
+      "explanation": "Et-Teube nuk fillon me Bismilah.",
+      "source": "Kur'an – Sureja 9",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-43",
+      "category": "Kuran",
+      "question": "Në cilën sure përmendet Bismilah edhe brenda tekstit të sures?",
+      "options": [
+        "En-Neml",
+        "El-Felek",
+        "El-Asr",
+        "El-Kadr"
+      ],
+      "correctIndex": 0,
+      "explanation": "Në En-Neml 27:30.",
+      "source": "Kur'an 27:30",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-44",
+      "category": "Kuran",
+      "question": "Sa xhuze ka Kur'ani?",
+      "options": [
+        "20",
+        "25",
+        "30",
+        "40"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kur'ani ndahet zakonisht në 30 xhuze.",
+      "source": "Kur'an – struktura",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-45",
+      "category": "Kuran",
+      "question": "Cila sure quhet edhe Ummul-Kitab?",
+      "options": [
+        "El-Fatiha",
+        "El-Bekare",
+        "El-Ihlas",
+        "Jasin"
+      ],
+      "correctIndex": 0,
+      "explanation": "El-Fatiha njihet si Ummul-Kitab.",
+      "source": "Hadith – Fatiha",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-46",
+      "category": "Kuran",
+      "question": "Cila është fjala e parë e shpalljes së parë?",
+      "options": [
+        "Kul",
+        "Ikra",
+        "Subhan",
+        "Elhamdu"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shpallja e parë filloi me Ikra.",
+      "source": "Kur'an 96:1",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-47",
+      "category": "Sira",
+      "question": "Ku ndodhej Pejgamberi ﷺ kur mori shpalljen e parë?",
+      "options": [
+        "Në shpellën Hira",
+        "Në Medinë",
+        "Në Taif",
+        "Në shpellën Theur"
+      ],
+      "correctIndex": 0,
+      "explanation": "Shpallja e parë erdhi në Hira.",
+      "source": "Sira",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-48",
+      "category": "Sira",
+      "question": "Kush ishte gruaja e parë e Pejgamberit ﷺ?",
+      "options": [
+        "Aishja r.a.",
+        "Hafsa r.a.",
+        "Hatixhja r.a.",
+        "Ummu Seleme r.a."
+      ],
+      "correctIndex": 2,
+      "explanation": "Hatixhja r.a. ishte gruaja e parë.",
+      "source": "Sira",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-49",
+      "category": "Sira",
+      "question": "Kush e shoqëroi Pejgamberin ﷺ në Hixhret drejt Medinës?",
+      "options": [
+        "Aliu r.a.",
+        "Ebu Bekri r.a.",
+        "Omeri r.a.",
+        "Othmani r.a."
+      ],
+      "correctIndex": 1,
+      "explanation": "Ebu Bekri r.a. e shoqëroi në Hixhret.",
+      "source": "Kur'an 9:40; Sira",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-50",
+      "category": "Sira",
+      "question": "Në cilën shpellë u strehuan Pejgamberi ﷺ dhe Ebu Bekri r.a. gjatë Hixhretit?",
+      "options": [
+        "Hira",
+        "Theur",
+        "Uhud",
+        "Safa"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ata u strehuan në Theur.",
+      "source": "Sira",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-51",
+      "category": "Sira",
+      "question": "Si quhet qyteti ku emigroi Pejgamberi ﷺ nga Meka?",
+      "options": [
+        "Taif",
+        "Jerusalem",
+        "Medina",
+        "Damask"
+      ],
+      "correctIndex": 2,
+      "explanation": "Hixhreti ishte drejt Medinës.",
+      "source": "Sira",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-52",
+      "category": "Sira",
+      "question": "Në cilin vit hixhri ndodhi Beteja e Bedrit?",
+      "options": [
+        "1 H",
+        "2 H",
+        "5 H",
+        "8 H"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bedri ndodhi në vitin 2 H.",
+      "source": "Sira",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-53",
+      "category": "Sira",
+      "question": "Në cilin vit hixhri ndodhi Çlirimi i Mekës?",
+      "options": [
+        "2 H",
+        "5 H",
+        "8 H",
+        "10 H"
+      ],
+      "correctIndex": 2,
+      "explanation": "Çlirimi i Mekës ndodhi në 8 H.",
+      "source": "Sira",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-54",
+      "category": "Sira",
+      "question": "Si quhej xhaxhai i Pejgamberit ﷺ që e mbrojti për shumë vite në Mekë?",
+      "options": [
+        "Ebu Talibi",
+        "Ebu Lehebi",
+        "Hamza r.a.",
+        "Abbas r.a."
+      ],
+      "correctIndex": 0,
+      "explanation": "Ebu Talibi e mbrojti për shumë vite.",
+      "source": "Sira",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-55",
+      "category": "Akide",
+      "question": "Sa janë shtyllat e Islamit?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shtyllat e Islamit janë pesë.",
+      "source": "Hadithi i Xhibrilit",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-56",
+      "category": "Akide",
+      "question": "Sa janë shtyllat e Imanit?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shtyllat e Imanit janë gjashtë.",
+      "source": "Hadithi i Xhibrilit",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-57",
+      "category": "Akide",
+      "question": "Besimi në Ditën e Gjykimit është pjesë e:",
+      "options": [
+        "Imanit",
+        "Vetëm fikhut",
+        "Historisë",
+        "Gjuhës arabe"
+      ],
+      "correctIndex": 0,
+      "explanation": "Është nga shtyllat e Imanit.",
+      "source": "Hadithi i Xhibrilit",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-58",
+      "category": "Akide",
+      "question": "Kush është meleku i shpalljes?",
+      "options": [
+        "Mikaili a.s.",
+        "Xhibrili a.s.",
+        "Israfil a.s.",
+        "Maliku"
+      ],
+      "correctIndex": 1,
+      "explanation": "Xhibrili a.s. solli shpalljen.",
+      "source": "Kur'an 2:97",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-59",
+      "category": "Akide",
+      "question": "Cili libër iu shpall Musait a.s.?",
+      "options": [
+        "Teurati",
+        "Inxhili",
+        "Zeburi",
+        "Kur'ani"
+      ],
+      "correctIndex": 0,
+      "explanation": "Musait a.s. iu dha Teurati.",
+      "source": "Kur'an",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-60",
+      "category": "Akide",
+      "question": "Cili libër iu dha Davudit a.s.?",
+      "options": [
+        "Teurati",
+        "Zeburi",
+        "Inxhili",
+        "Kur'ani"
+      ],
+      "correctIndex": 1,
+      "explanation": "Davudit a.s. iu dha Zeburi.",
+      "source": "Kur'an 4:163",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-61",
+      "category": "Akide",
+      "question": "Cili libër iu dha Isait a.s.?",
+      "options": [
+        "Teurati",
+        "Zeburi",
+        "Inxhili",
+        "Kur'ani"
+      ],
+      "correctIndex": 2,
+      "explanation": "Isait a.s. iu dha Inxhili.",
+      "source": "Kur'an 5:46",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-62",
+      "category": "Fikh",
+      "question": "Sa farze ka abdesi sipas përmbledhjes së ajetit të abdesit?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "Janë katër veprime themelore.",
+      "source": "Kur'an 5:6",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-63",
+      "category": "Fikh",
+      "question": "Sa rekate është farzi i Sabahut?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 0,
+      "explanation": "Farzi i Sabahut është 2 rekate.",
+      "source": "Fikh – Namazi",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-64",
+      "category": "Fikh",
+      "question": "Sa rekate është farzi i Drekës?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 2,
+      "explanation": "Farzi i Drekës është 4 rekate.",
+      "source": "Fikh – Namazi",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-65",
+      "category": "Fikh",
+      "question": "Sa rekate është farzi i Akshamit?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 1,
+      "explanation": "Farzi i Akshamit është 3 rekate.",
+      "source": "Fikh – Namazi",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-66",
+      "category": "Fikh",
+      "question": "Sa rekate është farzi i Jacisë?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 2,
+      "explanation": "Farzi i Jacisë është 4 rekate.",
+      "source": "Fikh – Namazi",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-67",
+      "category": "Fikh Hanefi",
+      "question": "Sa rekate falet Vitri sipas medhhebit Hanefi?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correctIndex": 2,
+      "explanation": "Vitri falet 3 rekate.",
+      "source": "Fikh Hanefi – Vitr",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-68",
+      "category": "Fikh",
+      "question": "Në cilin drejtim kthehen muslimanët në namaz?",
+      "options": [
+        "Drejt Medinës",
+        "Drejt Qabes",
+        "Drejt Jerusalemit gjithmonë",
+        "Drejt lindjes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kibla është Qabja.",
+      "source": "Kur'an 2:144",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-69",
+      "category": "Fikh",
+      "question": "Çfarë quhet thirrja për hyrjen e kohës së namazit?",
+      "options": [
+        "Hutbe",
+        "Ezan",
+        "Tekbir i teshrikut",
+        "Talbije"
+      ],
+      "correctIndex": 1,
+      "explanation": "Thirrja quhet Ezan.",
+      "source": "Fikh – Namazi",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-70",
+      "category": "Fikh",
+      "question": "Çfarë quhet thirrja menjëherë para fillimit të namazit me xhemat?",
+      "options": [
+        "Ikamet",
+        "Ezan",
+        "Hutbe",
+        "Tesbih"
+      ],
+      "correctIndex": 0,
+      "explanation": "Quhet Ikamet.",
+      "source": "Fikh – Namazi",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-71",
+      "category": "Fikh",
+      "question": "Cili namaz javor falet të premten në vend të Drekës për ata që e kanë obligim?",
+      "options": [
+        "Vitri",
+        "Xhumaja",
+        "Teravia",
+        "Bajrami"
+      ],
+      "correctIndex": 1,
+      "explanation": "Namazi i Xhumasë falet të premten.",
+      "source": "Kur'an 62:9",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-72",
+      "category": "Ramazan",
+      "question": "Në cilin muaj agjërojnë muslimanët agjërimin farz?",
+      "options": [
+        "Ramazan",
+        "Shaban",
+        "Muharrem",
+        "Rexheb"
+      ],
+      "correctIndex": 0,
+      "explanation": "Agjërimi farz është në Ramazan.",
+      "source": "Kur'an 2:185",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-73",
+      "category": "Ramazan",
+      "question": "Si quhet vakti para agimit për agjëruesin?",
+      "options": [
+        "Iftar",
+        "Syfyr",
+        "Akika",
+        "Talbije"
+      ],
+      "correctIndex": 1,
+      "explanation": "Vakti para agimit quhet syfyr.",
+      "source": "Hadith – Agjërimi",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-74",
+      "category": "Ramazan",
+      "question": "Si quhet çelja e agjërimit pas perëndimit të diellit?",
+      "options": [
+        "Iftar",
+        "Syfyr",
+        "Imsak",
+        "Itikaf"
+      ],
+      "correctIndex": 0,
+      "explanation": "Quhet iftar.",
+      "source": "Fikh – Agjërimi",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-75",
+      "category": "Zekat",
+      "question": "Cila përqindje përdoret zakonisht për zekatin e pasurisë monetare kur plotësohen kushtet?",
+      "options": [
+        "1%",
+        "2.5%",
+        "5%",
+        "10%"
+      ],
+      "correctIndex": 1,
+      "explanation": "Norma e zakonshme është 2.5%.",
+      "source": "Fikh – Zekat",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-76",
+      "category": "Haxh",
+      "question": "Në cilin qytet gjendet Qabja?",
+      "options": [
+        "Medinë",
+        "Mekë",
+        "Jerusalem",
+        "Taif"
+      ],
+      "correctIndex": 1,
+      "explanation": "Qabja gjendet në Mekë.",
+      "source": "Haxh",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-77",
+      "category": "Haxh",
+      "question": "Si quhet rrotullimi rreth Qabes?",
+      "options": [
+        "Sa'j",
+        "Tavaf",
+        "Vakfe",
+        "Rami"
+      ],
+      "correctIndex": 1,
+      "explanation": "Quhet Tavaf.",
+      "source": "Fikh – Haxh",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-78",
+      "category": "Haxh",
+      "question": "Mes cilave dy kodra bëhet Sa'ji?",
+      "options": [
+        "Safa dhe Merve",
+        "Arafat dhe Muzdelife",
+        "Mina dhe Arafat",
+        "Hira dhe Theur"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sa'ji bëhet mes Safas dhe Merves.",
+      "source": "Kur'an 2:158",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-79",
+      "category": "Haxh",
+      "question": "Cili qëndrim është shtyllë kryesore e Haxhit?",
+      "options": [
+        "Qëndrimi në Arafat",
+        "Vizita në Taif",
+        "Qëndrimi në Hira",
+        "Namazi në Kuba"
+      ],
+      "correctIndex": 0,
+      "explanation": "Qëndrimi në Arafat është thelbësor në Haxh.",
+      "source": "Hadith: Haxhi është Arafati",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-80",
+      "category": "Hadith",
+      "question": "Sipas hadithit të njohur, veprat vlerësohen sipas:",
+      "options": [
+        "Pasurisë",
+        "Nijetit",
+        "Moshës",
+        "Vendit"
+      ],
+      "correctIndex": 1,
+      "explanation": "Veprat janë sipas nijeteve.",
+      "source": "Sahih Buhari 1",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-81",
+      "category": "Hadith",
+      "question": "Sipas hadithit, musliman i mirë është ai nga gjuha dhe dora e të cilit janë të sigurt:",
+      "options": [
+        "Vetëm të afërmit",
+        "Muslimanët",
+        "Vetëm udhëtarët",
+        "Vetëm fqinjët"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hadithi përmend sigurinë nga gjuha dhe dora.",
+      "source": "Sahih Buhari / Muslim",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-82",
+      "category": "Etikë",
+      "question": "Çfarë përgjigjeje i jepet selamit 'Es-selamu alejkum'?",
+      "options": [
+        "Mirupafshim",
+        "Ve alejkum selam",
+        "Allahu ekber",
+        "Subhanallah"
+      ],
+      "correctIndex": 1,
+      "explanation": "Selami kthehet me përshëndetje.",
+      "source": "Kur'an 4:86",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-83",
+      "category": "Etikë",
+      "question": "Cila cilësi është e kundërta e gënjeshtrës?",
+      "options": [
+        "Sinqeriteti",
+        "Zilia",
+        "Krenaria",
+        "Përtacia"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sinqeriteti është cilësi e lavdëruar.",
+      "source": "Etikë islame",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-84",
+      "category": "Etikë",
+      "question": "Çfarë urdhëron Kur'ani për prindërit?",
+      "options": [
+        "Mirësjellje dhe respekt",
+        "T'i injorojmë",
+        "Vetëm ndihmë financiare",
+        "Asgjë"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kur'ani urdhëron mirësi ndaj prindërve.",
+      "source": "Kur'an 17:23",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-85",
+      "category": "Etikë",
+      "question": "A lejohet përgojimi?",
+      "options": [
+        "Po, gjithmonë",
+        "Jo, në parim është i ndaluar",
+        "Vetëm natën",
+        "Vetëm në udhëtim"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kur'ani e ndalon përgojimin.",
+      "source": "Kur'an 49:12",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-86",
+      "category": "Histori",
+      "question": "Kush ishte halifi i parë pas vdekjes së Pejgamberit ﷺ?",
+      "options": [
+        "Omeri r.a.",
+        "Ebu Bekri r.a.",
+        "Othmani r.a.",
+        "Aliu r.a."
+      ],
+      "correctIndex": 1,
+      "explanation": "Ebu Bekri r.a. ishte halifi i parë.",
+      "source": "Histori Islame",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-87",
+      "category": "Histori",
+      "question": "Kush ishte halifi i dytë?",
+      "options": [
+        "Omeri r.a.",
+        "Aliu r.a.",
+        "Othmani r.a.",
+        "Ebu Bekri r.a."
+      ],
+      "correctIndex": 0,
+      "explanation": "Omeri r.a. ishte halifi i dytë.",
+      "source": "Histori Islame",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-88",
+      "category": "Histori",
+      "question": "Kush ishte halifi i tretë?",
+      "options": [
+        "Aliu r.a.",
+        "Othmani r.a.",
+        "Omeri r.a.",
+        "Muavija r.a."
+      ],
+      "correctIndex": 1,
+      "explanation": "Othmani r.a. ishte halifi i tretë.",
+      "source": "Histori Islame",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-89",
+      "category": "Histori",
+      "question": "Kush ishte halifi i katërt nga Hulefai Rashidin?",
+      "options": [
+        "Aliu r.a.",
+        "Omeri r.a.",
+        "Ebu Bekri r.a.",
+        "Othmani r.a."
+      ],
+      "correctIndex": 0,
+      "explanation": "Aliu r.a. ishte halifi i katërt.",
+      "source": "Histori Islame",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-90",
+      "category": "Histori",
+      "question": "Nën cilin halif filloi mbledhja e Kur'anit në një përmbledhje pas Jemames?",
+      "options": [
+        "Ebu Bekri r.a.",
+        "Othmani r.a.",
+        "Aliu r.a.",
+        "Muavija r.a."
+      ],
+      "correctIndex": 0,
+      "explanation": "U bë në kohën e Ebu Bekrit r.a.",
+      "source": "Histori e Mushafit",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-91",
+      "category": "Histori",
+      "question": "Nën cilin halif u dërguan kopje të standardizuara të Mushafit?",
+      "options": [
+        "Omeri r.a.",
+        "Othmani r.a.",
+        "Aliu r.a.",
+        "Ebu Bekri r.a."
+      ],
+      "correctIndex": 1,
+      "explanation": "U bë në kohën e Othmanit r.a.",
+      "source": "Histori e Mushafit",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-92",
+      "category": "Kuran",
+      "question": "Cili pejgamber ndërtoi anijen me urdhrin e Allahut?",
+      "options": [
+        "Nuhu a.s.",
+        "Ibrahimi a.s.",
+        "Musa a.s.",
+        "Jusufi a.s."
+      ],
+      "correctIndex": 0,
+      "explanation": "Nuhu a.s. ndërtoi anijen.",
+      "source": "Kur'an 11:37",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-93",
+      "category": "Kuran",
+      "question": "Cili pejgamber u hodh në zjarr nga populli i tij?",
+      "options": [
+        "Ibrahimi a.s.",
+        "Junusi a.s.",
+        "Musa a.s.",
+        "Jusufi a.s."
+      ],
+      "correctIndex": 0,
+      "explanation": "Ibrahimi a.s. u hodh në zjarr.",
+      "source": "Kur'an 21:68-69",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-94",
+      "category": "Kuran",
+      "question": "Cili pejgamber u gëlltit nga peshku?",
+      "options": [
+        "Junusi a.s.",
+        "Nuhu a.s.",
+        "Hudi a.s.",
+        "Salihu a.s."
+      ],
+      "correctIndex": 0,
+      "explanation": "Junusi a.s. u gëlltit nga peshku.",
+      "source": "Kur'an 37:139-148",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-95",
+      "category": "Kuran",
+      "question": "Cili pejgamber interpretoi ëndrrën e mbretit në Egjipt?",
+      "options": [
+        "Jusufi a.s.",
+        "Ismaili a.s.",
+        "Luti a.s.",
+        "Ejubi a.s."
+      ],
+      "correctIndex": 0,
+      "explanation": "Jusufi a.s. interpretoi ëndrrën.",
+      "source": "Kur'an 12:43-49",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-96",
+      "category": "Kuran",
+      "question": "Cili pejgamber njihet si Kelimullah?",
+      "options": [
+        "Musa a.s.",
+        "Davudi a.s.",
+        "Sulejmani a.s.",
+        "Jahja a.s."
+      ],
+      "correctIndex": 0,
+      "explanation": "Musa a.s. është ai të cilit Allahu i foli.",
+      "source": "Kur'an 4:164",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-97",
+      "category": "Kuran",
+      "question": "Cili pejgamber ngriti themelet e Qabes së bashku me Ismailin a.s.?",
+      "options": [
+        "Ibrahimi a.s.",
+        "Nuhu a.s.",
+        "Musa a.s.",
+        "Davudi a.s."
+      ],
+      "correctIndex": 0,
+      "explanation": "Ibrahimi dhe Ismaili a.s. ngritën themelet.",
+      "source": "Kur'an 2:127",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-98",
+      "category": "Kuran",
+      "question": "Cila sure përmban tregimin e banorëve të shpellës?",
+      "options": [
+        "El-Kehf",
+        "El-Mulk",
+        "En-Nebe",
+        "El-Felek"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tregimi gjendet në El-Kehf.",
+      "source": "Kur'an 18:9-26",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-99",
+      "category": "Kuran",
+      "question": "Cila sure mbyll Mushafin?",
+      "options": [
+        "El-Felek",
+        "En-Nas",
+        "El-Ihlas",
+        "En-Nasr"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sureja e fundit është En-Nas.",
+      "source": "Kur'an – Sureja 114",
+      "difficulty": 1
+    },
+    {
+      "id": "sheet-100",
+      "category": "Kuran",
+      "question": "Cili është ajeti më i gjatë në Kur'an?",
+      "options": [
+        "Ajetul-Kursij",
+        "Ajeti i borxhit 2:282",
+        "Ajeti i dritës",
+        "Ajeti i agjërimit"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ajeti 2:282, i njohur si ajeti i borxhit, është ajeti më i gjatë.",
+      "source": "Kur'an 2:282",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-kuran-ayat-kursi",
+      "category": "Kurani",
+      "question": "Në cilën sure gjendet Ajeti i Kursisë?",
+      "options": [
+        "El-Fatiha",
+        "El-Bekare",
+        "Ali Imran",
+        "En-Nisa"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ajeti i Kursisë është ajeti 255 i sures El-Bekare. Ai thekson njëshmërinë, jetën e përhershme, dijen dhe pushtetin e Allahut.",
+      "source": "Kurani 2:255; Quran.com, Al-Baqarah 2:255",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-hadith-12-rawatib",
+      "category": "Hadith",
+      "question": "Sa rekate vullnetare përmenden në hadithin e Ummu Habibes si shkak për ndërtimin e një shtëpie në Xhenet?",
+      "options": [
+        "8",
+        "10",
+        "12",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ummu Habibe transmeton se i Dërguari i Allahut ﷺ përmendi dymbëdhjetë rekate vullnetare gjatë ditës dhe natës dhe shpërblimin e një shtëpie në Xhenet.",
+      "source": "Sahih Muslim 728a/728c",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-hadith-bukhari-10",
+      "category": "Hadith",
+      "question": "Sa rekate nafile të rregullta kujton Ibn Umeri nga Profeti ﷺ në transmetimin e Sahih el-Buhari 1180?",
+      "options": [
+        "8",
+        "10",
+        "12",
+        "16"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ibn Umeri përmend dhjetë rekate: dy para dhe dy pas drekës, dy pas akshamit, dy pas jacisë dhe dy para sabahut.",
+      "source": "Sahih el-Buhari 1180–1181",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-fikh-kharaj-author",
+      "category": "Fikhu Hanefi",
+      "question": "Kush është autori i veprës së hershme hanefije Kitab el-Haraxh, mbi financat dhe administrimin publik?",
+      "options": [
+        "Imam Maliku",
+        "Imam Ebu Jusuf",
+        "Imam Shafiu",
+        "Ibn Halduni"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kitab el-Haraxh është vepër e Ebu Jusufit, nxënësit të njohur të Ebu Hanifes. Vepra trajton haraxhin, taksat, sadakatë dhe çështje të administrimit shtetëror.",
+      "source": "Ebu Jusuf, Kitab el-Haraxh; TDV İslâm Ansiklopedisi, Kitâbü'l-Harâc; Library of Congress, Kitab al-kharaj",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-001",
+      "category": "Shkencë",
+      "question": "Cili planet është më afër Diellit?",
+      "options": [
+        "Venusi",
+        "Mërkuri",
+        "Marsi",
+        "Toka"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mërkuri është planeti më i afërt me Diellin.",
+      "source": "NASA Solar System Exploration, Mercury ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-002",
+      "category": "Gjeografi",
+      "question": "Cili është oqeani më i madh në Tokë?",
+      "options": [
+        "Atlantik",
+        "Indian",
+        "Arktik",
+        "Paqësor"
+      ],
+      "correctIndex": 3,
+      "explanation": "Oqeani Paqësor është më i madhi për nga sipërfaqja.",
+      "source": "NOAA, Pacific Ocean ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-003",
+      "category": "Histori",
+      "question": "Në cilin vit ra Muri i Berlinit?",
+      "options": [
+        "1987",
+        "1989",
+        "1991",
+        "1993"
+      ],
+      "correctIndex": 1,
+      "explanation": "Muri i Berlinit u hap më 9 nëntor 1989.",
+      "source": "Bundeszentrale für politische Bildung, Mauerfall 1989 ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-004",
+      "category": "Matematikë",
+      "question": "Sa është 15% e numrit 200?",
+      "options": [
+        "20",
+        "25",
+        "30",
+        "35"
+      ],
+      "correctIndex": 2,
+      "explanation": "0,15 × 200 = 30.",
+      "source": "Llogaritje aritmetike ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-005",
+      "category": "Biologji",
+      "question": "Cili organ pompon gjakun në trupin e njeriut?",
+      "options": [
+        "Mushkëritë",
+        "Zemra",
+        "Mëlçia",
+        "Veshkat"
+      ],
+      "correctIndex": 1,
+      "explanation": "Zemra pompon gjakun përmes sistemit të qarkullimit.",
+      "source": "Biologji bazë njerëzore ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-006",
+      "category": "Astronomi",
+      "question": "Si quhet galaktika ku ndodhet Sistemi ynë Diellor?",
+      "options": [
+        "Andromeda",
+        "Rruga e Qumështit",
+        "Triangulum",
+        "Sombrero"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sistemi Diellor gjendet në galaktikën Rruga e Qumështit.",
+      "source": "NASA, Milky Way ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-007",
+      "category": "Gjeografi",
+      "question": "Cili është kryeqyteti i Kanadasë?",
+      "options": [
+        "Toronto",
+        "Vankuver",
+        "Otava",
+        "Montreal"
+      ],
+      "correctIndex": 2,
+      "explanation": "Otava është kryeqyteti federal i Kanadasë.",
+      "source": "Government of Canada ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-008",
+      "category": "Fizikë",
+      "question": "Cila është njësia SI e forcës?",
+      "options": [
+        "Xhaul",
+        "Vat",
+        "Njuton",
+        "Paskal"
+      ],
+      "correctIndex": 2,
+      "explanation": "Forca matet në njuton (N); xhauli mat energjinë, vati fuqinë dhe paskali presionin.",
+      "source": "BIPM, SI Brochure ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-009",
+      "category": "Letërsi",
+      "question": "Kush e shkroi romanin 'Don Kishoti'?",
+      "options": [
+        "Miguel de Servantes",
+        "Viktor Hygo",
+        "Dante Aligieri",
+        "Lev Tolstoi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Miguel de Servantes është autori i romanit Don Kishoti.",
+      "source": "Biblioteca Nacional de España, Cervantes ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-010",
+      "category": "Teknologji",
+      "question": "Çfarë do të thotë shkurtesa CPU në informatikë?",
+      "options": [
+        "Central Processing Unit",
+        "Computer Power Utility",
+        "Control Program Upload",
+        "Core Peripheral Unit"
+      ],
+      "correctIndex": 0,
+      "explanation": "CPU është njësia qendrore e përpunimit të kompjuterit.",
+      "source": "Terminologji standarde informatike ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-011",
+      "category": "Kimi",
+      "question": "Cili është simboli kimik i hekurit?",
+      "options": [
+        "He",
+        "H",
+        "Fe",
+        "Ir"
+      ],
+      "correctIndex": 2,
+      "explanation": "Simboli Fe vjen nga emri latin ferrum.",
+      "source": "IUPAC Periodic Table ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-012",
+      "category": "Histori",
+      "question": "Në cilin vit përfundoi Lufta e Dytë Botërore?",
+      "options": [
+        "1943",
+        "1944",
+        "1945",
+        "1946"
+      ],
+      "correctIndex": 2,
+      "explanation": "Lufta e Dytë Botërore përfundoi në vitin 1945.",
+      "source": "United States Holocaust Memorial Museum ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-013",
+      "category": "Matematikë",
+      "question": "Sa është perimetri i një katrori me brinjë 7 cm?",
+      "options": [
+        "14 cm",
+        "21 cm",
+        "28 cm",
+        "49 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "Perimetri i katrorit është 4 × 7 = 28 cm.",
+      "source": "Gjeometri elementare ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-014",
+      "category": "Gjeografi",
+      "question": "Në cilin kontinent ndodhet shkretëtira e Saharasë?",
+      "options": [
+        "Azi",
+        "Afrikë",
+        "Australi",
+        "Amerikë e Jugut"
+      ],
+      "correctIndex": 1,
+      "explanation": "Saharaja shtrihet në Afrikën Veriore.",
+      "source": "National Geographic, Sahara ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-015",
+      "category": "Biologji",
+      "question": "Cili gaz merret kryesisht nga bimët gjatë fotosintezës?",
+      "options": [
+        "Oksigjen",
+        "Azot",
+        "Dioksid karboni",
+        "Helium"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bimët marrin dioksid karboni nga ajri dhe ujë nga mjedisi. Me energjinë e dritës prodhojnë përbërje që ruajnë energji, ndërsa çlirojnë oksigjen. Prandaj gazi që përdoret në këtë proces është CO₂.",
+      "source": "OpenStax — Biology 2e, 8.1 Overview of Photosynthesis — https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-016",
+      "category": "Sport",
+      "question": "Sa lojtarë ka një skuadër futbolli në fushë në fillim të ndeshjes?",
+      "options": [
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "correctIndex": 2,
+      "explanation": "Një skuadër futbolli fillon normalisht me 11 lojtarë, përfshirë portierin.",
+      "source": "IFAB Laws of the Game, Law 3 ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-017",
+      "category": "Gjuhë shqipe",
+      "question": "Cila nga këto fjalë është mbiemër?",
+      "options": [
+        "Vrapoj",
+        "I bukur",
+        "Shkollë",
+        "Shpejt"
+      ],
+      "correctIndex": 1,
+      "explanation": "'I bukur' është mbiemër që tregon cilësi.",
+      "source": "Gramatika e gjuhës shqipe ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-018",
+      "category": "Astronomi",
+      "question": "Sa kohë i duhet afërsisht Tokës për një rrotullim rreth Diellit?",
+      "options": [
+        "24 orë",
+        "30 ditë",
+        "365 ditë",
+        "10 vjet"
+      ],
+      "correctIndex": 2,
+      "explanation": "Një orbitë e Tokës rreth Diellit zgjat rreth 365,25 ditë. Kjo përcakton vitin. Rrotullimi rreth boshtit përcakton ditën dhe nuk duhet ngatërruar me orbitën.",
+      "source": "NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-019",
+      "category": "Muzikë",
+      "question": "Sa vija ka pentagrami muzikor?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pentagrami standard përbëhet nga pesë vija paralele.",
+      "source": "Teoria bazë e muzikës ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-020",
+      "category": "Logjikë",
+      "question": "Nëse të gjithë katrorët janë drejtkëndësha, cili pohim është patjetër i vërtetë?",
+      "options": [
+        "Çdo drejtkëndësh është katror",
+        "Asnjë katror nuk është drejtkëndësh",
+        "Çdo katror ka katër kënde të drejta",
+        "Çdo katror ka tri brinjë"
+      ],
+      "correctIndex": 2,
+      "explanation": "Katrori ka katër kënde të drejta; jo çdo drejtkëndësh është katror.",
+      "source": "Gjeometri elementare ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-021",
+      "category": "Gjeografi",
+      "question": "Cili është kryeqyteti i Australisë?",
+      "options": [
+        "Sidnei",
+        "Melburni",
+        "Kanberra",
+        "Perthi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kanberra është kryeqyteti i Australisë.",
+      "source": "Australian Government ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-022",
+      "category": "Shkencë",
+      "question": "Cili gaz përbën pjesën më të madhe të atmosferës së Tokës?",
+      "options": [
+        "Oksigjeni",
+        "Azoti",
+        "Dioksidi i karbonit",
+        "Hidrogjeni"
+      ],
+      "correctIndex": 1,
+      "explanation": "Azoti përbën rreth 78% të atmosferës pranë sipërfaqes, oksigjeni rreth 21% dhe gazrat e tjera afërsisht 1%. Oksigjeni është thelbësor për frymëmarrjen, por nuk është gazi më i bollshëm.",
+      "source": "NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-023",
+      "category": "Matematikë",
+      "question": "Sa është rrënja katrore e numrit 144?",
+      "options": [
+        "10",
+        "11",
+        "12",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 × 12 = 144.",
+      "source": "Aritmetikë ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-024",
+      "category": "Biologji",
+      "question": "Cili organ është përgjegjës kryesisht për filtrimin e gjakut dhe prodhimin e urinës?",
+      "options": [
+        "Zemra",
+        "Veshkat",
+        "Mushkëritë",
+        "Stomaku"
+      ],
+      "correctIndex": 1,
+      "explanation": "Veshkat filtrojnë gjakun dhe prodhojnë urinën.",
+      "source": "NIDDK ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-026",
+      "category": "Astronomi",
+      "question": "Cili planet njihet për unazat e tij të dukshme?",
+      "options": [
+        "Marsi",
+        "Venusi",
+        "Saturni",
+        "Mërkuri"
+      ],
+      "correctIndex": 2,
+      "explanation": "Saturni njihet për sistemin e gjerë të unazave.",
+      "source": "NASA Saturn ",
+      "difficulty": 1
+    },
+    {
+      "id": "general-sq-029",
+      "category": "Fizikë",
+      "question": "Cila është njësia SI e rezistencës elektrike?",
+      "options": [
+        "Volti",
+        "Amperi",
+        "Ohmi",
+        "Vati"
+      ],
+      "correctIndex": 2,
+      "explanation": "Rezistenca elektrike matet në ohm (Ω).",
+      "source": "BIPM SI ",
+      "difficulty": 1
+    },
+    {
+      "id": "logic-v3-multiply-sq",
+      "category": "Logjikë",
+      "question": "Sa është 12 × 8?",
+      "options": [
+        "84",
+        "96",
+        "108",
+        "88"
+      ],
+      "correctIndex": 1,
+      "explanation": "12 × 8 = 96.",
+      "source": "Aritmetikë / gjeometri elementare; verifikuar me llogaritje",
+      "difficulty": 1
+    },
+    {
+      "id": "logic-v3-divide-sq",
+      "category": "Logjikë",
+      "question": "Sa është 144 ÷ 12?",
+      "options": [
+        "10",
+        "11",
+        "12",
+        "14"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 × 12 = 144, prandaj 144 ÷ 12 = 12.",
+      "source": "Aritmetikë / gjeometri elementare; verifikuar me llogaritje",
+      "difficulty": 1
+    },
+    {
+      "id": "logic-v3-perimeter-sq",
+      "category": "Logjikë",
+      "question": "Një katror ka brinjën 9 cm. Sa është perimetri?",
+      "options": [
+        "18 cm",
+        "27 cm",
+        "36 cm",
+        "81 cm"
+      ],
+      "correctIndex": 2,
+      "explanation": "Perimetri është 4 × 9 = 36 cm.",
+      "source": "Aritmetikë / gjeometri elementare; verifikuar me llogaritje",
+      "difficulty": 1
+    },
+    {
+      "id": "logic-v3-triangle-sq",
+      "category": "Logjikë",
+      "question": "Dy kënde të një trekëndëshi në plan janë 50° dhe 60°. Sa është i treti?",
+      "options": [
+        "60°",
+        "70°",
+        "80°",
+        "90°"
+      ],
+      "correctIndex": 1,
+      "explanation": "Këndet bëjnë 180°: 180 − 50 − 60 = 70°.",
+      "source": "Aritmetikë / gjeometri elementare; verifikuar me llogaritje",
+      "difficulty": 1
+    },
+    {
+      "id": "logic-v3-sum-sq",
+      "category": "Logjikë",
+      "question": "Sa është shuma 1 + 2 + … + 10?",
+      "options": [
+        "45",
+        "50",
+        "55",
+        "60"
+      ],
+      "correctIndex": 2,
+      "explanation": "Pesë çifte me shumën 11 japin 55.",
+      "source": "Aritmetikë / gjeometri elementare; verifikuar me llogaritje",
+      "difficulty": 1
+    },
+    {
+      "id": "logic-v3-doubling-sq",
+      "category": "Logjikë",
+      "question": "Vazhdo duke dyfishuar: 3, 6, 12, 24, …",
+      "options": [
+        "30",
+        "36",
+        "42",
+        "48"
+      ],
+      "correctIndex": 3,
+      "explanation": "24 × 2 = 48.",
+      "source": "Aritmetikë / gjeometri elementare; verifikuar me llogaritje",
+      "difficulty": 1
+    },
+    {
+      "id": "logic-v3-probability-sq",
+      "category": "Logjikë",
+      "question": "Në një qese ka 3 topa blu dhe 2 të kuq. Me zgjedhje të rastësishme, sa është mundësia për blu?",
+      "options": [
+        "1/5",
+        "2/5",
+        "3/5",
+        "4/5"
+      ],
+      "correctIndex": 2,
+      "explanation": "3 nga 5 topa janë blu: 3/5.",
+      "source": "Aritmetikë / gjeometri elementare; verifikuar me llogaritje",
+      "difficulty": 1
+    },
+    {
+      "id": "logic-v3-units-sq",
+      "category": "Logjikë",
+      "question": "Sa metra janë 2,5 km?",
+      "options": [
+        "25",
+        "250",
+        "2500",
+        "25000"
+      ],
+      "correctIndex": 2,
+      "explanation": "1 km = 1000 m; 2,5 × 1000 = 2500 m.",
+      "source": "Aritmetikë / gjeometri elementare; verifikuar me llogaritje",
+      "difficulty": 1
+    },
+    {
+      "id": "logic-v3-prime-sq",
+      "category": "Logjikë",
+      "question": "Cili nga numrat është i thjeshtë?",
+      "options": [
+        "21",
+        "27",
+        "29",
+        "33"
+      ],
+      "correctIndex": 2,
+      "explanation": "29 ka vetëm pjesëtuesit pozitivë 1 dhe 29.",
+      "source": "Aritmetikë / gjeometri elementare; verifikuar me llogaritje",
+      "difficulty": 1
+    },
+    {
+      "id": "logic-v3-area-sq",
+      "category": "Logjikë",
+      "question": "Një drejtkëndësh ka brinjët 7 m dhe 6 m. Sa është sipërfaqja?",
+      "options": [
+        "13 m²",
+        "26 m²",
+        "42 m²",
+        "49 m²"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sipërfaqja është 7 × 6 = 42 m².",
+      "source": "Aritmetikë / gjeometri elementare; verifikuar me llogaritje",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-sq-030",
+      "category": "Shkencë",
+      "question": "Cili gaz zë afërsisht 21% të atmosferës pranë sipërfaqes së Tokës?",
+      "options": [
+        "Azoti",
+        "Oksigjeni",
+        "Heliumi",
+        "Hidrogjeni"
+      ],
+      "correctIndex": 1,
+      "explanation": "Oksigjeni zë rreth një të pestën e atmosferës. Azoti është më i bollshëm, me rreth 78%. Përqindja më e vogël nuk e zvogëlon rolin e oksigjenit në frymëmarrje.",
+      "source": "NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-sq-031",
+      "category": "Astronomi",
+      "question": "Cili veprim i Tokës përcakton kryesisht alternimin e ditës dhe natës?",
+      "options": [
+        "Rrotullimi rreth boshtit",
+        "Ndryshimi i stinëve",
+        "Lëvizja e Hënës",
+        "Një orbitë e plotë rreth Diellit"
+      ],
+      "correctIndex": 0,
+      "explanation": "Toka rrotullohet rreth boshtit të saj në afërsisht 24 orë. Pjesa e kthyer drejt Diellit ka ditë, ndërsa pjesa tjetër natë. Një orbitë rreth Diellit përcakton vitin.",
+      "source": "NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-sq-032",
+      "category": "Astronomi",
+      "question": "Nga çfarë përbëhen kryesisht grimcat e unazave të Saturnit?",
+      "options": [
+        "Vetëm gaz",
+        "Akull dhe shkëmbinj",
+        "Vetëm ujë i lëngshëm",
+        "Dritë e ngurtësuar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Unazat përmbajnë miliarda copa akulli dhe shkëmbinjsh, shpesh të mbuluara me pluhur. Ato nuk janë një disk i vetëm i ngurtë; janë grimca që orbitojnë planetin.",
+      "source": "NASA Science — Saturn Facts — https://science.nasa.gov/saturn/facts/",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-sq-033",
+      "category": "Biologji",
+      "question": "Në cilën organele zhvillohet fotosinteza te bimët?",
+      "options": [
+        "Bërthama",
+        "Ribozomi",
+        "Kloroplasti",
+        "Lizozomi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kloroplastet përmbajnë strukturat dhe pigmentet që mundësojnë fotosintezën. Klorofili ndihmon në përthithjen e dritës. Kjo energji përdoret për formimin e përbërjeve organike.",
+      "source": "OpenStax — Biology 2e, 8.1 Overview of Photosynthesis — https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-sq-034",
+      "category": "Biologji",
+      "question": "Cila është forma fillestare e energjisë që shfrytëzohet në fotosintezë?",
+      "options": [
+        "Energjia e dritës",
+        "Energjia e zërit",
+        "Energjia bërthamore e bimës",
+        "Energjia e erës"
+      ],
+      "correctIndex": 0,
+      "explanation": "Fotosinteza shndërron energjinë e dritës në energji kimike të ruajtur në përbërje organike. Bima nuk e krijon energjinë nga asgjë; e shndërron dhe e ruan atë.",
+      "source": "OpenStax — Biology 2e, 8.1 Overview of Photosynthesis — https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-sq-035",
+      "category": "Shkencë",
+      "question": "Çfarë shkakton kryesisht ciklin vjetor të stinëve në Tokë?",
+      "options": [
+        "Ndryshimi i madhësisë së Diellit",
+        "Pjerrësia e boshtit të Tokës gjatë orbitës",
+        "Fazat e Hënës",
+        "Rrotullimi i reve"
+      ],
+      "correctIndex": 1,
+      "explanation": "Boshti i Tokës është i pjerrët ndaj planit të orbitës. Gjatë vitit, secila hemisferë merr rreze më të drejtpërdrejta dhe ditë më të gjata në periudha të ndryshme. Kjo krijon ciklin e stinëve.",
+      "source": "NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-sq-036",
+      "category": "Biologji",
+      "question": "Cili gaz çlirohet gjatë fotosintezës së bimëve?",
+      "options": [
+        "Oksigjeni",
+        "Heliumi",
+        "Neoni",
+        "Hidrogjeni"
+      ],
+      "correctIndex": 0,
+      "explanation": "Gjatë fotosintezës çlirohet oksigjen. Bima përdor dritë, ujë dhe dioksid karboni për të formuar përbërje organike që ruajnë energji.",
+      "source": "OpenStax — Biology 2e, 8.1 Overview of Photosynthesis — https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-sq-037",
+      "category": "Biologji",
+      "question": "Cilat struktura të gjethes rregullojnë shkëmbimin e gazeve?",
+      "options": [
+        "Stomatet",
+        "Rrënjët",
+        "Farat",
+        "Petalet"
+      ],
+      "correctIndex": 0,
+      "explanation": "Stomatet janë hapje të vogla të rregulluara nga qelizat rojtare. Përmes tyre kryhet shkëmbimi i gazeve dhe ndikohet humbja e ujit.",
+      "source": "OpenStax — Biology 2e, 8.1 Overview of Photosynthesis — https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-sq-038",
+      "category": "Astronomi",
+      "question": "Sa satelitë natyrorë ka Toka?",
+      "options": [
+        "Asnjë",
+        "Një",
+        "Dy",
+        "Katër"
+      ],
+      "correctIndex": 1,
+      "explanation": "Toka ka një satelit natyror: Hënën. Satelitët artificialë janë pajisje të ndërtuara nga njeriu dhe nuk llogariten si satelitë natyrorë.",
+      "source": "NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-sq-039",
+      "category": "Astronomi",
+      "question": "Çfarë përfaqëson afërsisht një njësi astronomike?",
+      "options": [
+        "Distancën mesatare Tokë–Diell",
+        "Diametrin e Tokës",
+        "Distancën Tokë–Hënë",
+        "Një vit kohor"
+      ],
+      "correctIndex": 0,
+      "explanation": "Njësia astronomike përdoret për distancat në Sistemin Diellor. Ajo lidhet me distancën mesatare Tokë–Diell, afërsisht 150 milionë kilometra; nuk është njësi kohe.",
+      "source": "NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-sq-040",
+      "category": "Shkencë",
+      "question": "Cila shtresë ndihmon që shumë meteoroide të digjen para se të arrijnë tokën?",
+      "options": [
+        "Atmosfera",
+        "Bërthama e brendshme",
+        "Korja oqeanike",
+        "Manteli"
+      ],
+      "correctIndex": 0,
+      "explanation": "Pjesa më e madhe e meteoroideve të vogla shpërbëhet gjatë kalimit në atmosferë. Shkëlqimi që shohim quhet meteor; atmosfera ofron kështu edhe mbrojtje.",
+      "source": "NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-sq-041",
+      "category": "Shkencë",
+      "question": "Sa për qind zënë afërsisht së bashku azoti dhe oksigjeni në atmosferën pranë sipërfaqes?",
+      "options": [
+        "50%",
+        "78%",
+        "99%",
+        "21%"
+      ],
+      "correctIndex": 2,
+      "explanation": "Azoti zë rreth 78% dhe oksigjeni rreth 21%; së bashku afërsisht 99%. Pjesa tjetër përfshin argon, dioksid karboni dhe gaze të tjera.",
+      "source": "NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-001",
+      "category": "Shkencë",
+      "question": "Cila është njësia bazë SI e kohës?",
+      "options": [
+        "Sekonda",
+        "Metri",
+        "Kelvini",
+        "Amperi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Njësia bazë SI e kohës është sekonda.",
+      "source": "https://www.bipm.org/en/measurement-units/si-base-units",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-002",
+      "category": "Shkencë",
+      "question": "Cila është njësia bazë SI e gjatësisë?",
+      "options": [
+        "Kandela",
+        "Metri",
+        "Sekonda",
+        "Moli"
+      ],
+      "correctIndex": 1,
+      "explanation": "Njësia bazë SI e gjatësisë është metri.",
+      "source": "https://www.bipm.org/en/measurement-units/si-base-units",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-003",
+      "category": "Shkencë",
+      "question": "Cila është njësia bazë SI e masës?",
+      "options": [
+        "Metri",
+        "Sekonda",
+        "Kilogrami",
+        "Njutoni"
+      ],
+      "correctIndex": 2,
+      "explanation": "Njësia bazë SI e masës është kilogrami.",
+      "source": "https://www.bipm.org/en/measurement-units/si-base-units",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-004",
+      "category": "Shkencë",
+      "question": "Cila është njësia bazë SI e rrymës elektrike?",
+      "options": [
+        "Volti",
+        "Ohmi",
+        "Vati",
+        "Amperi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Njësia bazë SI e rrymës elektrike është amperi.",
+      "source": "https://www.bipm.org/en/measurement-units/si-base-units",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-005",
+      "category": "Shkencë",
+      "question": "Cila është njësia bazë SI e temperaturës termodinamike?",
+      "options": [
+        "Kelvini",
+        "Grada Celsius",
+        "Xhauli",
+        "Moli"
+      ],
+      "correctIndex": 0,
+      "explanation": "Njësia bazë SI e temperaturës termodinamike është kelvini.",
+      "source": "https://www.bipm.org/en/measurement-units/si-base-units",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-006",
+      "category": "Shkencë",
+      "question": "Cila është njësia bazë SI e sasisë së lëndës?",
+      "options": [
+        "Metri",
+        "Moli",
+        "Kilogrami",
+        "Kandela"
+      ],
+      "correctIndex": 1,
+      "explanation": "Njësia bazë SI e sasisë së lëndës është moli.",
+      "source": "https://www.bipm.org/en/measurement-units/si-base-units",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-007",
+      "category": "Shkencë",
+      "question": "Cila është njësia bazë SI e intensitetit të dritës?",
+      "options": [
+        "Vati",
+        "Lumen",
+        "Kandela",
+        "Luksi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Njësia bazë SI e intensitetit të dritës është kandela.",
+      "source": "https://www.bipm.org/en/measurement-units/si-base-units",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-008",
+      "category": "Shkencë",
+      "question": "Me cilën njësi SI matet madhësia e frekuencës?",
+      "options": [
+        "Xhauli",
+        "Paskali",
+        "Volti",
+        "Herci"
+      ],
+      "correctIndex": 3,
+      "explanation": "Herci është njësia SI e frekuencës.",
+      "source": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-009",
+      "category": "Shkencë",
+      "question": "Me cilën njësi SI matet madhësia e presionit?",
+      "options": [
+        "Paskali",
+        "Amperi",
+        "Vati",
+        "Faradi"
+      ],
+      "correctIndex": 0,
+      "explanation": "Paskali është njësia SI e presionit.",
+      "source": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-010",
+      "category": "Shkencë",
+      "question": "Me cilën njësi SI matet madhësia e energjisë?",
+      "options": [
+        "Teslla",
+        "Xhauli",
+        "Volti",
+        "Herci"
+      ],
+      "correctIndex": 1,
+      "explanation": "Xhauli është njësia SI e energjisë.",
+      "source": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-011",
+      "category": "Shkencë",
+      "question": "Me cilën njësi SI matet madhësia e fuqisë?",
+      "options": [
+        "Kuloni",
+        "Ohmi",
+        "Vati",
+        "Xhauli"
+      ],
+      "correctIndex": 2,
+      "explanation": "Vati është njësia SI e fuqisë.",
+      "source": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-012",
+      "category": "Shkencë",
+      "question": "Me cilën njësi SI matet madhësia e ngarkesës elektrike?",
+      "options": [
+        "Volti",
+        "Herci",
+        "Paskali",
+        "Kuloni"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kuloni është njësia SI e ngarkesës elektrike.",
+      "source": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-013",
+      "category": "Shkencë",
+      "question": "Me cilën njësi SI matet madhësia e diferencës së potencialit elektrik?",
+      "options": [
+        "Volti",
+        "Kuloni",
+        "Faradi",
+        "Metri"
+      ],
+      "correctIndex": 0,
+      "explanation": "Volti është njësia SI e diferencës së potencialit elektrik.",
+      "source": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-014",
+      "category": "Shkencë",
+      "question": "Me cilën njësi SI matet madhësia e kapacitetit elektrik?",
+      "options": [
+        "Herci",
+        "Faradi",
+        "Amperi",
+        "Vati"
+      ],
+      "correctIndex": 1,
+      "explanation": "Faradi është njësia SI e kapacitetit elektrik.",
+      "source": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-015",
+      "category": "Shkencë",
+      "question": "Me cilën njësi SI matet madhësia e përçueshmërisë elektrike?",
+      "options": [
+        "Volti",
+        "Njutoni",
+        "Simensi",
+        "Ohmi"
+      ],
+      "correctIndex": 2,
+      "explanation": "Simensi është njësia SI e përçueshmërisë elektrike.",
+      "source": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-016",
+      "category": "Shkencë",
+      "question": "Me cilën njësi SI matet madhësia e fluksit magnetik?",
+      "options": [
+        "Teslla",
+        "Herci",
+        "Xhauli",
+        "Veberi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Veberi është njësia SI e fluksit magnetik.",
+      "source": "https://www.nist.gov/pml/special-publication-330/sp-330-section-2",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-017",
+      "category": "Astronomi",
+      "question": "Sa planetë ka Sistemi Diellor sipas klasifikimit të IAU-së?",
+      "options": [
+        "8",
+        "9",
+        "10",
+        "7"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sistemi Diellor ka tetë planetë.",
+      "source": "https://science.nasa.gov/solar-system/planets/",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-018",
+      "category": "Astronomi",
+      "question": "Cili është planeti më i vogël në Sistemin Diellor?",
+      "options": [
+        "Marsi",
+        "Mërkuri",
+        "Venusi",
+        "Toka"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mërkuri është më i vogli nga tetë planetët.",
+      "source": "https://science.nasa.gov/solar-system/planets/",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-019",
+      "category": "Astronomi",
+      "question": "Cili planet është i dyti nga Dielli?",
+      "options": [
+        "Marsi",
+        "Saturni",
+        "Venusi",
+        "Toka"
+      ],
+      "correctIndex": 2,
+      "explanation": "Venusi është planeti i dytë nga Dielli.",
+      "source": "https://science.nasa.gov/solar-system/planets/",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-020",
+      "category": "Astronomi",
+      "question": "Cili planet vjen menjëherë pas Tokës duke u larguar nga Dielli?",
+      "options": [
+        "Venusi",
+        "Mërkuri",
+        "Neptuni",
+        "Marsi"
+      ],
+      "correctIndex": 3,
+      "explanation": "Toka është e treta dhe Marsi i katërti nga Dielli.",
+      "source": "https://science.nasa.gov/solar-system/planets/",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-021",
+      "category": "Astronomi",
+      "question": "Cili çift përbëhet nga gjigantë akulli?",
+      "options": [
+        "Urani dhe Neptuni",
+        "Jupiteri dhe Saturni",
+        "Venusi dhe Mërkuri",
+        "Toka dhe Marsi"
+      ],
+      "correctIndex": 0,
+      "explanation": "NASA i klasifikon Uranin dhe Neptunin si gjigantë akulli.",
+      "source": "https://science.nasa.gov/solar-system/planets/",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-022",
+      "category": "Astronomi",
+      "question": "Mes orbitave të cilëve planetë gjendet brezi kryesor i asteroideve ku ndodhet Ceresi?",
+      "options": [
+        "Saturnit dhe Uranit",
+        "Marsit dhe Jupiterit",
+        "Mërkurit dhe Venusit",
+        "Tokës dhe Marsit"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ceresi ndodhet në brezin e asteroideve mes Marsit dhe Jupiterit.",
+      "source": "https://science.nasa.gov/solar-system/planets/",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-023",
+      "category": "Astronomi",
+      "question": "Në cilin vit Plutoni u riklasifikua si planet xhuxh?",
+      "options": [
+        "1989",
+        "2000",
+        "2006",
+        "1969"
+      ],
+      "correctIndex": 2,
+      "explanation": "IAU e riklasifikoi Plutonin në vitin 2006.",
+      "source": "https://science.nasa.gov/solar-system/planets/",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-024",
+      "category": "Astronomi",
+      "question": "Çfarë quhet ekzoplanet?",
+      "options": [
+        "Satelit i Tokës",
+        "Asteroid pranë Marsit",
+        "Një lloj komete",
+        "Planet jashtë Sistemit Diellor"
+      ],
+      "correctIndex": 3,
+      "explanation": "Ekzoplaneti është planet jashtë Sistemit Diellor.",
+      "source": "https://science.nasa.gov/solar-system/planets/",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-025",
+      "category": "Histori",
+      "question": "Kush paraqiti më 9 maj 1950 planin për bashkëpunimin evropian të qymyrit dhe çelikut?",
+      "options": [
+        "Robert Shuman",
+        "Isaak Njuton",
+        "Albert Ajnshtajn",
+        "Nikola Tesla"
+      ],
+      "correctIndex": 0,
+      "explanation": "Plani u paraqit nga ministri francez Robert Shuman.",
+      "source": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-026",
+      "category": "Histori",
+      "question": "Cilat industri propozonte të bashkonte Plani Shuman?",
+      "options": [
+        "Tekstilin dhe ushqimin",
+        "Qymyrin dhe çelikun",
+        "Naftën dhe turizmin",
+        "Bujqësinë dhe peshkimin"
+      ],
+      "correctIndex": 1,
+      "explanation": "Plani synonte bashkimin e industrive të qymyrit dhe çelikut.",
+      "source": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-027",
+      "category": "Histori",
+      "question": "Sa shtete nënshkruan traktatin e Komunitetit Evropian të Qymyrit dhe Çelikut në vitin 1951?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "12"
+      ],
+      "correctIndex": 2,
+      "explanation": "Traktatin e vitit 1951 e nënshkruan gjashtë shtete.",
+      "source": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-028",
+      "category": "Histori",
+      "question": "Cili nga këto shtete NUK ishte ndër gjashtë nënshkruesit e traktatit të qymyrit dhe çelikut?",
+      "options": [
+        "Italia",
+        "Belgjika",
+        "Luksemburgu",
+        "Mbretëria e Bashkuar"
+      ],
+      "correctIndex": 3,
+      "explanation": "Gjashtë shtetet ishin Gjermania, Franca, Italia, Holanda, Belgjika dhe Luksemburgu.",
+      "source": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-029",
+      "category": "Histori",
+      "question": "Në cilin qytet u nënshkruan traktatet evropiane të 25 marsit 1957?",
+      "options": [
+        "Romë",
+        "Paris",
+        "Berlin",
+        "Madrid"
+      ],
+      "correctIndex": 0,
+      "explanation": "Traktatet e 25 marsit 1957 u nënshkruan në Romë.",
+      "source": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-030",
+      "category": "Histori",
+      "question": "Në cilin vit u krijua NATO-ja?",
+      "options": [
+        "1945",
+        "1949",
+        "1957",
+        "1962"
+      ],
+      "correctIndex": 1,
+      "explanation": "NATO-ja u krijua më 4 prill 1949.",
+      "source": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-031",
+      "category": "Kulturë",
+      "question": "Në cilën datë BE-ja shënon Ditën e Evropës?",
+      "options": [
+        "1 janar",
+        "8 mars",
+        "9 maj",
+        "24 tetor"
+      ],
+      "correctIndex": 2,
+      "explanation": "Dita e Evropës shënohet më 9 maj, datën e Deklaratës Shuman.",
+      "source": "https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-032",
+      "category": "Teknologji",
+      "question": "Kush e shpiku World Wide Web-in?",
+      "options": [
+        "Nikola Tesla",
+        "Johanes Kepler",
+        "Alan Turing",
+        "Tim Berners-Li"
+      ],
+      "correctIndex": 3,
+      "explanation": "Tim Berners-Li e shpiku Web-in në CERN.",
+      "source": "https://home.cern/science/computing/the-birth-of-the-web",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-033",
+      "category": "Teknologji",
+      "question": "Në cilin vit u shpik World Wide Web-i në CERN?",
+      "options": [
+        "1989",
+        "2001",
+        "1969",
+        "1975"
+      ],
+      "correctIndex": 0,
+      "explanation": "Web-i u shpik në vitin 1989.",
+      "source": "https://home.cern/science/computing/the-birth-of-the-web",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-034",
+      "category": "Teknologji",
+      "question": "Cila nevojë shkencore nxiti krijimin e Web-it?",
+      "options": [
+        "Ndërtimi i satelitëve",
+        "Shkëmbimi i informacionit mes studiuesve",
+        "Prodhimi i baterive",
+        "Matja e temperaturës"
+      ],
+      "correctIndex": 1,
+      "explanation": "Web-i synonte të lehtësonte shkëmbimin e informacionit shkencor.",
+      "source": "https://home.cern/science/computing/the-birth-of-the-web",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-035",
+      "category": "Teknologji",
+      "question": "Në çfarë kompjuteri u strehua faqja e parë e Web-it?",
+      "options": [
+        "Një tablet iPad",
+        "Një konsolë lojërash",
+        "NeXT i Berners-Lit",
+        "Një telefon Android"
+      ],
+      "correctIndex": 2,
+      "explanation": "Faqja e parë u strehua në kompjuterin NeXT të Berners-Lit.",
+      "source": "https://home.cern/science/computing/the-birth-of-the-web",
+      "difficulty": 3
+    },
+    {
+      "id": "premium-20261105-sq-036",
+      "category": "Teknologji",
+      "question": "Çfarë bëri CERN-i me softuerin e Web-it më 30 prill 1993?",
+      "options": [
+        "E fshiu përgjithmonë",
+        "E kufizoi vetëm për një universitet",
+        "E ndaloi përdorimin",
+        "E vendosi në domenin publik"
+      ],
+      "correctIndex": 3,
+      "explanation": "CERN-i e vendosi softuerin e Web-it në domenin publik.",
+      "source": "https://home.cern/science/computing/the-birth-of-the-web",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-037",
+      "category": "Histori",
+      "question": "Sa shtete themeluese kishte OKB-ja në vitin 1945?",
+      "options": [
+        "51",
+        "60",
+        "40",
+        "50"
+      ],
+      "correctIndex": 0,
+      "explanation": "OKB-ja kishte 51 shtete themeluese në vitin 1945.",
+      "source": "https://research.un.org/en/unmembers/founders",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-038",
+      "category": "Histori",
+      "question": "Kur hyri në fuqi Karta e OKB-së?",
+      "options": [
+        "25 mars 1957",
+        "24 tetor 1945",
+        "1 janar 1940",
+        "9 maj 1950"
+      ],
+      "correctIndex": 1,
+      "explanation": "Karta hyri në fuqi më 24 tetor 1945.",
+      "source": "https://research.un.org/en/unmembers/founders",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-039",
+      "category": "Histori",
+      "question": "Në cilin qytet u zhvillua konferenca e vitit 1945 ku u miratua Karta e OKB-së?",
+      "options": [
+        "Romë",
+        "Tokio",
+        "San Francisko",
+        "Gjenevë"
+      ],
+      "correctIndex": 2,
+      "explanation": "Konferenca themeluese e vitit 1945 u zhvillua në San Francisko.",
+      "source": "https://research.un.org/en/unmembers/founders",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-040",
+      "category": "Histori",
+      "question": "Cili shtet u bë anëtar themelues i OKB-së pasi nënshkroi Kartën më 15 tetor 1945?",
+      "options": [
+        "Italia",
+        "Spanja",
+        "Kanadaja",
+        "Polonia"
+      ],
+      "correctIndex": 3,
+      "explanation": "Polonia nënshkroi më 15 tetor 1945 dhe është ndër 51 themeluesit.",
+      "source": "https://research.un.org/en/unmembers/founders",
+      "difficulty": 3
+    },
+    {
+      "id": "premium-20261105-sq-041",
+      "category": "Teknologji",
+      "question": "Në komunikimin HTTP, kush e nis zakonisht kërkesën?",
+      "options": [
+        "Klienti, p.sh. shfletuesi",
+        "Vetëm printeri",
+        "Serveri pa klient",
+        "Vetëm ruteri"
+      ],
+      "correctIndex": 0,
+      "explanation": "HTTP përdor modelin klient–server; klienti dërgon kërkesën.",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-042",
+      "category": "Teknologji",
+      "question": "Si quhet mesazhi që serveri kthen pas një kërkese HTTP?",
+      "options": [
+        "Kabllo",
+        "Përgjigje",
+        "Kompilues",
+        "Procesor"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mesazhi i kthyer nga serveri quhet përgjigje HTTP.",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-043",
+      "category": "Teknologji",
+      "question": "A ruan vetë protokolli HTTP domosdoshmërisht gjendjen mes dy kërkesave?",
+      "options": [
+        "Vetëm natën",
+        "Vetëm për fotografi",
+        "Jo, është pa gjendje",
+        "Po, gjithmonë"
+      ],
+      "correctIndex": 2,
+      "explanation": "HTTP është pa gjendje; sesionet mund të ndërtohen mbi të.",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-044",
+      "category": "Teknologji",
+      "question": "Cili mekanizëm HTTP përdoret zakonisht për të lidhur kërkesat me një sesion?",
+      "options": [
+        "Ventilatori",
+        "Rezolucioni i ekranit",
+        "Altoparlantët",
+        "Cookies"
+      ],
+      "correctIndex": 3,
+      "explanation": "Cookies mundësojnë lidhjen e kërkesave me kontekstin e një sesioni.",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-045",
+      "category": "Teknologji",
+      "question": "Cili element HTML përdoret për një lidhje me një faqe tjetër?",
+      "options": [
+        "<a>",
+        "<table>",
+        "<p>",
+        "<img>"
+      ],
+      "correctIndex": 0,
+      "explanation": "Elementi <a> me atributin href krijon një lidhje.",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-046",
+      "category": "Teknologji",
+      "question": "Cili atribut i elementit <a> jep adresën e lidhjes?",
+      "options": [
+        "height",
+        "href",
+        "alt",
+        "width"
+      ],
+      "correctIndex": 1,
+      "explanation": "Atributi href përcakton destinacionin e lidhjes.",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-047",
+      "category": "Teknologji",
+      "question": "Cili element HTML fut një fotografi në faqe?",
+      "options": [
+        "<p>",
+        "<h1>",
+        "<img>",
+        "<a>"
+      ],
+      "correctIndex": 2,
+      "explanation": "Elementi <img> fut një imazh në dokumentin HTML.",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-048",
+      "category": "Teknologji",
+      "question": "Cili atribut i imazhit HTML përmban tekstin alternativ?",
+      "options": [
+        "id",
+        "class",
+        "href",
+        "alt"
+      ],
+      "correctIndex": 3,
+      "explanation": "Atributi alt jep përshkrimin tekstual alternativ të imazhit.",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-049",
+      "category": "Teknologji",
+      "question": "Cila metodë HTTP përdoret për të kërkuar një paraqitje të një burimi?",
+      "options": [
+        "GET",
+        "CONNECT",
+        "DELETE",
+        "PATCH"
+      ],
+      "correctIndex": 0,
+      "explanation": "GET kërkon një paraqitje të burimit të identifikuar.",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/GET",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-050",
+      "category": "Teknologji",
+      "question": "Çfarë nënkupton zakonisht statusi HTTP 404?",
+      "options": [
+        "Lidhja u ruajt",
+        "Burimi nuk u gjet",
+        "Kërkesa pati sukses",
+        "Serveri kërkon pagesë"
+      ],
+      "correctIndex": 1,
+      "explanation": "404 tregon se serveri nuk e gjeti burimin e kërkuar.",
+      "source": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/404",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-051",
+      "category": "Matematikë",
+      "question": "Sa është −7 + 12?",
+      "options": [
+        "−19",
+        "−5",
+        "5",
+        "19"
+      ],
+      "correctIndex": 2,
+      "explanation": "Nga −7 shtojmë 12 dhe arrijmë në 5.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-052",
+      "category": "Matematikë",
+      "question": "Sa është 6 + 4 × 3?",
+      "options": [
+        "24",
+        "21",
+        "30",
+        "18"
+      ],
+      "correctIndex": 3,
+      "explanation": "Shumëzimi kryhet para mbledhjes: 6 + 12 = 18.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-053",
+      "category": "Matematikë",
+      "question": "Sa është (6 + 4) × 3?",
+      "options": [
+        "30",
+        "18",
+        "24",
+        "28"
+      ],
+      "correctIndex": 0,
+      "explanation": "Së pari kllapat japin 10; pastaj 10 × 3 = 30.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-054",
+      "category": "Matematikë",
+      "question": "Nëse 3x + 5 = 20, sa është x?",
+      "options": [
+        "15",
+        "5",
+        "4",
+        "6"
+      ],
+      "correctIndex": 1,
+      "explanation": "3x = 15, prandaj x = 5.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-055",
+      "category": "Matematikë",
+      "question": "Sa është 2⁵?",
+      "options": [
+        "10",
+        "25",
+        "32",
+        "64"
+      ],
+      "correctIndex": 2,
+      "explanation": "2 × 2 × 2 × 2 × 2 = 32.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-056",
+      "category": "Matematikë",
+      "question": "Sa është kubi i numrit 3?",
+      "options": [
+        "18",
+        "81",
+        "9",
+        "27"
+      ],
+      "correctIndex": 3,
+      "explanation": "3³ = 3 × 3 × 3 = 27.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-057",
+      "category": "Matematikë",
+      "question": "Sa është vëllimi i kubit me brinjë 4 cm, në cm³?",
+      "options": [
+        "64",
+        "12",
+        "16",
+        "48"
+      ],
+      "correctIndex": 0,
+      "explanation": "Vëllimi i kubit është 4³ = 64 cm³.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-058",
+      "category": "Matematikë",
+      "question": "Një trekëndësh ka bazë 10 cm dhe lartësi 6 cm. Sa është sipërfaqja në cm²?",
+      "options": [
+        "32",
+        "30",
+        "60",
+        "16"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sipërfaqja është baza × lartësia ÷ 2 = 30 cm².",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-059",
+      "category": "Matematikë",
+      "question": "Cila është mesatarja e numrave 10, 15 dhe 20?",
+      "options": [
+        "10",
+        "12",
+        "15",
+        "20"
+      ],
+      "correctIndex": 2,
+      "explanation": "Shuma 45 pjesëtohet me 3 dhe jep 15.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-060",
+      "category": "Matematikë",
+      "question": "Cila është mediana e listës së renditur 2, 4, 9, 11, 20?",
+      "options": [
+        "11",
+        "20",
+        "4",
+        "9"
+      ],
+      "correctIndex": 3,
+      "explanation": "Vlera e mesit në pesë numra të renditur është e treta: 9.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-061",
+      "category": "Matematikë",
+      "question": "Një çmim 80 € ulet me 10%. Sa euro mbeten për t’u paguar?",
+      "options": [
+        "72",
+        "8",
+        "70",
+        "78"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ulja është 8 €; 80 − 8 = 72 €.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-062",
+      "category": "Matematikë",
+      "question": "Një mall kushton 50 €. Çmimi rritet me 20%. Sa euro bëhet?",
+      "options": [
+        "100",
+        "60",
+        "55",
+        "70"
+      ],
+      "correctIndex": 1,
+      "explanation": "20% e 50 është 10; çmimi i ri është 60 €.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-063",
+      "category": "Matematikë",
+      "question": "Sa sekonda janë 4 minuta?",
+      "options": [
+        "120",
+        "180",
+        "240",
+        "400"
+      ],
+      "correctIndex": 2,
+      "explanation": "Çdo minutë ka 60 sekonda; 4 × 60 = 240.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-064",
+      "category": "Matematikë",
+      "question": "Sa centimetra janë 3 metra?",
+      "options": [
+        "3000",
+        "3",
+        "30",
+        "300"
+      ],
+      "correctIndex": 3,
+      "explanation": "Një metër ka 100 centimetra; 3 × 100 = 300.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-065",
+      "category": "Matematikë",
+      "question": "Sa gramë janë 2 kilogramë?",
+      "options": [
+        "2000",
+        "20",
+        "200",
+        "20000"
+      ],
+      "correctIndex": 0,
+      "explanation": "Një kilogram ka 1000 gramë; 2 × 1000 = 2000.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-066",
+      "category": "Matematikë",
+      "question": "Një automjet ecën me 60 km/orë për 2 orë, pa ndalesë. Sa kilometra përshkon?",
+      "options": [
+        "180",
+        "120",
+        "30",
+        "62"
+      ],
+      "correctIndex": 1,
+      "explanation": "Distanca është shpejtësia × koha: 60 × 2 = 120 km.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-067",
+      "category": "Matematikë",
+      "question": "Sa faqe ka një kub?",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "8"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kubi ka dy faqe për secilin nga tri drejtimet: 2 × 3 = 6.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-068",
+      "category": "Matematikë",
+      "question": "Sa brinjë ka një kub?",
+      "options": [
+        "8",
+        "16",
+        "6",
+        "12"
+      ],
+      "correctIndex": 3,
+      "explanation": "Kubi ka 4 brinjë sipër, 4 poshtë dhe 4 vertikale: 12.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-069",
+      "category": "Matematikë",
+      "question": "Sa kulme ka një kub?",
+      "options": [
+        "8",
+        "4",
+        "6",
+        "12"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kubi ka katër kulme në secilën nga dy faqet përballë: 8.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 1
+    },
+    {
+      "id": "premium-20261105-sq-070",
+      "category": "Matematikë",
+      "question": "Sa është pjesëtuesi më i madh i përbashkët i 18 dhe 24?",
+      "options": [
+        "9",
+        "6",
+        "3",
+        "12"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pjesëtuesi më i madh i përbashkët i 18 dhe 24 është 6.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-071",
+      "category": "Matematikë",
+      "question": "Sa është shumëfishi më i vogël i përbashkët i 4 dhe 6?",
+      "options": [
+        "8",
+        "10",
+        "12",
+        "24"
+      ],
+      "correctIndex": 2,
+      "explanation": "12 është numri më i vogël pozitiv që pjesëtohet me 4 dhe me 6.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-072",
+      "category": "Logjikë",
+      "question": "Nëse sot është e hënë, çfarë dite do të jetë pas 17 ditësh?",
+      "options": [
+        "E martë",
+        "E enjte",
+        "E premte",
+        "E diel"
+      ],
+      "correctIndex": 1,
+      "explanation": "17 ditë janë dy javë dhe tri ditë; pas së hënës vjen e enjtja.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-073",
+      "category": "Logjikë",
+      "question": "Katër persona shtrëngojnë duart me njëri-tjetrin, çdo çift vetëm një herë. Sa shtrëngime bëhen?",
+      "options": [
+        "6",
+        "4",
+        "8",
+        "12"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ka 4 × 3 ÷ 2 = 6 çifte të ndryshme.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-074",
+      "category": "Logjikë",
+      "question": "Sa rezultate të mundshme ka hedhja e dy monedhave, duke dalluar rendin?",
+      "options": [
+        "8",
+        "4",
+        "2",
+        "3"
+      ],
+      "correctIndex": 1,
+      "explanation": "Rezultatet janë SS, SA, AS dhe AA: katër raste.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 2
+    },
+    {
+      "id": "premium-20261105-sq-075",
+      "category": "Logjikë",
+      "question": "Një kod ka dy shifra nga 0 deri në 9 dhe përsëritja lejohet. Sa kode të ndryshme ka?",
+      "options": [
+        "20",
+        "90",
+        "100",
+        "99"
+      ],
+      "correctIndex": 2,
+      "explanation": "Për çdo vend ka 10 zgjedhje; gjithsej 10 × 10 = 100.",
+      "source": "Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve",
+      "difficulty": 2
+    }
+  ]
+}
