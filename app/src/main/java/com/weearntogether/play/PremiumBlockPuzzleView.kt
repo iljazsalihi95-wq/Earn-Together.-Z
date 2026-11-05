@@ -67,8 +67,12 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         else -> fallback
     }
 
+    // Preference migrations can store board/tray data with a non-String type.
+    // Avoid getString() ClassCastException and regenerate only invalid entries.
+    private fun restoredString(key:String):String? = prefs.all[key] as? String
+
     private fun restoreOrNew(){
-        val raw=prefs.getString("board",null)
+        val raw=restoredString("board")
         val cells=raw?.split(',')?.map{it.trim().toIntOrNull()}
         val validBoard=cells?.size==64 && cells.all{it!=null && it in 0..palette.size}
         if(validBoard) cells!!.forEachIndexed{i,v->board[i/8][i%8]=v!!}
@@ -78,7 +82,7 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         totalLines=restoredInt("total_lines",restoredInt("lines",0)).coerceAtLeast(0)
         levelLines=restoredInt("level_lines",0).coerceAtLeast(0)
         combo=restoredInt("combo",0).coerceAtLeast(0)
-        val saved=prefs.getString("offers",null)?.split(',')?.map{it.trim().toIntOrNull()}
+        val saved=restoredString("offers")?.split(',')?.map{it.trim().toIntOrNull()}
         val validOffers=saved?.size==3 && saved.all{it!=null && it in -1..shapes.lastIndex}
         offers=if(validOffers) saved!!.map{it!!}.toIntArray() else nextOffers()
         if(offers.all{it<0}) offers=nextOffers()
