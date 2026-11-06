@@ -202,11 +202,44 @@ class ArenaCloudActivity:Activity(){
         if(isOfflineSession())accept(localStore.next(s)) else nextLive(s)
     }
     private fun addLifelineControls(s:JSONObject){
-        val rows=listOf("fifty" to "50:50", "audience" to "PYET PUBLIKUN • SIMULIM", "friend" to "TELEFONO SHOKUN", "hint" to "ORIENTIM / NDIHMË", "switch" to "NDËRRO PYETJEN")
-        for((kind,title) in rows)add(button(title+if(kind=="fifty"&&s.getJSONObject("question").getJSONArray("choices").length()<3)" • VETËM 2 ALTERNATIVA" else if(ArenaLifelines.used(s,kind))" • PËRDORUR" else " • 1 NË NIVEL"){
-            if(!ArenaLifelines.used(s,kind))useLifeline(s,kind)
-        }.apply{isEnabled=!ArenaLifelines.used(s,kind)&&(kind!="fifty"||(if(isOfflineSession())s.getJSONObject("question").getJSONArray("choices").length()>=3 else s.getJSONObject("question").getJSONArray("choices").length()==4))&&(kind!="switch"||!isOfflineSession()||(s.optJSONArray("local_reserve")?.length()?:0)>0)})
-        add(button("BISEDO ME PREZANTUESIN"){clarify(s)})
+        add(label("NDIHMAT E STUDIOS",17,gold))
+        val items=listOf(
+            Triple("fifty","½","50:50"),
+            Triple("audience","♟","PUBLIKU"),
+            Triple("friend","☎","TELEFONO"),
+            Triple("hint","✦","NDIHMË AI"),
+            Triple("switch","↻","NDËRRO")
+        )
+        val grid=android.widget.GridLayout(this).apply{
+            columnCount=3
+            setPadding(0,dp(5),0,dp(8))
+        }
+        for((kind,symbol,title) in items){
+            val used=ArenaLifelines.used(s,kind)
+            val choices=s.getJSONObject("question").getJSONArray("choices").length()
+            val available=!used&&(kind!="fifty"||(if(isOfflineSession())choices>=3 else choices==4))&&
+                (kind!="switch"||!isOfflineSession()||(s.optJSONArray("local_reserve")?.length()?:0)>0)
+            val tile=android.widget.LinearLayout(this).apply{
+                orientation=1;gravity=Gravity.CENTER
+                background=gradient(0xff18375f.toInt(),0xff34265f.toInt())
+                setPadding(dp(5),dp(12),dp(5),dp(12))
+                alpha=if(available)1f else .42f
+                isEnabled=available
+                contentDescription="$title, "+if(used)"përdorur" else if(available)"aktiv" else "jo i disponueshëm"
+                addView(label(symbol,30,gold).apply{gravity=Gravity.CENTER})
+                addView(label(title,11,Color.WHITE).apply{gravity=Gravity.CENTER})
+                addView(label(if(used)"PËRDORUR" else if(available)"AKTIVE" else "JO AKTIVE",9,blue).apply{gravity=Gravity.CENTER})
+                setOnClickListener{if(available)useLifeline(s,kind)}
+            }
+            val params=android.widget.GridLayout.LayoutParams().apply{
+                width=0;height=dp(112)
+                columnSpec=android.widget.GridLayout.spec(android.widget.GridLayout.UNDEFINED,1f)
+                setMargins(dp(3),dp(3),dp(3),dp(3))
+            }
+            grid.addView(tile,params)
+        }
+        add(grid)
+        add(button("✦  BISEDË ME PREZANTUESIN"){clarify(s)})
     }
     private fun useLifeline(s:JSONObject,kind:String){
         if(session!==s){status.text="Pyetja ka ndryshuar. Provo ndihmën te pyetja aktuale.";return}
