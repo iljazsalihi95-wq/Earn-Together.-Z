@@ -26,18 +26,20 @@ class KnifeHitActivity:Activity(){
         root.addView(top)
         game=KnifeHitView(this)
         root.addView(Button(this).apply {
-            text="DYQANI I THIKAVE"
+            text="✦  ARSENALI I THIKAVE  ›"
+            isAllCaps=false;setTextColor(0xffffdc88.toInt());textSize=14f
+            background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xff183653.toInt(),0xff34215e.toInt())).apply{cornerRadius=dp(16).toFloat();setStroke(dp(1),0x6682cfff)}
             setOnClickListener { game.openShop(this@KnifeHitActivity) }
-        },LinearLayout.LayoutParams(-1,dp(48)))
+        },LinearLayout.LayoutParams(-1,dp(48)).apply{setMargins(dp(12),dp(4),dp(12),dp(4))})
         root.addView(game,LinearLayout.LayoutParams(-1,0,1f))
         recovery=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL }
         watch=Button(this).apply {
-            text="SHIKO VIDEO DHE VAZHDO"
+            text="▶ VIDEO • VAZHDO";isAllCaps=false;setTextColor(Color.WHITE);background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xff225eac.toInt(),0xff6531b1.toInt())).apply{cornerRadius=dp(16).toFloat()}
             setOnClickListener { showRecoveryVideo() }
         }
         recovery.addView(watch,LinearLayout.LayoutParams(0,dp(52),2f))
         recovery.addView(Button(this).apply {
-            text="RIFILLO"
+            text="↻ RIFILLO";isAllCaps=false;setTextColor(0xffffdb85.toInt());background=GradientDrawable().apply{setColor(0xff232043.toInt());cornerRadius=dp(16).toFloat();setStroke(dp(1),0x88ffce69.toInt())}
             setOnClickListener { game.restartLevel() }
         },LinearLayout.LayoutParams(0,dp(52),1f))
         root.addView(recovery)
@@ -55,7 +57,7 @@ class KnifeHitActivity:Activity(){
         fun navButton(label:String,action:()->Unit)=TextView(this).apply{text=label;textSize=12f;setTextColor(Color.WHITE);gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);isClickable=true;isFocusable=true;background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff153b7a.toInt(),0xff6b2ea6.toInt(),0xffb9872d.toInt())).apply{cornerRadius=dp(20).toFloat();setStroke(dp(1),0x99ffd66b.toInt())};setOnClickListener{performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);action()}}
         nav.addView(navButton("BLOCK PUZZLE ›"){startActivity(Intent(this,BlockPuzzleActivity::class.java))},LinearLayout.LayoutParams(0,dp(42),1f).apply{rightMargin=dp(6)})
         nav.addView(navButton("BUBBLE SHOOTER ›"){startActivity(Intent(this,BubbleShooterActivity::class.java))},LinearLayout.LayoutParams(0,dp(42),1f).apply{leftMargin=dp(6)})
-        root.addView(nav,LinearLayout.LayoutParams(-1,dp(58)));setContentView(root)
+        root.addView(nav,LinearLayout.LayoutParams(-1,dp(58)));root.setOnApplyWindowInsetsListener{v,i->v.setPadding(i.systemWindowInsetLeft,i.systemWindowInsetTop,i.systemWindowInsetRight,i.systemWindowInsetBottom);i};setContentView(root);root.requestApplyInsets()
     }
     private fun refreshRecovery() {
         recovery.visibility=if(game.hasLostRound) View.VISIBLE else View.GONE
@@ -131,6 +133,7 @@ class KnifeHitView(context:android.content.Context):View(context){
     private var completed = prefs.getBoolean("campaign_complete", false) && level == 200
     private var running = true
     private var shopOpen = false
+    private var ambience = 0f
     private var angle = 0f
     private var speed = 1f
     private var direction = 1f
@@ -286,6 +289,7 @@ class KnifeHitView(context:android.content.Context):View(context){
     override fun performClick(): Boolean {
         super.performClick()
         if (completed) restartLevel()
+        else if(cleared && clearAge >= .6f){level++;setupLevel()}
         else if (!lost && !shopOpen && !cleared && flight < 0f) { flight = 0f; invalidate() }
         return true
     }
@@ -319,7 +323,67 @@ class KnifeHitView(context:android.content.Context):View(context){
         intArrayOf(0xffe7fcff.toInt(), 0xff50b5eb.toInt(), 0xff1e427c.toInt()),
         intArrayOf(0xfffaa9ff.toInt(), 0xff8448d5.toInt(), 0xff291546.toInt())
     )
-    private val stageNames = listOf("TRUNGU", "RROTA E ÇELIKUT", "KRISTALI", "AKULLI", "PORTA MAGJIKE")
+    private val stageNames = listOf("ROJA E PYLLIT", "FORGJA E RRUFESË", "TEMPULLI I KRISTALIT", "KALAJA E AKULLIT", "PORTA E YJEVE")
+    private val worldNames = listOf("PYLLI I DRITAVE", "KËSHTJELLA E ÇELIKUT", "LUGINA E KRISTALIT", "MBRETËRIA E AKULLIT", "KOZMOSI MAGJIK")
+    private val worldTints = intArrayOf(0xff52edb0.toInt(),0xffffa34f.toInt(),0xffb795ff.toInt(),0xff73dbff.toInt(),0xffeb7dff.toInt())
+    private fun fill(color:Int){p.shader=null;p.style=Paint.Style.FILL;p.color=color}
+    private fun stroke(color:Int,w:Float){p.shader=null;p.style=Paint.Style.STROKE;p.color=color;p.strokeWidth=w}
+    private fun panel(c:Canvas,l:Float,t:Float,r:Float,b:Float,color:Int){fill(color);c.drawRoundRect(l,t,r,b,width*.025f,width*.025f,p)}
+
+    /** Animated layered scenery shares the live game clock and pauses with the Activity. */
+    private fun drawWorld(c:Canvas){
+        val w=width.toFloat();val h=height.toFloat();val tint=worldTints[targetStyle]
+        val sky=when(targetStyle){0->intArrayOf(0xff041b29.toInt(),0xff10413f.toInt(),0xff071421.toInt());1->intArrayOf(0xff100e2c.toInt(),0xff442943.toInt(),0xff111528.toInt());2->intArrayOf(0xff100d31.toInt(),0xff302467.toInt(),0xff101b37.toInt());3->intArrayOf(0xff061d38.toInt(),0xff184367.toInt(),0xff101d3c.toInt());else->intArrayOf(0xff0e082b.toInt(),0xff35205a.toInt(),0xff071a3d.toInt())}
+        p.style=Paint.Style.FILL;p.shader=LinearGradient(0f,0f,w,h,sky,null,Shader.TileMode.CLAMP);c.drawRect(0f,0f,w,h,p);p.shader=null
+        p.shader=RadialGradient(w*.5f,h*.37f,w*.66f,intArrayOf((tint and 0x00ffffff) or 0x33000000,Color.TRANSPARENT),null,Shader.TileMode.CLAMP);c.drawCircle(w*.5f,h*.37f,w*.66f,p);p.shader=null
+        // Distant stars, drifting embers and fireflies. Deterministic, no allocations of sprites.
+        repeat(45){i->val x=((i*137.2f+w*.04f*sin(ambience*.12f+i))%w+w)%w;val y=((i*71.9f-ambience*(4+i%4))%h+h)%h;fill(Color.argb((45+65*(.5f+.5f*sin(ambience+i))).toInt(),Color.red(tint),Color.green(tint),Color.blue(tint)));c.drawCircle(x,y,w*(.0015f+(i%3)*.001f),p)}
+        // Three depth layers; silhouette shapes differ in every unlocked world.
+        repeat(3){layer->val base=h*(.74f+layer*.07f);fill(intArrayOf(0x33102d4e,0x7730224c,0xcc081526.toInt())[layer]);val land=Path();land.moveTo(0f,h)
+            repeat(17){i->val x=w*i/16f;val y=base-h*(.05f+.06f*sin(i*1.7f+layer));if(i==0)land.lineTo(x,y)else land.lineTo(x,y)};land.lineTo(w,h);land.close();c.drawPath(land,p)
+        }
+        repeat(9){i->val x=w*(i/8f);val base=h*(.85f+(i%3)*.03f);val tall=h*(.15f+(i%4)*.06f);fill(0xaa061723.toInt())
+            when(targetStyle){
+                0->{c.drawRoundRect(x-w*.009f,base-tall,x+w*.009f,base,w*.008f,w*.008f,p);repeat(3){j->c.drawOval(x-w*(.06f+j*.012f),base-tall+h*j*.045f,x+w*(.06f+j*.012f),base-tall+h*(.1f+j*.045f),p)}}
+                1->{c.drawRect(x-w*.035f,base-tall,x+w*.035f,base,p);repeat(3){j->c.drawRect(x-w*.045f+j*w*.03f,base-tall-h*.015f,x-w*.03f+j*w*.03f,base-tall+h*.01f,p)}}
+                else->{val peak=Path().apply{moveTo(x-w*.08f,base);lineTo(x-w*.035f,base-tall*.75f);lineTo(x,base-tall);lineTo(x+w*.06f,base-tall*.3f);lineTo(x+w*.085f,base);close()};c.drawPath(peak,p);stroke((tint and 0x00ffffff) or 0x33000000,w*.002f);c.drawLine(x,base-tall,x+w*.025f,base,p)}
+            }
+        }
+        // Perspective platform beneath the launcher.
+        p.style=Paint.Style.FILL;p.shader=RadialGradient(w*.5f,h*.87f,w*.37f,intArrayOf((tint and 0x00ffffff) or 0x55000000,Color.TRANSPARENT),null,Shader.TileMode.CLAMP);c.drawOval(w*.08f,h*.82f,w*.92f,h*.94f,p);p.shader=null
+        stroke((tint and 0x00ffffff) or 0x77000000,w*.003f);c.drawOval(w*.19f,h*.854f,w*.81f,h*.91f,p);p.style=Paint.Style.FILL
+    }
+
+    private fun drawGuardian(c:Canvas,cx:Float,cy:Float,r:Float){
+        // Eyes and mouth remain upright while the physical target and attached blades rotate.
+        val blink=if(ambience%5.8f>5.62f).12f else 1f
+        val hurt=(1f-hitAge/.28f).coerceIn(0f,1f)
+        val eyeY=cy-r*.13f;val eyeW=r*.23f;val eyeH=r*(.17f-.07f*hurt)*blink
+        for(side in listOf(-1f,1f)){
+            val x=cx+side*r*.35f
+            fill(0xcc071326.toInt());c.drawOval(x-eyeW,eyeY-eyeH,x+eyeW,eyeY+eyeH,p)
+            p.shader=RadialGradient(x,eyeY,r*.16f,intArrayOf(Color.WHITE,if(boss)0xffff6f68.toInt() else worldTints[targetStyle],Color.TRANSPARENT),null,Shader.TileMode.CLAMP);c.drawCircle(x,eyeY,r*.16f*blink,p);p.shader=null
+            fill(0xff071122.toInt());c.drawOval(x-r*.04f,eyeY-r*.085f*blink,x+r*.04f,eyeY+r*.085f*blink,p)
+            stroke(palettes[targetStyle][2],r*.065f);c.drawLine(x-eyeW,eyeY-r*.23f-side*r*.06f,x+eyeW,eyeY-r*.23f+side*r*.06f,p)
+        }
+        val mouth=RectF(cx-r*.26f,cy+r*.2f,cx+r*.26f,cy+r*(if(hurt>0).56f else .43f))
+        fill(0xbb031125.toInt());c.drawOval(mouth,p)
+        stroke(0x99ffffff.toInt(),r*.018f);c.drawArc(mouth,12f,156f,false,p);p.style=Paint.Style.FILL
+    }
+
+    private fun drawVictory(c:Canvas){
+        val w=width.toFloat();val h=height.toFloat();val t=(clearAge/.45f).coerceIn(0f,1f);val tint=worldTints[targetStyle]
+        fill(Color.argb((210*t).toInt(),3,8,24));c.drawRect(0f,0f,w,h,p)
+        repeat(38){i->val a=i*2.39996f;val d=w*(.08f+clearAge*(.1f+i%4*.035f));fill(Color.argb((220*(1-clearAge/4f)).toInt().coerceIn(0,255),if(i%2==0)255 else Color.red(tint),if(i%2==0)213 else Color.green(tint),if(i%2==0)98 else Color.blue(tint)));c.drawCircle(w*.5f+cos(a)*d,h*.39f+sin(a)*d-h*clearAge*.04f,w*.006f,p)}
+        c.save();c.translate(w*.5f,h*.39f);val scale=.7f+.3f*t;c.scale(scale,scale)
+        stroke(tint,w*.006f);c.drawCircle(0f,0f,w*.17f,p);stroke(0xffffd475.toInt(),w*.003f);c.drawCircle(0f,0f,w*.19f,p)
+        label(c,"✦",0f,w*.045f,w*.16f,0xffffdb85.toInt(),true);c.restore()
+        label(c,if(completed)"LEGJENDA U PËRFUNDUA" else "NIVELI $level U KALUA",w*.5f,h*.57f,w*.055f,0xffffdc88.toInt(),true)
+        label(c,"+${if(boss)25 else 10} MONEDHA  •  +${150*level} PIKË",w*.5f,h*.62f,w*.033f,Color.WHITE,true)
+        if(level%5==0&&!completed){label(c,"PAMJE E RE U HAP",w*.5f,h*.69f,w*.043f,tint,true);label(c,worldNames[(level/5)%5],w*.5f,h*.735f,w*.037f,Color.WHITE,true)}
+        else label(c,if(boss)"BOSS I MUNDUR" else "SFIDA TJETËR PO AFRON",w*.5f,h*.71f,w*.037f,tint,true)
+        if(!completed){panel(c,w*.18f,h*.79f,w*.82f,h*.86f,0xff283b68.toInt());label(c,"VAZHDO  ›",w*.5f,h*.836f,w*.04f,Color.WHITE,true)}
+    }
 
     private fun drawTarget(c: Canvas, cx: Float, cy: Float, r: Float) {
         c.save()
@@ -381,7 +445,7 @@ class KnifeHitView(context:android.content.Context):View(context){
     private fun advance(dt: Float) {
         if (cleared) {
             clearAge += dt
-            if (clearAge >= .75f && !completed) { level++; setupLevel() }
+            if (clearAge >= 3.2f && !completed) { level++; setupLevel() }
             return
         }
         if (completed || lost) return
@@ -410,21 +474,27 @@ class KnifeHitView(context:android.content.Context):View(context){
             missAge += dt
             advance(dt)
         }
-        p.shader = LinearGradient(0f,0f,width.toFloat(),height.toFloat(),
-            intArrayOf(0xff050b1d.toInt(),0xff251653.toInt(),0xff071b3e.toInt()),null,Shader.TileMode.CLAMP)
-        c.drawRect(0f,0f,width.toFloat(),height.toFloat(),p)
-        p.shader = null
+        if(running&&!shopOpen)ambience+=dt
+        drawWorld(c)
         val cx = width / 2f
         val cy = height * .39f
-        val r = min(width,height) * .205f
+        val r = min(width*.245f,height*.205f)
         val impactY = cy + r + height*.09f*.82f
         val bounce = if (hitAge < .14f) -r*.055f*sin(hitAge/.14f*PI).toFloat() else 0f
         val targetY = cy + bounce
+        panel(c,width*.03f,height*.015f,width*.97f,height*.12f,0xbb101b36.toInt())
         label(c,"NIVELI $level/200",width*.055f,height*.055f,width*.038f,0xffffc857.toInt())
         label(c,"REKORD $best",width*.39f,height*.055f,width*.033f,0xffd9ccff.toInt())
         label(c,"PIKË $score",width*.72f,height*.055f,width*.032f)
         label(c,if(boss) "BOSS • ${stageNames[targetStyle]}" else stageNames[targetStyle],cx,height*.105f,width*.036f,0xff78dfff.toInt(),true)
+        // Orbital halo creates depth behind the live target.
+        c.save();c.rotate(-angle*.25f,cx,targetY);stroke((worldTints[targetStyle] and 0x00ffffff) or 0x55000000,r*.018f);c.drawOval(cx-r*1.28f,targetY-r*1.12f,cx+r*1.28f,targetY+r*1.12f,p);c.restore();p.style=Paint.Style.FILL
+        c.save()
+        val shake=if(missAge<.3f)sin(missAge*95f)*width*.014f*(1-missAge/.3f) else 0f
+        c.translate(shake,0f)
+        if(cleared){val shrink=(1-clearAge/.6f).coerceIn(.05f,1f);c.scale(shrink,shrink,cx,targetY)}
         drawTarget(c,cx,targetY,r)
+        drawGuardian(c,cx,targetY,r)
         for (a0 in obstacles) {
             val a = Math.toRadians((a0 + angle).toDouble())
             val x = cx + cos(a).toFloat()*r*.79f
@@ -439,6 +509,7 @@ class KnifeHitView(context:android.content.Context):View(context){
             val distance = r + height*.09f*.52f
             drawBlade(c,cx+cos(a).toFloat()*distance,targetY+sin(a).toFloat()*distance,a0+angle-90f,.69f)
         }
+        c.restore()
         if (hitAge < .32f) {
             repeat(13) { i ->
                 val a = i * PI * 2 / 13
@@ -458,6 +529,7 @@ class KnifeHitView(context:android.content.Context):View(context){
         }
         if (!lost && !cleared && !completed) {
             val y = if (flight < 0f) height*.9f else height*.9f+(impactY-height*.9f)*flight
+            if(flight>=0f){p.shader=LinearGradient(cx,y,cx,y+height*.2f,intArrayOf(0xccbbddff.toInt(),Color.TRANSPARENT),null,Shader.TileMode.CLAMP);p.style=Paint.Style.FILL;c.drawRoundRect(cx-width*.008f,y,cx+width*.008f,y+height*.2f,width*.008f,width*.008f,p);p.shader=null}
             drawBlade(c,cx,y,0f,.82f)
         }
         val hint = when {
@@ -467,6 +539,9 @@ class KnifeHitView(context:android.content.Context):View(context){
             else -> "PREK PËR TË HEDHUR"
         }
         label(c,hint,cx,height*.977f,width*.039f,0xffffd66b.toInt(),true)
-        if (running && !shopOpen && (!lost || missAge < .33f) && !completed) postInvalidateOnAnimation()
+        // Keep ambience alive on the loss/victory screens as well; Activity pause stops frames.
+        if(cleared)drawVictory(c)
+        if(lost){panel(c,width*.12f,height*.81f,width*.88f,height*.91f,0xdd301e41.toInt());label(c,"PROVO SËRISH",cx,height*.85f,width*.05f,0xffffd68a.toInt(),true);label(c,"Vazhdo me video ose rifillo nivelin",cx,height*.885f,width*.03f,Color.WHITE,true)}
+        if (running && !shopOpen) postInvalidateOnAnimation()
     }
 }
