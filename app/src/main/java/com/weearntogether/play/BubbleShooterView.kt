@@ -49,7 +49,7 @@ class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Un
             for(r in 0..11)for(c in 0..7)if(grid[r][c]<0){
                 val connected=r==0||neighbors(r,c).any{(rr,cc)->grid[rr][cc]>=0}
                 val distance=hypot(px-centerX(c,r),py-centerY(r))
-                if(connected&&distance<=rad*3.0f)candidates.add(Triple(r,c,distance))
+                if(connected)candidates.add(Triple(r,c,distance))
             }
         }
         val nearest=candidates.minByOrNull{it.third}?:run{finishGame();invalidate();return}
