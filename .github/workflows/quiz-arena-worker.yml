@@ -44,4 +44,4 @@ jobs:
       - name: Check production capabilities
         run: |
           curl --fail --silent --show-error --max-time 20 https://quiz-arena-backend.lazisalihi.workers.dev/health > /tmp/arena-health.json
-          node -e 'const h=require("/tmp/arena-health.json");if(!h.success||h.version!==2||!h.ai_quota_configured)process.exit(1);console.log("Existing Quiz Arena Worker v2 and durable AI quota are active")'
+          node -e 'const h=require("/tmp/arena-health.json");if(!h.success||h.version!==2||!h.ai_quota_configured||!h.openai_configured||!h.apps_script_bridge)process.exit(1);console.log("Quiz Arena Worker v2, OpenAI, Apps Script bridge and durable quota are configured")'

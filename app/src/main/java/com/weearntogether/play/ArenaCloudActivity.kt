@@ -29,8 +29,6 @@ class ArenaCloudActivity:Activity(){
     private val accounts by lazy{AccountStore(this)}
     private val prefs by lazy{getSharedPreferences("arena_cloud_"+(accounts.currentUserId()?:"guest"),MODE_PRIVATE)}
     private val client=BackendClient(BuildConfig.QUIZ_ARENA_WORKER_URL.trimEnd('/')+"/api/arena",30_000)
-    private var directBridge=false
-    private val voiceClient=BackendClient("https://script.google.com/macros/s/AKfycbzu9rso0BO_UhLBPi3TMqIQl44tZ12r0n-t143ydmWOoiVMPbm_YA1uF0rImIfEcvaERw/exec",60_000)
     private var locale="sq";private var category="";private var session:JSONObject?=null;private var bootstrap:JSONObject?=null
     private var busy=false;private var live=false;private var resumed=false;private var audioEnabled=true
     private var deadline=0L;private var tick=-1;private var timer:android.os.CountDownTimer?=null
@@ -84,20 +82,10 @@ class ArenaCloudActivity:Activity(){
         busy=true;val version=modeVersion;status.text=when(action){"arenaReady"->"Prezantuesi përfundoi • Po nis koha…";"arenaAnswer"->"Po kontrollohet zgjedhja jote…";"arenaNext"->"Po hapet pyetja tjetër…";else->"Po provohet LIVE… Mund të luash OFFLINE."}
         val payload=JSONObject(data.toString()).put("locale",locale).put("protocol",2)
         if(accounts.isSignedIn())payload.put("session_token",accounts.requireToken())
-        network.execute{val result=runCatching{if(qa()&&qaTransport!=null)qaTransport!!.invoke(action,payload) else arenaRequest(action,payload)}
+        network.execute{val result=runCatching{if(qa()&&qaTransport!=null)qaTransport!!.invoke(action,payload) else client.request(action,payload)}
             runOnUiThread{busy=false;if(isFinishing||isDestroyed||version!=modeVersion)return@runOnUiThread
                 result.onSuccess{live=true;done(it)}.onFailure{error->if(action=="arenaLifeline"&&error is BackendException&&error.code !in setOf("NETWORK","TIMEOUT")){status.text=if(error.code=="INVALID_ACTION")"Serveri aktiv duhet përditësuar për ndihmat LIVE. Progresi u ruajt." else "Ndihma nuk është e disponueshme: ${error.code}";return@onFailure};live=false;if(session==null){home();status.text="LIVE: "+(if(error is BackendException)error.code else "NETWORK")+" • "+(error.message?:"Lidhja nuk u realizua")} else {status.text=if(isOfflineSession())"USHTRIM OFFLINE • Shqip" else "LIVE nuk përgjigjet. Sesioni LIVE mbetet i ruajtur.";add(button("RIPROVO / VAZHDO LIVE"){call(action,data,done)});add(button("VAZHDO NË USHTRIM OFFLINE"){startOffline(localStore.saved()!=null)})}}
             }
-        }
-    }
-    private fun arenaRequest(action:String,payload:JSONObject):JSONObject {
-        if(directBridge)return voiceClient.request(action,payload)
-        return try { client.request(action,payload) } catch(error:BackendException) {
-            // Probe only a read. Never replay a potentially accepted answer or mutation.
-            if(action!="arenaBootstrap"||error.code !in setOf("NETWORK","TIMEOUT","DEPLOYMENT_ACCESS","INVALID_ACTION"))throw error
-            val bootstrap=voiceClient.request(action,payload)
-            directBridge=true
-            bootstrap
         }
     }
     private fun refresh(){call("arenaBootstrap"){if(it.optInt("available",0)<=0||it.optJSONArray("categories")==null){live=false;if(session==null)home();return@call};bootstrap=it;prefs.edit().putString("bootstrap",it.toString()).apply();if(session==null)home() else if(isOfflineSession())status.text="USHTRIM OFFLINE • LIVE u rikthye; hapet nga ballina pa humbur progresin lokal."}}
@@ -227,7 +215,7 @@ class ArenaCloudActivity:Activity(){
             "switch"->{status.text="Pyetja u ndërrua. Dëgjo pyetjen e re para se të nisë koha."}
             "friend"->phoneFriend(s,r)
             "audience"->{val votes=r.getJSONArray("votes");val body=(0 until votes.length()).joinToString("\n"){"${'A'+it}: ${votes.getInt(it)}%"};android.app.AlertDialog.Builder(this).setTitle("PUBLIKU • VOTIM I SIMULUAR").setMessage(body+"\n\nNuk janë vota të njerëzve realë.").setPositiveButton("VAZHDO",null).show()}
-            "hint"->if(isOfflineSession()||directBridge)android.app.AlertDialog.Builder(this).setTitle("ORIENTIM PËR PYETJEN").setMessage(r.optString("text").ifBlank { ArenaLifelines.hint(s.getJSONObject("question")) }).setPositiveButton("VAZHDO",null).show() else aiDialog(s,"hint","")
+            "hint"->if(isOfflineSession())android.app.AlertDialog.Builder(this).setTitle("ORIENTIM PËR PYETJEN").setMessage(r.optString("text").ifBlank { ArenaLifelines.hint(s.getJSONObject("question")) }).setPositiveButton("VAZHDO",null).show() else aiDialog(s,"hint","")
         }
     }
     private fun clarify(s:JSONObject){
@@ -249,8 +237,8 @@ class ArenaCloudActivity:Activity(){
     }
     private fun phoneFriend(s:JSONObject,r:JSONObject){
         stopVoice();val generation=++phoneGeneration
-        friendText=r.optString("text").ifBlank { if(isOfflineSession()||directBridge)ArenaLifelines.simulatedFriend(s.getJSONObject("question")) else "" }
-        val dialog=android.app.AlertDialog.Builder(this).setTitle("TELEFONO SHOKUN"+if(isOfflineSession()||directBridge)" • SIMULIM" else " • MENDIM AI").setMessage("☎ Po telefonohet…").setPositiveButton("MBYLL TELEFONATËN",null).create()
+        friendText=r.optString("text").ifBlank { if(isOfflineSession())ArenaLifelines.simulatedFriend(s.getJSONObject("question")) else "" }
+        val dialog=android.app.AlertDialog.Builder(this).setTitle("TELEFONO SHOKUN"+if(isOfflineSession())" • SIMULIM" else " • MENDIM AI").setMessage("☎ Po telefonohet…").setPositiveButton("MBYLL TELEFONATËN",null).create()
         phoneDialog=dialog;dialog.setOnDismissListener{if(generation==phoneGeneration){phoneGeneration++;stopVoice();sound?.stopTone();scene?.phoneState=""};phoneDialog=null};dialog.show();scene?.phoneState="PO TELEFONOHET…"
         fun dial(){
         if(generation!=phoneGeneration||session!==s||!resumed||!dialog.isShowing)return
@@ -260,7 +248,7 @@ class ArenaCloudActivity:Activity(){
             if(generation==phoneGeneration&&session===s&&resumed&&dialog.isShowing){
                 sound?.stopTone();scene?.phoneState="SHOKU U PËRGJIGJ"
                 dialog.setMessage("Për ${prefs.getString("name","Lojtari")}.\n\n"+if(friendText.isNotBlank())friendText else "Shoku po mendon për pyetjen… Mendimi i tij nuk është garanci.")
-                if(isOfflineSession()||directBridge){if(audioEnabled)voice("friend"){if(generation==phoneGeneration&&dialog.isShowing)voice("phone_outro")}}
+                if(isOfflineSession()){if(audioEnabled)voice("friend"){if(generation==phoneGeneration&&dialog.isShowing)voice("phone_outro")}}
                 else voiceNetwork.execute{
                     val response=runCatching{BackendClient(BuildConfig.QUIZ_ARENA_WORKER_URL.trimEnd('/')+"/api/ai/respond",60000).request("arenaDialogue",JSONObject().put("session_token",accounts.requireToken()).put("session_id",s.optString("session_id")).put("question_id",s.getJSONObject("question").optString("id")).put("mode","friend").put("locale",locale))}
                     runOnUiThread{if(generation==phoneGeneration&&session===s&&resumed&&dialog.isShowing){
@@ -420,10 +408,10 @@ class ArenaCloudActivity:Activity(){
         return true
     }
     private fun voice(phase:String,onDone:(()->Unit)?=null){
-        if(!audioEnabled){onDone?.invoke();return};val s=session?:return;stopVoice();voiceCompletion=onDone;if(recordedVoice(phase,s))return;if(directBridge&&phase !in setOf("question","explanation")){ttsFallback(phase);return};if(isOfflineSession()){ttsFallback(phase);return}
+        if(!audioEnabled){onDone?.invoke();return};val s=session?:return;stopVoice();voiceCompletion=onDone;if(recordedVoice(phase,s))return;if(isOfflineSession()){ttsFallback(phase);return}
         val generation=voiceGeneration;val version=modeVersion
         val q=s.optJSONObject("question")?:run{ttsFallback(phase);return}
-        val cacheKey=java.security.MessageDigest.getInstance("SHA-256").digest(("natural-male-v6|"+prefs.getString("name","")+locale+q.toString()+(s.optJSONObject("feedback")?.toString()?:"")+phase+if(phase=="clarify")dialogueText else if(phase=="friend")friendText else "").toByteArray()).joinToString(""){"%02x".format(it)}
+        val cacheKey=java.security.MessageDigest.getInstance("SHA-256").digest(("worker-speech-v7|"+prefs.getString("name","")+locale+q.toString()+(s.optJSONObject("feedback")?.toString()?:"")+phase+if(phase=="clarify")dialogueText else if(phase=="friend")friendText else "").toByteArray()).joinToString(""){"%02x".format(it)}
         val cachedAudio=java.io.File(cacheDir,"arena-voice-$cacheKey.mp3")
         fun playCached(){
             scene?.speechEnergy={speechEnvelope?.at(runCatching{player?.currentPosition?:0}.getOrDefault(0))?:0f}
@@ -445,31 +433,14 @@ class ArenaCloudActivity:Activity(){
             val uri=java.net.URI(workerUrl)
             uri.scheme=="https"&&uri.host=="quiz-arena-backend.lazisalihi.workers.dev"&&uri.rawUserInfo==null&&uri.port==-1&&uri.rawQuery==null&&uri.rawFragment==null
         }.getOrDefault(false)
-        if(trustedWorker&&!directBridge&&!qa()&&accounts.isSignedIn()){
-            val choices=q.optJSONArray("choices")?:org.json.JSONArray()
-            val feedback=s.optJSONObject("feedback")
-            val playerName=prefs.getString("name","Lojtari").orEmpty().take(80)
-            val rawText=when(phase){
-                "phone_intro"->"${playerName}, po telefonojmë shokun për mendimin e tij. Ai nuk e ka përgjigjen e garantuar."
-                "phone_outro"->"Faleminderit për ndihmën! ${playerName}, tani zgjedhja të mbetet ty."
-                "intro"->"Mirë se erdhe në Quiz Arena Premium, ${playerName}! Je gati për nivelin ${s.optInt("level")}?"
-                "clarify"->dialogueText
-                "friend"->friendText.ifBlank{"Lidhja me shokun nuk u realizua. Mund të vazhdosh lojën."}
-                "result"->"${playerName}, ${s.optInt("correct")} përgjigje të sakta nga ${s.optInt("total")}. ${s.optInt("score")} pikë."
-                "explanation"->if(feedback!=null){
-                    val correct=feedback.optInt("correct",-1)
-                    (if(correct in 0 until choices.length())"Përgjigjja e saktë është ${'A'+correct}. ${choices.optString(correct)}. " else "")+feedback.optString("explanation")
-                }else "Shpjegimi nuk është ende i disponueshëm."
-                else->q.optString("prompt")+". "+(0 until choices.length()).joinToString(". "){"${'A'+it}. ${choices.optString(it)}"}
-            }
-            val speechText=ArenaAlbanianSpeech.forVoice(rawText,locale)
+        if(trustedWorker&&!qa()&&accounts.isSignedIn()){
             voiceNetwork.execute{
                 val result=runCatching{
                     val connection=(java.net.URL(workerUrl+"/api/ai/speech").openConnection() as java.net.HttpURLConnection)
                     try{
                         connection.requestMethod="POST";connection.connectTimeout=12000;connection.readTimeout=45000
-                        connection.doOutput=true;connection.setRequestProperty("Content-Type","application/json")
-                        connection.outputStream.use{it.write(JSONObject().put("input",speechText).put("voice","onyx").put("session_token",accounts.requireToken()).put("session_id",s.optString("session_id")).put("question_id",q.optString("id")).put("phase",phase).put("locale",locale).put("player_name",prefs.getString("name","Lojtari")).put("message",if(phase=="clarify")dialogueMessage else "").toString().toByteArray(Charsets.UTF_8))}
+                        connection.instanceFollowRedirects=false;connection.doOutput=true;connection.setRequestProperty("Content-Type","application/json")
+                        connection.outputStream.use{it.write(JSONObject().put("session_token",accounts.requireToken()).put("session_id",s.optString("session_id")).put("question_id",q.optString("id")).put("phase",phase).put("locale",locale).put("player_name",prefs.getString("name","Lojtari")).put("message",if(phase=="clarify")dialogueMessage else "").toString().toByteArray(Charsets.UTF_8))}
                         if(connection.responseCode !in 200..299)throw java.io.IOException("Worker speech HTTP ${connection.responseCode}")
                         if(!connection.contentType.orEmpty().lowercase(java.util.Locale.ROOT).startsWith("audio/"))throw java.io.IOException("Worker did not return audio")
                         val audio=connection.inputStream.use{input->
@@ -504,9 +475,9 @@ class ArenaCloudActivity:Activity(){
             }
             return
         }
-        if(!accounts.isSignedIn()&&!(qa()&&qaTransport!=null)){ttsFallback(phase);return}
+        val testTransport=qaTransport?.takeIf { qa() }?:run{ttsFallback(phase);return}
         val payload=JSONObject().put("session_id",s.getString("session_id")).put("phase",phase).put("question_id",q.getString("id")).put("locale",locale);if(accounts.isSignedIn())payload.put("session_token",accounts.requireToken())
-        voiceNetwork.execute{val r=runCatching{if(qa()&&qaTransport!=null)qaTransport!!.invoke("arenaVoice",payload) else voiceClient.request("arenaVoice",payload)};runOnUiThread{if(isFinishing||isDestroyed||!resumed||generation!=voiceGeneration||version!=modeVersion)return@runOnUiThread
+        voiceNetwork.execute{val r=runCatching{testTransport("arenaVoice",payload)};runOnUiThread{if(isFinishing||isDestroyed||!resumed||generation!=voiceGeneration||version!=modeVersion)return@runOnUiThread
             r.onSuccess{runCatching{require(it.optString("question_id")==q.getString("id")){"Audio question mismatch"};cachedAudio.writeBytes(android.util.Base64.decode(it.getString("audio"),android.util.Base64.DEFAULT));voiceNetwork.execute{val envelope=runCatching{ArenaSpeechEnvelope.decode(cachedAudio)}.getOrNull();runOnUiThread{if(generation==voiceGeneration&&resumed&&session===s){speechEnvelope=envelope;playCached()}}}}.onFailure{ttsFallback(phase)}}.onFailure{ttsFallback(phase)}
         }}
     }

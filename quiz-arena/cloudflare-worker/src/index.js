@@ -33,11 +33,13 @@ function token(p,request){
 }
 async function context(env,p,t){
  if(!text(p.session_id,150)||!text(p.question_id,150))throw new Failure('SESSION_AND_QUESTION_REQUIRED');
- const s=await apps(env,{action:'arenaResume',session_token:t,session_id:p.session_id});
+ const locale=['sq','de','en','tr'].includes(p.locale)?p.locale:'sq';
+ const bridge={session_token:t,locale,protocol:2};
+ const s=await apps(env,{...bridge,action:'arenaResume',session_id:p.session_id});
  if(!s.question||s.question.id!==p.question_id)throw new Failure('QUESTION_CHANGED',409);
- const identity=await apps(env,{action:'arenaBootstrap',session_token:t,locale:p.locale||'sq'});
+ const identity=await apps(env,{...bridge,action:'arenaBootstrap'});
  if(!identity.player_id)throw new Failure('AUTH_REQUIRED',401);
- return {s,uid:await hash(identity.player_id),name:text(identity.player?.name||p.player_name,40)||'Lojtar',locale:['sq','de','en','tr'].includes(p.locale)?p.locale:'sq'};
+ return {s,uid:await hash(identity.player_id),name:text(identity.player?.name||p.player_name,40)||'Lojtar',locale};
 }
 async function budget(env,uid){
  // Never silently serve paid endpoints with process-local counters or missing storage.
