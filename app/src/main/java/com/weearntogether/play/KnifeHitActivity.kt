@@ -222,7 +222,7 @@ class KnifeHitView(context:android.content.Context):View(context){
         val list = LinearLayout(activity).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(12), 0, dp(12), 0) }
         val dialog = android.app.AlertDialog.Builder(activity).setView(list).setPositiveButton("MBYLL", null).create()
         fun refresh() {
-            dialog.setTitle("Thikat • $coins monedha")
+            dialog.setCustomTitle(TextView(activity).apply{text="ARSENALI • $coins monedha";textSize=18f;setTypeface(null,Typeface.BOLD);setTextColor(0xffffd275.toInt());setPadding(dp(22),dp(20),dp(22),dp(16))})
             list.removeAllViews()
             blades.forEachIndexed { index, blade ->
                 val row = LinearLayout(activity).apply {
