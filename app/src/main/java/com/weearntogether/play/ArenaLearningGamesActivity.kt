@@ -31,7 +31,7 @@ class ArenaLearningGamesActivity:Activity(){
     override fun onCreate(b:Bundle?){super.onCreate(b);ads=NativeGameAds(this,"quiz_arena_learning");quickMode=b?.getBoolean("quickMode")?:intent.hasExtra("quick_mode");mode=b?.getString("mode")?:intent.getStringExtra("quick_mode")?:"";state=runCatching{JSONObject(b?.getString("state")?:prefs.getString("round_$mode",null)?:"{}")}.getOrDefault(JSONObject());if(mode.isEmpty())menu() else {if(b==null&&quickMode)newRound();render()}}
     private fun menu(){revision++;mode="";scene=null;shell("QUIZ ARENA • SFIDA TË REJA")
         add(label("Zgjidh mënyrën e lojës. Mëso, kujto dhe përmirëso rekordin tënd.",17))
-        listOf("word" to "◆ Gjeje fjalën e duhur","verse" to "▣ Plotëso ajetin","memory" to "◈ Kujtesa • gjej çiftet","order" to "↔ Rendit fjalët").forEach{(key,title)->add(button(title){open(key)})}
+        listOf("word" to "◆ Gjeje fjalën e duhur","verse" to "▣ Plotëso ajetin","memory" to "◈ Kujtesa • gjej çiftet","true_false" to "✓ E saktë apo e gabuar","order" to "↔ Rendit fjalët").forEach{(key,title)->add(button(title){open(key)})}
         add(label("Rekordi: ${prefs.getInt("best",0)} pikë",18));add(button("KTHEHU NË ARENË"){finish()})
     }
     private fun open(key:String){mode=key;state=runCatching{JSONObject(prefs.getString("round_$mode","{}")?:"{}")}.getOrDefault(JSONObject());if(!state.has("rounds")&&!state.has("cards")||key=="word"&&state.optJSONArray("rounds")?.optJSONObject(0)?.has("url")!=true)newRound();render()}
@@ -50,6 +50,14 @@ class ArenaLearningGamesActivity:Activity(){
                 }
             }
             state.put("rounds",JSONArray(rows.shuffled().take(if(quickMode)1 else 10)))
+        }else if(mode=="true_false"){
+            val rows=bank.shuffled().take(if(quickMode)1 else 10).map { q ->
+                val proposed=if(kotlin.random.Random.nextBoolean()) q.correct else q.choices.indices.filter { it!=q.correct }.random()
+                JSONObject().put("prompt",q.prompt).put("proposed",q.choices[proposed])
+                    .put("right_proposal",proposed==q.correct).put("answer",q.choices[q.correct])
+                    .put("source",q.source).put("full",q.why)
+            }
+            state.put("rounds",JSONArray(rows))
         }else{
             val pool=bank.filter{it.choices[it.correct].length in 2..80 && (mode!="order"||it.choices[it.correct].split(" ").size in 2..8)}.shuffled().take(if(quickMode)1 else 10)
             state.put("rounds",JSONArray(pool.map{q->JSONObject().put("prompt",q.prompt).put("answer",q.choices[q.correct]).put("choices",JSONArray(q.choices.shuffled())).put("source",q.source).put("full",q.why)}))
@@ -62,13 +70,18 @@ class ArenaLearningGamesActivity:Activity(){
         val rows=state.getJSONArray("rounds");val index=state.optInt("index")
         if(index>=rows.length()){results();return}
         val q=rows.getJSONObject(index);val answered=state.optBoolean("answered")
-        shell(when(mode){"verse"->"PLOTËSO AJETIN";"order"->"RENDIT FJALËT";else->"GJEJE FJALËN E DUHUR"})
+        shell(when(mode){"verse"->"PLOTËSO AJETIN";"order"->"RENDIT FJALËT";"true_false"->"E SAKTË APO E GABUAR";else->"GJEJE FJALËN E DUHUR"})
         add(label("${index+1} / ${rows.length()}  •  ★ ${state.optInt("score")}",16))
         val progress=ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal).apply{max=rows.length();progress=index};add(progress)
         scene=QuizArenaScene(this).apply{playerName="SFIDA";questionPrompt=if(mode=="verse"||mode=="word")"Gjej fjalën që mungon" else q.getString("prompt");questionCategory=if(mode=="verse"||mode=="word")q.optString("source") else "MËSO DHE KUJTO";questionNumber="PYETJA ${index+1}";timerText="★ ${state.optInt("score")}";stageStatus="ILAZ SALIHI";reaction=if(answered&&state.optBoolean("right"))1 else 0}
         root.addView(scene,LinearLayout.LayoutParams(-1,dp(if(mode=="verse"||mode=="word")160 else 220)))
         if(mode=="verse"||mode=="word"){add(label("Ushtrim plotësimi • teksti i plotë shfaqet pas zgjedhjes",13));add(label(q.getString("prompt"),30).apply{textDirection=android.view.View.TEXT_DIRECTION_RTL})}
-        if(mode=="order"){
+        if(mode=="true_false"){
+            add(label("Përgjigjja e propozuar",14))
+            add(label(q.getString("proposed"),22))
+            add(button("E saktë"){answer(q.getBoolean("right_proposal"))}.apply{isEnabled=!answered})
+            add(button("E gabuar"){answer(!q.getBoolean("right_proposal"))}.apply{isEnabled=!answered})
+        }else if(mode=="order"){
             val answer=q.getString("answer").split(" ");val selected=state.optJSONArray("selected")?:JSONArray();val chips=state.optJSONArray("chips")?:JSONArray(answer.shuffled()).also{state.put("chips",it);save()}
             add(label((0 until selected.length()).joinToString(" "){chips.getString(selected.getInt(it))}.ifBlank{"Prek fjalët në rendin e duhur"},21))
             for(i in 0 until chips.length())add(button(chips.getString(i)){selected.put(i);state.put("selected",selected);save();render()}.apply{isEnabled=!answered&&(0 until selected.length()).none{selected.getInt(it)==i}})

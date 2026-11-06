@@ -194,7 +194,7 @@ class ArenaCloudActivity:Activity(){
         val key="challenge:"+questionKey(s)
         val boundary=(s.optInt("index")+1)%2==0&&s.optInt("index")+1<s.optInt("total")
         if(locale=="sq"&&boundary&&!prefs.getBoolean(key,false)){
-            val modes=arrayOf("verse","memory","word","order")
+            val modes=arrayOf("verse","memory","word","true_false","order")
             pendingChallenge=s;advancing=true
             startActivityForResult(android.content.Intent(this,ArenaLearningGamesActivity::class.java)
                 .putExtra("quick_mode",modes[(s.optInt("index")/2)%modes.size]).putExtra("native_qa",qa()),3116)
