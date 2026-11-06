@@ -17,19 +17,18 @@ internal object ArenaLifelines {
         val result = JSONObject().put("kind", kind).put("question_id", q.getString("id"))
         when (kind) {
             "fifty" -> {
-                require(choices.length() == 4) { "FOUR_CHOICES_REQUIRED" }
-                result.put("hidden", JSONArray((0..3).filter { it != q.getInt("correct") }.shuffled().take(2)))
+                require(choices.length() >= 3) { "AT_LEAST_THREE_CHOICES_REQUIRED" }
+                result.put("hidden", JSONArray((0 until choices.length()).filter { it != q.getInt("correct") }.shuffled().take(choices.length()-2)))
             }
             "friend" -> {
-                val guess = (0 until choices.length()).random()
-                result.put("text", "Unë do të provoja alternativën ${'A' + guess}, ${choices.getString(guess)}. Ky është vetëm mendim i simuluar, jo garanci.").put("simulated", true)
+                result.put("text", simulatedFriend(q)).put("simulated", true)
             }
             "audience" -> {
                 val weights = List(choices.length()) { (10..70).random() }; val sum = weights.sum()
                 val votes = weights.map { it * 100 / sum }.toMutableList(); votes[0] += 100 - votes.sum()
                 result.put("votes", JSONArray(votes)).put("simulated", true)
             }
-            "hint" -> result.put("text", "Lexo çfarë kërkon pyetja. Krahaso çdo alternativë me njohuritë e tua dhe kontrollo njësitë, datat ose kushtet që përmenden. Ky është orientim lokal, jo përgjigje AI.")
+            "hint" -> result.put("text", hint(q))
             "switch" -> {
                 val all = s.getJSONArray("local_questions")
                 val reserve=s.optJSONArray("local_reserve")
@@ -41,6 +40,21 @@ internal object ArenaLifelines {
         }
         used.put(kind, result)
         return result
+    }
+    fun simulatedFriend(q:JSONObject):String {
+        val choices=q.getJSONArray("choices")
+        val guess=(0 until choices.length()).random()
+        return "Unë do të provoja alternativën ${'A'+guess}, ${choices.getString(guess)}. Krahasoje me pyetjen para se të vendosësh. Ky është mendim i simuluar, jo garanci."
+    }
+    fun hint(q:JSONObject):String {
+        val prompt=q.optString("prompt").lowercase(java.util.Locale.ROOT)
+        val focus=when {
+            listOf("nuk ","pavërtet", "përveç").any { it in prompt }->"Kujdes me mohimin: po kërkohet alternativa që NUK përputhet."
+            listOf("vit", "mosh", "sa ").any { it in prompt }->"Dallo çfarë kërkohet: numër, moshë apo vit. Kontrollo edhe nëse datat janë hixhri apo miladi."
+            listOf("kush", "cili", "cila").any { it in prompt }->"Dallo personin, emrin ose ngjarjen që kërkon pyetja dhe krahaso alternativat një nga një."
+            else->"Përqendrohu te termi kryesor dhe kushtet që përmenden në pyetje."
+        }
+        return focus+"\n\n"+q.optString("prompt")+"\n\nOrientim lokal; përgjigjja mbetet e fshehur deri pas zgjedhjes."
     }
     fun hidden(s: JSONObject): Set<Int> {
         val r = s.optJSONObject("lifelines")?.optJSONObject("fifty") ?: return emptySet()

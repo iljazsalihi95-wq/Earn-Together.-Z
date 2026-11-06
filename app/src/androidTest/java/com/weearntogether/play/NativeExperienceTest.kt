@@ -89,7 +89,7 @@ class NativeExperienceTest {
         val a=launch(ArenaCloudActivity::class.java)
         try{android.os.SystemClock.sleep(250);inst.waitForIdleSync();val saved=store.saved()!!;assertEquals(0,saved.getJSONArray("answers").length());assertNull(saved.optJSONObject("feedback"));assertTrue(saved.optBoolean("timed_out"));assertTrue(views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.isEnabled)
             inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.performClick()};inst.waitForIdleSync();assertEquals(-1,store.saved()!!.getJSONObject("feedback").getInt("choice"));assertEquals(0,store.saved()!!.getInt("learning_choice"));assertEquals(0,store.saved()!!.getInt("score"));assertTrue(views(a.window.decorView).filterIsInstance<TextView>().any{it.text=="KOHA PËRFUNDOI • PA PËRGJIGJE"})
-            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="DËGJO SHPJEGIMIN AI"}.performClick()};inst.waitForIdleSync();assertTrue(views(a.window.decorView).filterIsInstance<Button>().any{it.text=="VAZHDO ›"&&it.isEnabled})
+            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text=="DËGJO SHPJEGIMIN"}.performClick()};inst.waitForIdleSync();assertTrue(views(a.window.decorView).filterIsInstance<Button>().any{it.text=="VAZHDO ›"&&it.isEnabled})
         }finally{inst.runOnMainSync{a.finish()}}
     }
     @Test fun liveRecoveryPreservesSeparateOfflineSession(){

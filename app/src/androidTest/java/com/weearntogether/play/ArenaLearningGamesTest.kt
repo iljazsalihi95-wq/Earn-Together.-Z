@@ -15,15 +15,17 @@ class ArenaLearningGamesTest {
     private val inst get()=InstrumentationRegistry.getInstrumentation()
     private fun views(v:View):List<View> = listOf(v)+if(v is ViewGroup)(0 until v.childCount).flatMap{views(v.getChildAt(it))} else emptyList()
     private fun click(a:Activity,text:String){inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.toString()==text}.performClick()};inst.waitForIdleSync()}
-    @Test fun typedAnswerScoresOnceAndSurvivesReopening(){
+    @Test fun missingWordOptionsScoreOnceAndSurviveReopening(){
         val context=inst.targetContext
         val prefs=context.getSharedPreferences("arena_learning_guest",0);prefs.edit().clear().commit()
         fun launch()=inst.startActivitySync(Intent(context,ArenaLearningGamesActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("native_qa",true))
         var a=launch();click(a,"◆ Gjeje fjalën e duhur")
         val round=JSONObject(prefs.getString("round_word","{}")!!)
         val answer=round.getJSONArray("rounds").getJSONObject(0).getString("answer")
-        inst.runOnMainSync{views(a.window.decorView).filterIsInstance<EditText>().single().setText(answer)}
-        click(a,"KONTROLLO FJALËN")
+        assertTrue(round.getJSONArray("rounds").getJSONObject(0).getString("prompt").contains("[ … ]"))
+        assertEquals(4,round.getJSONArray("rounds").getJSONObject(0).getJSONArray("choices").length())
+        assertFalse(views(a.window.decorView).any{it is EditText})
+        click(a,answer)
         val dir=java.io.File(context.getExternalFilesDir(null),"native-qa").apply{mkdirs()}
         val screenshot=inst.uiAutomation.takeScreenshot()
         java.io.File(dir,"22-arena-word-game-ilaz-presenter.png").outputStream().use{screenshot.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)}
@@ -36,6 +38,38 @@ class ArenaLearningGamesTest {
         click(a,"VAZHDO ›")
         assertEquals(1,JSONObject(prefs.getString("round_word","{}")!!).getInt("index"))
         inst.runOnMainSync{a.finish()}
+    }
+    @Test fun fiftyWorksWithThreeChoicesAndSurvivesSaving(){
+        val ctx=inst.targetContext;val store=ArenaOfflineStore(ctx,"three-choice-help")
+        val s=store.start("");val q=s.getJSONObject("question")
+        q.put("choices",org.json.JSONArray(listOf("One","Two","Three"))).put("correct",1)
+        s.put("presentation_pending",false)
+        val help=ArenaLifelines.use(s,"fifty")
+        assertEquals(1,help.getJSONArray("hidden").length())
+        assertFalse(ArenaLifelines.hidden(s).contains(1))
+        store.save(s)
+        val restored=store.saved()!!
+        assertTrue(ArenaLifelines.used(restored,"fifty"))
+        assertEquals(ArenaLifelines.hidden(s),ArenaLifelines.hidden(restored))
+    }
+    @Test fun normalQuestionsOpenMissingWordChallengeWithoutChangingRankedScore(){
+        val ctx=inst.targetContext
+        ctx.getSharedPreferences("arena_cloud_guest",0).edit().clear().putBoolean("audio",false).commit()
+        val store=ArenaOfflineStore(ctx,"guest");val s=store.start("")
+        s.put("index",1).put("question",s.getJSONArray("local_questions").getJSONObject(1)).put("presentation_pending",false)
+        store.answer(s,s.getJSONObject("question").getInt("correct"))
+        val score=s.getInt("score")
+        val monitor=inst.addMonitor(ArenaLearningGamesActivity::class.java.name,null,false)
+        val a=inst.startActivitySync(Intent(ctx,ArenaCloudActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("native_qa",true))
+        try {
+            click(a,"VAZHDO ›")
+            val challenge=monitor.waitForActivityWithTimeout(4000)
+            assertNotNull(challenge)
+            assertEquals(1,store.saved()!!.getInt("index"));assertEquals(score,store.saved()!!.getInt("score"))
+            assertTrue(views(challenge.window.decorView).filterIsInstance<android.widget.TextView>().any{it.text.contains("[ … ]")})
+            inst.runOnMainSync{challenge.finish()};inst.waitForIdleSync()
+            assertEquals(1,store.saved()!!.getInt("index"));assertEquals(score,store.saved()!!.getInt("score"))
+        }finally{inst.removeMonitor(monitor);inst.runOnMainSync{a.finish()}}
     }
     @Test fun verseCompletionAlwaysRestoresExactlyTheSourcedVerse(){
         val ctx=inst.targetContext
