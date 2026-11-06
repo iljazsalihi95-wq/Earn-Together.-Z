@@ -30,6 +30,7 @@ class NativeExperienceTest {
         val destinations=listOf(
             PremiumHomeActivity::class.java,
             com.weearntogether.lazygarden.LazyGardenActivity::class.java,
+            KnifeHitActivity::class.java,
             BlockPuzzleActivity::class.java,
             BubbleShooterActivity::class.java,
             BallSortActivity::class.java,
@@ -53,14 +54,14 @@ class NativeExperienceTest {
             } finally { inst.runOnMainSync{a.finish()} }
         }
     }
-    @Test fun homeKeepsFourPrimaryGamesVisible(){
+    @Test fun homeKeepsSixPrimaryGameCardsVisible(){
         val a=launch(PremiumHomeActivity::class.java)
         try{
             val cards=views(a.window.decorView).filter{it.isClickable}.mapNotNull{it.contentDescription?.toString()}
-            listOf("QUIZ ARENA","LAZYGARDEN","BLOCK PUZZLE","BUBBLE SHOOTER").forEach{title->
+            listOf("QUIZ ARENA","LAZYGARDEN","BLOCK PUZZLE","BUBBLE SHOOTER","KNIFE HIT PREMIUM","MATCH-3").forEach{title->
                 assertTrue("Missing permanent playable card: $title",cards.any{it.startsWith("$title.")&&it.endsWith("LUAJ")})
             }
-            shot("00-four-primary-games")
+            shot("00-primary-games")
         }finally{inst.runOnMainSync{a.finish()}}
     }
     @Test fun offlineEngineValidatesGradesResumesAndNeverDuplicatesPoints(){
