@@ -267,6 +267,38 @@ class NativeExperienceTest {
         assertTrue(views(a.window.decorView).filterIsInstance<TextView>().any{it.text.contains("Lojtari Test")})
         inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.performClick()};inst.waitForIdleSync();shot("03-quiz-answer")
     }finally{inst.runOnMainSync{a.finish()}}}
+    @Test fun bladeQuestRevealsNextWorldAfterVictoryAndKeepsPurchasedBlade(){
+        val prefs=ProgressPreferences.open(inst.targetContext,"knife_hit")
+        val backup=prefs.all.toMap()
+        prefs.edit().clear().putInt("level",5).putInt("board_level",5)
+            .putString("stuck_angles","0,35,145,210,275").putInt("blade_coins",60)
+            .putInt("blade_owned",5).putInt("blade_selected",2).commit()
+        val a=launch(KnifeHitActivity::class.java)
+        try{
+            val game=views(a.window.decorView).filterIsInstance<KnifeHitView>().single()
+            shot("blade-01-forest-guardian")
+            inst.runOnMainSync{
+                game.setRunning(false)
+                KnifeHitView::class.java.getDeclaredField("angle").apply{isAccessible=true}.setFloat(game,0f)
+                KnifeHitView::class.java.getDeclaredMethod("impact").apply{isAccessible=true}.invoke(game)
+                KnifeHitView::class.java.getDeclaredField("clearAge").apply{isAccessible=true}.setFloat(game,.9f)
+                game.invalidate()
+            }
+            assertEquals(6,prefs.getInt("level",0))
+            assertEquals(70,prefs.getInt("blade_coins",0))
+            shot("blade-02-world-unlocked")
+            inst.runOnMainSync{game.performClick()}
+            assertEquals(6,prefs.getInt("board_level",0))
+            assertEquals(1,KnifeHitView::class.java.getDeclaredField("targetStyle").apply{isAccessible=true}.getInt(game))
+            assertEquals(2,prefs.getInt("blade_selected",-1))
+            shot("blade-03-steel-world")
+        }finally{
+            inst.runOnMainSync{a.finish()}
+            val edit=prefs.edit().clear()
+            backup.forEach{(key,value)->when(value){is Int->edit.putInt(key,value);is Long->edit.putLong(key,value);is Float->edit.putFloat(key,value);is Boolean->edit.putBoolean(key,value);is String->edit.putString(key,value)}}
+            edit.commit()
+        }
+    }
     @Test fun ballSortHasRealRulesAndUndoAcrossLevels(){for(level in 1..100){val game=BallSortGame(level);val counts=game.tubes.flatten().groupingBy{it}.eachCount();assertEquals(game.colors,counts.size);assertTrue(counts.values.all{it==4});assertFalse(game.won());assertTrue(game.tubes.all{it.size<=4})}
         val g=BallSortGame(1,listOf(listOf(0,1),listOf(1),listOf(0,0,2),listOf(1,1,2),listOf(0,2,2)));assertFalse(g.move(0,2));val before=g.tubes.map{it.toList()};assertTrue(g.move(0,1));assertTrue(g.undo());assertEquals(before,g.tubes)
         val a=launch(BallSortActivity::class.java);try{assertTrue(views(a.window.decorView).any{it is BallSortBoard});shot("04-ball-sort")}finally{inst.runOnMainSync{a.finish()}}
