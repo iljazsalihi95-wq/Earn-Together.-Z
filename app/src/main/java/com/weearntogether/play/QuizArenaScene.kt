@@ -22,7 +22,7 @@ class QuizArenaScene(context:Context):View(context){
     var questionPrompt="";var questionCategory="";var questionNumber=""
     var timerText="";var stageStatus="";var remainingFraction=1f
     private var speechStarted=0L;private var reactionStarted=0L
-    private val presenter=ArenaPresenter()
+    private val presenter=ArenaPresenter(context)
     private val p=Paint(3);private val textPaint=TextPaint(3);private var attached=false
     private var layoutText="";private var questionLayout:StaticLayout?=null
     private val audience=StudioAssets.get(context,"audience");private val studio=StudioAssets.get(context,"arena")
@@ -44,7 +44,7 @@ class QuizArenaScene(context:Context):View(context){
         val energy=if(speaking)(speechEnergy?.invoke()?:0f).coerceIn(0f,1f) else 0f
         c.save();c.translate(505f,-18f);c.scale(.84f,.84f);presenter.draw(c,if(friendSpeaking)0f else energy,speaking&&!friendSpeaking,reaction,time);c.restore()
         drawPlayer(c)
-        p.color=0xe60a1b35.toInt();c.drawRoundRect(40f,147f,218f,180f,10f,10f,p);c.drawRoundRect(500f,147f,688f,180f,10f,10f,p);p.textAlign=Paint.Align.CENTER;p.textSize=17f;p.typeface=Typeface.DEFAULT_BOLD;p.color=0xffffd77e.toInt();c.drawText(playerName.take(21),129f,170f,p);c.drawText(if(speaking)"PREZANTUESJA • AI" else if(reaction>0)"MASHALLAH • SAKTË" else if(reaction<0)"PROVO PËRSËRI" else "PREZANTUESJA",594f,170f,p)
+        p.color=0xe60a1b35.toInt();c.drawRoundRect(40f,147f,218f,180f,10f,10f,p);c.drawRoundRect(500f,147f,688f,180f,10f,10f,p);p.textAlign=Paint.Align.CENTER;p.textSize=17f;p.typeface=Typeface.DEFAULT_BOLD;p.color=0xffffd77e.toInt();c.drawText(playerName.take(21),129f,170f,p);c.drawText(if(speaking)"ILAZ SALIHI • ZË" else if(reaction>0)"MASHALLAH • SAKTË" else if(reaction<0)"PROVO PËRSËRI" else "ILAZ SALIHI",594f,170f,p)
         p.shader=LinearGradient(210f,10f,510f,180f,0xff142958.toInt(),0xff191039.toInt(),Shader.TileMode.CLAMP);c.drawRoundRect(210f,8f,510f,182f,28f,28f,p);p.shader=null;p.style=Paint.Style.STROKE;p.strokeWidth=3f;p.color=if(reaction>0)0xffffe59a.toInt() else 0xffffd77e.toInt();c.drawRoundRect(210f,8f,510f,182f,28f,28f,p);p.style=Paint.Style.FILL
         p.textSize=22f;p.color=0xff80ddff.toInt();c.drawText(questionNumber,360f,44f,p);p.textSize=if(timerText.length>6)29f else 58f;p.color=if(reaction<0)0xffffb0b5.toInt() else if(reaction>0)0xffffe59a.toInt() else Color.WHITE;c.drawText(timerText,360f,112f,p)
         p.textSize=18f;p.color=0xffffd77e.toInt();c.drawText(stageStatus.take(28),360f,148f,p)
@@ -53,10 +53,30 @@ class QuizArenaScene(context:Context):View(context){
         p.textSize=21f;p.color=0xffffd77e.toInt();c.drawText(questionCategory.uppercase().take(43),360f,228f,p)
         val prompt=promptLayout();c.save();c.translate(55f,251f+(190-prompt.height).coerceAtLeast(0)/2);prompt.draw(c);c.restore()
         p.color=0xff304669.toInt();c.drawRoundRect(48f,453f,672f,462f,5f,5f,p);p.color=if(remainingFraction<.2f)0xffffac6f.toInt() else 0xff77d7ff.toInt();c.drawRoundRect(48f,453f,48f+624f*remainingFraction.coerceIn(0f,1f),462f,5f,5f,p)
-        if(reaction>0&&reactionTime<1600)for(i in 0..20){val x=((i*83)%700+10).toFloat();val y=((phase*72+i*31)%550).toFloat();p.color=when(i%3){0->0xffffd979.toInt();1->0xff65e2ef.toInt();else->0xffd9a6ff.toInt()};c.drawCircle(x,y,if(i%4==0)3.5f else 2.2f,p)}
-        val audienceFrame=if(reaction>0&&reactionTime<1200&&(time/320)%2==1L)1 else 0;c.drawBitmap(audience,Rect(0,audienceFrame*audience.height/2,audience.width,(audienceFrame+1)*audience.height/2),RectF(0f,480f,720f,560f),p)
+        if(reaction>0&&reactionTime<4000)drawFireworks(c,reactionTime)
+        if(reaction>0&&reactionTime<3200)for(i in 0..20){val x=((i*83)%700+10).toFloat();val y=((phase*72+i*31)%550).toFloat();p.color=when(i%3){0->0xffffd979.toInt();1->0xff65e2ef.toInt();else->0xffd9a6ff.toInt()};c.drawCircle(x,y,if(i%4==0)3.5f else 2.2f,p)}
+        val audienceFrame=if(reaction>0&&reactionTime<4000&&(time/320)%2==1L)1 else 0;c.drawBitmap(audience,Rect(0,audienceFrame*audience.height/2,audience.width,(audienceFrame+1)*audience.height/2),RectF(0f,480f,720f,560f),p)
         if(phoneState.isNotEmpty()){p.color=0xf0201540.toInt();c.drawRoundRect(228f,42f,492f,155f,18f,18f,p);p.color=0xffffd782.toInt();p.textSize=24f;c.drawText(if(friendSpeaking)"SHOKU" else "☎",360f,84f,p);if(friendSpeaking){p.color=0xff7fe2ff.toInt();c.drawRoundRect(278f,91f,278f+164f*energy,97f,3f,3f,p);p.color=0xffffd782.toInt()};p.textSize=18f;c.drawText(phoneState.take(26),360f,124f,p)}
         c.restoreToCount(save);if(attached&&windowVisibility==VISIBLE)postInvalidateDelayed(if(speaking||reaction!=0)40 else 70)
+    }
+    private fun drawFireworks(c:Canvas,elapsed:Long){
+        val colors=intArrayOf(0xffffd979.toInt(),0xff65e2ef.toInt(),0xffd9a6ff.toInt(),Color.WHITE)
+        for(burst in 0..5){
+            val age=elapsed-burst*380L
+            if(age !in 0..1750)continue
+            val t=age/1750f;val radius=12f+110f*t
+            val cx=70f+(burst*137%590);val cy=50f+(burst*79%320)
+            p.alpha=((1f-t)*255).toInt();p.strokeWidth=2.5f
+            for(ray in 0..23){
+                val angle=ray*Math.PI/12+burst
+                p.color=colors[(burst+ray)%colors.size];p.alpha=((1f-t)*255).toInt()
+                val dx=kotlin.math.cos(angle).toFloat();val dy=kotlin.math.sin(angle).toFloat()
+                val fall=70f*t*t
+                c.drawLine(cx+dx*radius*.72f,cy+dy*radius*.72f+fall,cx+dx*radius,cy+dy*radius+fall,p)
+                c.drawCircle(cx+dx*radius,cy+dy*radius+fall,2.5f*(1f-t)+.5f,p)
+            }
+        }
+        p.alpha=255
     }
     private fun drawPlayer(c:Canvas){
         p.shader=LinearGradient(72f,111f,186f,161f,suitColor,0xff142039.toInt(),Shader.TileMode.CLAMP)

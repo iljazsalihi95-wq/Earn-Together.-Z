@@ -1,0 +1,26 @@
+{
+  "checkedDate": "2026-11-06",
+  "source": "Quran.com; Arabic text checked against individual verse pages. No synthetic recitation.",
+  "verses": [
+    {
+      "reference": "112:1",
+      "arabic": "قُلْ هُوَ اللَّهُ أَحَدٌ",
+      "url": "https://quran.com/112/1"
+    },
+    {
+      "reference": "112:2",
+      "arabic": "اللَّهُ الصَّمَدُ",
+      "url": "https://quran.com/112/2"
+    },
+    {
+      "reference": "113:1",
+      "arabic": "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ",
+      "url": "https://quran.com/113/1"
+    },
+    {
+      "reference": "114:1",
+      "arabic": "قُلْ أَعُوذُ بِرَبِّ النَّاسِ",
+      "url": "https://quran.com/114/1"
+    }
+  ]
+}

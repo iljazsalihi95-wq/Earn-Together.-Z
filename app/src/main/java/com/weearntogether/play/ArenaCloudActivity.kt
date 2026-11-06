@@ -29,6 +29,7 @@ class ArenaCloudActivity:Activity(){
     private val accounts by lazy{AccountStore(this)}
     private val prefs by lazy{getSharedPreferences("arena_cloud_"+(accounts.currentUserId()?:"guest"),MODE_PRIVATE)}
     private val client=BackendClient(BuildConfig.QUIZ_ARENA_WORKER_URL.trimEnd('/')+"/api/arena",30_000)
+    private var directBridge=false
     private val voiceClient=BackendClient("https://script.google.com/macros/s/AKfycbzu9rso0BO_UhLBPi3TMqIQl44tZ12r0n-t143ydmWOoiVMPbm_YA1uF0rImIfEcvaERw/exec",60_000)
     private var locale="sq";private var category="";private var session:JSONObject?=null;private var bootstrap:JSONObject?=null
     private var busy=false;private var live=false;private var resumed=false;private var audioEnabled=true
@@ -83,10 +84,20 @@ class ArenaCloudActivity:Activity(){
         busy=true;val version=modeVersion;status.text=when(action){"arenaReady"->"Prezantuesi përfundoi • Po nis koha…";"arenaAnswer"->"Po kontrollohet zgjedhja jote…";"arenaNext"->"Po hapet pyetja tjetër…";else->"Po provohet LIVE… Mund të luash OFFLINE."}
         val payload=JSONObject(data.toString()).put("locale",locale).put("protocol",2)
         if(accounts.isSignedIn())payload.put("session_token",accounts.requireToken())
-        network.execute{val result=runCatching{if(qa()&&qaTransport!=null)qaTransport!!.invoke(action,payload) else client.request(action,payload)}
+        network.execute{val result=runCatching{if(qa()&&qaTransport!=null)qaTransport!!.invoke(action,payload) else arenaRequest(action,payload)}
             runOnUiThread{busy=false;if(isFinishing||isDestroyed||version!=modeVersion)return@runOnUiThread
-                result.onSuccess{live=true;done(it)}.onFailure{error->if(action=="arenaLifeline"&&error is BackendException&&error.code !in setOf("NETWORK","TIMEOUT")){status.text=if(error.code=="INVALID_ACTION")"Serveri aktiv duhet përditësuar për ndihmat LIVE. Progresi u ruajt." else "Ndihma nuk është e disponueshme: ${error.code}";return@onFailure};live=false;if(session==null)home() else {status.text=if(isOfflineSession())"USHTRIM OFFLINE • Shqip" else "LIVE nuk përgjigjet. Sesioni LIVE mbetet i ruajtur.";add(button("RIPROVO / VAZHDO LIVE"){call(action,data,done)});add(button("VAZHDO NË USHTRIM OFFLINE"){startOffline(localStore.saved()!=null)})}}
+                result.onSuccess{live=true;done(it)}.onFailure{error->if(action=="arenaLifeline"&&error is BackendException&&error.code !in setOf("NETWORK","TIMEOUT")){status.text=if(error.code=="INVALID_ACTION")"Serveri aktiv duhet përditësuar për ndihmat LIVE. Progresi u ruajt." else "Ndihma nuk është e disponueshme: ${error.code}";return@onFailure};live=false;if(session==null){home();status.text="LIVE: "+(if(error is BackendException)error.code else "NETWORK")+" • "+(error.message?:"Lidhja nuk u realizua")} else {status.text=if(isOfflineSession())"USHTRIM OFFLINE • Shqip" else "LIVE nuk përgjigjet. Sesioni LIVE mbetet i ruajtur.";add(button("RIPROVO / VAZHDO LIVE"){call(action,data,done)});add(button("VAZHDO NË USHTRIM OFFLINE"){startOffline(localStore.saved()!=null)})}}
             }
+        }
+    }
+    private fun arenaRequest(action:String,payload:JSONObject):JSONObject {
+        if(directBridge)return voiceClient.request(action,payload)
+        return try { client.request(action,payload) } catch(error:BackendException) {
+            // Probe only a read. Never replay a potentially accepted answer or mutation.
+            if(action!="arenaBootstrap"||error.code !in setOf("NETWORK","TIMEOUT","DEPLOYMENT_ACCESS","INVALID_ACTION"))throw error
+            val bootstrap=voiceClient.request(action,payload)
+            directBridge=true
+            bootstrap
         }
     }
     private fun refresh(){call("arenaBootstrap"){if(it.optInt("available",0)<=0||it.optJSONArray("categories")==null){live=false;if(session==null)home();return@call};bootstrap=it;prefs.edit().putString("bootstrap",it.toString()).apply();if(session==null)home() else if(isOfflineSession())status.text="USHTRIM OFFLINE • LIVE u rikthye; hapet nga ballina pa humbur progresin lokal."}}
@@ -100,18 +111,41 @@ class ArenaCloudActivity:Activity(){
         val categories=if(live)bootstrap?.optJSONArray("categories")?:JSONArray() else JSONArray(localStore.categories());add(label("KATEGORITË",14,blue));val options=mutableListOf("Të gjitha");for(i in 0 until categories.length())options.add(categories.getString(i));val cats=Spinner(this).apply{adapter=ArrayAdapter(this@ArenaCloudActivity,android.R.layout.simple_spinner_dropdown_item,options);background=gradient(0xffc5e2ff.toInt(),0xffaabfff.toInt())};cats.onItemSelectedListener=object:AdapterView.OnItemSelectedListener{override fun onNothingSelected(p:AdapterView<*>?){};override fun onItemSelected(p:AdapterView<*>?,v:View?,pos:Int,id:Long){category=if(pos==0)"" else options[pos]}};add(cats,48)
         add(label(if(live)"${bootstrap?.optInt("available",0)?:0} pyetje LIVE në gjuhën e zgjedhur" else "Pyetje lokale të gatshme: ${localStore.questions.size} • Shqip",12));add(button(if(live)"HYR NË ARENË • NIVELI $level" else "HYR NË USHTRIM OFFLINE • NIVELI $level"){val n=name.text.toString().trim();if(n.length<2){name.error="Shkruaj emrin";return@button};prefs.edit().putString("name",n).apply();if(!live){startOffline();return@button};call("arenaRegister",JSONObject().put("name",n)){call("arenaStart",JSONObject().put("level",level).put("category",category)){accept(it)}}})
         add(button("🏆 RENDITJA E LOJTARËVE"){if(!live){status.text="Renditja kërkon LIVE. Rekordi lokal: ${localStore.progress().optInt("best")} pikë.";return@button};call("arenaLeaderboard"){shell();add(label("RENDІTJA",25,gold));val rows=it.getJSONArray("ranking");if(rows.length()==0)add(label("Bëhu lojtari i parë që përfundon një nivel."));for(i in 0 until rows.length()){val r=rows.getJSONObject(i);add(label("${r.getInt("rank")}. ${r.getString("name")}   ★ ${r.getInt("points")}   • N${r.getInt("level")}"))};add(button("KTHEHU"){home()})}})
-        add(button("RIPROVO LIDHJEN LIVE"){refresh()});add(button("USHTRIM OFFLINE • PA RENDITJE"){startOffline(localStore.saved()!=null)});add(label("Regjistrimet shqip përdoren kur janë të disponueshme; për pyetjet e tjera përdoret zëri AI. Recitimet kërkojnë audio autentike. Pikët e arenës janë rezultat loje.",11,0xffb9c9df.toInt()));ads.banner(root)
+        if(!accounts.isSignedIn())add(button("HYR NË LLOGARI • AKTIVIZO LIVE"){startActivity(android.content.Intent(this,MainActivity::class.java).putExtra("open_profile",true))});add(button("SFIDA TË REJA • FJALË • AJETE • MEMORIE"){startActivity(android.content.Intent(this,ArenaLearningGamesActivity::class.java))});add(button("RIPROVO LIDHJEN LIVE"){refresh()});add(button("USHTRIM OFFLINE • PA RENDITJE"){startOffline(localStore.saved()!=null)});add(label("Regjistrimet shqip përdoren kur janë të disponueshme; për pyetjet e tjera përdoret zëri AI. Recitimet kërkojnë audio autentike. Pikët e arenës janë rezultat loje.",11,0xffb9c9df.toInt()));ads.banner(root)
     }
     private fun accept(v:JSONObject){val previous=session;if(previous!=null&&questionKey(previous)!=questionKey(v)){phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;sound?.stopTone()};if(previous!=null&&questionKey(previous)==questionKey(v)&&previous.has("learning_choice"))v.put("learning_choice",previous.getInt("learning_choice"));val f=v.optJSONObject("feedback");if(f?.optString("reason")=="timeout"&&f.optInt("submitted_choice",-1)>=0)v.put("learning_choice",f.getInt("submitted_choice"));session=v;offline=v.optBoolean("offline");if(offline)locale="sq" else if(v.optString("locale") in setOf("sq","de","en","tr"))locale=v.getString("locale");if(v.optJSONObject("feedback")==null&&v.optLong("remaining_ms")<=0)v.put("timed_out",true);deadline=android.os.SystemClock.elapsedRealtime()+v.optLong("remaining_ms");if(offline)localStore.save(v) else prefs.edit().putString("session",v.toString()).putString("active_id",v.optString("session_id")).apply();render()}
     private fun render(){val s=session?:return;timer?.cancel();stopVoice();answerButtons.clear();shell();val config=s.getJSONObject("config");add(label("${if(isOfflineSession())"USHTRIM OFFLINE" else "LIVE"} • NIVELI ${s.getInt("level")}  •  ${s.getInt("index")+1}/${s.getInt("total")}  •  ★ ${s.getInt("score")}",14,gold));scene=QuizArenaScene(this).apply{playerName=prefs.getString("name","")?:"";portrait=if(prefs.getBoolean("initial_avatar",false))null else PlayerPortrait.load(this@ArenaCloudActivity);suitColor=prefs.getInt("suit",0xff273b68.toInt());shirtColor=prefs.getInt("shirt",Color.WHITE);tieColor=prefs.getInt("tie",0xffc99b4e.toInt());reaction=if(s.optJSONObject("feedback")?.optString("reason")=="timeout")0 else if(s.optJSONObject("feedback")?.optBoolean("right")==true)1 else if(s.optJSONObject("feedback")!=null)-1 else 0};add(scene!!,(resources.displayMetrics.heightPixels/resources.displayMetrics.density*.36f).toInt().coerceIn(200,270))
-        if(s.optBoolean("finished")){if(!isOfflineSession())prefs.edit().remove("active_id").remove("pending_answer").remove("pending_next").apply();add(label(if(s.optBoolean("passed"))"NIVELI U KALUA!" else "PROVO PËRSËRI",27,gold));add(label("${s.getInt("correct")} / ${s.getInt("total")} të sakta • ★ ${s.getInt("score")}",21));scene?.apply{reaction=if(s.optBoolean("passed"))1 else -1;questionPrompt=if(s.optBoolean("passed"))"NIVELI U KALUA!" else "PROVO PËRSËRI";questionCategory="${s.getInt("correct")} / ${s.getInt("total")} TË SAKTA";questionNumber="NIVELI ${s.getInt("level")}";timerText="★ ${s.getInt("score")}";stageStatus="REZULTATI YT"};root.translationY=dp(22).toFloat();root.animate().translationY(0f).setDuration(550).start();add(button("VAZHDO • KAPËRCE SKENËN"){home();refresh()});val video=config.optString("video");if(video.startsWith("https://"))add(button("SHIKO VIDEON E KALIMIT"){video(video)});if(audioEnabled)voice("result");ads.naturalBreak();return}
+        if(s.optBoolean("finished")){if(!isOfflineSession())prefs.edit().remove("active_id").remove("pending_answer").remove("pending_next").apply();add(label(if(s.optBoolean("passed"))"NIVELI U KALUA!" else "PROVO PËRSËRI",27,gold));add(label("${s.getInt("correct")} / ${s.getInt("total")} të sakta • ★ ${s.getInt("score")}",21));scene?.apply{reaction=if(s.optBoolean("passed"))1 else -1;questionPrompt=if(s.optBoolean("passed"))"NIVELI U KALUA!" else "PROVO PËRSËRI";questionCategory="${s.getInt("correct")} / ${s.getInt("total")} TË SAKTA";questionNumber="NIVELI ${s.getInt("level")}";timerText="★ ${s.getInt("score")}";stageStatus="REZULTATI YT"};root.translationY=dp(22).toFloat();root.animate().translationY(0f).setDuration(550).start();add(button("VAZHDO • KAPËRCE SKENËN"){home();refresh()});val video=config.optString("video");if(video.startsWith("https://"))add(button("SHIKO VIDEON E KALIMIT"){video(video)});if(audioEnabled)voice("result"){ads.naturalBreak()} else ads.naturalBreak();return}
         val q=s.getJSONObject("question");scene?.apply{questionPrompt=q.getString("prompt");questionCategory=q.getString("category");questionNumber="PYETJA ${s.getInt("index")+1} / ${s.getInt("total")}";contentDescription=questionPrompt};val feedback=s.optJSONObject("feedback");val choices=q.getJSONArray("choices");for(i in 0 until choices.length()){val option=button("${'A'+i}   ${choices.getString(i)}"){sendAnswer(i)};option.gravity=Gravity.START or Gravity.CENTER_VERTICAL;option.isEnabled=feedback==null&&!s.optBoolean("answer_pending")&&!s.optBoolean("presentation_pending");answerButtons.add(option);if(feedback!=null&&i==feedback.getInt("correct"))option.background=gradient(0xff0b9a76.toInt(),0xff146b63.toInt());if(feedback!=null&&i==feedback.optInt("choice",s.optInt("local_choice",-2))&&!feedback.getBoolean("right"))option.background=gradient(0xffa73551.toInt(),0xff682544.toInt());if(i in ArenaLifelines.hidden(s)&&feedback==null){option.isEnabled=false;option.alpha=.25f;option.text="${'A'+i}   —"};add(option)}
-        if(feedback!=null){scene?.apply{timerText=if(feedback.optInt("choice",-2)==-1)"PA PËRGJIGJE" else if(feedback.getBoolean("right"))"SAKTË" else "GABIM";stageStatus="TESTIM DHE MËSIM"};add(label(if(feedback.optInt("choice",s.optInt("local_choice",-2))==-1)"KOHA PËRFUNDOI • PA PËRGJIGJE" else if(feedback.getBoolean("right"))"✓ SAKTË" else "GABIM • PËRGJIGJJA E SAKTË: ${'A'+feedback.getInt("correct")}",20,gold));val selected=feedback.optInt("choice",s.optInt("local_choice",-2));if(selected>=0)add(label("Zgjedhja jote: ${'A'+selected} • ${choices.optString(selected)}",14,blue));if(s.has("learning_choice"))add(label(lateChoiceText(s),16,blue));if(selected==-1)add(label("Përgjigjja e saktë: ${'A'+feedback.getInt("correct")} • ${choices.optString(feedback.getInt("correct"))}",16,gold));add(label(feedback.getString("explanation"),17));add(label(feedback.optString("source"),12,blue));add(button("DËGJO SHPJEGIMIN"){voice("explanation")});add(button("HAP SHPJEGIMIN • TESTIM DHE MËSIM"){showLearning(s)});add(button("VAZHDO ›"){continueAfterLearning(s)});add(button("PYET PREZANTUESEN PËR SHPJEGIMIN"){clarify(s)});if(audioEnabled)voice("explanation");if(!qa()&&learningShown!=questionKey(s)){learningShown=questionKey(s);root.post{if(session===s&&!isFinishing&&!isDestroyed)showLearning(s)}}}
+        if(feedback!=null){scene?.apply{timerText=if(feedback.optInt("choice",-2)==-1)"PA PËRGJIGJE" else if(feedback.getBoolean("right"))"SAKTË" else "GABIM";stageStatus="TESTIM DHE MËSIM"};add(label(if(feedback.optInt("choice",s.optInt("local_choice",-2))==-1)"KOHA PËRFUNDOI • PA PËRGJIGJE" else if(feedback.getBoolean("right"))"✓ SAKTË" else "GABIM • PËRGJIGJJA E SAKTË: ${'A'+feedback.getInt("correct")}",20,gold));val selected=feedback.optInt("choice",s.optInt("local_choice",-2));if(selected>=0)add(label("Zgjedhja jote: ${'A'+selected} • ${choices.optString(selected)}",14,blue));if(s.has("learning_choice"))add(label(lateChoiceText(s),16,blue));if(selected==-1)add(label("Përgjigjja e saktë: ${'A'+feedback.getInt("correct")} • ${choices.optString(feedback.getInt("correct"))}",16,gold));add(label(feedback.getString("explanation"),17));add(label(feedback.optString("source"),12,blue));add(button("DËGJO SHPJEGIMIN"){voice("explanation")});add(button("HAP SHPJEGIMIN • TESTIM DHE MËSIM"){showLearning(s)});add(button("VAZHDO ›"){continueAfterLearning(s)});add(button("PYET PREZANTUESIN PËR SHPJEGIMIN"){clarify(s)});presentFeedback(s)}
         else if(s.optBoolean("presentation_pending")){beginQuestionReading(s)}
         else if(s.optBoolean("timed_out")){timeoutControls()}
         else{val clock=label("",15,gold);fun update(){val sec=((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000;scene?.apply{timerText="%02d:%02d".format(sec/60,sec%60);stageStatus="KOHA E PËRGJIGJES";remainingFraction=(sec.toFloat()/(config.optInt("seconds",30).coerceAtLeast(1))).coerceIn(0f,1f)};clock.text="⏱ ${((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000}s • ${config.getInt("points")} pikë për saktë"};update();timer=object:android.os.CountDownTimer((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(1),200){override fun onTick(ms:Long){update();val sec=(ms/1000).toInt();if(sec!=tick){tick=sec;if(audioEnabled&&sec>0&&scene?.speaking!=true&&phoneDialog?.isShowing!=true)sound?.startTone(android.media.ToneGenerator.TONE_PROP_BEEP,if(sec<=10)145 else 80)}};override fun onFinish(){clock.text="Koha përfundoi • Asnjë përgjigje nuk u zgjodh";if(resumed)expireQuestion()}}.start();addLifelineControls(s);add(button("DËGJO PYETJEN"){voice("question")});val rec=q.optString("recitation");if(rec.startsWith("https://"))add(button("DËGJO RECITIMIN AUTENTIK"){playUrl(rec)});add(button("RIPROVO / SINKRONIZO"){retryAnswer()});if(audioEnabled&&narrationKey!=questionKey(s)){narrationKey=questionKey(s);voice("question")}}
     }
 
+    private var celebratedKey=""
+    private fun presentFeedback(s:JSONObject){
+        val key=questionKey(s)
+        fun learn(){if(!qa()&&learningShown!=key&&session===s&&resumed){learningShown=key;showLearning(s)}}
+        fun narrate(){if(session===s&&resumed){if(audioEnabled)voice("explanation"){learn()} else learn()}}
+        val correct=s.optJSONObject("feedback")?.optBoolean("right")==true
+        if(correct&&celebratedKey!=key){
+            celebratedKey=key
+            scene?.reaction=1
+            if(audioEnabled){
+                stopVoice();val generation=voiceGeneration
+                applause?.release()
+                applause=android.media.MediaPlayer.create(this,R.raw.arena_applause)
+                val clip=applause
+                if(clip==null){narrate();return}
+                clip.setOnCompletionListener { if(generation==voiceGeneration&&session===s&&resumed){applause?.release();applause=null;narrate()} }
+                clip.setOnErrorListener { _,_,_->if(generation==voiceGeneration&&session===s&&resumed)narrate();true }
+                clip.start()
+            }else{
+                retryHandler.postDelayed({if(session===s&&resumed)narrate()},2800)
+            }
+        }else narrate()
+    }
     private fun showLearning(s:JSONObject){
         if(learningDialog?.isShowing==true)return
         val f=s.optJSONObject("feedback")?:return
@@ -244,14 +278,14 @@ class ArenaCloudActivity:Activity(){
     }
     private fun timeoutControls(){scene?.apply{timerText="00:00";stageStatus="KOHA PËRFUNDOI";remainingFraction=0f};status.text="Koha përfundoi • Nuk është zgjedhur përgjigje";add(label("Koha përfundoi. Mund të zgjedhësh një alternativë për të mësuar, pa pikë, ose të hapësh shpjegimin.",16,gold));add(button("SHFAQ PËRGJIGJEN DHE SHPJEGIMIN"){sendAnswer(-1)})}
     private fun expireQuestion(){val s=session?:return;if(s.optJSONObject("feedback")!=null||s.optBoolean("answer_pending")||s.optBoolean("timed_out"))return;s.put("timed_out",true).put("remaining_ms",0);timer?.cancel();answerButtons.forEachIndexed{i,b->b.isEnabled=i !in ArenaLifelines.hidden(s)};if(isOfflineSession())localStore.save(s) else prefs.edit().putString("session",s.toString()).apply();timeoutControls()}
-    private fun sendAnswer(choice:Int){val s=session?:return;val question=s.optJSONObject("question")?:return;val choices=question.optJSONArray("choices")?:return;if(choice < -1 || choice >= choices.length())return;if(choice == -1 && !s.optBoolean("timed_out"))return;if(s.optBoolean("presentation_pending"))return;if(s.optJSONObject("feedback")!=null||s.optBoolean("answer_pending"))return;if(busy){status.text="Po përfundon kërkesa LIVE. Provoje përsëri.";return};val late=choice>=0&&(s.optBoolean("timed_out")||android.os.SystemClock.elapsedRealtime()>=deadline);if(late){s.put("timed_out",true).put("remaining_ms",0).put("learning_choice",choice)};val submittedChoice=if(late)-1 else choice;timer?.cancel();stopVoice();s.put("answer_pending",true).put("local_choice",choice);answerButtons.forEach{it.isEnabled=false};if(isOfflineSession()){s.remove("answer_pending");timer?.cancel();persistLocal();val answered=localStore.answer(s,submittedChoice);answered.remove("answer_pending");if(audioEnabled&&answered.optJSONObject("feedback")?.optBoolean("right")==true){applause?.release();applause=android.media.MediaPlayer.create(this,R.raw.arena_applause);applause?.start()};accept(answered);return};val q=s.optJSONObject("question")?:return;val data=JSONObject().put("session_id",s.getString("session_id")).put("question_id",q.getString("id")).put("choice",submittedChoice);prefs.edit().putString("pending_answer",data.toString()).commit();stopVoice();call("arenaAnswer",data){prefs.edit().remove("pending_answer").apply();if(audioEnabled&&it.optJSONObject("feedback")?.optBoolean("right")==true){applause?.release();applause=android.media.MediaPlayer.create(this,R.raw.arena_applause);applause?.start()};accept(it)}}
+    private fun sendAnswer(choice:Int){val s=session?:return;val question=s.optJSONObject("question")?:return;val choices=question.optJSONArray("choices")?:return;if(choice < -1 || choice >= choices.length())return;if(choice == -1 && !s.optBoolean("timed_out"))return;if(s.optBoolean("presentation_pending"))return;if(s.optJSONObject("feedback")!=null||s.optBoolean("answer_pending"))return;if(busy){status.text="Po përfundon kërkesa LIVE. Provoje përsëri.";return};val late=choice>=0&&(s.optBoolean("timed_out")||android.os.SystemClock.elapsedRealtime()>=deadline);if(late){s.put("timed_out",true).put("remaining_ms",0).put("learning_choice",choice)};val submittedChoice=if(late)-1 else choice;timer?.cancel();stopVoice();s.put("answer_pending",true).put("local_choice",choice);answerButtons.forEach{it.isEnabled=false};if(isOfflineSession()){s.remove("answer_pending");timer?.cancel();persistLocal();val answered=localStore.answer(s,submittedChoice);answered.remove("answer_pending");accept(answered);return};val q=s.optJSONObject("question")?:return;val data=JSONObject().put("session_id",s.getString("session_id")).put("question_id",q.getString("id")).put("choice",submittedChoice);prefs.edit().putString("pending_answer",data.toString()).commit();stopVoice();call("arenaAnswer",data){prefs.edit().remove("pending_answer").apply();accept(it)}}
     private fun nextLive(s:JSONObject){
         val data=JSONObject().put("session_id",s.getString("session_id")).put("question_id",s.getJSONObject("question").getString("id"))
         prefs.edit().putString("pending_next",data.toString()).commit()
         call("arenaNext",data){prefs.edit().remove("pending_next").apply();accept(it)}
     }
     private fun retryAnswer(){if(isOfflineSession()){render();return};val next=runCatching{JSONObject(prefs.getString("pending_next","")?:"")}.getOrNull();if(next!=null){call("arenaNext",next){prefs.edit().remove("pending_next").apply();accept(it)};return};val p=runCatching{JSONObject(prefs.getString("pending_answer","")?:"")}.getOrNull();if(p!=null)call("arenaAnswer",p){prefs.edit().remove("pending_answer").apply();accept(it)}else session?.let{call("arenaResume",JSONObject().put("session_id",it.getString("session_id"))){v->accept(v)}}}
-    private fun stopVoice(){voiceCompletion=null;tts?.stop();voiceGeneration++;player?.release();player=null;speechEnvelope=null;scene?.speaking=false;scene?.friendSpeaking=false;scene?.speechEnergy=null}
+    private fun stopVoice(){applause?.release();applause=null;voiceCompletion=null;tts?.stop();voiceGeneration++;player?.release();player=null;speechEnvelope=null;scene?.speaking=false;scene?.friendSpeaking=false;scene?.speechEnergy=null}
     private fun narrationFinished(phase:String,key:String){
         if(key!=questionKey())return
         scene?.speaking=false;scene?.friendSpeaking=false
@@ -275,7 +309,7 @@ class ArenaCloudActivity:Activity(){
         tts?.setOnUtteranceProgressListener(object:android.speech.tts.UtteranceProgressListener(){
             override fun onBeginSynthesis(id:String?,sampleRateInHz:Int,audioFormat:Int,channelCount:Int){pcm.configure(sampleRateInHz,audioFormat,channelCount)}
             override fun onAudioAvailable(id:String?,audio:ByteArray?){if(audio!=null)pcm.append(audio)}
-            override fun onStart(id:String?){runOnUiThread{if(generation==voiceGeneration){started=android.os.SystemClock.uptimeMillis();scene?.speechEnergy={pcm.at((android.os.SystemClock.uptimeMillis()-started).toInt())};scene?.speaking=true;scene?.friendSpeaking=phase=="friend";scene?.stageStatus=if(phase=="friend")"SHOKU PO FLET" else "PREZANTUESJA PO FLET"}}}
+            override fun onStart(id:String?){runOnUiThread{if(generation==voiceGeneration){started=android.os.SystemClock.uptimeMillis();scene?.speechEnergy={pcm.at((android.os.SystemClock.uptimeMillis()-started).toInt())};scene?.speaking=true;scene?.friendSpeaking=phase=="friend";scene?.stageStatus=if(phase=="friend")"SHOKU PO FLET" else "PREZANTUESI PO FLET"}}}
             override fun onDone(id:String?){runOnUiThread{if(generation==voiceGeneration)narrationFinished(phase,key)}}
             @Deprecated("TTS callback") override fun onError(id:String?){onDone(id)}
         })
@@ -356,7 +390,7 @@ class ArenaCloudActivity:Activity(){
             player=android.media.MediaPlayer().apply{
                 setDataSource(cachedAudio.absolutePath)
                 setOnPreparedListener{
-                    if(generation==voiceGeneration&&resumed&&session===s){scene?.speaking=true;scene?.friendSpeaking=phase=="friend";scene?.stageStatus=if(phase=="friend")"SHOKU PO FLET" else "PREZANTUESJA PO FLET";it.start()}
+                    if(generation==voiceGeneration&&resumed&&session===s){scene?.speaking=true;scene?.friendSpeaking=phase=="friend";scene?.stageStatus=if(phase=="friend")"SHOKU PO FLET" else "PREZANTUESI PO FLET";it.start()}
                 }
                 setOnCompletionListener{
                     if(generation==voiceGeneration&&resumed&&session===s)narrationFinished(phase,questionKey(s))
@@ -371,22 +405,22 @@ class ArenaCloudActivity:Activity(){
             val uri=java.net.URI(workerUrl)
             uri.scheme=="https"&&uri.host=="quiz-arena-backend.lazisalihi.workers.dev"&&uri.rawUserInfo==null&&uri.port==-1&&uri.rawQuery==null&&uri.rawFragment==null
         }.getOrDefault(false)
-        if(trustedWorker&&!qa()&&accounts.isSignedIn()){
+        if(trustedWorker&&!directBridge&&!qa()&&accounts.isSignedIn()){
             val choices=q.optJSONArray("choices")?:org.json.JSONArray()
             val feedback=s.optJSONObject("feedback")
             val playerName=prefs.getString("name","Lojtari").orEmpty().take(80)
             val rawText=when(phase){
-                "phone_intro"->"$"+"{playerName}, po telefonojmë shokun për mendimin e tij. Ai nuk e ka përgjigjen e garantuar."
-                "phone_outro"->"Faleminderit për ndihmën! $"+"{playerName}, tani zgjedhja të mbetet ty."
-                "intro"->"Mirë se erdhe në Quiz Arena Premium, $"+"{playerName}! Je gati për nivelin $"+"{s.optInt(\"level\")}?"
+                "phone_intro"->"${playerName}, po telefonojmë shokun për mendimin e tij. Ai nuk e ka përgjigjen e garantuar."
+                "phone_outro"->"Faleminderit për ndihmën! ${playerName}, tani zgjedhja të mbetet ty."
+                "intro"->"Mirë se erdhe në Quiz Arena Premium, ${playerName}! Je gati për nivelin ${s.optInt("level")}?"
                 "clarify"->dialogueText
                 "friend"->friendText.ifBlank{"Lidhja me shokun nuk u realizua. Mund të vazhdosh lojën."}
-                "result"->"$"+"{playerName}, $"+"{s.optInt(\"correct\")} përgjigje të sakta nga $"+"{s.optInt(\"total\")}. $"+"{s.optInt(\"score\")} pikë."
+                "result"->"${playerName}, ${s.optInt("correct")} përgjigje të sakta nga ${s.optInt("total")}. ${s.optInt("score")} pikë."
                 "explanation"->if(feedback!=null){
                     val correct=feedback.optInt("correct",-1)
-                    (if(correct in 0 until choices.length())"Përgjigjja e saktë është $"+"{'A'+correct}. $"+"{choices.optString(correct)}. " else "")+feedback.optString("explanation")
+                    (if(correct in 0 until choices.length())"Përgjigjja e saktë është ${'A'+correct}. ${choices.optString(correct)}. " else "")+feedback.optString("explanation")
                 }else "Shpjegimi nuk është ende i disponueshëm."
-                else->q.optString("prompt")+". "+(0 until choices.length()).joinToString(". "){"$"+"{'A'+it}. $"+"{choices.optString(it)}"}
+                else->q.optString("prompt")+". "+(0 until choices.length()).joinToString(". "){"${'A'+it}. ${choices.optString(it)}"}
             }
             val speechText=ArenaAlbanianSpeech.forVoice(rawText,locale)
             voiceNetwork.execute{

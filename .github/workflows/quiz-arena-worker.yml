@@ -1,6 +1,12 @@
 name: Deploy existing Quiz Arena Worker
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'quiz-arena/cloudflare-worker/**'
+      - 'wrangler.toml'
+      - '.github/workflows/quiz-arena-worker.yml'
 permissions:
   contents: read
 concurrency:

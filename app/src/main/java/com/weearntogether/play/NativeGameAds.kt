@@ -50,8 +50,16 @@ class NativeGameAds(private val activity:Activity,private val game:String){
         ad.show(activity){if(!granted&&!disposed){granted=true;receipts?.completed(game);GameCoinStore(activity).awardCompletedVideo();onGameplayReward();Toast.makeText(activity,"Video u përfundua. Bonusi pret verifikimin e serverit.",Toast.LENGTH_LONG).show()}}
         return true
     }
-    fun naturalBreak(onFinished:()->Unit={}):Boolean{if(qa||disposed||activity.isFinishing||activity.isDestroyed||System.currentTimeMillis()-lastBreak<90_000)return false;val ad=interstitial?:return false;interstitial=null;lastBreak=System.currentTimeMillis();ad.fullScreenContentCallback=object:FullScreenContentCallback(){override fun onAdDismissedFullScreenContent(){onFinished();if(!disposed)loadInterstitial()};override fun onAdFailedToShowFullScreenContent(error:AdError){onFinished();if(!disposed)loadInterstitial()}};ad.show(activity);return true}
+    private var commercialIntro:ArenaCommercialIntro?=null
+    fun naturalBreak(onFinished:()->Unit={}):Boolean{if(qa||disposed||activity.isFinishing||activity.isDestroyed||System.currentTimeMillis()-lastBreak<90_000)return false;val ad=interstitial?:return false;interstitial=null;lastBreak=System.currentTimeMillis();ad.fullScreenContentCallback=object:FullScreenContentCallback(){override fun onAdDismissedFullScreenContent(){onFinished();if(!disposed)loadInterstitial()};override fun onAdFailedToShowFullScreenContent(error:AdError){onFinished();if(!disposed)loadInterstitial()}};if(game.startsWith("quiz_arena")){
+            commercialIntro?.cancel()
+            commercialIntro=ArenaCommercialIntro(activity,{
+                commercialIntro=null
+                if(!disposed&&!activity.isFinishing&&!activity.isDestroyed)ad.show(activity) else onFinished()
+            },{commercialIntro=null;if(!disposed)loadInterstitial();onFinished()}).also{it.show()}
+        }else ad.show(activity)
+        return true}
     fun resume(){if(!disposed)runCatching{banner?.resume()};runCatching{receipts?.sync()}}
     fun pause(){if(!disposed)runCatching{banner?.pause()}}
-    fun destroy(){disposed=true;runCatching{banner?.destroy()};banner=null;rewarded=null;interstitial=null}
+    fun destroy(){disposed=true;commercialIntro?.cancel();commercialIntro=null;runCatching{banner?.destroy()};banner=null;rewarded=null;interstitial=null}
 }

@@ -74,8 +74,16 @@ class BackendClient(private val endpoint: String = ENDPOINT, private val timeout
                     url = URL(url, connection.getHeaderField("Location") ?: throw Exception("Invalid redirect"))
                     if (code in listOf(301, 302, 303)) body = null // ContentService JSON is retrieved with GET; 307/308 preserve POST.
                 } else {
-                    if (code in listOf(401, 403)) throw BackendException("DEPLOYMENT_ACCESS", "The account service is not publicly accessible. Please contact support.")
-                    if (code != 200) throw BackendException("NETWORK", "Server unavailable ($code). Try again.")
+                    if (code != 200) {
+                        // Worker JSON errors explain auth, quota and deployment failures.
+                        // Never replace them all with a misleading connection error.
+                        val errorText=connection.errorStream?.bufferedReader()?.use { it.readText().take(16384) }.orEmpty()
+                        val error=runCatching { JSONObject(errorText) }.getOrNull()
+                        val errorCode=error?.optString("error").orEmpty()
+                        if(errorCode.matches(Regex("[A-Z_]{2,80}")))throw BackendException(errorCode,error?.optString("message")?.takeIf { it.isNotBlank() }?:errorCode)
+                        if(code in listOf(401,403))throw BackendException("DEPLOYMENT_ACCESS","Serveri LIVE nuk lejoi lidhjen ($code).")
+                        throw BackendException("NETWORK", "Server unavailable ($code). Try again.")
+                    }
                     val text = connection.inputStream.bufferedReader().use { reader ->
                         val out = StringBuilder(); val buffer = CharArray(4096)
                         while (true) { if (expired.get() || System.nanoTime() >= deadline) throw timedOut(); val n = reader.read(buffer); if (n < 0) break; out.append(buffer, 0, n); if (out.length > 2_000_000) throw Exception("Response too large") }
