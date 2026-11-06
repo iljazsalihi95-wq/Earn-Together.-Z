@@ -31,33 +31,76 @@ class QuizArenaScene(context:Context):View(context){
     private fun promptLayout():StaticLayout{
         if(questionLayout==null||layoutText!=questionPrompt){
             layoutText=questionPrompt;textPaint.color=Color.WHITE;textPaint.typeface=Typeface.create("sans-serif-medium",Typeface.BOLD)
-            var size=40f;var layout:StaticLayout
-            do{textPaint.textSize=size;layout=StaticLayout.Builder.obtain(questionPrompt,0,questionPrompt.length,textPaint,610).setAlignment(Layout.Alignment.ALIGN_CENTER).setIncludePad(false).setLineSpacing(2f,1f).build();size-=2f}while(layout.height>190&&size>=26f)
+            var size=34f;var layout:StaticLayout
+            do{textPaint.textSize=size;layout=StaticLayout.Builder.obtain(questionPrompt,0,questionPrompt.length,textPaint,610).setAlignment(Layout.Alignment.ALIGN_CENTER).setIncludePad(false).setLineSpacing(2f,1f).build();size-=2f}while(layout.height>172&&size>=24f)
             questionLayout=layout
         }
         return questionLayout!!
     }
-    override fun onDraw(c:Canvas){super.onDraw(c);val save=c.save();val scale=minOf(width/720f,height/560f);c.translate((width-720f*scale)/2,(height-560f*scale)/2);c.scale(scale,scale);val time=android.os.SystemClock.uptimeMillis();val phase=time/650.0
-        c.drawBitmap(studio,Rect(0,(studio.height*.068f).toInt(),studio.width,(studio.height*.776f).toInt()),RectF(0f,0f,720f,480f),p)
-        p.shader=RadialGradient((360+140*sin(phase)).toFloat(),80f,480f,intArrayOf(if(reaction<0)0x446f1636 else if(reaction>0)0x446f5f16 else 0x4446bfff,Color.TRANSPARENT),null,Shader.TileMode.CLAMP);c.drawRect(0f,0f,720f,480f,p);p.shader=null
-        val speechTime=(time-speechStarted).coerceAtLeast(0);val reactionTime=(time-reactionStarted).coerceAtLeast(0)
+    var audienceVotes:IntArray?=null
+    private var camera=0f
+    override fun onDraw(c:Canvas){
+        super.onDraw(c)
+        val save=c.save();val scale=minOf(width/720f,height/560f)
+        c.translate((width-720f*scale)/2,(height-560f*scale)/2);c.scale(scale,scale)
+        val time=android.os.SystemClock.uptimeMillis()
         val energy=if(speaking)(speechEnergy?.invoke()?:0f).coerceIn(0f,1f) else 0f
-        c.save();c.translate(505f,-18f);c.scale(.84f,.84f);presenter.draw(c,if(friendSpeaking)0f else energy,speaking&&!friendSpeaking,reaction,time);c.restore()
-        drawPlayer(c)
-        p.color=0xe60a1b35.toInt();c.drawRoundRect(40f,147f,218f,180f,10f,10f,p);c.drawRoundRect(500f,147f,688f,180f,10f,10f,p);p.textAlign=Paint.Align.CENTER;p.textSize=17f;p.typeface=Typeface.DEFAULT_BOLD;p.color=0xffffd77e.toInt();c.drawText(playerName.take(21),129f,170f,p);c.drawText(if(speaking)"ILAZ SALIHI • ZË" else if(reaction>0)"MASHALLAH • SAKTË" else if(reaction<0)"PROVO PËRSËRI" else "ILAZ SALIHI",594f,170f,p)
-        p.shader=LinearGradient(210f,10f,510f,180f,0xff142958.toInt(),0xff191039.toInt(),Shader.TileMode.CLAMP);c.drawRoundRect(210f,8f,510f,182f,28f,28f,p);p.shader=null;p.style=Paint.Style.STROKE;p.strokeWidth=3f;p.color=if(reaction>0)0xffffe59a.toInt() else 0xffffd77e.toInt();c.drawRoundRect(210f,8f,510f,182f,28f,28f,p);p.style=Paint.Style.FILL
-        p.textSize=22f;p.color=0xff80ddff.toInt();c.drawText(questionNumber,360f,44f,p);p.textSize=if(timerText.length>6)29f else 58f;p.color=if(reaction<0)0xffffb0b5.toInt() else if(reaction>0)0xffffe59a.toInt() else Color.WHITE;c.drawText(timerText,360f,112f,p)
-        p.textSize=18f;p.color=0xffffd77e.toInt();c.drawText(stageStatus.take(28),360f,148f,p)
-        if(speaking)for(i in 0..8){p.color=if(i%2==0)0xff73dbff.toInt() else 0xffffd77e.toInt();val h=3f+20f*energy*(1f-abs(i-4)/6f);c.drawRoundRect(294f+i*15,171f-h,301f+i*15,171f,3f,3f,p)}
-        p.shader=LinearGradient(0f,190f,720f,480f,0xf5162854.toInt(),0xfa18112e.toInt(),Shader.TileMode.CLAMP);c.drawRoundRect(24f,194f,696f,475f,28f,28f,p);p.shader=null;p.style=Paint.Style.STROKE;p.strokeWidth=2.5f;p.color=if(reaction>0)0xffffd77e.toInt() else 0xff67c7ff.toInt();c.drawRoundRect(24f,194f,696f,475f,28f,28f,p);p.style=Paint.Style.FILL
-        p.textSize=21f;p.color=0xffffd77e.toInt();c.drawText(questionCategory.uppercase().take(43),360f,228f,p)
-        val prompt=promptLayout();c.save();c.translate(55f,251f+(190-prompt.height).coerceAtLeast(0)/2);prompt.draw(c);c.restore()
-        p.color=0xff304669.toInt();c.drawRoundRect(48f,453f,672f,462f,5f,5f,p);p.color=if(remainingFraction<.2f)0xffffac6f.toInt() else 0xff77d7ff.toInt();c.drawRoundRect(48f,453f,48f+624f*remainingFraction.coerceIn(0f,1f),462f,5f,5f,p)
-        if(reaction>0&&reactionTime<4000)drawFireworks(c,reactionTime)
-        if(reaction>0&&reactionTime<3200)for(i in 0..20){val x=((i*83)%700+10).toFloat();val y=((phase*72+i*31)%550).toFloat();p.color=when(i%3){0->0xffffd979.toInt();1->0xff65e2ef.toInt();else->0xffd9a6ff.toInt()};c.drawCircle(x,y,if(i%4==0)3.5f else 2.2f,p)}
-        val audienceFrame=if(reaction>0&&reactionTime<4000&&(time/320)%2==1L)1 else 0;c.drawBitmap(audience,Rect(0,audienceFrame*audience.height/2,audience.width,(audienceFrame+1)*audience.height/2),RectF(0f,480f,720f,560f),p)
-        if(phoneState.isNotEmpty()){p.color=0xf0201540.toInt();c.drawRoundRect(228f,42f,492f,155f,18f,18f,p);p.color=0xffffd782.toInt();p.textSize=24f;c.drawText(if(friendSpeaking)"SHOKU" else "☎",360f,84f,p);if(friendSpeaking){p.color=0xff7fe2ff.toInt();c.drawRoundRect(278f,91f,278f+164f*energy,97f,3f,3f,p);p.color=0xffffd782.toInt()};p.textSize=18f;c.drawText(phoneState.take(26),360f,124f,p)}
-        c.restoreToCount(save);if(attached&&windowVisibility==VISIBLE)postInvalidateDelayed(if(speaking||reaction!=0)40 else 70)
+        camera+=((if(audienceVotes!=null)1f else 0f)-camera)*.12f
+        // One continuous stage: rear LED display, floor, two chairs, front audience.
+        c.drawBitmap(studio,null,RectF(0f,0f,720f,560f),p)
+        p.shader=LinearGradient(0f,0f,0f,560f,0x66071025,0xe6071025.toInt(),Shader.TileMode.CLAMP)
+        c.drawRect(0f,0f,720f,560f,p);p.shader=null
+        c.save();c.translate(0f,-camera*90f);c.scale(1f+camera*.12f,1f+camera*.12f,360f,500f)
+        p.color=0xff080e20.toInt();c.drawRoundRect(51f,25f,669f,283f,12f,12f,p)
+        p.style=Paint.Style.STROKE;p.strokeWidth=4f;p.color=0xff8abed5.toInt();c.drawRoundRect(51f,25f,669f,283f,12f,12f,p);p.style=Paint.Style.FILL
+        p.textAlign=Paint.Align.CENTER;p.typeface=Typeface.DEFAULT_BOLD;p.textSize=17f;p.color=0xffe3be7b.toInt()
+        c.drawText(questionCategory.uppercase().take(48),360f,55f,p)
+        val prompt=promptLayout();c.save();c.translate(55f,67f+(172-prompt.height).coerceAtLeast(0)/2);prompt.draw(c);c.restore()
+        p.color=0xff233656.toInt();c.drawRoundRect(72f,258f,648f,265f,4f,4f,p)
+        p.color=if(remainingFraction<.2f)0xffffa37e.toInt() else 0xff63d9ef.toInt()
+        c.drawRoundRect(72f,258f,72f+576f*remainingFraction.coerceIn(0f,1f),265f,4f,4f,p)
+        // Perspective floor and practical strip lighting.
+        p.color=0xff102841.toInt();c.drawOval(72f,374f,648f,491f,p)
+        p.style=Paint.Style.STROKE;p.color=0xff417c9b.toInt();p.strokeWidth=2f;c.drawOval(72f,374f,648f,491f,p);p.style=Paint.Style.FILL
+        c.save();c.translate(105f,288f);c.scale(.68f,.68f);chair(c,129f);drawPlayer(c);c.restore()
+        c.save();c.translate(423f,288f);c.scale(.68f,.68f);chair(c,100f);presenter.draw(c,if(friendSpeaking)0f else energy,speaking&&!friendSpeaking,reaction,time);c.restore()
+        p.color=0xff0b162b.toInt();c.drawRoundRect(264f,326f,456f,435f,12f,12f,p)
+        p.style=Paint.Style.STROKE;p.color=0xffbb995e.toInt();p.strokeWidth=2f;c.drawRoundRect(264f,326f,456f,435f,12f,12f,p);p.style=Paint.Style.FILL
+        p.textSize=15f;p.color=0xff8ed8ed.toInt();c.drawText(questionNumber,360f,350f,p)
+        p.textSize=if(timerText.length>6)22f else 35f;p.color=if(reaction<0)0xffffa5ad.toInt() else Color.WHITE;c.drawText(timerText,360f,389f,p)
+        p.textSize=11f;p.color=0xffe3be7b.toInt();c.drawText(stageStatus.take(29),360f,416f,p)
+        p.textSize=13f;c.drawText(playerName.take(23),193f,466f,p);c.drawText("PREZANTUESI",491f,466f,p)
+        if(speaking)for(i in 0..8){val h=3f+14f*energy*(1f-abs(i-4)/6f);p.color=0xff67d8ed.toInt();c.drawRoundRect(312f+i*11,444f-h,317f+i*11,444f,2f,2f,p)}
+        val audienceFrame=if(reaction>0&&(time/320)%2==1L)1 else 0
+        c.drawBitmap(audience,Rect(0,audienceFrame*audience.height/2,audience.width,(audienceFrame+1)*audience.height/2),RectF(0f,483f,720f,560f),p)
+        c.restore()
+        audienceVotes?.let { votes ->
+            p.color=0xf00a152b.toInt();c.drawRoundRect(80f,302f,640f,485f,14f,14f,p)
+            p.textSize=18f;p.color=0xffe3be7b.toInt();c.drawText("KAMERA E PUBLIKUT • SIMULIM",360f,331f,p)
+            votes.forEachIndexed { i,v ->
+                val y=351f+i*29f;p.color=0xff304563.toInt();c.drawRoundRect(160f,y,565f,y+18,4f,4f,p)
+                p.color=0xff37acc5.toInt();c.drawRoundRect(160f,y,160f+405f*v/100,y+18,4f,4f,p)
+                p.color=Color.WHITE;p.textSize=16f;c.drawText("${'A'+i}",133f,y+15,p);c.drawText("$v%",605f,y+15,p)
+            }
+            // Boom microphone in the audience camera shot.
+            p.color=0xffa7b5c5.toInt();p.strokeWidth=5f;c.drawLine(37f,560f,77f,450f,p);c.drawLine(77f,450f,127f,426f,p)
+            p.color=0xff202735.toInt();c.drawRoundRect(115f,412f,160f,435f,10f,10f,p)
+        }
+        if(phoneState.isNotEmpty()){
+            p.color=0xf00a152b.toInt();c.drawRoundRect(170f,288f,550f,339f,12f,12f,p)
+            p.color=0xff8ee3e9.toInt();p.textSize=18f;c.drawText("☎  "+phoneState.take(28),360f,319f,p)
+        }
+        if(reaction>0&&(time-reactionStarted)<4000)drawFireworks(c,time-reactionStarted)
+        c.restoreToCount(save)
+        if(attached&&windowVisibility==VISIBLE)postInvalidateDelayed(if(speaking||audienceVotes!=null)40 else 80)
+    }
+    private fun chair(c:Canvas,x:Float){
+        p.color=0xff050914.toInt();c.drawOval(x-105,255f,x+110,283f,p)
+        p.shader=LinearGradient(x-85,90f,x+85,210f,0xff263b56.toInt(),0xff080f20.toInt(),Shader.TileMode.CLAMP)
+        c.drawRoundRect(x-91,65f,x+91,226f,32f,32f,p);c.drawRoundRect(x-105,179f,x+105,230f,16f,16f,p);p.shader=null
+        p.color=0xff1b263a.toInt();c.drawRoundRect(x-46,200f,x-7,270f,12f,12f,p);c.drawRoundRect(x+7,200f,x+46,270f,12f,12f,p)
+        p.color=0xff080c16.toInt();c.drawRoundRect(x-53,258f,x-4,275f,7f,7f,p);c.drawRoundRect(x+4,258f,x+53,275f,7f,7f,p)
+        p.color=0xff9ba6ad.toInt();c.drawRect(x-4,229f,x+4,278f,p);c.drawRect(x-70,276f,x+70,282f,p)
     }
     private fun drawFireworks(c:Canvas,elapsed:Long){
         val colors=intArrayOf(0xffffd979.toInt(),0xff65e2ef.toInt(),0xffd9a6ff.toInt(),Color.WHITE)
