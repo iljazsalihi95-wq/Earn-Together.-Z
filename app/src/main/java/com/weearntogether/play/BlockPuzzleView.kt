@@ -43,12 +43,13 @@ class BlockPuzzleView(context: Context, private val onNaturalBreak: (() -> Unit)
         offers = if (validOffers) parsedOffers!!.toMutableList() else freshOffers()
         // A saved tray with all three pieces consumed must be replenished on resume.
         // Otherwise a player can reopen a playable board and be stuck with no piece.
-        if (offers.all { it < 0 } && campaignShapeIds().any { canFitAnywhere(it) }) {
+        val replenished = offers.all { it < 0 } && campaignShapeIds().any { canFitAnywhere(it) }
+        if (replenished) {
             offers = freshOffers()
         }
         selected = offers.indexOfFirst { it >= 0 }.let { if (it >= 0) it else 0 }
         gameOver = !anyMoves()
-        if (!validBoard || !validOffers) save()
+        if (!validBoard || !validOffers || replenished) save()
     }
     fun restart(){for(row in board)row.fill(0);offers=freshOffers();selected=0;score=0;levelLines=0;combo=0;gameOver=false;dragging=false;previewX=-1;previewY=-1;performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);save();invalidate()}
     private fun canFitAnywhere(id:Int)=(0..7).any{y->(0..7).any{x->fits(id,x,y)}}
