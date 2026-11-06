@@ -225,18 +225,23 @@ class KnifeHitView(context:android.content.Context):View(context){
             dialog.setTitle("Thikat • $coins monedha")
             list.removeAllViews()
             blades.forEachIndexed { index, blade ->
-                val row = LinearLayout(activity).apply { gravity = Gravity.CENTER_VERTICAL }
+                val row = LinearLayout(activity).apply {
+                    gravity = Gravity.CENTER_VERTICAL;setPadding(dp(10),dp(8),dp(10),dp(8))
+                    background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xff122945.toInt(),0xff302055.toInt())).apply{cornerRadius=dp(18).toFloat();setStroke(dp(1),if(selected==index)0xffffd275.toInt() else 0x5578aaff)}
+                }
                 row.addView(object : View(activity) {
                     override fun onDraw(canvas: Canvas) {
                         renderBlade(canvas, width / 2f, height * .52f, 28f, width * .12f, height * .38f, index)
                     }
-                }, LinearLayout.LayoutParams(dp(44), dp(54)))
+                }, LinearLayout.LayoutParams(dp(64), dp(72)))
                 row.addView(Button(activity).apply {
                     text = when {
                         selected == index -> "${blade.name} • E zgjedhur"
                         owns(index) -> "${blade.name} • Zgjidh"
                         else -> "${blade.name} • ${blade.price} monedha"
                     }
+                    isAllCaps=false;textSize=14f;setTextColor(if(selected==index)0xffffd275.toInt() else Color.WHITE)
+                    setBackgroundColor(Color.TRANSPARENT)
                     isEnabled = selected != index && (owns(index) || coins >= blade.price)
                     setOnClickListener {
                         if (!owns(index)) {
@@ -248,12 +253,13 @@ class KnifeHitView(context:android.content.Context):View(context){
                         refresh()
                     }
                 }, LinearLayout.LayoutParams(0, -2, 1f))
-                list.addView(row)
+                list.addView(row,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(10)})
             }
         }
         dialog.setOnDismissListener { shopOpen = false; last = 0L; invalidate() }
         refresh()
         dialog.show()
+        dialog.window?.setBackgroundDrawable(GradientDrawable().apply{setColor(0xff0c1630.toInt());cornerRadius=dp(24).toFloat()})
     }
 
     private val collisionAngle get() = if (totalBlades + obstacles.size >= 14) 11f else 13f
@@ -359,7 +365,8 @@ class KnifeHitView(context:android.content.Context):View(context){
         val blink=if(ambience%5.8f>5.62f).12f else 1f
         val hurt=(1f-hitAge/.28f).coerceIn(0f,1f)
         val eyeY=cy-r*.13f;val eyeW=r*.23f;val eyeH=r*(.17f-.07f*hurt)*blink
-        for(side in listOf(-1f,1f)){
+        repeat(2){sideIndex->
+            val side=if(sideIndex==0)-1f else 1f
             val x=cx+side*r*.35f
             fill(0xcc071326.toInt());c.drawOval(x-eyeW,eyeY-eyeH,x+eyeW,eyeY+eyeH,p)
             p.shader=RadialGradient(x,eyeY,r*.16f,intArrayOf(Color.WHITE,if(boss)0xffff6f68.toInt() else worldTints[targetStyle],Color.TRANSPARENT),null,Shader.TileMode.CLAMP);c.drawCircle(x,eyeY,r*.16f*blink,p);p.shader=null
