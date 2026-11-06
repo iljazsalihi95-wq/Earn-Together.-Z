@@ -104,6 +104,31 @@ class NativeExperienceTest {
         }
     }
 
+    @Test fun knifeHitRescueRetainsBoardAndRejectsStaleReward() {
+        val prefs=ProgressPreferences.open(inst.targetContext,"knife_hit")
+        prefs.edit().clear().putInt("board_level",1).putString("stuck_angles","90.0").putBoolean("round_lost",true).commit()
+        val activity=launch(KnifeHitActivity::class.java)
+        try {
+            inst.runOnMainSync {
+                val game=views(activity.window.decorView).filterIsInstance<KnifeHitView>().single()
+                val token=requireNotNull(game.rescueToken())
+                game.continueAfterVerifiedVideo(token+1)
+                assertTrue(game.hasLostRound)
+                game.continueAfterVerifiedVideo(token)
+                assertFalse(game.hasLostRound)
+                assertEquals("90.0",prefs.getString("stuck_angles",""))
+                assertTrue(prefs.getBoolean("round_rescue_used",false))
+                assertFalse(prefs.getBoolean("round_lost",true))
+                game.restartLevel()
+                game.continueAfterVerifiedVideo(token)
+                assertFalse(prefs.getBoolean("round_rescue_used",true))
+            }
+        } finally {
+            inst.runOnMainSync { activity.finish() }
+            prefs.edit().clear().commit()
+        }
+    }
+
     @Test fun gardenSwapsAdjacentTilesWithTwoTaps(){
         val activity=launch(com.weearntogether.lazygarden.LazyGardenActivity::class.java)
         try {

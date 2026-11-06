@@ -12,6 +12,11 @@ import kotlin.math.*
 /** Fantasy arcade renderer: stylised targets/blades only, not a real-world throwing simulation. */
 class KnifeHitActivity:Activity(){
     private lateinit var game:KnifeHitView
+    private lateinit var recovery:LinearLayout
+    private lateinit var watch:Button
+    private var unityAds:LevelPlayManager?=null
+    private var adMob:NativeGameAds?=null
+    private var showingVideo=false
     override fun onCreate(state:Bundle?){super.onCreate(state);window.statusBarColor=0xff07152f.toInt();window.navigationBarColor=0xff07152f.toInt();window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         val root=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setBackgroundColor(0xff071020.toInt())}
         val top=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(12),dp(8),dp(12),dp(8));background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xff101b43.toInt(),0xff43217d.toInt(),0xff225cc8.toInt()))}
@@ -25,12 +30,71 @@ class KnifeHitActivity:Activity(){
             setOnClickListener { game.openShop(this@KnifeHitActivity) }
         },LinearLayout.LayoutParams(-1,dp(48)))
         root.addView(game,LinearLayout.LayoutParams(-1,0,1f))
+        recovery=LinearLayout(this).apply { orientation=LinearLayout.HORIZONTAL }
+        watch=Button(this).apply {
+            text="SHIKO VIDEO DHE VAZHDO"
+            setOnClickListener { showRecoveryVideo() }
+        }
+        recovery.addView(watch,LinearLayout.LayoutParams(0,dp(52),2f))
+        recovery.addView(Button(this).apply {
+            text="RIFILLO"
+            setOnClickListener { game.restartLevel() }
+        },LinearLayout.LayoutParams(0,dp(52),1f))
+        root.addView(recovery)
+        if(!(BuildConfig.DEBUG && intent.getBooleanExtra("native_qa",false))) {
+            adMob=NativeGameAds(this,"knife_hit",gameplayOnly=true)
+            val id=AccountStore(this).currentUserId()
+                ?:getSharedPreferences("wet_guest_profile",MODE_PRIVATE).getString("guest_id",null)
+            unityAds=LevelPlayManager(this,id).also {
+                it.initialize(makeActive=false,rewardedOnly=true)
+            }
+        }
+        game.onRecoveryChanged=::refreshRecovery
+        refreshRecovery()
         val nav=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER;setPadding(dp(12),dp(6),dp(12),dp(10));background=GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,intArrayOf(0xff09152f.toInt(),0xff241050.toInt(),0xff0b3562.toInt())).apply{setStroke(dp(1),0x6658c8ff)}}
         fun navButton(label:String,action:()->Unit)=TextView(this).apply{text=label;textSize=12f;setTextColor(Color.WHITE);gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);isClickable=true;isFocusable=true;background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff153b7a.toInt(),0xff6b2ea6.toInt(),0xffb9872d.toInt())).apply{cornerRadius=dp(20).toFloat();setStroke(dp(1),0x99ffd66b.toInt())};setOnClickListener{performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);action()}}
         nav.addView(navButton("BLOCK PUZZLE ›"){startActivity(Intent(this,BlockPuzzleActivity::class.java))},LinearLayout.LayoutParams(0,dp(42),1f).apply{rightMargin=dp(6)})
         nav.addView(navButton("BUBBLE SHOOTER ›"){startActivity(Intent(this,BubbleShooterActivity::class.java))},LinearLayout.LayoutParams(0,dp(42),1f).apply{leftMargin=dp(6)})
         root.addView(nav,LinearLayout.LayoutParams(-1,dp(58)));setContentView(root)
     }
+    private fun refreshRecovery() {
+        recovery.visibility=if(game.hasLostRound) View.VISIBLE else View.GONE
+        watch.visibility=if(game.rescueToken()!=null && adMob!=null) View.VISIBLE else View.GONE
+        watch.isEnabled=!showingVideo
+    }
+
+    private fun showRecoveryVideo() {
+        val token=game.rescueToken()?:return
+        if(showingVideo)return
+        showingVideo=true
+        refreshRecovery()
+        val grant={
+            if(!isFinishing&&!isDestroyed)game.continueAfterVerifiedVideo(token)
+            Unit
+        }
+        val finish={
+            showingVideo=false
+            if(!isFinishing&&!isDestroyed)refreshRecovery()
+        }
+        fun useAdMob() {
+            if(isFinishing||isDestroyed||game.rescueToken()!=token) {
+                finish()
+                return
+            }
+            if(adMob?.rewardedForGameplay(grant,finish)!=true) {
+                finish()
+                Toast.makeText(this,"Videoja nuk është gati. Mund ta rifillosh nivelin.",Toast.LENGTH_SHORT).show()
+            }
+        }
+        if(unityAds?.showRewardedForGameplayWithFallback(grant,finish,::useAdMob)!=true)useAdMob()
+    }
+
+    override fun onDestroy() {
+        unityAds?.dispose()
+        adMob?.destroy()
+        super.onDestroy()
+    }
+
     private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt()
     override fun onResume(){super.onResume();if(::game.isInitialized)game.setRunning(true)};override fun onPause(){if(::game.isInitialized)game.setRunning(false);super.onPause()}
 }
@@ -47,6 +111,22 @@ class KnifeHitView(context:android.content.Context):View(context){
     private var remaining = 0
     private var totalBlades = 0
     private var lost = false
+    private var rescueUsed = false
+    private var attempt = 0
+    var onRecoveryChanged: (() -> Unit)? = null
+    val hasLostRound get() = lost
+
+    fun rescueToken(): Int? = attempt.takeIf { lost && !rescueUsed }
+
+    fun continueAfterVerifiedVideo(token: Int) {
+        if (rescueToken() != token) return
+        rescueUsed = true
+        lost = false
+        missAge = 1f
+        save()
+        onRecoveryChanged?.invoke()
+        invalidate()
+    }
     private var cleared = false
     private var completed = prefs.getBoolean("campaign_complete", false) && level == 200
     private var running = true
@@ -69,6 +149,8 @@ class KnifeHitView(context:android.content.Context):View(context){
     init { isFocusable = true; isClickable = true; setupLevel(restore = true) }
 
     private fun setupLevel(restore: Boolean = false) {
+        attempt++
+        rescueUsed = false
         lost = false
         cleared = false
         flight = -1f
@@ -96,9 +178,11 @@ class KnifeHitView(context:android.content.Context):View(context){
                 stuck.addAll(angles)
                 remaining -= angles.size
                 lost = prefs.getBoolean("round_lost", false)
+                rescueUsed = prefs.getBoolean("round_rescue_used", false)
             }
         }
         save()
+        onRecoveryChanged?.invoke()
         invalidate()
     }
 
@@ -124,7 +208,7 @@ class KnifeHitView(context:android.content.Context):View(context){
         best = max(best, nextLevel)
         prefs.edit().putInt("level", nextLevel).putInt("best", best).putInt("score", score)
             .putInt("board_level", nextLevel).putString("stuck_angles", if (cleared) "" else stuck.joinToString(","))
-            .putBoolean("round_lost", lost).putBoolean("campaign_complete", completed)
+            .putBoolean("round_rescue_used", !cleared && rescueUsed).putBoolean("round_lost", lost).putBoolean("campaign_complete", completed)
             .putInt("blade_coins", coins).putInt("blade_owned", owned).putInt("blade_selected", selected).apply()
     }
 
@@ -196,12 +280,13 @@ class KnifeHitView(context:android.content.Context):View(context){
             }
         }
         save()
+        if(lost)onRecoveryChanged?.invoke()
     }
 
     override fun performClick(): Boolean {
         super.performClick()
-        if (lost || completed) restartLevel()
-        else if (!shopOpen && !cleared && flight < 0f) { flight = 0f; invalidate() }
+        if (completed) restartLevel()
+        else if (!lost && !shopOpen && !cleared && flight < 0f) { flight = 0f; invalidate() }
         return true
     }
 
@@ -377,7 +462,7 @@ class KnifeHitView(context:android.content.Context):View(context){
         }
         val hint = when {
             completed -> "FUSHATA U PËRFUNDUA • RIFILLO"
-            lost -> "U PËRPLAS! • RIFILLO NIVELIN"
+            lost -> "U PËRPLAS!"
             cleared -> "NIVELI U FITUA!"
             else -> "PREK PËR TË HEDHUR"
         }
