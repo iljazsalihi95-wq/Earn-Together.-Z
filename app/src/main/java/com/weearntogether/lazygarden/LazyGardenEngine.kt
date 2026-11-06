@@ -28,7 +28,52 @@ class LazyGardenEngine(val level:LazyGardenLevel,private val random:Random=Rando
     fun restoreState(boardState:String,obstacleState:String,obstacleHitState:String?=null):Boolean{val cells=level.rows*level.columns;if(boardState.length!=cells||obstacleState.length!=cells)return false;val savedHits=obstacleHitState?.split(',')?.takeIf{it.size==level.rows}?.map{row->row.split('.').mapNotNull(String::toIntOrNull).takeIf{it.size==level.columns}?:return@map emptyList()};val validSavedHits=savedHits?.takeIf{rows->rows.size==level.rows&&rows.all{it.size==level.columns}};var i=0;for(r in 0 until level.rows)for(c in 0 until level.columns){val tile=boardState[i].digitToIntOrNull()?.let{GardenTile.entries.getOrNull(it)}?:return false;val obstacle=when(obstacleState[i]){'0'->null;'1'->GardenObstacle.CRATE;'2'->GardenObstacle.IVY;'3'->GardenObstacle.STONE;else->return false};board[r][c]=tile;obstacles[r][c]=obstacle;val max=durability(obstacle);obstacleHits[r][c]=if(obstacle==null)0 else validSavedHits?.get(r)?.get(c)?.coerceIn(1,max)?:max;i++};if(findMatches().cells.isNotEmpty()||!hasValidMove())return false;return true}
     fun swap(a:Cell,b:Cell):MatchResult?{if(movesLeft<=0||!inside(a)||!inside(b)||abs(a.row-b.row)+abs(a.col-b.col)!=1)return null;if(blocksSwap(a)||blocksSwap(b))return null;swapTiles(a,b);var matches=findMatches();if(matches.cells.isEmpty()){swapTiles(a,b);return null};movesLeft--;val collected=mutableMapOf<GardenTile,Int>();val cleared=mutableMapOf<GardenObstacle,Int>();val resolvedCells=linkedSetOf<Cell>();while(matches.cells.isNotEmpty()){val powered=expandPowerClear(matches);resolvedCells+=powered.cells;powered.tiles.forEach{(t,n)->collected[t]=(collected[t]?:0)+n};damageObstacles(powered.cells).forEach{(o,n)->cleared[o]=(cleared[o]?:0)+n};collapseAndRefill(powered.cells.filterNot(::blocksSwap).toSet());matches=findMatches()};ensurePlayableBoard();return MatchResult(resolvedCells,collected,cleared)}
     fun activatePowerUp(powerUp:GardenPowerUp,target:Cell):MatchResult?{if(!inside(target)||movesLeft<=0)return null;val affected=linkedSetOf<Cell>();when(powerUp){GardenPowerUp.HAMMER->affected+=target;GardenPowerUp.BOMB->for(dr in -1..1)for(dc in -1..1){val cell=Cell(target.row+dr,target.col+dc);if(inside(cell))affected+=cell};GardenPowerUp.ROW_SWEEP->for(c in 0 until level.columns)affected+=Cell(target.row,c);GardenPowerUp.COLUMN_SWEEP->for(r in 0 until level.rows)affected+=Cell(r,target.col);GardenPowerUp.CROSS_BLAST->{for(c in 0 until level.columns)affected+=Cell(target.row,c);for(r in 0 until level.rows)affected+=Cell(r,target.col)}};val tiles=affected.filterNot(::blocksSwap).groupingBy{board[it.row][it.col]}.eachCount();val cleared=damageObstacles(affected);collapseAndRefill(affected.filterNot(::blocksSwap).toSet());var cascade=findMatches();val allCells=linkedSetOf<Cell>().apply{addAll(affected)};val allTiles=tiles.toMutableMap();val allObstacles=cleared.toMutableMap();while(cascade.cells.isNotEmpty()){val powered=expandPowerClear(cascade);allCells.addAll(powered.cells);powered.tiles.forEach{(t,n)->allTiles[t]=(allTiles[t]?:0)+n};damageObstacles(powered.cells).forEach{(o,n)->allObstacles[o]=(allObstacles[o]?:0)+n};collapseAndRefill(powered.cells.filterNot(::blocksSwap).toSet());cascade=findMatches()};ensurePlayableBoard();return MatchResult(allCells,allTiles,allObstacles)}
-    private fun expandPowerClear(match:MatchResult):MatchResult{if(match.cells.size<4)return match;val expanded=linkedSetOf<Cell>().apply{addAll(match.cells)};val rows=match.cells.groupBy{it.row};val columns=match.cells.groupBy{it.col};fun rainbowClear(line:List<Cell>){if(line.size<5)return;val colour=board[line.first().row][line.first().col];for(r in 0 until level.rows)for(c in 0 until level.columns){val cell=Cell(r,c);if(!blocksSwap(cell)&&board[r][c]==colour)expanded+=cell}};rows.filterValues{it.size>=4}.forEach{(row,line)->for(c in 0 until level.columns)expanded+=Cell(row,c);rainbowClear(line)};columns.filterValues{it.size>=4}.forEach{(col,line)->for(r in 0 until level.rows)expanded+=Cell(r,col);rainbowClear(line)};val intersections=match.cells.filter{cell->(rows[cell.row]?.size?:0)>=3&&(columns[cell.col]?.size?:0)>=3};intersections.forEach{pivot->for(dr in -1..1)for(dc in -1..1){val cell=Cell(pivot.row+dr,pivot.col+dc);if(inside(cell))expanded+=cell}};return MatchResult(expanded,expanded.filterNot(::blocksSwap).groupingBy{board[it.row][it.col]}.eachCount())}
+    private fun expandPowerClear(match: MatchResult): MatchResult {
+        if (match.cells.size < 4) return match
+        val expanded = match.cells.toMutableSet()
+        val horizontal = mutableSetOf<Cell>()
+        val vertical = mutableSetOf<Cell>()
+        val rainbowColors = mutableSetOf<GardenTile>()
+        fun processLine(cells: List<Cell>, runs: MutableSet<Cell>) {
+            var start = 0
+            while (start < cells.size) {
+                val first = cells[start]
+                val tile = board[first.row][first.col]
+                if (first !in match.cells || blocksSwap(first)) { start++; continue }
+                var end = start + 1
+                while (end < cells.size) {
+                    val next = cells[end]
+                    if (next !in match.cells || blocksSwap(next) || board[next.row][next.col] != tile) break
+                    end++
+                }
+                val length = end - start
+                if (length >= 3) runs.addAll(cells.subList(start, end))
+                if (length >= 4) expanded.addAll(cells)
+                if (length >= 5) rainbowColors.add(tile)
+                start = end
+            }
+        }
+        for (row in 0 until level.rows) {
+            processLine(List(level.columns) { col -> Cell(row, col) }, horizontal)
+        }
+        for (col in 0 until level.columns) {
+            processLine(List(level.rows) { row -> Cell(row, col) }, vertical)
+        }
+        for (pivot in horizontal.intersect(vertical)) {
+            for (dr in -1..1) for (dc in -1..1) {
+                val cell = Cell(pivot.row + dr, pivot.col + dc)
+                if (inside(cell)) expanded.add(cell)
+            }
+        }
+        if (rainbowColors.isNotEmpty()) {
+            for (row in 0 until level.rows) for (col in 0 until level.columns) {
+                val cell = Cell(row, col)
+                if (!blocksSwap(cell) && board[row][col] in rainbowColors) expanded.add(cell)
+            }
+        }
+        return MatchResult(expanded, expanded.filterNot(::blocksSwap).groupingBy { board[it.row][it.col] }.eachCount())
+    }
+
     fun findMatches():MatchResult{val cells=linkedSetOf<Cell>();fun blocked(r:Int,c:Int):Boolean{return obstacles[r][c]==GardenObstacle.STONE||obstacles[r][c]==GardenObstacle.CRATE};for(r in board.indices){var start=0;while(start<level.columns){if(blocked(r,start)){start++;continue};var end=start+1;while(end<level.columns&&!blocked(r,end)&&board[r][end]==board[r][start])end++;if(end-start>=3)for(c in start until end)cells+=Cell(r,c);start=end}};for(c in 0 until level.columns){var start=0;while(start<level.rows){if(blocked(start,c)){start++;continue};var end=start+1;while(end<level.rows&&!blocked(end,c)&&board[end][c]==board[start][c])end++;if(end-start>=3)for(r in start until end)cells+=Cell(r,c);start=end}};return MatchResult(cells,cells.groupingBy{board[it.row][it.col]}.eachCount())}
     fun findHint():Pair<Cell,Cell>?{if(movesLeft<=0)return null;for(r in 0 until level.rows)for(c in 0 until level.columns){val a=Cell(r,c);if(blocksSwap(a))continue;if(c+1<level.columns){val b=Cell(r,c+1);if(!blocksSwap(b)&&createsMatch(a,b))return a to b};if(r+1<level.rows){val b=Cell(r+1,c);if(!blocksSwap(b)&&createsMatch(a,b))return a to b}};return null}
     fun hasValidMove():Boolean=findHint()!=null

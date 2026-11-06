@@ -306,7 +306,7 @@ class ArenaCloudActivity:Activity(){
         call("arenaNext",data){prefs.edit().remove("pending_next").apply();accept(it)}
     }
     private fun retryAnswer(){if(isOfflineSession()){render();return};val next=runCatching{JSONObject(prefs.getString("pending_next","")?:"")}.getOrNull();if(next!=null){call("arenaNext",next){prefs.edit().remove("pending_next").apply();accept(it)};return};val p=runCatching{JSONObject(prefs.getString("pending_answer","")?:"")}.getOrNull();if(p!=null)call("arenaAnswer",p){prefs.edit().remove("pending_answer").apply();accept(it)}else session?.let{call("arenaResume",JSONObject().put("session_id",it.getString("session_id"))){v->accept(v)}}}
-    private fun stopVoice(){applause?.release();applause=null;voiceCompletion=null;tts?.stop();voiceGeneration++;player?.release();player=null;speechEnvelope=null;scene?.speaking=false;scene?.friendSpeaking=false;scene?.speechEnergy=null}
+    private fun stopVoice(){voiceGeneration++;sound?.stopTone();applause?.release();applause=null;voiceCompletion=null;tts?.stop();player?.release();player=null;speechEnvelope=null;scene?.speaking=false;scene?.friendSpeaking=false;scene?.speechEnergy=null}
     private fun narrationFinished(phase:String,key:String){
         if(key!=questionKey())return
         scene?.speaking=false;scene?.friendSpeaking=false
@@ -316,27 +316,34 @@ class ArenaCloudActivity:Activity(){
         completion?.invoke()
     }
     private fun ttsFallback(phase:String){
-        if(!audioEnabled)return;val s=session?:return;val q=s.optJSONObject("question")?:return
-        if(!isOfflineSession())status.text="Audioja AI nuk u ngarkua. Po provoj leximin zanor të pajisjes."
+        if(!audioEnabled||!resumed)return
+        val s=session?:return
+        val q=s.optJSONObject("question")?:JSONObject()
+        if(locale!="sq"&&phase !in setOf("question","explanation")){
+            narrationFinished(phase,questionKey(s))
+            return
+        }
+        status.text="Lexim me zërin e pajisjes."
         val lang=locale
         if(!ttsReady||(tts?.isLanguageAvailable(java.util.Locale(lang))?:-1)<0){status.text="Audioja nuk është e disponueshme. Loja vazhdon me tekst.";narrationFinished(phase,questionKey(s));return}
         tts?.language=java.util.Locale(lang)
         tts?.voices?.filter { it.locale.language==lang&& !it.features.orEmpty().contains("notInstalled") }?.maxByOrNull { it.quality }?.let { tts?.voice=it }
         val f=s.optJSONObject("feedback")
-        val text=if(phase=="phone_intro")"${prefs.getString("name","Lojtari")}, po telefonojmë shokun për mendimin e tij. Ai nuk e ka përgjigjen e garantuar." else if(phase=="phone_outro")"Faleminderit për ndihmën! ${prefs.getString("name","Lojtari")}, tani zgjedhja të mbetet ty." else if(phase=="intro")"Mirë se erdhe në Quiz Arena Premium, ${prefs.getString("name","Lojtari")}! Je gati për nivelin ${s.optInt("level")}?" else if(phase=="clarify")dialogueText else if(phase=="friend")friendText.ifBlank{"Më vjen keq, lidhja me shokun nuk u realizua. Loja mund të vazhdojë."} else if(phase=="result")"${prefs.getString("name","Lojtari")}, ${s.optInt("correct")} përgjigje të sakta nga ${s.optInt("total")}. ${s.optInt("score")} pikë." else if(phase=="explanation"&&f!=null)q.getJSONArray("choices").optString(f.getInt("correct"))+". "+f.optString("explanation") else q.optString("prompt")+". "+(0 until q.getJSONArray("choices").length()).joinToString(". "){"${'A'+it}. "+q.getJSONArray("choices").getString(it)}
+        val text=if(phase=="phone_intro")"${prefs.getString("name","Lojtari")}, po telefonojmë shokun për mendimin e tij. Ai nuk e ka përgjigjen e garantuar." else if(phase=="phone_outro")"Faleminderit për ndihmën! ${prefs.getString("name","Lojtari")}, tani zgjedhja të mbetet ty." else if(phase=="intro")"Mirë se erdhe në Quiz Arena Premium, ${prefs.getString("name","Lojtari")}! Je gati për nivelin ${s.optInt("level")}?" else if(phase=="clarify")dialogueText else if(phase=="friend")friendText.ifBlank{"Më vjen keq, lidhja me shokun nuk u realizua. Loja mund të vazhdojë."} else if(phase=="result")"${prefs.getString("name","Lojtari")}, ${s.optInt("correct")} përgjigje të sakta nga ${s.optInt("total")}. ${s.optInt("score")} pikë." else if(phase=="explanation"&&f!=null)q.getJSONArray("choices").optString(f.getInt("correct"))+". "+f.optString("explanation") else q.optString("prompt")+". "+(0 until (q.optJSONArray("choices")?.length()?:0)).joinToString(". "){"${'A'+it}. "+q.getJSONArray("choices").getString(it)}
         val key=questionKey(s);val generation=voiceGeneration
+        val utteranceId="arena-fallback-$generation"
         tts?.setPitch(1.0f)
         tts?.setSpeechRate(.92f)
         val pcm=ArenaPcmStream()
         var started=0L
         tts?.setOnUtteranceProgressListener(object:android.speech.tts.UtteranceProgressListener(){
-            override fun onBeginSynthesis(id:String?,sampleRateInHz:Int,audioFormat:Int,channelCount:Int){pcm.configure(sampleRateInHz,audioFormat,channelCount)}
-            override fun onAudioAvailable(id:String?,audio:ByteArray?){if(audio!=null)pcm.append(audio)}
-            override fun onStart(id:String?){runOnUiThread{if(generation==voiceGeneration){started=android.os.SystemClock.uptimeMillis();scene?.speechEnergy={pcm.at((android.os.SystemClock.uptimeMillis()-started).toInt())};scene?.speaking=true;scene?.friendSpeaking=phase=="friend";scene?.stageStatus=if(phase=="friend")"SHOKU PO FLET" else "PREZANTUESI PO FLET"}}}
-            override fun onDone(id:String?){runOnUiThread{if(generation==voiceGeneration)narrationFinished(phase,key)}}
+            override fun onBeginSynthesis(id:String?,sampleRateInHz:Int,audioFormat:Int,channelCount:Int){if(id==utteranceId)pcm.configure(sampleRateInHz,audioFormat,channelCount)}
+            override fun onAudioAvailable(id:String?,audio:ByteArray?){if(id==utteranceId&&audio!=null)pcm.append(audio)}
+            override fun onStart(id:String?){runOnUiThread{if(id==utteranceId&&generation==voiceGeneration){started=android.os.SystemClock.uptimeMillis();scene?.speechEnergy={pcm.at((android.os.SystemClock.uptimeMillis()-started).toInt())};scene?.speaking=true;scene?.friendSpeaking=phase=="friend";scene?.stageStatus=if(phase=="friend")"SHOKU PO FLET" else "PREZANTUESI PO FLET"}}}
+            override fun onDone(id:String?){runOnUiThread{if(id==utteranceId&&generation==voiceGeneration)narrationFinished(phase,key)}}
             @Deprecated("TTS callback") override fun onError(id:String?){onDone(id)}
         })
-        if(tts?.speak(ArenaAlbanianSpeech.forVoice(text,lang),android.speech.tts.TextToSpeech.QUEUE_FLUSH,null,"arena-fallback")==android.speech.tts.TextToSpeech.ERROR)narrationFinished(phase,key)
+        if(tts?.speak(ArenaAlbanianSpeech.forVoice(text,lang),android.speech.tts.TextToSpeech.QUEUE_FLUSH,null,utteranceId)==android.speech.tts.TextToSpeech.ERROR)narrationFinished(phase,key)
     }
     private fun trimVoiceCache(keep:java.io.File){
         val files=cacheDir.listFiles{f->f.name.startsWith("arena-voice-")&&f.extension=="mp3"}.orEmpty().sortedBy{it.lastModified()}
@@ -379,7 +386,17 @@ class ArenaCloudActivity:Activity(){
             voiceNetwork.execute {
                 val prepared=runCatching {
                     val file=java.io.File(cacheDir,"arena-recorded-v1-"+clips[index]+".mp3")
-                    if(!file.exists())assets.open("quiz-arena/voice-sq/"+clips[index]+".mp3").use { input->file.outputStream().use { input.copyTo(it) } }
+                    if(!file.isFile||file.length()==0L){
+                        val temp=java.io.File.createTempFile("arena-recording-", ".part", cacheDir)
+                        try {
+                            assets.open("quiz-arena/voice-sq/"+clips[index]+".mp3").use { input ->
+                                temp.outputStream().use { input.copyTo(it) }
+                            }
+                            check(temp.length()>0L&&temp.renameTo(file))
+                        } finally {
+                            temp.delete()
+                        }
+                    }
                     file to runCatching { ArenaSpeechEnvelope.decode(file) }.getOrNull()
                 }
                 runOnUiThread {
@@ -405,7 +422,7 @@ class ArenaCloudActivity:Activity(){
     private fun voice(phase:String,onDone:(()->Unit)?=null){
         if(!audioEnabled){onDone?.invoke();return};val s=session?:return;stopVoice();voiceCompletion=onDone;if(recordedVoice(phase,s))return;if(directBridge&&phase !in setOf("question","explanation")){ttsFallback(phase);return};if(isOfflineSession()){ttsFallback(phase);return}
         val generation=voiceGeneration;val version=modeVersion
-        val q=s.optJSONObject("question")?:return
+        val q=s.optJSONObject("question")?:run{ttsFallback(phase);return}
         val cacheKey=java.security.MessageDigest.getInstance("SHA-256").digest(("natural-male-v6|"+prefs.getString("name","")+locale+q.toString()+(s.optJSONObject("feedback")?.toString()?:"")+phase+if(phase=="clarify")dialogueText else if(phase=="friend")friendText else "").toByteArray()).joinToString(""){"%02x".format(it)}
         val cachedAudio=java.io.File(cacheDir,"arena-voice-$cacheKey.mp3")
         fun playCached(){
@@ -418,7 +435,7 @@ class ArenaCloudActivity:Activity(){
                 setOnCompletionListener{
                     if(generation==voiceGeneration&&resumed&&session===s)narrationFinished(phase,questionKey(s))
                 }
-                setOnErrorListener{_,_,_->cachedAudio.delete();ttsFallback(phase);true}
+                setOnErrorListener{_,_,_->if(generation==voiceGeneration&&resumed&&session===s){player?.release();player=null;cachedAudio.delete();ttsFallback(phase)};true}
                 prepareAsync()
             }
         }
@@ -498,6 +515,6 @@ class ArenaCloudActivity:Activity(){
     @Deprecated("Activity back navigation") override fun onBackPressed(){if(session!=null){modeVersion++;home()}else super.onBackPressed()}
     override fun onActivityResult(code:Int,result:Int,data:android.content.Intent?){super.onActivityResult(code,result,data);if(code==3116){val s=pendingChallenge;pendingChallenge=null;advancing=false;if(s!=null&&session===s){if(result==RESULT_OK){prefs.edit().putBoolean("challenge:"+questionKey(s),true).apply();if(isOfflineSession())accept(localStore.next(s)) else nextLive(s)}else render()};return};if(code==PlayerPortrait.REQUEST&&PlayerPortrait.receive(this,result,data)){prefs.edit().putBoolean("initial_avatar",false).apply();PlayerPortrait.adjust(this){home()}}}
     override fun onResume(){super.onResume();resumed=true;ads.resume();if(isOfflineSession()&&!advancing){deadline=android.os.SystemClock.elapsedRealtime()+(session?.optLong("remaining_ms")?:0);render()}else if(session!=null&&!busy&&!advancing){retryAnswer()};if(!qa()){retryHandler.removeCallbacks(retry);retryHandler.postDelayed(retry,1000)}}
-    override fun onPause(){phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;scene?.phoneState="";sound?.stopTone();if(session?.optBoolean("presentation_pending")==true)narrationKey="";persistLocal();timer?.cancel();retryHandler.removeCallbacks(retry);resumed=false;stopVoice();applause?.pause();ads.pause();super.onPause()}
+    override fun onPause(){phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;scene?.phoneState="";sound?.stopTone();if(player!=null||scene?.speaking==true||session?.optBoolean("presentation_pending")==true)narrationKey="";persistLocal();timer?.cancel();retryHandler.removeCallbacks(retry);resumed=false;stopVoice();applause?.pause();ads.pause();super.onPause()}
     override fun onDestroy(){learningDialog?.dismiss();retryHandler.removeCallbacks(retry);tts?.shutdown();network.shutdownNow();voiceNetwork.shutdownNow();timer?.cancel();stopVoice();sound?.release();applause?.release();ads.destroy();super.onDestroy()}
 }
