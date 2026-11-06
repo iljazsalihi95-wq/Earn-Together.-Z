@@ -64,6 +64,74 @@ class NativeExperienceTest {
             shot("00-primary-games")
         }finally{inst.runOnMainSync{a.finish()}}
     }
+    @Test fun knifeHitSavesImpactAndPurchasedBladeAcrossRelaunch(){
+        val prefs=ProgressPreferences.open(inst.targetContext,"knife_hit")
+        prefs.edit().clear().putInt("blade_coins",40).commit()
+        var activity=launch(KnifeHitActivity::class.java)
+        try {
+            val firstBoard=views(activity.window.decorView).filterIsInstance<KnifeHitView>().single()
+            inst.runOnMainSync { firstBoard.performClick() }
+            val end=android.os.SystemClock.uptimeMillis()+3000L
+            while(prefs.getString("stuck_angles","").isNullOrEmpty()&&android.os.SystemClock.uptimeMillis()<end){
+                android.os.SystemClock.sleep(35)
+            }
+            val saved=prefs.getString("stuck_angles","")
+            assertFalse("The first thrown blade should reach the target",saved.isNullOrEmpty())
+            inst.runOnMainSync {
+                views(activity.window.decorView).filterIsInstance<Button>().first{it.text=="DYQANI I THIKAVE"}.performClick()
+            }
+            inst.waitForIdleSync()
+            fun findBuy(node:android.view.accessibility.AccessibilityNodeInfo?):android.view.accessibility.AccessibilityNodeInfo? {
+                if(node==null)return null
+                if(node.text?.contains("Akull • 30 monedha",ignoreCase=true)==true)return node
+                for(i in 0 until node.childCount)findBuy(node.getChild(i))?.let{return it}
+                return null
+            }
+            val buy=findBuy(inst.uiAutomation.rootInActiveWindow)
+            assertNotNull("The blade shop must show the Ice blade price",buy)
+            assertTrue(buy!!.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK))
+            inst.waitForIdleSync()
+            assertEquals(10,prefs.getInt("blade_coins",-1))
+            assertEquals(1,prefs.getInt("blade_selected",-1))
+            inst.runOnMainSync { activity.finish() }
+            activity=launch(KnifeHitActivity::class.java)
+            assertEquals(saved,prefs.getString("stuck_angles",""))
+            assertEquals(3,prefs.getInt("blade_owned",0))
+            assertEquals(1,prefs.getInt("blade_selected",-1))
+        } finally {
+            inst.runOnMainSync { activity.finish() }
+            prefs.edit().clear().commit()
+        }
+    }
+
+    @Test fun gardenSwapsAdjacentTilesWithTwoTaps(){
+        val activity=launch(com.weearntogether.lazygarden.LazyGardenActivity::class.java)
+        try {
+            inst.runOnMainSync {
+                val board=views(activity.window.decorView)
+                    .filterIsInstance<com.weearntogether.lazygarden.LazyGardenBoardView>().single()
+                val engine=board.engine
+                val moves=engine.movesLeft
+                val (first,second)=requireNotNull(engine.findHint())
+                val size=minOf(board.width.toFloat()/engine.level.columns,board.height.toFloat()/engine.level.rows)
+                assertTrue(size>0f)
+                fun tap(cell:com.weearntogether.lazygarden.Cell){
+                    val x=(board.width-size*engine.level.columns)/2f+(cell.col+.5f)*size
+                    val y=(board.height-size*engine.level.rows)/2f+(cell.row+.5f)*size
+                    val now=android.os.SystemClock.uptimeMillis()
+                    for(action in listOf(android.view.MotionEvent.ACTION_DOWN,android.view.MotionEvent.ACTION_UP)){
+                        val event=android.view.MotionEvent.obtain(now,now,action,x,y,0)
+                        try { assertTrue(board.dispatchTouchEvent(event)) } finally { event.recycle() }
+                    }
+                }
+                tap(first)
+                assertEquals(moves,engine.movesLeft)
+                tap(second)
+                assertEquals(moves-1,engine.movesLeft)
+            }
+        } finally { inst.runOnMainSync { activity.finish() } }
+    }
+
     @Test fun offlineEngineValidatesGradesResumesAndNeverDuplicatesPoints(){
         val ctx=inst.targetContext;ctx.getSharedPreferences("arena_offline_v1_qa_engine",0).edit().clear().commit()
         val store=ArenaOfflineStore(ctx,"qa_engine");assertTrue(store.questions.size>=80);assertTrue(store.questions.any{it.id.startsWith("general-")});assertTrue(store.categories().all{category->store.questions.any{it.category==category}})
