@@ -92,7 +92,7 @@ cache.clear();user='lifeline-user';call('arenaRegister',{name:'Lifeline tester'}
 let life=call('arenaStart',{level:1,protocol:2});
 assert.throws(()=>call('arenaLifeline',{session_id:life.session_id,question_id:life.question.id,kind:'fifty'}),/LIFELINE_UNAVAILABLE/);
 life=call('arenaReady',{session_id:life.session_id,question_id:life.question.id});
-const lifeId=life.session_id,lifeQ=life.question.id,lifeCorrect=lifeQ==='q1'?1:2;
+const lifeId=life.session_id,lifeQ=life.question.id,lifeCorrect=context.arenaBank_('sq').find(q=>q.id===lifeQ).correct;
 const fifty=call('arenaLifeline',{session_id:lifeId,question_id:lifeQ,kind:'fifty'});
 assert.equal(fifty.lifeline.hidden.length,2);assert.ok(!fifty.lifeline.hidden.includes(lifeCorrect));assert.equal(fifty.question.correct,undefined);
 assert.deepEqual(call('arenaLifeline',{session_id:lifeId,question_id:lifeQ,kind:'fifty'}).lifeline,fifty.lifeline);

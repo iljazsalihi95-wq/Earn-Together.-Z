@@ -24,6 +24,10 @@ class ArenaLearningGamesTest {
         val answer=round.getJSONArray("rounds").getJSONObject(0).getString("answer")
         inst.runOnMainSync{views(a.window.decorView).filterIsInstance<EditText>().single().setText(answer)}
         click(a,"KONTROLLO FJALËN")
+        val dir=java.io.File(context.getExternalFilesDir(null),"native-qa").apply{mkdirs()}
+        val screenshot=inst.uiAutomation.takeScreenshot()
+        java.io.File(dir,"22-arena-word-game-ilaz-presenter.png").outputStream().use{screenshot.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)}
+        screenshot.recycle()
         val scored=JSONObject(prefs.getString("round_word","{}")!!)
         assertEquals(10,scored.getInt("score"));assertTrue(scored.getBoolean("answered"))
         inst.runOnMainSync{a.finish()};inst.waitForIdleSync()
