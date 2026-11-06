@@ -29,7 +29,27 @@ class BlockPuzzleView(context: Context, private val onNaturalBreak: (() -> Unit)
     private var flashUntil=0L;private var flashLines=0;private var comboUntil=0L;private var placementUntil=0L;private var placementX=-1;private var placementY=-1;private var placementSize=0;private var invalidUntil=0L
     private fun goal()=min(6+level/5,24)
     private fun campaignShapeIds():List<Int>{val maxSize=when{level<15->2;level<45->3;level<100->4;else->5};return shapes.indices.filter{shapes[it].size<=maxSize}}
-    init{val s=prefs.getString("board",null);val o=prefs.getString("offers",null);if(s!=null&&s.length==64&&s.all{it in '0'..'4'}&&o!=null){val a=o.split(",").mapNotNull{it.toIntOrNull()};if(a.size==3&&a.all{it in -1 until shapes.size}){for(r in 0..7)for(c in 0..7)board[r][c]=s[r*8+c].digitToInt();offers=a.toMutableList();score=prefs.getInt("score",0);gameOver=!anyMoves()}}else offers=freshOffers()}
+    init {
+        val savedBoard = prefs.getString("board", null)
+        val savedOffers = prefs.getString("offers", null)
+        val validBoard = savedBoard != null && savedBoard.length == 64 && savedBoard.all { it in '0'..'4' }
+        if (validBoard) {
+            for (r in 0..7) for (c in 0..7) board[r][c] = savedBoard!![r * 8 + c].digitToInt()
+            score = prefs.getInt("score", 0).coerceAtLeast(0)
+        }
+        val parsedOffers = savedOffers?.split(",")?.mapNotNull { it.toIntOrNull() }
+        val validOffers = validBoard && parsedOffers?.size == 3 &&
+            parsedOffers.all { it in -1 until shapes.size }
+        offers = if (validOffers) parsedOffers!!.toMutableList() else freshOffers()
+        // A saved tray with all three pieces consumed must be replenished on resume.
+        // Otherwise a player can reopen a playable board and be stuck with no piece.
+        if (offers.all { it < 0 } && campaignShapeIds().any { canFitAnywhere(it) }) {
+            offers = freshOffers()
+        }
+        selected = offers.indexOfFirst { it >= 0 }.let { if (it >= 0) it else 0 }
+        gameOver = !anyMoves()
+        if (!validBoard || !validOffers) save()
+    }
     fun restart(){for(row in board)row.fill(0);offers=freshOffers();selected=0;score=0;levelLines=0;combo=0;gameOver=false;dragging=false;previewX=-1;previewY=-1;performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);save();invalidate()}
     private fun canFitAnywhere(id:Int)=(0..7).any{y->(0..7).any{x->fits(id,x,y)}}
     private fun freshOffers():MutableList<Int>{val campaignPool=campaignShapeIds();val fitting=campaignPool.filter{canFitAnywhere(it)};if(fitting.isEmpty())return mutableListOf(-1,-1,-1);val small=fitting.filter{shapes[it].size<=2};val out=mutableListOf<Int>();out+=(small.ifEmpty{fitting}).random();while(out.size<3)out+=fitting.random();return out.shuffled().toMutableList()}
