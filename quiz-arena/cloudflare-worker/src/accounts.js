@@ -1,3 +1,4 @@
+import { progressAction } from './progress.js';
 // Native Cloudflare account service. No Google Apps Script requests or client money authority.
 const headers={'content-type':'application/json; charset=utf-8','cache-control':'no-store'};
 const reply=(value,status=200)=>new Response(JSON.stringify(value),{status,headers});
@@ -85,6 +86,12 @@ export class NativeAccounts {
     if(p.action==='logout'){await tx.delete('session:'+tokenHash);return {success:true}}
     if(['validateSession','getProfile'].includes(p.action))return {success:true,...publicUser(user),expires_at:new Date(session.expires).toISOString()};
     if(p.action==='updateProfile'){const name=String(p.name||'').trim();if(name.length<2||name.length>100)fail('INVALID_NAME');user.name=name;await tx.put('user:'+user.user_id,user);return {success:true,...publicUser(user)}}
+    if(['getProgress','saveProgress','syncProgress'].includes(p.action)){
+     try{return await progressAction(tx,user.user_id,p)}catch(e){
+      if(['INVALID_GAME','INVALID_PROGRESS'].includes(e.message))fail(e.message);
+      throw e;
+     }
+    }
     // Values below are account-scoped. No action accepts balances, money or approval from Android.
     if(['balance','coins','verified','status','amount_cents','user_id'].some(k=>p[k]!==undefined))fail('CLIENT_AUTHORITY');
     const prefix='wallet:'+user.user_id+':';

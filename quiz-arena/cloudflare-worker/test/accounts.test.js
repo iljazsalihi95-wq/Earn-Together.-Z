@@ -30,6 +30,10 @@ test('native accounts isolate balances, hash passwords, revoke sessions and keep
  assert.equal((await act('convertCoins')).error,'PARTNER_APPROVAL_REQUIRED');
  assert.equal((await act('getCoinHistory')).transactions.length,1);
  assert.equal((await act('getOfferwallConfig')).enabled,false);
+ const save=await act('saveProgress',{game:'Block Puzzle',level:3,score:90,best_score:90,progress_json:'{"board":[1,0]}'});
+ assert.equal(save.progress[0].conflict,false);
+ assert.equal((await act('getProgress')).progress[0].level,3);
+ assert.equal((await call({action:'getProgress',session_token:b.session_token})).progress.length,0);
  assert.equal((await act('logout')).success,true);
  assert.equal((await act('getBalance')).status,401);
 });
