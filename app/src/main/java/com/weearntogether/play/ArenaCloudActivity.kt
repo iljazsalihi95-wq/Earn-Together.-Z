@@ -248,7 +248,14 @@ class ArenaCloudActivity:Activity(){
                 .replace(Regex("\\p{M}+"), "").lowercase(java.util.Locale.ROOT).trim()
                 .trimEnd('.', '!', '?').replace(Regex("\\s+"), " ")
             val value = normalize(input.text.toString())
-            val letter = value.removePrefix("alternativa ").singleOrNull()?.minus('a')
+            val spoken = value.removePrefix("alternativa ").removePrefix("nen ").removePrefix("shkronja ")
+            val letter = when(spoken) {
+                "a", "aa" -> 0
+                "b", "be", "bee" -> 1
+                "c", "ce" -> 2
+                "d", "de" -> 3
+                else -> null
+            }
             val matches = (0 until choices.length()).filter {
                 it !in ArenaLifelines.hidden(session!!) &&
                     (it == letter || (value.isNotEmpty() && value == normalize(choices.getString(it))))
