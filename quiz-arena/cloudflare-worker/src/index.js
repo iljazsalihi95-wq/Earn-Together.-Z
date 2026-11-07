@@ -1,3 +1,4 @@
+export { NativeAccounts } from './accounts.js';
 import { arenaNormalizeVoice_ } from './speech-sq.js';
 const HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type, authorization', 'access-control-allow-methods': 'GET, POST, OPTIONS' };
 const ACTIONS = new Set(['arenaBootstrap','arenaRegister','arenaStart','arenaResume','arenaReady','arenaAnswer','arenaNext','arenaLeaderboard','arenaLifeline','arenaVoice']);
@@ -136,6 +137,14 @@ export default {
    const path=new URL(request.url).pathname;
    if(request.method==='OPTIONS')return new Response(null,{status:204,headers:HEADERS});
    if(request.method==='GET'&&['/','/health'].includes(path))return json({success:true,service:'quiz-arena-backend',version:2,openai_configured:!!env.OPENAI_API_KEY,apps_script_bridge:!!env.APPS_SCRIPT_URL,ai_quota_configured:!!env.ARENA_QUOTA});
+   if(request.method==='POST'&&path==='/api/account'){
+    if(!env.NATIVE_ACCOUNTS)return json({success:false,error:'NATIVE_ACCOUNTS_NOT_CONFIGURED'},503);
+    const p=await body(request);
+    const id=env.NATIVE_ACCOUNTS.idFromName('we-earn-together-accounts-v1');
+    return env.NATIVE_ACCOUNTS.get(id).fetch('https://accounts/api',{
+     method:'POST',headers:{'content-type':'application/json','x-native-client-ip':request.headers.get('CF-Connecting-IP')||'unknown'},body:JSON.stringify(p)
+    });
+   }
    if(request.method!=='POST')return json({success:false,error:'METHOD_NOT_ALLOWED'},405);
    if(!['/','/api/arena','/api/ai/respond','/api/ai/speech'].includes(path))return json({success:false,error:'NOT_FOUND'},404);
    const p=await body(request),t=token(p,request);

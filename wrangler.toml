@@ -3,6 +3,7 @@ main = "quiz-arena/cloudflare-worker/src/index.js"
 compatibility_date = "2026-11-02"
 
 [vars]
+GOOGLE_WEB_CLIENT_ID = "726413248892-hvdca11ahhbb1lm6in5sdviglep69494.apps.googleusercontent.com"
 APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzu9rso0BO_UhLBPi3TMqIQl44tZ12r0n-t143ydmWOoiVMPbm_YA1uF0rImIfEcvaERw/exec"
 
 # Durable, server-side cost caps. Paid routes fail closed if this binding is missing.
@@ -13,3 +14,12 @@ class_name = "ArenaQuota"
 [[migrations]]
 tag = "arena-quota-v1"
 new_sqlite_classes = ["ArenaQuota"]
+
+# Independent accounts and wallet; existing Script-backed clients are retained until migration.
+[[durable_objects.bindings]]
+name = "NATIVE_ACCOUNTS"
+class_name = "NativeAccounts"
+
+[[migrations]]
+tag = "native-accounts-v1"
+new_sqlite_classes = ["NativeAccounts"]

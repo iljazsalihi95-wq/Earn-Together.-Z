@@ -1,0 +1,19 @@
+# Existing application: native Cloudflare account migration
+
+The independent `/api/account` route is implemented in `quiz-arena/cloudflare-worker/src/accounts.js` and uses the `NATIVE_ACCOUNTS` Durable Object binding. It never calls Apps Script. It supports email/password registration and login, Google ID-token signature/issuer/audience/expiry verification with a one-use nonce, explicit Google linking, sessions and logout, profile, separate noncash Game Coins and pending Reward Coins, event history and duplicate receipts. Passwords use salted PBKDF2 SHA-256; session tokens are stored hashed. Login failure rate limits persist separately from failed auth transactions.
+
+A completed level claim grants 20 noncash Game Coins. A video completion claim records 100 PENDING Reward Coins. A client cannot approve coins, manufacture cash, or request conversion/payment before partner approval and funded revenue integration. Offerwall configuration is disabled unless an existing genuine offerwall URL is configured; this route does not implement or fabricate partner completion callbacks. Existing ayeT Android integration is retained.
+
+## Deployment and current boundaries
+
+Deployment uses the existing Worker, repository and workflow. GitHub Actions needs CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID as repository secrets; a variable inside the running Worker does not authorize GitHub deployments. GOOGLE_WEB_CLIENT_ID is a public configuration value in wrangler.toml. Keep OPENAI_API_KEY only in Worker secrets. The existing Apps Script, arena routes and Android endpoint are deliberately retained until migration is complete. Existing users are NOT automatically imported into the new store.
+
+This is the independently testable account/wallet foundation, not a completed cutover. The Android client still uses its existing account service. Quiz Arena bank/session/progress data and existing login/password format must be retrieved and migrated before changing BackendClient.ENDPOINT. Cash conversion and payout implementation remain disabled, pending partner approval and verified funding. No PayPal transfer is implemented or claimed.
+
+## Retrieve missing original Script through Cloud Shell
+
+Use the owner Google account. In Apps Script, Project settings provides the Script ID (different from the Web App deployment ID). Use Google's clasp CLI to authenticate that owner and clone the existing project into `backend/apps-script-source/` in the checkout of THIS repository. Retrieve the complete project, including original email authentication, auth/session helpers, progress routes, offers and Quiz Arena code. Never commit OAuth credentials, .clasprc.json, Script Properties, API keys or personal spreadsheet exports. Authentication is performed in the owner's terminal, not by pasting passwords or tokens in chat.
+
+Before cutover, inventory every Android action in BackendClient and its callers, preserve stable user IDs and existing balances, verify password-hash compatibility, import the approved user/progress/ledger data through an owner-only migration path, and test login, Google linking, saves, rewards and round continuation against the imported accounts. Google Sheets export is a separate data migration from clasp source retrieval. Keep a rollback snapshot and the original deployment URL until both services agree. Revoke legacy sessions at the documented cutover and require re-login; do not treat old Script tokens as native Worker credentials.
+
+Natural Albanian narration remains in the existing Worker `/api/ai/speech` route; recorded Albanian voice assets stay in Android. The current narration route still depends on Script-backed Quiz Arena sessions. Its migration must preserve server-owned questions, hidden correct answers, timers, voice caching and spending limits. It cannot be disconnected merely by replacing the URL.
