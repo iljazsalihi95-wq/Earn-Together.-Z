@@ -35,8 +35,14 @@ class WalletActivity:Activity(){
     private fun profile(){page("PROFILE");button("BACK TO APP"){finish()}
         box("GAME COINS",GameCoinStore(this).balance().toString(),
             "20 për nivel të përfunduar • 100 për video të përfunduar.\nRuhen në këtë pajisje; përdoren vetëm në lojë.")
-        root.addView(text("REWARD COINS • Bilanci dhe verifikimi merren nga serveri.",12,muted))
+        val rewardStatus=text("REWARD COINS • Duke marrë bilancin nga serveri…",12,muted)
+        root.addView(rewardStatus)
+        val queued=Html5VideoRewards(this,accounts.currentUserId()!!).summary().optInt("waiting_videos")
+        if(queued>0)root.addView(text("$queued video të përfunduara presin sinkronizim. Nuk janë kredituar ende nga serveri.",12,muted))
+        Html5VideoRewards(this,accounts.currentUserId()!!).sync()
         call("getWalletProfile"){r->val p=r.getJSONObject("profile");val b=r.getJSONObject("balance");currentBalance=b
+        val rules=r.optJSONObject("reward_rules")
+        rewardStatus.text=if(rules!=null)"REWARD COINS • ${rules.optInt("video_reward_coins")} për video të përfunduar • Në pritje të verifikimit" else "REWARD COINS • Serveri duhet përditësuar për rregullin 100 për video."
         val header=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(16),dp(12),dp(16),dp(12));background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff482879.toInt(),0xff154986.toInt())).apply{cornerRadius=dp(22).toFloat()}}
         val name=p.getString("username");header.addView(TextView(this).apply{text=name.take(1).uppercase(Locale.ROOT);gravity=Gravity.CENTER;textSize=28f;setTextColor(bg);background=shape(gold,40);setTypeface(null,Typeface.BOLD)},LinearLayout.LayoutParams(dp(64),dp(64)))
         val identity=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(14),0,0,0)};identity.addView(text(name,21,Color.WHITE,true));identity.addView(text(p.getString("email"),13));header.addView(identity,LinearLayout.LayoutParams(0,-2,1f));root.addView(header,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(16)})

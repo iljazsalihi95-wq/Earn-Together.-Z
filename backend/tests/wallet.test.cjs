@@ -31,10 +31,10 @@ console.log('PASS: isolation, no client balance authority, duplicate events/sess
 
 advance(120000);
 let videoSession=call('startRewardSession',{game_id:'html5_arrows'});
-assert.equal(videoSession.ad_reward_coins,10);
+assert.equal(videoSession.ad_reward_coins,100);
 advance(11000);
 let video=call('recordRewardEvent',{source:'AD_REWARD',event_id:'html5-video-0001',session_id:videoSession.session_id,game_id:'html5_arrows'});
-assert.equal(video.status,'PENDING');assert.equal(video.coins,10);assert.equal(call('getBalance').available_cents,0);
+assert.equal(video.status,'PENDING');assert.equal(video.coins,100);assert.equal(call('getBalance').available_cents,0);
 props.WALLET_HTML5_VIDEO_COINS='7';advance(6000);
 let video2=call('recordRewardEvent',{source:'AD_REWARD',event_id:'html5-video-0002',session_id:videoSession.session_id,game_id:'html5_arrows'});
 assert.equal(video2.coins,7);props.WALLET_HTML5_VIDEO_COINS='20';
@@ -44,3 +44,15 @@ reject(()=>call('recordRewardEvent',{source:'AD_REWARD',event_id:'html5-forge-00
 props.WALLET_HTML5_VIDEO_COINS='-1';reject(()=>context.walletVideoCoins_(),'REWARD_CONFIG');
 console.log('PASS: HTML5 video coins use a configurable server rule, remain PENDING, preserve amounts on retry and never mint cash.');
 
+
+// Profile rules and receipt amounts must agree; no locally claimed amount is accepted.
+props.WALLET_HTML5_VIDEO_COINS='100';
+const profile=call('getWalletProfile');
+assert.equal(profile.reward_rules.video_reward_coins,100);
+assert.equal(profile.reward_rules.video_status,'PENDING');
+assert.equal(profile.reward_rules.automatic_cash_conversion,false);
+assert.equal(profile.profile.user_id,'A');
+assert.equal(call('getCoinHistory').transactions.find(x=>x.transaction_id===video.transaction_id).coins,100);
+assert.equal(call('getBalance',{},'B').pending_coins,0);
+assert.equal(call('getBalance').available_cents,0);
+console.log('PASS: profile advertises 100 Reward Coins, account isolation and noncash pending history.');

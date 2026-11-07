@@ -67,7 +67,7 @@ class NativeGameAds(private val activity:Activity,private val game:String,privat
                 if(!gameplayOnly){
                     receipts?.completed(game)
                     val awarded=GameCoinStore(activity).awardCompletedVideo()
-                    Toast.makeText(activity,if(awarded)"+100 Game Coins. Earn Coins presin verifikimin e serverit." else "Video u përfundua. Bonusi i lojës u aplikua.",Toast.LENGTH_LONG).show()
+                    Toast.makeText(activity,if(awarded)"+100 Game Coins. Reward Coins presin verifikimin e serverit." else "Video u përfundua. Bonusi i lojës u aplikua.",Toast.LENGTH_LONG).show()
                 }
                 onGameplayReward()
             }
