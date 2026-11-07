@@ -19,6 +19,8 @@ class QuizArenaScene(context:Context):View(context){
     var suitColor=0xff273b68.toInt();var shirtColor=Color.WHITE;var tieColor=0xffc99b4e.toInt()
     var phoneState="";var friendSpeaking=false
     var playerName="LOJTARI";var portrait:Bitmap?=null
+    var playerSpeaking=false
+    var playerSpeechEnergy:(()->Float)?=null
     var questionPrompt="";var questionCategory="";var questionNumber=""
     var timerText="";var stageStatus="";var remainingFraction=1f
     private var speechStarted=0L;private var reactionStarted=0L
@@ -62,7 +64,7 @@ class QuizArenaScene(context:Context):View(context){
         // Perspective floor and practical strip lighting.
         p.color=0xff102841.toInt();c.drawOval(72f,374f,648f,491f,p)
         p.style=Paint.Style.STROKE;p.color=0xff417c9b.toInt();p.strokeWidth=2f;c.drawOval(72f,374f,648f,491f,p);p.style=Paint.Style.FILL
-        c.save();c.translate(105f,288f);c.scale(.68f,.68f);chair(c,129f);drawPlayer(c);c.restore()
+        c.save();c.translate(105f,288f);c.scale(.68f,.68f);chair(c,129f);drawPlayer(c,time);c.restore()
         c.save();c.translate(423f,288f);c.scale(.68f,.68f);chair(c,100f);presenter.draw(c,if(friendSpeaking)0f else energy,speaking&&!friendSpeaking,reaction,time);c.restore()
         p.color=0xff0b162b.toInt();c.drawRoundRect(264f,326f,456f,435f,12f,12f,p)
         p.style=Paint.Style.STROKE;p.color=0xffbb995e.toInt();p.strokeWidth=2f;c.drawRoundRect(264f,326f,456f,435f,12f,12f,p);p.style=Paint.Style.FILL
@@ -92,7 +94,7 @@ class QuizArenaScene(context:Context):View(context){
         }
         if(reaction>0&&(time-reactionStarted)<4000)drawFireworks(c,time-reactionStarted)
         c.restoreToCount(save)
-        if(attached&&windowVisibility==VISIBLE)postInvalidateDelayed(if(speaking||audienceVotes!=null)40 else 80)
+        if(attached&&windowVisibility==VISIBLE)postInvalidateDelayed(if(speaking||playerSpeaking||audienceVotes!=null)40 else 80)
     }
     private fun chair(c:Canvas,x:Float){
         p.color=0xff050914.toInt();c.drawOval(x-105,255f,x+110,283f,p)
@@ -121,13 +123,16 @@ class QuizArenaScene(context:Context):View(context){
         }
         p.alpha=255
     }
-    private fun drawPlayer(c:Canvas){
+    private fun drawPlayer(c:Canvas,time:Long){
         p.shader=LinearGradient(72f,111f,186f,161f,suitColor,0xff142039.toInt(),Shader.TileMode.CLAMP)
         c.drawRoundRect(48f,107f,208f,184f,24f,24f,p);p.shader=null
         p.color=shirtColor;val shirt=Path().apply{moveTo(106f,108f);lineTo(129f,157f);lineTo(153f,108f);close()};c.drawPath(shirt,p)
         p.color=tieColor;val tie=Path().apply{moveTo(125f,113f);lineTo(133f,113f);lineTo(138f,143f);lineTo(129f,154f);lineTo(120f,143f);close()};c.drawPath(tie,p)
         val face=RectF(68f,8f,187f,131f);val clip=Path().apply{addOval(face,Path.Direction.CW)}
         c.save();c.clipPath(clip)
+        val amplitude=if(playerSpeaking)(playerSpeechEnergy?.invoke()?:.35f).coerceIn(0f,1f) else 0f
+        val nod=if(playerSpeaking)kotlin.math.sin(time/145.0).toFloat()*amplitude*2f else 0f
+        c.translate(0f,nod)
         val photo=portrait
         if(photo!=null){val size=minOf(photo.width,photo.height);c.drawBitmap(photo,Rect((photo.width-size)/2,(photo.height-size)/2,(photo.width+size)/2,(photo.height+size)/2),face,p)}
         else{p.color=0xff376999.toInt();c.drawRect(face,p);p.color=Color.WHITE;p.textAlign=Paint.Align.CENTER;p.textSize=42f;p.typeface=Typeface.DEFAULT_BOLD;c.drawText(playerName.take(1).uppercase(),129f,93f,p)}
