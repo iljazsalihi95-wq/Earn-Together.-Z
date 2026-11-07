@@ -490,9 +490,14 @@ class ArenaCloudActivity:Activity(){
         fun playClip(index:Int){
             if(!current())return
             if(index>=clips.size){narrationFinished(phase,key);return}
+            // A reaction is optional. Its failure must not suppress the actual explanation.
+            fun unavailable(){
+                if(index<clips.lastIndex)playClip(index+1) else ttsFallback(phase)
+            }
             voiceNetwork.execute {
                 val prepared=runCatching {
-                    val file=java.io.File(cacheDir,"arena-recorded-v1-"+clips[index]+".mp3")
+                    val updated=packageManager.getPackageInfo(packageName,0).lastUpdateTime
+                    val file=java.io.File(cacheDir,"arena-recorded-"+updated+"-"+clips[index]+".mp3")
                     if(!file.isFile||file.length()==0L){
                         val temp=java.io.File.createTempFile("arena-recording-", ".part", cacheDir)
                         try {
@@ -515,11 +520,11 @@ class ArenaCloudActivity:Activity(){
                                 setDataSource(file.absolutePath)
                                 setOnPreparedListener { if(current()){scene?.speaking=true;scene?.friendSpeaking=false;scene?.stageStatus="PREZANTUESI PO FLET";it.start()} }
                                 setOnCompletionListener { if(current())playClip(index+1) }
-                                setOnErrorListener { _,_,_->if(current()){player?.release();player=null;ttsFallback(phase)};true }
+                                setOnErrorListener { _,_,_->if(current()){player?.release();player=null;unavailable()};true }
                                 prepareAsync()
                             }
-                        }.onFailure { ttsFallback(phase) }
-                    }.onFailure { ttsFallback(phase) }
+                        }.onFailure { unavailable() }
+                    }.onFailure { unavailable() }
                 }
             }
         }
