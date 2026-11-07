@@ -119,7 +119,7 @@ class ArenaCloudActivity:Activity(){
         if(feedback!=null){scene?.apply{timerText=if(feedback.optInt("choice",-2)==-1)"PA PËRGJIGJE" else if(feedback.getBoolean("right"))"SAKTË" else "GABIM";stageStatus="TESTIM DHE MËSIM"};add(label(if(feedback.optInt("choice",s.optInt("local_choice",-2))==-1)"KOHA PËRFUNDOI • PA PËRGJIGJE" else if(feedback.getBoolean("right"))"✓ SAKTË" else "GABIM • PËRGJIGJJA E SAKTË: ${'A'+feedback.getInt("correct")}",20,gold));val selected=feedback.optInt("choice",s.optInt("local_choice",-2));if(selected>=0)add(label("Zgjedhja jote: ${'A'+selected} • ${choices.optString(selected)}",14,blue));if(s.has("learning_choice"))add(label(lateChoiceText(s),16,blue));if(selected==-1)add(label("Përgjigjja e saktë: ${'A'+feedback.getInt("correct")} • ${choices.optString(feedback.getInt("correct"))}",16,gold));add(label(feedback.getString("explanation"),17));add(label(feedback.optString("source"),12,blue));add(button("DËGJO SHPJEGIMIN"){voice("explanation")});add(button("HAP SHPJEGIMIN • TESTIM DHE MËSIM"){showLearning(s)});add(button("VAZHDO ›"){continueAfterLearning(s)});add(button("PYET PREZANTUESIN PËR SHPJEGIMIN"){clarify(s)});presentFeedback(s)}
         else if(s.optBoolean("presentation_pending")){beginQuestionReading(s)}
         else if(s.optBoolean("timed_out")){timeoutControls()}
-        else{val clock=label("",15,gold);fun update(){val sec=((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000;scene?.apply{timerText="%02d:%02d".format(sec/60,sec%60);stageStatus="KOHA E PËRGJIGJES";remainingFraction=(sec.toFloat()/(config.optInt("seconds",30).coerceAtLeast(1))).coerceIn(0f,1f)};clock.text="⏱ ${((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000}s • ${config.getInt("points")} pikë për saktë"};update();timer=object:android.os.CountDownTimer((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(1),200){override fun onTick(ms:Long){update();val sec=(ms/1000).toInt();if(sec!=tick){tick=sec;if(audioEnabled&&sec>0&&scene?.speaking!=true&&phoneDialog?.isShowing!=true)sound?.startTone(android.media.ToneGenerator.TONE_PROP_BEEP,if(sec<=10)145 else 80)}};override fun onFinish(){clock.text="Koha përfundoi • Asnjë përgjigje nuk u zgjodh";if(resumed)expireQuestion()}}.start();addLifelineControls(s);add(button("DËGJO PYETJEN"){voice("question")});val rec=q.optString("recitation");if(rec.startsWith("https://"))add(button("DËGJO RECITIMIN AUTENTIK"){playUrl(rec)});add(button("RIPROVO / SINKRONIZO"){retryAnswer()});if(audioEnabled&&narrationKey!=questionKey(s)){narrationKey=questionKey(s);voice("question")}}
+        else{val clock=label("",15,gold);fun update(){val sec=((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000;scene?.apply{timerText="%02d:%02d".format(sec/60,sec%60);stageStatus="KOHA E PËRGJIGJES";remainingFraction=(sec.toFloat()/(config.optInt("seconds",30).coerceAtLeast(1))).coerceIn(0f,1f)};clock.text="⏱ ${((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000}s • ${config.getInt("points")} pikë për saktë"};update();timer=object:android.os.CountDownTimer((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(1),200){override fun onTick(ms:Long){update();val sec=(ms/1000).toInt();if(sec!=tick){tick=sec;if(audioEnabled&&sec>0&&scene?.speaking!=true&&phoneDialog?.isShowing!=true)sound?.startTone(android.media.ToneGenerator.TONE_PROP_BEEP,if(sec<=10)145 else 80)}};override fun onFinish(){clock.text="Koha përfundoi • Asnjë përgjigje nuk u zgjodh";if(resumed)expireQuestion()}}.start();addAnswerInputs(s);addLifelineControls(s);add(button("DËGJO PYETJEN"){voice("question")});val rec=q.optString("recitation");if(rec.startsWith("https://"))add(button("DËGJO RECITIMIN AUTENTIK"){playUrl(rec)});add(button("RIPROVO / SINKRONIZO"){retryAnswer()});if(audioEnabled&&narrationKey!=questionKey(s)){narrationKey=questionKey(s);voice("question")}}
     }
 
     private var celebratedKey=""
@@ -201,6 +201,73 @@ class ArenaCloudActivity:Activity(){
         }
         if(isOfflineSession())accept(localStore.next(s)) else nextLive(s)
     }
+    private val speechAnswerRequest = 3117
+    private var speechQuestionKey: String? = null
+
+    private fun addAnswerInputs(s: JSONObject) {
+        val row = LinearLayout(this)
+        val key = questionKey(s)
+        row.addView(button("🎙 Mikrofon") {
+            if (!canConfirmAnswer(key)) return@button
+            val speech = android.content.Intent(android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                .putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                .putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE, "sq-AL")
+                .putExtra(android.speech.RecognizerIntent.EXTRA_PROMPT, "Thuaj shkronjën ose përgjigjen në shqip")
+            try {
+                speechQuestionKey = key
+                startActivityForResult(speech, speechAnswerRequest)
+            } catch (_: android.content.ActivityNotFoundException) {
+                speechQuestionKey = null
+                answerInput(key, "", "Mikrofoni nuk është i disponueshëm. Shkruaj përgjigjen.")
+            }
+        }, LinearLayout.LayoutParams(0, -2, 1f))
+        row.addView(button("✎ Shkruaj") {
+            answerInput(key, "", "Shkruaj shkronjën ose tekstin e alternativës.")
+        }, LinearLayout.LayoutParams(0, -2, 1f))
+        add(row)
+    }
+
+    private fun canConfirmAnswer(key: String): Boolean {
+        val s = session ?: return false
+        return questionKey(s) == key && !busy && !s.optBoolean("presentation_pending") &&
+            !s.optBoolean("answer_pending") && !s.optBoolean("timed_out") &&
+            s.optJSONObject("feedback") == null && android.os.SystemClock.elapsedRealtime() < deadline
+    }
+
+    private fun answerInput(key: String, transcript: String, message: String) {
+        if (!canConfirmAnswer(key)) return
+        val choices = session!!.getJSONObject("question").getJSONArray("choices")
+        val input = EditText(this).apply { setSingleLine(); setText(transcript) }
+        val dialog = android.app.AlertDialog.Builder(this)
+            .setTitle("Përgjigjja jote").setMessage(message).setView(input)
+            .setNegativeButton("Anulo", null).setPositiveButton("Kontrollo", null).show()
+        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            if (!canConfirmAnswer(key)) { dialog.dismiss(); return@setOnClickListener }
+            fun normalize(value: String) = java.text.Normalizer.normalize(value, java.text.Normalizer.Form.NFD)
+                .replace(Regex("\\p{M}+"), "").lowercase(java.util.Locale.ROOT).trim()
+                .trimEnd('.', '!', '?').replace(Regex("\\s+"), " ")
+            val value = normalize(input.text.toString())
+            val letter = value.removePrefix("alternativa ").singleOrNull()?.minus('a')
+            val matches = (0 until choices.length()).filter {
+                it !in ArenaLifelines.hidden(session!!) &&
+                    (it == letter || (value.isNotEmpty() && value == normalize(choices.getString(it))))
+            }
+            val choice = matches.singleOrNull()
+            if (choice == null) {
+                input.error = "Shkruaj një shkronjë ose tekstin e një alternative të dukshme."
+                return@setOnClickListener
+            }
+            dialog.dismiss()
+            android.app.AlertDialog.Builder(this).setTitle("Konfirmo përgjigjen")
+                .setMessage("${'A' + choice} • ${choices.getString(choice)}")
+                .setNegativeButton("Anulo", null).setPositiveButton("Dërgo") { _, _ ->
+                    if (canConfirmAnswer(key) && choice !in ArenaLifelines.hidden(session!!)) sendAnswer(choice)
+                    else Toast.makeText(this, "Përgjigjja nuk mund të dërgohet më.", Toast.LENGTH_SHORT).show()
+                }.show()
+        }
+    }
+
     private fun addLifelineControls(s:JSONObject){
         add(label("NDIHMAT E STUDIOS",17,gold))
         val items=listOf(
@@ -541,7 +608,14 @@ class ArenaCloudActivity:Activity(){
     private fun playUrl(url:String){stopVoice();val generation=voiceGeneration;player=android.media.MediaPlayer().apply{setDataSource(url);setOnPreparedListener{if(generation==voiceGeneration&&resumed)it.start()};setOnErrorListener{_,_,_->status.text="Audioja nuk është e disponueshme.";true};prepareAsync()}}
     private fun video(url:String){timer?.cancel();stopVoice();shell();val view=VideoView(this);add(view,230);val controls=MediaController(this);view.setMediaController(controls);controls.setAnchorView(view);view.setVideoURI(android.net.Uri.parse(url));view.setOnPreparedListener{it.start()};view.setOnCompletionListener{home();refresh()};view.setOnErrorListener{_,_,_->status.text="Videoja mungon. Progresi është ruajtur.";true};add(button("KAPËRCE • VAZHDO"){view.stopPlayback();home();refresh()})}
     @Deprecated("Activity back navigation") override fun onBackPressed(){if(session!=null){modeVersion++;home()}else super.onBackPressed()}
-    override fun onActivityResult(code:Int,result:Int,data:android.content.Intent?){super.onActivityResult(code,result,data);if(code==3116){val s=pendingChallenge;pendingChallenge=null;advancing=false;if(s!=null&&session===s){if(result==RESULT_OK){prefs.edit().putBoolean("challenge:"+questionKey(s),true).apply();if(isOfflineSession())accept(localStore.next(s)) else nextLive(s)}else render()};return};if(code==PlayerPortrait.REQUEST&&PlayerPortrait.receive(this,result,data)){prefs.edit().putBoolean("initial_avatar",false).apply();PlayerPortrait.adjust(this){home()}}}
+    override fun onActivityResult(code:Int,result:Int,data:android.content.Intent?){super.onActivityResult(code,result,data);if(code==speechAnswerRequest){
+        val key=speechQuestionKey; speechQuestionKey=null
+        if(key!=null && result==RESULT_OK){
+            val transcript=data?.getStringArrayListExtra(android.speech.RecognizerIntent.EXTRA_RESULTS)?.firstOrNull().orEmpty()
+            answerInput(key,transcript,"Kontrollo tekstin që u kuptua dhe korrigjoje nëse duhet.")
+        }
+        return
+    };if(code==3116){val s=pendingChallenge;pendingChallenge=null;advancing=false;if(s!=null&&session===s){if(result==RESULT_OK){prefs.edit().putBoolean("challenge:"+questionKey(s),true).apply();if(isOfflineSession())accept(localStore.next(s)) else nextLive(s)}else render()};return};if(code==PlayerPortrait.REQUEST&&PlayerPortrait.receive(this,result,data)){prefs.edit().putBoolean("initial_avatar",false).apply();PlayerPortrait.adjust(this){home()}}}
     override fun onResume(){super.onResume();resumed=true;ads.resume();if(isOfflineSession()&&!advancing){deadline=android.os.SystemClock.elapsedRealtime()+(session?.optLong("remaining_ms")?:0);render()}else if(session!=null&&!busy&&!advancing){retryAnswer()};if(!qa()){retryHandler.removeCallbacks(retry);retryHandler.postDelayed(retry,1000)}}
     override fun onPause(){phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;scene?.phoneState="";sound?.stopTone();if(player!=null||scene?.speaking==true||session?.optBoolean("presentation_pending")==true)narrationKey="";persistLocal();timer?.cancel();retryHandler.removeCallbacks(retry);resumed=false;stopVoice();applause?.pause();ads.pause();super.onPause()}
     override fun onDestroy(){learningDialog?.dismiss();retryHandler.removeCallbacks(retry);tts?.shutdown();network.shutdownNow();voiceNetwork.shutdownNow();timer?.cancel();stopVoice();sound?.release();applause?.release();ads.destroy();super.onDestroy()}
