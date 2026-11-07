@@ -17,8 +17,24 @@ class GameArtwork(context: Context, private val game: String) : View(context) {
         c.drawRoundRect(RectF(0f,0f,w,h),s*.18f,s*.18f,p);p.shader=null
         p.color=Color.argb(45,255,255,255);c.drawCircle(w*.80f,h*.13f,s*.28f,p)
         p.color=Color.argb(35,80,190,255);c.drawCircle(w*.10f,h*.88f,s*.36f,p)
-        when(game){"quiz"->quiz(c,w,h,s);"garden"->garden(c,w,h,s);"bubble"->bubbles(c,w,h,s);"block"->blocks(c,w,h,s);"lines"->lines(c,w,h,s);"stack"->stack(c,w,h,s);"2048"->tile2048(c,w,h,s);"water"->waterSort(c,w,h,s);"knife"->knife(c,w,h,s);"arrows"->arrows(c,w,h,s);"cups"->cups(c,w,h,s)}
+        when(game){"quiz"->quiz(c,w,h,s);"garden"->garden(c,w,h,s);"bubble"->bubbles(c,w,h,s);"block"->blocks(c,w,h,s);"lines"->lines(c,w,h,s);"stack"->stack(c,w,h,s);"2048","merge"->tile2048(c,w,h,s);"falling"->blocks(c,w,h,s);"water"->waterSort(c,w,h,s);"knife"->knife(c,w,h,s);"arrows"->arrows(c,w,h,s);"cups"->cups(c,w,h,s);else->libraryCover(c,w,h,s)}
         p.style=Paint.Style.STROKE;p.strokeWidth=s*.018f;p.color=Color.argb(105,255,215,95);c.drawRoundRect(RectF(s*.025f,s*.025f,w-s*.025f,h-s*.025f),s*.16f,s*.16f,p);p.style=Paint.Style.FILL
+    }
+    private fun libraryCover(c:Canvas,w:Float,h:Float,s:Float){
+        val symbols=when(game){
+            "word"->listOf("W","O","R","D")
+            "memory"->listOf("✦","◆","◆","✦")
+            "treasure"->listOf("◆","★","✦","◆")
+            "park"->listOf("↑","→","←","↑")
+            else->listOf("▶","✦","◆","●")
+        }
+        symbols.forEachIndexed{i,symbol->
+            val x=w*.19f+(i%2)*w*.33f;val y=h*.17f+(i/2)*h*.34f
+            rr(c,x,y,x+w*.29f,y+h*.28f,s*.06f,if(i%2==0)0xff1c80c4.toInt() else 0xff7944be.toInt())
+            p.color=gold;p.typeface=Typeface.DEFAULT_BOLD;p.textAlign=Paint.Align.CENTER;p.textSize=s*.17f
+            c.drawText(symbol,x+w*.145f,y+h*.19f,p)
+        }
+        p.textAlign=Paint.Align.LEFT
     }
     private fun quiz(c:Canvas,w:Float,h:Float,s:Float){
         rr(c,w*.12f,h*.64f,w*.88f,h*.88f,s*.05f,0xff143a75.toInt())
