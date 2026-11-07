@@ -54,13 +54,16 @@ class NativeExperienceTest {
             } finally { inst.runOnMainSync{a.finish()} }
         }
     }
-    @Test fun homeKeepsSixPrimaryGameCardsVisible(){
+    @Test fun homeHasOneIllustratedCardPerGame(){
         val a=launch(PremiumHomeActivity::class.java)
         try{
-            val cards=views(a.window.decorView).filter{it.isClickable}.mapNotNull{it.contentDescription?.toString()}
-            listOf("QUIZ ARENA","LAZYGARDEN","BLOCK PUZZLE","BUBBLE SHOOTER","KNIFE HIT PREMIUM","MATCH-3").forEach{title->
-                assertTrue("Missing permanent playable card: $title",cards.any{it.startsWith("$title.")&&it.endsWith("LUAJ")})
-            }
+            val cards=views(a.window.decorView).filter{it.tag?.toString()?.startsWith("game:")==true}
+            val expected=setOf("arena","garden","knife","block","bubble","balls","cups","word","memory","merge","falling","arrows","treasure","water","park","lines","stack","gamepix").map{"game:"+it}.toSet()
+            assertEquals(expected,cards.map{it.tag.toString()}.toSet())
+            assertEquals("Every game must appear exactly once",expected.size,cards.size)
+            assertTrue(cards.all{it.isClickable&&it.contentDescription.toString().endsWith("LUAJ")})
+            assertEquals("One shared card layout",1,cards.map{(it as ViewGroup).childCount}.toSet().size)
+            assertEquals(1,cards.count{it.contentDescription.toString().startsWith("LAZYGARDEN.")})
             shot("00-primary-games")
         }finally{inst.runOnMainSync{a.finish()}}
     }
