@@ -32,30 +32,20 @@ class WalletActivity:Activity(){
     private fun box(title:String,value:String,subtitle:String=""){val panel=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;background=shape(card);setPadding(dp(18),dp(10),dp(18),dp(14))};panel.addView(text(title,12,muted,true));panel.addView(text(value,29,gold,true));if(subtitle.isNotEmpty())panel.addView(text(subtitle,12,muted));root.addView(panel,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(12)})}
     private fun call(action:String,data:JSONObject=JSONObject(),onError:(()->Unit)?=null,done:(JSONObject)->Unit){if(waiting)return;waiting=true;val id=generation;status.text="Connecting to your secure ledger…";val timeout=Runnable{if(id==generation&&waiting){waiting=false;generation++;status.text="The account service took too long. Reopen this screen or try again.";onError?.invoke()}};watch=timeout;handler.postDelayed(timeout,70_000)
         AuthWorker.executor.execute{val result=runCatching{api.request(action,JSONObject(data.toString()).put("session_token",accounts.requireToken()))};runOnUiThread{if(!isFinishing&&!isDestroyed&&id==generation&&waiting){handler.removeCallbacks(timeout);waiting=false;result.onSuccess{status.text="";done(it)}.onFailure{status.text=it.message?:"Could not connect. Please try again.";onError?.invoke()}}}}}
-    private fun profile(){page("PROFILE");button("BACK TO APP"){finish()};call("getWalletProfile"){r->val p=r.getJSONObject("profile");val b=r.getJSONObject("balance");currentBalance=b
+    private fun profile(){page("PROFILE");button("BACK TO APP"){finish()}
+        box("GAME COINS",GameCoinStore(this).balance().toString(),
+            "20 për nivel të përfunduar • 100 për video të përfunduar.\nRuhen në këtë pajisje; përdoren vetëm në lojë.")
+        root.addView(text("EARN COINS • Bilanci dhe verifikimi merren nga serveri.",12,muted))
+        call("getWalletProfile"){r->val p=r.getJSONObject("profile");val b=r.getJSONObject("balance");currentBalance=b
         val header=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(16),dp(12),dp(16),dp(12));background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff482879.toInt(),0xff154986.toInt())).apply{cornerRadius=dp(22).toFloat()}}
         val name=p.getString("username");header.addView(TextView(this).apply{text=name.take(1).uppercase(Locale.ROOT);gravity=Gravity.CENTER;textSize=28f;setTextColor(bg);background=shape(gold,40);setTypeface(null,Typeface.BOLD)},LinearLayout.LayoutParams(dp(64),dp(64)))
         val identity=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(14),0,0,0)};identity.addView(text(name,21,Color.WHITE,true));identity.addView(text(p.getString("email"),13));header.addView(identity,LinearLayout.LayoutParams(0,-2,1f));root.addView(header,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(16)})
         root.addView(text("User ID: "+p.getString("user_id"),11,muted));root.addView(text("Joined: "+p.optString("joined_date").take(10),12,muted))
-        box("GAMECOINS • DEVICE PILOT",GameCoinStore(this).balance().toString(),"Local game currency only. No cash value; not synced across devices.")
-        box("PENDING COINS",b.optLong("pending_coins").toString(),"Awaiting independent verification. No cash value promised.")
-        box("VERIFIED COINS",b.optLong("verified_coins").toString(),"Eligible coins may be allocated to an approved, funded period.")
+        box("EARN COINS • NË PRITJE",b.optLong("pending_coins").toString(),"Awaiting independent verification. No cash value promised.")
+        box("EARN COINS • TË VERIFIKUARA",b.optLong("verified_coins").toString(),"Eligible coins may be allocated to an approved, funded period.")
         box("AVAILABLE CASH",euro(b.optLong("available_cents")),"Verified cash after reservations and completed payments.")
         box("TOTAL EARNED",euro(b.optLong("total_earned_cents")));box("TOTAL PAID",euro(b.optLong("total_paid_cents")));box("PENDING CASH OUT",euro(b.optLong("pending_cashout_cents")))
-        // Informational economy preview only. The backend remains the sole authority for balances.
-        // These proposed rates are NOT active grants, money or cash-out eligibility.
-        box("GAME ECONOMY • PROPOSED", "10 GameCoins = 1 RewardCoin",
-            "Completed rewarded video: proposed 100 GameCoins + 10 RewardCoins.\\n" +
-            "Completed level: proposed 10 GameCoins + 1 RewardCoin.")
-        root.addView(text("PROPOSED REDEMPTION • NOT ACTIVE",14,gold,true))
-        root.addView(text("10,000 RewardCoins = €1.00 · 20,000 = €2.00 · 30,000 = €3.00 · 40,000 = €4.00.\\n" +
-            "No automatic conversion or payout. Requires partner approval, funded revenue, server verification and anti-fraud checks.",12,muted))
-        // Preview only: RewardCoins are not cash and are not converted locally.
-        val rewardCoins=b.optLong("verified_coins",0L).coerceAtLeast(0L)
-        val previewCents=rewardCoins / 100L // 10,000 coins per EUR; integer cents, rounded down.
-        box("REWARDCOINS → EUR • PREVIEW",euro(previewCents),
-            "$rewardCoins verified coins × €0.0001 (proposed). This is NOT available cash.")
-        root.addView(text("Only the server-confirmed AVAILABLE CASH balance can be requested via PayPal. A preview cannot be withdrawn.",12,muted))
+        root.addView(text("Game Coins dhe Earn Coins janë bilance të ndara. Pagesat monetare kërkojnë miratim nga partnerët, të ardhura të financuara dhe verifikim nga serveri.",12,muted))
         button("CASH OUT",b.optBoolean("cashout_allowed")){cashout()};if(!b.optBoolean("cashout_allowed"))root.addView(text("Minimum cash out is €5.00",13,muted))
         button("OFFERS & REWARDS • ayeT"){startActivity(Intent(this,AyetOfferwallActivity::class.java))};button("COIN HISTORY"){coinHistory(0)};button("TRANSACTION HISTORY"){transactionHistory(0)};button("CASH OUT HISTORY"){cashoutHistory(0)};button("REFRESH PROFILE"){profile()}
     }}
