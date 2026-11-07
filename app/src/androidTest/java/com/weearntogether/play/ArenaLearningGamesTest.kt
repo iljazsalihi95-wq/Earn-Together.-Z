@@ -15,18 +15,6 @@ class ArenaLearningGamesTest {
     private val inst get()=InstrumentationRegistry.getInstrumentation()
     private fun views(v:View):List<View> = listOf(v)+if(v is ViewGroup)(0 until v.childCount).flatMap{views(v.getChildAt(it))} else emptyList()
     private fun click(a:Activity,text:String){inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.toString()==text}.performClick()};inst.waitForIdleSync()}
-    // Window accessibility is published asynchronously after AlertDialog.show().
-    // waitForIdleSync alone does not guarantee an active accessibility root.
-    private fun waitForNode(text:String):android.view.accessibility.AccessibilityNodeInfo {
-        val deadline=android.os.SystemClock.uptimeMillis()+5000
-        while(android.os.SystemClock.uptimeMillis()<deadline){
-            val node=inst.uiAutomation.rootInActiveWindow
-                ?.findAccessibilityNodeInfosByText(text)?.firstOrNull()
-            if(node!=null)return node
-            android.os.SystemClock.sleep(50)
-        }
-        throw AssertionError("Dialog control did not become accessible: $text")
-    }
     @Test fun associationCluesScoreOnceAndSurviveReopening(){
         val context=inst.targetContext
         val prefs=context.getSharedPreferences("arena_learning_guest",0);prefs.edit().clear().commit()
@@ -37,13 +25,15 @@ class ArenaLearningGamesTest {
         click(a,"A1");click(a,"B2");click(a,"C3")
         assertEquals(273,JSONObject(prefs.getString("round_word","{}")!!).getInt("revealed"))
         click(a,"GJEJ ZGJIDHJEN FINALE")
-        val input=waitForNode("Shkruaj zgjidhjen")
-        val args=android.os.Bundle().apply{
-            putCharSequence(android.view.accessibility.AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,"Sureja El-Asr")
-        }
-        assertTrue(input.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_SET_TEXT,args))
-        assertTrue(waitForNode("Kontrollo")
-            .performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK))
+        androidx.test.espresso.Espresso.onView(
+            androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom(EditText::class.java)
+        ).inRoot(androidx.test.espresso.matcher.RootMatchers.isDialog())
+            .perform(androidx.test.espresso.action.ViewActions.replaceText("Sureja El-Asr"),
+                androidx.test.espresso.action.ViewActions.closeSoftKeyboard())
+        androidx.test.espresso.Espresso.onView(
+            androidx.test.espresso.matcher.ViewMatchers.withText("Kontrollo")
+        ).inRoot(androidx.test.espresso.matcher.RootMatchers.isDialog())
+            .perform(androidx.test.espresso.action.ViewActions.click())
         inst.waitForIdleSync()
         val dir=java.io.File(context.getExternalFilesDir(null),"native-qa").apply{mkdirs()}
         val screenshot=inst.uiAutomation.takeScreenshot()
