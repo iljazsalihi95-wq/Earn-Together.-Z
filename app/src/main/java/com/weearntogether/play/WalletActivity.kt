@@ -32,29 +32,61 @@ class WalletActivity:Activity(){
     private fun box(title:String,value:String,subtitle:String=""){val panel=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;background=shape(card);setPadding(dp(18),dp(10),dp(18),dp(14))};panel.addView(text(title,12,muted,true));panel.addView(text(value,29,gold,true));if(subtitle.isNotEmpty())panel.addView(text(subtitle,12,muted));root.addView(panel,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(12)})}
     private fun call(action:String,data:JSONObject=JSONObject(),onError:(()->Unit)?=null,done:(JSONObject)->Unit){if(waiting)return;waiting=true;val id=generation;status.text="Connecting to your secure ledger…";val timeout=Runnable{if(id==generation&&waiting){waiting=false;generation++;status.text="The account service took too long. Reopen this screen or try again.";onError?.invoke()}};watch=timeout;handler.postDelayed(timeout,70_000)
         AuthWorker.executor.execute{val result=runCatching{api.request(action,JSONObject(data.toString()).put("session_token",accounts.requireToken()))};runOnUiThread{if(!isFinishing&&!isDestroyed&&id==generation&&waiting){handler.removeCallbacks(timeout);waiting=false;result.onSuccess{status.text="";done(it)}.onFailure{status.text=it.message?:"Could not connect. Please try again.";onError?.invoke()}}}}}
-    private fun profile(){page("PROFILE");button("BACK TO APP"){finish()}
+    private fun profile(){
+        page("PROFILI IM");showingProfile=true
+        val name=accounts.currentName().orEmpty().ifBlank{"Lojtari"}
+        val header=LinearLayout(this).apply{
+            orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL
+            setPadding(dp(16),dp(14),dp(16),dp(14))
+            background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff482879.toInt(),0xff154986.toInt())).apply{cornerRadius=dp(22).toFloat()}
+        }
+        header.addView(TextView(this).apply{
+            text=name.take(1).uppercase(Locale.ROOT);gravity=Gravity.CENTER;textSize=26f
+            setTextColor(bg);background=shape(gold,40);setTypeface(null,Typeface.BOLD)
+        },LinearLayout.LayoutParams(dp(58),dp(58)))
+        val identity=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(14),0,0,0)}
+        identity.addView(text(name,21,Color.WHITE,true))
+        identity.addView(text(accounts.currentEmail().orEmpty(),12,muted))
+        header.addView(identity,LinearLayout.LayoutParams(0,-2,1f))
+        root.addView(header,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(12)})
         box("GAME COINS",GameCoinStore(this).balance().toString(),
-            "20 për nivel të përfunduar • 100 për video të përfunduar.\nRuhen në këtë pajisje; përdoren vetëm në lojë.")
-        val rewardStatus=text("REWARD COINS • Duke marrë bilancin nga serveri…",12,muted)
-        root.addView(rewardStatus)
-        val queued=Html5VideoRewards(this,accounts.currentUserId()!!).summary().optInt("waiting_videos")
-        if(queued>0)root.addView(text("$queued video të përfunduara presin sinkronizim. Nuk janë kredituar ende nga serveri.",12,muted))
-        Html5VideoRewards(this,accounts.currentUserId()!!).sync()
-        call("getWalletProfile"){r->val p=r.getJSONObject("profile");val b=r.getJSONObject("balance");currentBalance=b
-        val rules=r.optJSONObject("reward_rules")
-        rewardStatus.text=if(rules!=null)"REWARD COINS • ${rules.optInt("video_reward_coins")} për video të përfunduar • Në pritje të verifikimit" else "REWARD COINS • Serveri duhet përditësuar për rregullin 100 për video."
-        val header=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(16),dp(12),dp(16),dp(12));background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff482879.toInt(),0xff154986.toInt())).apply{cornerRadius=dp(22).toFloat()}}
-        val name=p.getString("username");header.addView(TextView(this).apply{text=name.take(1).uppercase(Locale.ROOT);gravity=Gravity.CENTER;textSize=28f;setTextColor(bg);background=shape(gold,40);setTypeface(null,Typeface.BOLD)},LinearLayout.LayoutParams(dp(64),dp(64)))
-        val identity=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(14),0,0,0)};identity.addView(text(name,21,Color.WHITE,true));identity.addView(text(p.getString("email"),13));header.addView(identity,LinearLayout.LayoutParams(0,-2,1f));root.addView(header,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(16)})
-        root.addView(text("User ID: "+p.getString("user_id"),11,muted));root.addView(text("Joined: "+p.optString("joined_date").take(10),12,muted))
-        box("REWARD COINS • NË PRITJE",b.optLong("pending_coins").toString(),"Awaiting independent verification. No cash value promised.")
-        box("REWARD COINS • TË VERIFIKUARA",b.optLong("verified_coins").toString(),"Eligible coins may be allocated to an approved, funded period.")
-        box("AVAILABLE CASH",euro(b.optLong("available_cents")),"Verified cash after reservations and completed payments.")
-        box("TOTAL EARNED",euro(b.optLong("total_earned_cents")));box("TOTAL PAID",euro(b.optLong("total_paid_cents")));box("PENDING CASH OUT",euro(b.optLong("pending_cashout_cents")))
-        root.addView(text("Game Coins dhe Reward Coins janë bilance të ndara. Pagesat monetare kërkojnë miratim nga partnerët, të ardhura të financuara dhe verifikim nga serveri.",12,muted))
-        button("CASH OUT",b.optBoolean("cashout_allowed")){cashout()};if(!b.optBoolean("cashout_allowed"))root.addView(text("Minimum cash out is €5.00",13,muted))
-        button("OFFERS & REWARDS • ayeT"){startActivity(Intent(this,AyetOfferwallActivity::class.java))};button("COIN HISTORY"){coinHistory(0)};button("TRANSACTION HISTORY"){transactionHistory(0)};button("CASH OUT HISTORY"){cashoutHistory(0)};button("REFRESH PROFILE"){profile()}
-    }}
+            "20 për nivel të përfunduar • 100 për video të përfunduar.\nBilanc i lojës i ruajtur për këtë llogari në pajisje.")
+        val rewardPanel=LinearLayout(this).apply{
+            orientation=LinearLayout.VERTICAL;setPadding(dp(18),dp(12),dp(18),dp(14))
+            background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff202650.toInt(),0xff152c50.toInt())).apply{cornerRadius=dp(20).toFloat();setStroke(dp(1),0x66b48aff)}
+        }
+        rewardPanel.addView(text("REWARD COINS",13,gold,true))
+        val pending=text("—",29,gold,true);val verified=text("—",19,Color.WHITE,true)
+        rewardPanel.addView(text("NË PRITJE TË VERIFIKIMIT",11,muted,true));rewardPanel.addView(pending)
+        rewardPanel.addView(text("TË VERIFIKUARA",11,muted,true));rewardPanel.addView(verified)
+        val rewardStatus=text("Po lidhemi me llogarinë tënde…",12,muted);rewardPanel.addView(rewardStatus)
+        root.addView(rewardPanel,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(12)})
+        val user=accounts.currentUserId()!!
+        val receipts=Html5VideoRewards(this,user)
+        val queued=receipts.summary().optInt("waiting_videos")
+        if(queued>0)root.addView(text("$queued video të përfunduara presin dërgim në server. Shpërblimi do të shfaqet pas sinkronizimit.",12,muted))
+        receipts.sync()
+        root.addView(text("Reward Coins ruhen në server dhe kanë historik të veçantë. Konvertimi në para kërkon miratim dhe të ardhura të verifikuara.",12,muted))
+        button("RIFRESKO BILANCET"){profile()}
+        button("KTHEHU NË APLIKACION"){finish()}
+        call("getWalletProfile",onError={
+            rewardStatus.text="Bilanci nuk u mor nga serveri. Provo përsëri me Rifresko bilancet."
+        }){r->
+            val b=r.getJSONObject("balance");currentBalance=b
+            pending.text=b.optLong("pending_coins").toString()
+            verified.text=b.optLong("verified_coins").toString()
+            val rules=r.optJSONObject("reward_rules")
+            rewardStatus.text=if(rules!=null)
+                "${rules.optInt("video_reward_coins")} Reward Coins për video të përfunduar, në pritje të verifikimit."
+                else "Bilanci u sinkronizua. Rregulli i ri 100 për video ende nuk është aktivizuar në server."
+            box("PARA TË DISPONUESHME",euro(b.optLong("available_cents")),"Vetëm shuma e konfirmuar nga serveri mund të kërkohet për pagesë.")
+            button("HISTORIKU I REWARD COINS"){coinHistory(0)}
+            button("HISTORIKU I TRANSAKSIONEVE"){transactionHistory(0)}
+            button("HISTORIKU I PAGESAVE"){cashoutHistory(0)}
+            button("KËRKO PAGESË",b.optBoolean("cashout_allowed")){cashout()}
+            button("OFERTA DHE SHPËRBLIME • ayeT"){startActivity(Intent(this,AyetOfferwallActivity::class.java))}
+        }
+    }
     private fun cashout(){page("CASH OUT");button("BACK TO PROFILE"){profile()};call("getCashoutEligibility"){r->val b=r.getJSONObject("balance");box("AVAILABLE",euro(b.optLong("available_cents")));box("MINIMUM CASH OUT","€5.00");box("PENDING CASH OUT",euro(b.optLong("pending_cashout_cents")));box("TOTAL PAID",euro(b.optLong("total_paid_cents")));root.addView(text("Payment method: PayPal · manual verified payout",14));root.addView(text("REQUEST → REVIEW → APPROVED / REJECTED → PAID. A submitted request is not a completed payment.",12,muted));root.addView(text("Enter your own PayPal email. It is used only to review and process your payout request.",13,muted));val destination=EditText(this).apply{hint="PayPal email";inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS;setTextColor(Color.WHITE);setHintTextColor(muted);background=shape(card);setPadding(dp(16),dp(12),dp(16),dp(12));setSingleLine(true)};root.addView(destination,LinearLayout.LayoutParams(-1,dp(54)))
         val amount=EditText(this).apply{hint="Amount in EUR, e.g. 5.00";inputType=InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL;setTextColor(Color.WHITE);setHintTextColor(muted);background=shape(card);setPadding(dp(16),dp(12),dp(16),dp(12));setSingleLine(true)};root.addView(amount,LinearLayout.LayoutParams(-1,dp(54)).apply{topMargin=dp(12)})
         val requestKey=java.util.UUID.randomUUID().toString();lateinit var send:Button
