@@ -310,7 +310,7 @@ class KnifeHitView(context:android.content.Context):View(context){
         renderBlade(c, x, y, rotation, width * .026f * scale, height * .09f * scale, variant)
     }
     private fun renderBlade(c:Canvas,x:Float,y:Float,rotation:Float,w:Float,h:Float,variant:Int){
-        c.save();c.rotate(rotation,x,y);p.style=Paint.Style.FILL;val metal=when(variant){1->intArrayOf(0xffffffff.toInt(),0xff8ee8ff.toInt(),0xff5276a8.toInt());2->intArrayOf(0xfffff2b0.toInt(),0xffffc857.toInt(),0xff8d5b20.toInt());3->intArrayOf(0xfff6e9ff.toInt(),0xffba7cff.toInt(),0xff56328c.toInt());else->intArrayOf(0xffffffff.toInt(),0xffc7d5f5.toInt(),0xff66779f.toInt())};p.shader=LinearGradient(x-w,y-h,x+w,y,metal,null,Shader.TileMode.CLAMP);val blade=Path().apply{
+        c.save();c.rotate(rotation,x,y);p.style=Paint.Style.FILL;p.color=Color.WHITE;val metal=when(variant){1->intArrayOf(0xffffffff.toInt(),0xff8ee8ff.toInt(),0xff5276a8.toInt());2->intArrayOf(0xfffff2b0.toInt(),0xffffc857.toInt(),0xff8d5b20.toInt());3->intArrayOf(0xfff6e9ff.toInt(),0xffba7cff.toInt(),0xff56328c.toInt());else->intArrayOf(0xffffffff.toInt(),0xffc7d5f5.toInt(),0xff66779f.toInt())};p.shader=LinearGradient(x-w,y-h,x+w,y,metal,null,Shader.TileMode.CLAMP);val blade=Path().apply{
             moveTo(x + if (variant == 3) w * .55f else 0f,y-h)
             when (variant) {
                 1 -> { lineTo(x+w,y-h*.48f); lineTo(x+w*.55f,y+h*.18f) }
@@ -397,7 +397,7 @@ class KnifeHitView(context:android.content.Context):View(context){
         c.translate(cx, cy)
         c.rotate(angle)
         val colors = if (boss) intArrayOf(0xffffdf86.toInt(), 0xffbb3a69.toInt(), 0xff381540.toInt()) else palettes[targetStyle]
-        p.shader = RadialGradient(-r*.24f,-r*.29f,r*1.25f,colors,null,Shader.TileMode.CLAMP)
+        p.style=Paint.Style.FILL\n        p.color=Color.WHITE\n        p.shader = RadialGradient(-r*.24f,-r*.29f,r*1.25f,colors,null,Shader.TileMode.CLAMP)
         c.drawCircle(0f,0f,r,p)
         p.shader = null
         p.style = Paint.Style.STROKE
