@@ -78,7 +78,7 @@ class NativeExperienceTest {
             val saved=prefs.getString("stuck_angles","")
             assertFalse("The first thrown blade should reach the target",saved.isNullOrEmpty())
             inst.runOnMainSync {
-                views(activity.window.decorView).filterIsInstance<Button>().first{it.text=="DYQANI I THIKAVE"}.performClick()
+                views(activity.window.decorView).filterIsInstance<Button>().first{it.text.contains("ARSENALI I THIKAVE")}.performClick()
             }
             inst.waitForIdleSync()
             fun findBuy(node:android.view.accessibility.AccessibilityNodeInfo?):android.view.accessibility.AccessibilityNodeInfo? {
