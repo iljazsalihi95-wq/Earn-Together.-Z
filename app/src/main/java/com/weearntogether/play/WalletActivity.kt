@@ -35,17 +35,17 @@ class WalletActivity:Activity(){
     private fun profile(){page("PROFILE");button("BACK TO APP"){finish()}
         box("GAME COINS",GameCoinStore(this).balance().toString(),
             "20 për nivel të përfunduar • 100 për video të përfunduar.\nRuhen në këtë pajisje; përdoren vetëm në lojë.")
-        root.addView(text("EARN COINS • Bilanci dhe verifikimi merren nga serveri.",12,muted))
+        root.addView(text("REWARD COINS • Bilanci dhe verifikimi merren nga serveri.",12,muted))
         call("getWalletProfile"){r->val p=r.getJSONObject("profile");val b=r.getJSONObject("balance");currentBalance=b
         val header=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(16),dp(12),dp(16),dp(12));background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff482879.toInt(),0xff154986.toInt())).apply{cornerRadius=dp(22).toFloat()}}
         val name=p.getString("username");header.addView(TextView(this).apply{text=name.take(1).uppercase(Locale.ROOT);gravity=Gravity.CENTER;textSize=28f;setTextColor(bg);background=shape(gold,40);setTypeface(null,Typeface.BOLD)},LinearLayout.LayoutParams(dp(64),dp(64)))
         val identity=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(14),0,0,0)};identity.addView(text(name,21,Color.WHITE,true));identity.addView(text(p.getString("email"),13));header.addView(identity,LinearLayout.LayoutParams(0,-2,1f));root.addView(header,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(16)})
         root.addView(text("User ID: "+p.getString("user_id"),11,muted));root.addView(text("Joined: "+p.optString("joined_date").take(10),12,muted))
-        box("EARN COINS • NË PRITJE",b.optLong("pending_coins").toString(),"Awaiting independent verification. No cash value promised.")
-        box("EARN COINS • TË VERIFIKUARA",b.optLong("verified_coins").toString(),"Eligible coins may be allocated to an approved, funded period.")
+        box("REWARD COINS • NË PRITJE",b.optLong("pending_coins").toString(),"Awaiting independent verification. No cash value promised.")
+        box("REWARD COINS • TË VERIFIKUARA",b.optLong("verified_coins").toString(),"Eligible coins may be allocated to an approved, funded period.")
         box("AVAILABLE CASH",euro(b.optLong("available_cents")),"Verified cash after reservations and completed payments.")
         box("TOTAL EARNED",euro(b.optLong("total_earned_cents")));box("TOTAL PAID",euro(b.optLong("total_paid_cents")));box("PENDING CASH OUT",euro(b.optLong("pending_cashout_cents")))
-        root.addView(text("Game Coins dhe Earn Coins janë bilance të ndara. Pagesat monetare kërkojnë miratim nga partnerët, të ardhura të financuara dhe verifikim nga serveri.",12,muted))
+        root.addView(text("Game Coins dhe Reward Coins janë bilance të ndara. Pagesat monetare kërkojnë miratim nga partnerët, të ardhura të financuara dhe verifikim nga serveri.",12,muted))
         button("CASH OUT",b.optBoolean("cashout_allowed")){cashout()};if(!b.optBoolean("cashout_allowed"))root.addView(text("Minimum cash out is €5.00",13,muted))
         button("OFFERS & REWARDS • ayeT"){startActivity(Intent(this,AyetOfferwallActivity::class.java))};button("COIN HISTORY"){coinHistory(0)};button("TRANSACTION HISTORY"){transactionHistory(0)};button("CASH OUT HISTORY"){cashoutHistory(0)};button("REFRESH PROFILE"){profile()}
     }}
