@@ -34,12 +34,22 @@ class ArenaLearningGamesActivity:Activity(){
         listOf("word" to "◆ Gjeje fjalën e duhur","verse" to "▣ Plotëso ajetin","memory" to "◈ Kujtesa • gjej çiftet","true_false" to "✓ E saktë apo e gabuar","order" to "↔ Rendit fjalët").forEach{(key,title)->add(button(title){open(key)})}
         add(label("Rekordi: ${prefs.getInt("best",0)} pikë",18));add(button("KTHEHU NË ARENË"){finish()})
     }
-    private fun open(key:String){mode=key;state=runCatching{JSONObject(prefs.getString("round_$mode","{}")?:"{}")}.getOrDefault(JSONObject());if(!state.has("rounds")&&!state.has("cards")||key=="word"&&state.optJSONArray("rounds")?.optJSONObject(0)?.has("url")!=true)newRound();render()}
+    private fun open(key:String){mode=key;state=runCatching{JSONObject(prefs.getString("round_$mode","{}")?:"{}")}.getOrDefault(JSONObject());if(!state.has("rounds")&&!state.has("cards")||key=="word"&&state.optJSONArray("rounds")?.optJSONObject(0)?.has("clues")!=true)newRound();render()}
     private fun newRound(){revision++;state=JSONObject().put("index",0).put("score",0).put("answered",false)
         if(mode=="memory"){
             val words=listOf("Kuran","Sabër","Namaz","Zekat","Haxh","Dua").take(if(quickMode)3 else 6)
             state.put("cards",JSONArray((words+words).shuffled())).put("matched",JSONArray()).put("flipped",JSONArray()).put("moves",0)
-        }else if(mode=="verse"||mode=="word"){
+        }else if(mode=="word"){
+            val puzzles=listOf(
+                Triple("Suretul Asr", listOf("Sabër","Besim","Vepra të mira","E vërteta","Kuran","Humbje","Këshillim","Tri ajete","Koha"), "Kurani 103:1–3"),
+                Triple("Ramazani", listOf("Agjërim","Syfyr","Iftar","Teravi","Kuran","Muaji i nëntë","Fitër Bajrami","Hëna e re","Nata e Kadrit"), "Kurani 2:183–185"),
+                Triple("Haxhi", listOf("Mekë","Ihram","Tavaf","Arafat","Mina","Muzdelife","Zemzem","Dhul-Hixhe","Qabeja"), "Kurani 2:196–203")
+            )
+            state.put("rounds",JSONArray(puzzles.take(if(quickMode)1 else puzzles.size).map { (solution,clues,source) ->
+                JSONObject().put("prompt","Zbulo fjalët. Gjej lidhjen!").put("answer",solution)
+                    .put("clues",JSONArray(clues)).put("source",source)
+            }))
+        }else if(mode=="verse"){
             val rows=mutableListOf<JSONObject>()
             for(i in 0 until verses.length()){
                 val verse=verses.getJSONObject(i);val words=verse.getString("arabic").split(" ")
@@ -65,7 +75,7 @@ class ArenaLearningGamesActivity:Activity(){
         save()
     }
     private fun save(){if(mode.isNotEmpty()&&!quickMode)prefs.edit().putString("round_$mode",state.toString()).apply()}
-    private fun render(){revision++;if(mode.isEmpty()){menu();return};if(!state.has("rounds")&&!state.has("cards")){newRound()}
+    private fun render(){revision++;if(mode.isEmpty()){menu();return};if(!state.has("rounds")&&!state.has("cards")||mode=="word"&&state.optJSONArray("rounds")?.optJSONObject(0)?.has("clues")!=true){newRound()}
         if(mode=="memory"){memory();return}
         val rows=state.getJSONArray("rounds");val index=state.optInt("index")
         if(index>=rows.length()){results();return}
@@ -73,10 +83,10 @@ class ArenaLearningGamesActivity:Activity(){
         shell(when(mode){"verse"->"PLOTËSO AJETIN";"order"->"RENDIT FJALËT";"true_false"->"E SAKTË APO E GABUAR";else->"GJEJE FJALËN E DUHUR"})
         add(label("${index+1} / ${rows.length()}  •  ★ ${state.optInt("score")}",16))
         val progress=ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal).apply{max=rows.length();progress=index};add(progress)
-        scene=QuizArenaScene(this).apply{playerName="SFIDA";questionPrompt=if(mode=="verse"||mode=="word")"Gjej fjalën që mungon" else q.getString("prompt");questionCategory=if(mode=="verse"||mode=="word")q.optString("source") else "MËSO DHE KUJTO";questionNumber="PYETJA ${index+1}";timerText="★ ${state.optInt("score")}";stageStatus="ILAZ SALIHI";reaction=if(answered&&state.optBoolean("right"))1 else 0}
-        root.addView(scene,LinearLayout.LayoutParams(-1,dp(if(mode=="verse"||mode=="word")160 else 220)))
-        if(mode=="verse"||mode=="word"){add(label("Ushtrim plotësimi • teksti i plotë shfaqet pas zgjedhjes",13));add(label(q.getString("prompt"),30).apply{textDirection=android.view.View.TEXT_DIRECTION_RTL})}
-        if(mode=="true_false"){
+        scene=QuizArenaScene(this).apply{playerName="SFIDA";questionPrompt=if(mode=="verse")"Gjej fjalën që mungon" else q.getString("prompt");questionCategory=if(mode=="verse")q.optString("source") else "MËSO DHE KUJTO";questionNumber="PYETJA ${index+1}";timerText="★ ${state.optInt("score")}";stageStatus="ILAZ SALIHI";reaction=if(answered&&state.optBoolean("right"))1 else 0}
+        root.addView(scene,LinearLayout.LayoutParams(-1,dp(if(mode=="verse")160 else 220)))
+        if(mode=="verse"){add(label("Ushtrim plotësimi • teksti i plotë shfaqet pas zgjedhjes",13));add(label(q.getString("prompt"),30).apply{textDirection=android.view.View.TEXT_DIRECTION_RTL})}
+        if(mode=="word"){associationBoard(q,answered)}else if(mode=="true_false"){
             add(label("Përgjigjja e propozuar",14))
             add(label(q.getString("proposed"),22))
             add(button("E saktë"){answer(q.getBoolean("right_proposal"))}.apply{isEnabled=!answered})
@@ -90,12 +100,57 @@ class ArenaLearningGamesActivity:Activity(){
             val choices=q.getJSONArray("choices")
             for(i in 0 until choices.length())add(button(choices.getString(i)){answer(choices.getString(i)==q.getString("answer"))}.apply{isEnabled=!answered})
         }
-        if(answered){add(label(if(state.optBoolean("right"))"MASHALLAH • SAKTË!" else "MËSO DHE PROVO PËRSËRI",21));add(label(q.getString("answer"),24));add(label(q.optString("full"),if(mode=="verse"||mode=="word")28 else 17));add(label(q.optString("source"),13))
+        if(answered){add(label(if(state.optBoolean("right"))"MASHALLAH • SAKTË!" else "MËSO DHE PROVO PËRSËRI",21));add(label(q.getString("answer"),24));add(label(q.optString("full"),if(mode=="verse")28 else 17));add(label(q.optString("source"),13))
             if(q.optString("url").startsWith("https://quran.com/"))add(button("LEXO AJETIN NË BURIM"){startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW,android.net.Uri.parse(q.getString("url"))))})
-            add(button("VAZHDO ›"){state.put("index",index+1).put("answered",false);state.remove("selected");state.remove("chips");save();render()})
+            add(button("VAZHDO ›"){state.put("index",index+1).put("answered",false);state.remove("selected");state.remove("chips");state.remove("revealed");save();render()})
         }
         add(button(if(quickMode)"KTHEHU TE PYETJET" else "MENYJA E SFIDAVE"){if(quickMode){setResult(RESULT_CANCELED);finish()}else{save();menu()}})
     }
+    private fun associationBoard(q:JSONObject,answered:Boolean){
+        val clues=q.getJSONArray("clues")
+        val revealed=state.optInt("revealed")
+        for(rowIndex in 0..2){
+            val row=LinearLayout(this)
+            for(column in 0..2){
+                val index=rowIndex*3+column
+                val bit=1 shl index
+                val code="${'A'+column}${rowIndex+1}"
+                val open=answered||revealed and bit!=0
+                val tile=button(if(open)clues.getString(index) else code){
+                    state.put("revealed",revealed or bit);save();render()
+                }.apply{
+                    isEnabled=!open
+                    textSize=14f
+                    minHeight=dp(58)
+                    contentDescription=if(open)"$code, ${clues.getString(index)}" else "Zbulo $code"
+                    if(open)background=bg(0xff145b66.toInt(),0xff20416e.toInt())
+                }
+                row.addView(tile,LinearLayout.LayoutParams(0,-1,1f).apply{setMargins(dp(3),0,dp(3),0)})
+            }
+            add(row)
+        }
+        if(answered)return
+        add(button("GJEJ ZGJIDHJEN FINALE"){
+            val input=android.widget.EditText(this).apply{hint="Shkruaj zgjidhjen";setSingleLine()}
+            val dialog=android.app.AlertDialog.Builder(this).setTitle("Cila është lidhja?")
+                .setView(input).setNegativeButton("Kthehu",null).setPositiveButton("Kontrollo",null).show()
+            dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener{
+                fun key(text:String)=java.text.Normalizer.normalize(text.lowercase(java.util.Locale.ROOT),java.text.Normalizer.Form.NFD)
+                    .filter{it.isLetterOrDigit()}
+                val guess=key(input.text.toString())
+                if(guess.isEmpty()){input.error="Shkruaj përgjigjen.";return@setOnClickListener}
+                val expected=key(q.getString("answer"))
+                val alternatives=when(expected){
+                    "suretulasr"->setOf("asr","elasr","surejaasr","surejaelasr")
+                    "ramazani"->setOf("ramazan","muajiramazanit")
+                    "haxhi"->setOf("haxh")
+                    else->emptySet()
+                }
+                dialog.dismiss();answer(guess==expected||guess in alternatives)
+            }
+        }.apply{isEnabled=revealed!=0})
+    }
+
     private fun answer(right:Boolean){if(state.optBoolean("answered"))return;state.put("answered",true).put("right",right);if(right)state.put("score",state.optInt("score")+10);save();render();if(right)celebrate()}
     private fun celebrate(){scene?.reaction=1;applause?.release();applause=android.media.MediaPlayer.create(this,R.raw.arena_applause);applause?.setOnCompletionListener{it.release();applause=null};applause?.start()}
     private fun memory(){shell("KUJTESA • GJEJ ÇIFTET");val cards=state.getJSONArray("cards");val matched=state.getJSONArray("matched");val flipped=state.getJSONArray("flipped")
