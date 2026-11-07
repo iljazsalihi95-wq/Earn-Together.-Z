@@ -397,7 +397,9 @@ class KnifeHitView(context:android.content.Context):View(context){
         c.translate(cx, cy)
         c.rotate(angle)
         val colors = if (boss) intArrayOf(0xffffdf86.toInt(), 0xffbb3a69.toInt(), 0xff381540.toInt()) else palettes[targetStyle]
-        p.style=Paint.Style.FILL\n        p.color=Color.WHITE\n        p.shader = RadialGradient(-r*.24f,-r*.29f,r*1.25f,colors,null,Shader.TileMode.CLAMP)
+        p.style=Paint.Style.FILL
+        p.color=Color.WHITE
+        p.shader = RadialGradient(-r*.24f,-r*.29f,r*1.25f,colors,null,Shader.TileMode.CLAMP)
         c.drawCircle(0f,0f,r,p)
         p.shader = null
         p.style = Paint.Style.STROKE
