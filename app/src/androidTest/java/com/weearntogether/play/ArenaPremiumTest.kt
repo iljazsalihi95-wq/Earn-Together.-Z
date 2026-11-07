@@ -74,7 +74,7 @@ class ArenaPremiumTest {
         try{
             repeat(2){
                 val scene=views(activity.window.decorView).filterIsInstance<QuizArenaScene>().first();assertEquals("Ilaz QA",scene.playerName);assertEquals(0xff583a79.toInt(),scene.suitColor);assertEquals(0xffbd3455.toInt(),scene.tieColor)
-                assertTrue(views(activity.window.decorView).filterIsInstance<Button>().any{it.text.contains("50:50")&&!it.isEnabled})
+                assertTrue(views(activity.window.decorView).any{it.contentDescription?.toString()=="50:50, përdorur"&&!it.isEnabled})
                 if(it==0){inst.runOnMainSync{activity.finish()};activity=launch()}
             }
             val dir=File(ctx.getExternalFilesDir(null),"native-qa").apply{mkdirs()}
