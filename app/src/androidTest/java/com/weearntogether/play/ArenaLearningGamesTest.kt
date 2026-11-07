@@ -15,17 +15,25 @@ class ArenaLearningGamesTest {
     private val inst get()=InstrumentationRegistry.getInstrumentation()
     private fun views(v:View):List<View> = listOf(v)+if(v is ViewGroup)(0 until v.childCount).flatMap{views(v.getChildAt(it))} else emptyList()
     private fun click(a:Activity,text:String){inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.toString()==text}.performClick()};inst.waitForIdleSync()}
-    @Test fun missingWordOptionsScoreOnceAndSurviveReopening(){
+    @Test fun associationCluesScoreOnceAndSurviveReopening(){
         val context=inst.targetContext
         val prefs=context.getSharedPreferences("arena_learning_guest",0);prefs.edit().clear().commit()
         fun launch()=inst.startActivitySync(Intent(context,ArenaLearningGamesActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra("native_qa",true))
         var a=launch();click(a,"◆ Gjeje fjalën e duhur")
         val round=JSONObject(prefs.getString("round_word","{}")!!)
-        val answer=round.getJSONArray("rounds").getJSONObject(0).getString("answer")
-        assertTrue(round.getJSONArray("rounds").getJSONObject(0).getString("prompt").contains("[ … ]"))
-        assertEquals(4,round.getJSONArray("rounds").getJSONObject(0).getJSONArray("choices").length())
-        assertFalse(views(a.window.decorView).any{it is EditText})
-        click(a,answer)
+        assertEquals(9,round.getJSONArray("rounds").getJSONObject(0).getJSONArray("clues").length())
+        click(a,"A1");click(a,"B2");click(a,"C3")
+        assertEquals(273,JSONObject(prefs.getString("round_word","{}")!!).getInt("revealed"))
+        click(a,"GJEJ ZGJIDHJEN FINALE")
+        val dialogRoot=inst.uiAutomation.rootInActiveWindow
+        val input=dialogRoot.findAccessibilityNodeInfosByText("Shkruaj zgjidhjen").first()
+        val args=android.os.Bundle().apply{
+            putCharSequence(android.view.accessibility.AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,"Sureja El-Asr")
+        }
+        assertTrue(input.performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_SET_TEXT,args))
+        assertTrue(dialogRoot.findAccessibilityNodeInfosByText("Kontrollo").first()
+            .performAction(android.view.accessibility.AccessibilityNodeInfo.ACTION_CLICK))
+        inst.waitForIdleSync()
         val dir=java.io.File(context.getExternalFilesDir(null),"native-qa").apply{mkdirs()}
         val screenshot=inst.uiAutomation.takeScreenshot()
         java.io.File(dir,"22-arena-word-game-ilaz-presenter.png").outputStream().use{screenshot.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it)}
