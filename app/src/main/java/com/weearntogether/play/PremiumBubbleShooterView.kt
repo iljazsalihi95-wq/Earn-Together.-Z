@@ -47,7 +47,19 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  private fun newBoard(){grid.forEach{it.fill(0)};val fill=(4+level/45).coerceAtMost(7);val colors=(3+level/55).coerceAtMost(palette.size);for(r in 0 until fill)for(c in 0 until cols)if(Random.nextFloat()>.08f)grid[r][c]=1+Random.nextInt(colors);misses=0}
  private fun save(){best=max(best,score);prefs.edit().putString("grid",grid.flatMap{it.asList()}.joinToString(",")).putInt("score",score).putInt("best",best).putInt("level",level).putInt("streak",streak).putInt("misses",misses).putInt("current",current).putInt("next",next).putBoolean("campaign_complete",campaignComplete).apply()}
  private fun pressureLimit()=(7-level/60).coerceAtLeast(4)
- private fun xFor(r:Int,c:Int)=dp(8)+c*cell+(if(r%2==1)cell/2 else 0)
+ private fun gridWidth()=(cols+.5f)*cell
+ private fun gridLeft()=maxOf(dp(8),((field.width-gridWidth())/2f).toInt())
+ private fun xFor(r:Int,c:Int)=gridLeft()+c*cell+(if(r%2==1)cell/2 else 0)
+ private fun addRails(){
+  for(right in listOf(false,true))field.addView(View(context).apply{
+   contentDescription=if(right)"Bubble wall right" else "Bubble wall left"
+   background=GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,intArrayOf(0xffffc857.toInt(),0xffa478ff.toInt(),0xff35c6fa.toInt()))
+   alpha=.65f
+  },LayoutParams(dp(1).coerceAtLeast(1),(field.height-fieldTop-dp(12)).coerceAtLeast(1)).apply{
+   leftMargin=if(right)(gridLeft()+gridWidth()).toInt() else gridLeft()-dp(1)
+   topMargin=fieldTop
+  })
+ }
  private fun yFor(r:Int)=fieldTop+(r*cell*.86f).toInt()
  private fun rebuild(){field.removeAllViews();// Fit all eleven staggered rows inside the actual playfield, including
  // short screens, split-screen and landscape. Width-only sizing clipped
@@ -56,7 +68,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  val widthCell=((field.width-dp(20))/(cols+0.5f)).toInt()
  val availableHeight=(field.height-fieldTop-dp(12)).coerceAtLeast(1)
  val heightCell=(availableHeight/(1f+(rows-1)*.86f)).toInt()
- cell=minOf(widthCell,heightCell).coerceAtLeast(1);for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]>0)addBubble(r,c,grid[r][c]);launcher.background=bubble(palette[current-1]);nextView.background=bubble(palette[next-1]);launcher.text=if(streak>=2)"✦" else "•";launcher.animate().cancel();launcher.scaleX=1f;launcher.scaleY=1f;if(streak>=2)launcher.animate().scaleX(1.12f).scaleY(1.12f).setDuration(360).withEndAction{launcher.animate().scaleX(1f).scaleY(1f).setDuration(360).start()}.start();hud.text=if(campaignComplete)"CAMPAIGN COMPLETE ✦ 250/250\nSCORE $score     BEST $best" else "SCORE  $score     BEST  $best     LEVEL  $level/250\nSTREAK  x$streak     ${if(streak>=2)"MAGIC READY ✦" else "NEXT"}";danger.text=if(campaignComplete)"ALL 250 LEVELS CLEARED • RESTART TO PLAY AGAIN" else "PRESSURE  $misses/${pressureLimit()}  •  MATCH 3+  •  3 COMBOS = MAGIC";danger.setTextColor(if(misses>=pressureLimit()-1)0xffff638f.toInt() else 0xffffc857.toInt())}
+ cell=minOf(widthCell,heightCell).coerceAtLeast(1);addRails();for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]>0)addBubble(r,c,grid[r][c]);launcher.background=bubble(palette[current-1]);nextView.background=bubble(palette[next-1]);launcher.text=if(streak>=2)"✦" else "•";launcher.animate().cancel();launcher.scaleX=1f;launcher.scaleY=1f;if(streak>=2)launcher.animate().scaleX(1.12f).scaleY(1.12f).setDuration(360).withEndAction{launcher.animate().scaleX(1f).scaleY(1f).setDuration(360).start()}.start();hud.text=if(campaignComplete)"CAMPAIGN COMPLETE ✦ 250/250\nSCORE $score     BEST $best" else "SCORE  $score     BEST  $best     LEVEL  $level/250\nSTREAK  x$streak     ${if(streak>=2)"MAGIC READY ✦" else "NEXT"}";danger.text=if(campaignComplete)"ALL 250 LEVELS CLEARED • RESTART TO PLAY AGAIN" else "PRESSURE  $misses/${pressureLimit()}  •  MATCH 3+  •  3 COMBOS = MAGIC";danger.setTextColor(if(misses>=pressureLimit()-1)0xffff638f.toInt() else 0xffffc857.toInt())}
  /** Reflow the hex grid when split-screen, rotation or display scaling changes. */
  override fun onSizeChanged(w:Int,h:Int,oldw:Int,oldh:Int){
   super.onSizeChanged(w,h,oldw,oldh)
@@ -83,8 +95,8 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   var vx=dx/length;val vy=dy/length
   var px=sx;var py=sy
   val radius=cell*.44f
-  val left=field.left+dp(8)+radius
-  val right=field.right-dp(8)-radius
+  val left=field.left+gridLeft()+radius
+  val right=field.left+gridLeft()+gridWidth()-radius
   var hitX=sx;var hitY=field.top+fieldTop+radius
   var collided:Pair<Int,Int>?=null
   val step=(cell*.22f).coerceAtLeast(2f)
@@ -138,8 +150,8 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   val length=kotlin.math.sqrt(dx*dx+dy*dy).coerceAtLeast(1f)
   var vx=dx/length;val vy=dy/length
   val radius=cell*.44f
-  val left=field.left+dp(8)+radius
-  val right=field.right-dp(8)-radius
+  val left=field.left+gridLeft()+radius
+  val right=field.left+gridLeft()+gridWidth()-radius
   val targetX=field.left+xFor(target.first,target.second)+cell/2f
   val targetY=field.top+yFor(target.first)+cell/2f
   val points=mutableListOf<Pair<Float,Float>>()

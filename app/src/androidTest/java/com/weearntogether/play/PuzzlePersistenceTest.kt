@@ -16,6 +16,32 @@ class PuzzlePersistenceTest {
  private fun launch(type:Class<out Activity>)=inst.startActivitySync(Intent(ctx,type).putExtra("native_qa",true).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)).also{inst.waitForIdleSync()}
  private fun views(v:View):List<View> = listOf(v)+if(v is ViewGroup)(0 until v.childCount).flatMap{views(v.getChildAt(it))}else emptyList()
  private fun tap(v:View){val now=android.os.SystemClock.uptimeMillis();for(a in listOf(MotionEvent.ACTION_DOWN,MotionEvent.ACTION_UP)){val e=MotionEvent.obtain(now,now+10,a,v.width/2f,v.height/2f,0);v.dispatchTouchEvent(e);e.recycle()}}
+ @Test fun bubbleGridAndVisibleBankShotWallsStayCenteredAfterResize(){
+  val p=ProgressPreferences.open(ctx,"bubble_shooter_hd2d")
+  p.edit().clear().putString("grid",List(99){if(it<18)"1" else "0"}.joinToString(",")).putInt("score",55).putInt("level",2).putInt("current",1).putInt("next",1).commit()
+  val a=launch(BubbleShooterActivity::class.java)
+  try {
+   val game=views(a.window.decorView).filterIsInstance<PremiumBubbleShooterView>().single()
+   val saved=p.getString("grid",null)
+   for((w,h) in listOf(320 to 650,640 to 540,360 to 800)){
+    val density=ctx.resources.displayMetrics.density
+    val width=(w*density).toInt();val height=(h*density).toInt()
+    fun layout(){game.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(height,View.MeasureSpec.EXACTLY));game.layout(0,0,width,height)}
+    inst.runOnMainSync{game.layoutParams=game.layoutParams.apply{this.width=width;this.height=height};layout()};inst.waitForIdleSync()
+    inst.runOnMainSync{
+     layout()
+     val left=views(game).first{it.contentDescription=="Bubble wall left"}
+     val right=views(game).first{it.contentDescription=="Bubble wall right"}
+     val field=left.parent as ViewGroup
+     assertTrue("Visible shot walls must be centered",kotlin.math.abs((left.left+right.left)/2f-field.width/2f)<=2*density)
+     val bubbles=(0 until field.childCount).map{field.getChildAt(it)}.filterIsInstance<android.widget.TextView>()
+     assertEquals(18,bubbles.size)
+     assertTrue(bubbles.all{it.left>=left.left && it.right<=right.right && it.bottom<=field.height})
+    }
+   }
+   assertEquals(saved,p.getString("grid",null));assertEquals(55,p.getInt("score",0))
+  }finally{inst.runOnMainSync{a.finish()}}
+ }
  @Test fun blockBoardRefitsActualWindowAndKeepsSavedProgress(){
   val p=ProgressPreferences.open(ctx,"block_puzzle_hd2d")
   val a=launch(BlockPuzzleActivity::class.java)
