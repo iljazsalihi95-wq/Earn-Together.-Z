@@ -112,7 +112,7 @@ class BlockPuzzleActivity : Activity() {
         host.addView(knife, FrameLayout.LayoutParams(dp(118), dp(40), Gravity.BOTTOM or Gravity.START).apply { leftMargin = dp(10); bottomMargin = dp(6) })
         val nextGame = chip(ui("BUBBLES ›", "TOPAT ›", "BUBBLES ›", "BOLLE ›")) { openGame(BubbleShooterActivity::class.java) }.apply { contentDescription = ui("Open Bubble Shooter", "Hap Bubble Shooter", "Bubble Shooter öffnen", "Apri Bubble Shooter") }
         host.addView(nextGame, FrameLayout.LayoutParams(dp(118), dp(40), Gravity.BOTTOM or Gravity.END).apply { rightMargin = dp(10); bottomMargin = dp(6) })
-        host.addView(chip(ui("PAUSE","PAUZË","PAUSE","PAUSA")){pauseGame()}.apply{contentDescription="Pause game"},FrameLayout.LayoutParams(dp(68),dp(46),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(8)})
+        host.addView(chip(ui("PAUSE","PAUZË","PAUSE","PAUSA")){pauseGame()}.apply{contentDescription="Pause game"},FrameLayout.LayoutParams(dp(94),dp(40),Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply{topMargin=dp(112)})
         setContentView(host)
     }
 
