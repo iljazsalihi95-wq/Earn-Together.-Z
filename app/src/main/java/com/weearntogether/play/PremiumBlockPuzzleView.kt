@@ -47,6 +47,19 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         tray.orientation=HORIZONTAL;tray.gravity=Gravity.CENTER;tray.background=rounded(0xaa101a3a.toInt(),0x55ffc857,22);tray.setPadding(dp(8),dp(8),dp(8),dp(8));addView(tray,LayoutParams(-1,dp(126)))
         buildBoard();restoreOrNew();boardView.setOnDragListener{_,e->handleBoardDrag(e)}
     }
+    override fun onMeasure(widthMeasureSpec:Int,heightMeasureSpec:Int){
+        // DisplayMetrics describes the display; split-screen and parent insets
+        // can leave this game considerably less space. Refit on every measure.
+        val w=View.MeasureSpec.getSize(widthMeasureSpec)
+        val h=View.MeasureSpec.getSize(heightMeasureSpec)
+        if(View.MeasureSpec.getMode(widthMeasureSpec)!=View.MeasureSpec.UNSPECIFIED &&
+            View.MeasureSpec.getMode(heightMeasureSpec)!=View.MeasureSpec.UNSPECIFIED){
+            val side=minOf(w-paddingLeft-paddingRight,h-dp(452)).coerceAtLeast(1)
+            val params=boardView.layoutParams as LayoutParams
+            if(params.width!=side || params.height!=side){params.width=side;params.height=side}
+        }
+        super.onMeasure(widthMeasureSpec,heightMeasureSpec)
+    }
     private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt()
     private fun goal()=(5+level/12).coerceAtMost(20)
     private fun modeName()=when{level>=80->"MAGIC STORM";level>=50->"GOLD RUSH";level>=25->"COMBO QUEST";level>=10->"CRYSTAL RUN";else->"CLASSIC"}

@@ -75,6 +75,9 @@ class WalletActivity:Activity(){
             val b=r.getJSONObject("balance");currentBalance=b
             pending.text=b.optLong("pending_coins").toString()
             verified.text=b.optLong("verified_coins").toString()
+            val verifiedCoins=b.optLong("verified_coins").coerceAtLeast(0L)
+            box("EARN COINS → EURO",euro(verifiedCoins/100L),
+                "10.000 Earn Coins = 1 € • 20.000 = 2 €\nLlogaritet vetëm bilanci i verifikuar. Kjo vlerë nuk është para të disponueshme për tërheqje.")
             val rules=r.optJSONObject("reward_rules")
             rewardStatus.text=if(rules!=null)
                 "${rules.optInt("video_reward_coins")} Reward Coins për video të përfunduar, në pritje të verifikimit."

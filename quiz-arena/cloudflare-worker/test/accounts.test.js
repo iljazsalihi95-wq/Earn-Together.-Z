@@ -29,6 +29,11 @@ test('native accounts isolate balances, hash passwords, revoke sessions and keep
  assert.equal((await act('requestCashout',{amount:'5.00'})).error,'PARTNER_APPROVAL_REQUIRED');
  assert.equal((await act('convertCoins')).error,'PARTNER_APPROVAL_REQUIRED');
  assert.equal((await act('getCoinHistory')).transactions.length,1);
+ assert.equal((await act('getConversionQuote')).estimated_cents,0); // Pending videos never convert.
+ const stored=data.get('wallet:'+a.user_id+':balance');stored.verified_coins=20000;
+ const quote=await act('getConversionQuote');assert.equal(quote.estimated_cents,200);assert.equal(quote.quote_only,true);
+ assert.equal((await act('getBalance')).available_cents,0);
+ assert.equal((await act('getWalletProfile')).conversion_preview.estimated_cents,200);
  assert.equal((await act('getOfferwallConfig')).enabled,false);
  const save=await act('saveProgress',{game:'Block Puzzle',level:3,score:90,best_score:90,progress_json:'{"board":[1,0]}'});
  assert.equal(save.progress[0].conflict,false);

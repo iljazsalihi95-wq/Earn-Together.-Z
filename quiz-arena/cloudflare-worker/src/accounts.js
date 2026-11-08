@@ -1,3 +1,4 @@
+import { conversionQuote } from './conversion.js';
 import { progressAction } from './progress.js';
 // Native Cloudflare account service. No Google Apps Script requests or client money authority.
 const headers={'content-type':'application/json; charset=utf-8','cache-control':'no-store'};
@@ -96,7 +97,8 @@ export class NativeAccounts {
     if(['balance','coins','verified','status','amount_cents','user_id'].some(k=>p[k]!==undefined))fail('CLIENT_AUTHORITY');
     const prefix='wallet:'+user.user_id+':';
     const wallet=await tx.get(prefix+'balance')||{game_coins:0,pending_coins:0,verified_coins:0,available_cents:0,total_earned_cents:0,total_paid_cents:0,pending_cashout_cents:0,cashout_allowed:false};
-    if(['getBalance','getCashoutEligibility','getWalletProfile'].includes(p.action))return {success:true,...wallet,eligible:false,balance:wallet,profile:{username:user.name,email:user.email,user_id:user.user_id,joined_date:user.created_at},reward_rules:{video_reward_coins:100,level_game_coins:20,video_status:'PENDING',automatic_cash_conversion:false}};
+    if(p.action==='getConversionQuote')return {success:true,...conversionQuote(wallet.verified_coins)};
+    if(['getBalance','getCashoutEligibility','getWalletProfile'].includes(p.action))return {success:true,...wallet,eligible:false,balance:wallet,profile:{username:user.name,email:user.email,user_id:user.user_id,joined_date:user.created_at},reward_rules:{video_reward_coins:100,level_game_coins:20,video_status:'PENDING',automatic_cash_conversion:false},conversion_preview:conversionQuote(wallet.verified_coins)};
     if(p.action==='getOfferwallConfig')return {success:true,provider:'ayet',enabled:!!this.env.AYET_OFFERWALL_URL,url:this.env.AYET_OFFERWALL_URL||'',rewards_require_verified_partner_callback:true};
     if(['convertCoins','requestCashout'].includes(p.action))fail('PARTNER_APPROVAL_REQUIRED',409);
     if(['getCoinHistory','getTransactionHistory','getCashoutHistory'].includes(p.action)){

@@ -16,6 +16,28 @@ class PuzzlePersistenceTest {
  private fun launch(type:Class<out Activity>)=inst.startActivitySync(Intent(ctx,type).putExtra("native_qa",true).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)).also{inst.waitForIdleSync()}
  private fun views(v:View):List<View> = listOf(v)+if(v is ViewGroup)(0 until v.childCount).flatMap{views(v.getChildAt(it))}else emptyList()
  private fun tap(v:View){val now=android.os.SystemClock.uptimeMillis();for(a in listOf(MotionEvent.ACTION_DOWN,MotionEvent.ACTION_UP)){val e=MotionEvent.obtain(now,now+10,a,v.width/2f,v.height/2f,0);v.dispatchTouchEvent(e);e.recycle()}}
+ @Test fun blockBoardRefitsActualWindowAndKeepsSavedProgress(){
+  val p=ProgressPreferences.open(ctx,"block_puzzle_hd2d")
+  val a=launch(BlockPuzzleActivity::class.java)
+  try {
+   val game=views(a.window.decorView).filterIsInstance<PremiumBlockPuzzleView>().single()
+   val saved=p.getString("board",null);val score=p.getInt("score",0)
+   inst.runOnMainSync{
+    val density=ctx.resources.displayMetrics.density
+    for((w,h) in listOf(320 to 650,600 to 540,640 to 880)){
+     val width=(w*density).toInt();val height=(h*density).toInt()
+     game.measure(View.MeasureSpec.makeMeasureSpec(width,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(height,View.MeasureSpec.EXACTLY))
+     game.layout(0,0,width,height)
+     val board=views(game).filterIsInstance<GridLayout>().first{it.childCount==64}
+     assertEquals(board.measuredWidth,board.measuredHeight)
+     assertTrue("Board must fit actual window width",board.right<=width-game.paddingRight)
+     val tray=game.getChildAt(game.childCount-1)
+     assertTrue("Pieces must remain inside actual window",tray.bottom<=height-game.paddingBottom)
+    }
+   }
+   assertEquals(saved,p.getString("board",null));assertEquals(score,p.getInt("score",0))
+  }finally{inst.runOnMainSync{a.finish()}}
+ }
  @Test fun blockTouchPlacementPauseRestartAndRelaunchPreserveRealSavedState(){
   val p=ProgressPreferences.open(ctx,"block_puzzle_hd2d")
   p.edit().clear().putString("board",List(64){"0"}.joinToString(",")).putString("offers","0,1,2").putInt("score",0).putInt("best",100).putInt("level",3).commit()
