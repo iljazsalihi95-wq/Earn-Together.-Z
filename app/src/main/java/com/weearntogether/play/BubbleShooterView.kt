@@ -17,6 +17,7 @@ class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Un
     private var aimX=0f; private var aimY=0f; private var px=0f; private var py=0f; private var vx=0f; private var vy=0f; private var lastFrame=0L
     private var burstX=0f; private var burstY=0f; private var burstCount=0; private var burstDropped=0; private var burstStarted=0L
     private var pressureStarted=0L
+    private var aimingGesture=false; private var swapGesture=false
     init { if(!restore()) newCampaign() else sanitizeQueue() }
     private fun activeColors():List<Int>{val used=linkedSetOf<Int>();for(r in grid)for(v in r)if(v in colors.indices)used.add(v);return if(used.isEmpty())colors.indices.toList() else used.toList()}
     private fun playableColor()=activeColors().random()
@@ -67,5 +68,52 @@ class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Un
     private fun drawPressure(c:Canvas){if(pressureStarted==0L)return;val elapsed=(System.nanoTime()-pressureStarted)/1e9f;if(elapsed>.85f){pressureStarted=0L;return};val rad=radius();val t=(elapsed/.85f).coerceIn(0f,1f);val alpha=((1f-t)*180).toInt();p.shader=LinearGradient(0f,0f,0f,rad*5.5f,Color.argb(alpha,255,74,115),Color.TRANSPARENT,Shader.TileMode.CLAMP);c.drawRect(0f,0f,width.toFloat(),rad*5.5f,p);p.shader=null;p.style=Paint.Style.STROKE;p.strokeWidth=rad*(.16f-.07f*t);p.color=Color.argb(((1f-t)*230).toInt(),255,92,126);c.drawRoundRect(rad*.2f,rad*.2f,width-rad*.2f,height-rad*.2f,rad*.7f,rad*.7f,p);p.style=Paint.Style.FILL;p.textAlign=Paint.Align.CENTER;label(c,"PRESSURE ROW",width/2f,rad*(2.7f+.7f*t),rad*.55f,Color.argb(((1f-t)*255).toInt(),255,211,92));p.textAlign=Paint.Align.LEFT;postInvalidateOnAnimation()}
     override fun onDraw(c:Canvas){super.onDraw(c);val rad=radius();c.drawColor(0xff071020.toInt());p.shader=LinearGradient(0f,0f,width.toFloat(),height.toFloat(),intArrayOf(0xff101b43.toInt(),0xff27165b.toInt(),0xff071020.toInt()),null,Shader.TileMode.CLAMP);c.drawRect(0f,0f,width.toFloat(),height.toFloat(),p);p.shader=null;pill(c,rad*.35f,rad*.28f,width-rad*.35f,rad*1.82f,0xaa111a3a.toInt());label(c,"SCORE $points",rad*.62f,rad*1.05f,rad*.34f,gold());label(c,"BEST $best",rad*4.35f,rad*1.05f,rad*.34f);label(c,"LEVEL $level/250",rad*8.05f,rad*1.05f,rad*.31f,0xffcbb9ff.toInt());label(c,"COMBO x$streak",rad*11.7f,rad*1.05f,rad*.30f,0xff66e0b8.toInt());label(c,"DANGER $misses/${missLimit()}",rad*11.7f,rad*1.52f,rad*.27f,if(misses>=missLimit()-1)0xffff6b7a.toInt() else 0xffb9c7e8.toInt());for(r in 0..11)for(col in 0..7)if(grid[r][col]>=0)drawBubble(c,centerX(col,r),centerY(r),rad*.88f,colors[grid[r][col]]);drawAimGuide(c);drawBurst(c);drawPressure(c);p.color=0x552d7cff;c.drawCircle(width/2f,shooterY(),rad*1.38f,p);drawBubble(c,width/2f,shooterY(),rad*.92f,colors[current]);pill(c,rad*.45f,shooterY()-rad*.85f,rad*4.6f,shooterY()+rad*.95f,0xaa111a3a.toInt());label(c,"NEXT",rad*.8f,shooterY()-rad*.25f,rad*.40f,0xffb9c7e8.toInt());drawBubble(c,rad*3.65f,shooterY()+rad*.05f,rad*.52f,colors[next]);label(c,"TAP TO SWAP",rad*.72f,shooterY()+rad*.65f,rad*.31f,gold());if(moving){drawBubble(c,px,py,rad*.88f,colors[current]);val now=System.nanoTime();val dt=if(lastFrame==0L).016f else((now-lastFrame)/1e9f).coerceIn(.005f,.035f);lastFrame=now;val steps=ceil(hypot(vx*dt,vy*dt)/(rad*.55f).coerceAtLeast(1f)).toInt().coerceIn(1,24);var collided=false;repeat(steps){if(!collided){px+=vx*dt/steps;py+=vy*dt/steps;if(px<rad||px>width-rad){vx=-vx;px=px.coerceIn(rad,width-rad)};if(py<=rad||(0..11).any{r->(0..7).any{col->grid[r][col]>=0&&hypot(px-centerX(col,r),py-centerY(r))<rad*1.8f}}){collided=true;snap()}}};if(!collided)postInvalidateOnAnimation()};if(ended){p.color=0xee080d22.toInt();c.drawRoundRect(rad,shooterY()/3,width-rad,shooterY()/3+rad*6.3f,rad*.65f,rad*.65f,p);label(c,if(completed)"CAMPAIGN COMPLETE" else "GAME OVER",rad*2.1f,shooterY()/3+rad*2f,if(completed)rad*.65f else rad*1.0f,gold());label(c,"Score $points • Level $level",rad*2.1f,shooterY()/3+rad*3.35f,rad*.58f);label(c,"Best level $bestLevel",rad*2.1f,shooterY()/3+rad*4.2f,rad*.48f,0xffcbb9ff.toInt());label(c,if(completed)"250 levels cleared" else "Tap Restart to retry level",rad*2.1f,shooterY()/3+rad*5.05f,rad*.43f,0xffb9c7e8.toInt())}}
     private fun gold()=0xffffc54d.toInt()
-    override fun onTouchEvent(e:MotionEvent):Boolean{val rad=radius();when(e.action){MotionEvent.ACTION_DOWN->{if(!moving&&!ended&&hypot(e.x-rad*3.65f,e.y-(shooterY()+rad*.05f))<rad*1.3f){swapBubble();return true};if(!moving&&!ended){aimX=e.x;aimY=e.y;invalidate()};return true};MotionEvent.ACTION_MOVE->{if(!moving&&!ended){aimX=e.x;aimY=e.y;invalidate()};return true};MotionEvent.ACTION_UP->{if(moving||ended)return true;if(hypot(e.x-rad*3.65f,e.y-(shooterY()+rad*.05f))<rad*1.3f)return true;aimX=e.x;aimY=e.y;val dx=e.x-width/2f;val dy=e.y-shooterY();if(dy>=-rad)return true;val len=hypot(dx,dy).coerceAtLeast(1f);px=width/2f;py=shooterY();vx=dx/len*1350f;vy=dy/len*1350f;moving=true;lastFrame=0L;postInvalidateOnAnimation();return true}};return true}
+    override fun onTouchEvent(e:MotionEvent):Boolean {
+        val rad=radius()
+        when(e.actionMasked){
+            MotionEvent.ACTION_DOWN->{
+                aimingGesture=false
+                swapGesture=false
+                if(moving||ended)return true
+                if(hypot(e.x-rad*3.65f,e.y-(shooterY()+rad*.05f))<rad*1.3f){
+                    swapGesture=true
+                    swapBubble()
+                    return true
+                }
+                aimingGesture=true
+                aimX=e.x;aimY=e.y;invalidate()
+                return true
+            }
+            MotionEvent.ACTION_MOVE->{
+                if(aimingGesture&&!moving&&!ended){
+                    aimX=e.x;aimY=e.y;invalidate()
+                }
+                return true
+            }
+            MotionEvent.ACTION_UP->{
+                val canShoot=aimingGesture&&!swapGesture&&!moving&&!ended
+                aimingGesture=false
+                swapGesture=false
+                if(!canShoot)return true
+                aimX=e.x;aimY=e.y
+                val dx=e.x-width/2f
+                val dy=e.y-shooterY()
+                if(dy>=-rad){invalidate();return true}
+                val len=hypot(dx,dy).coerceAtLeast(1f)
+                px=width/2f;py=shooterY()
+                vx=dx/len*1350f;vy=dy/len*1350f
+                moving=true;lastFrame=0L
+                postInvalidateOnAnimation()
+                return true
+            }
+            MotionEvent.ACTION_CANCEL->{
+                aimingGesture=false
+                swapGesture=false
+                aimY=0f
+                invalidate()
+                return true
+            }
+        }
+        return true
+    }
 }
