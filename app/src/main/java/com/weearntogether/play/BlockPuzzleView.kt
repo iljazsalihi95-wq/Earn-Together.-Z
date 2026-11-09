@@ -25,7 +25,7 @@ class BlockPuzzleView(context: Context, private val onNaturalBreak: (() -> Unit)
         arrayOf(1 to 0,0 to 1,1 to 1,2 to 1,1 to 2)
     )
     private val prefs=ProgressPreferences.open(context,"block_puzzle")
-    private var offers=MutableList(3){Random.nextInt(shapes.size)};private var selected=0;private var score=0;private var best=prefs.getInt("best",0);private var level=prefs.getInt("level",1).coerceIn(1,250);private var totalLines=prefs.getInt("total_lines",0);private var levelLines=prefs.getInt("level_lines",0);private var combo=prefs.getInt("combo",0);private var bestCombo=prefs.getInt("best_combo",0);private var reshuffles=prefs.getInt("reshuffles",1).coerceAtLeast(0);private var gameOver=false;private var dragging=false;private var previewX=-1;private var previewY=-1
+    private var offers=MutableList(3){Random.nextInt(shapes.size)};private var selected=0;private var score=0;private var best=prefs.getInt("best",0);private var level=prefs.getInt("level",1).coerceIn(1,250);private var totalLines=prefs.getInt("total_lines",0);private var levelLines=prefs.getInt("level_lines",0);private var combo=prefs.getInt("combo",0);private var bestCombo=prefs.getInt("best_combo",0);private var reshuffles=prefs.getInt("reshuffles",1).coerceAtLeast(0);private var gameOver=false;private var dragging=false;private var powerPressed=false;private var previewX=-1;private var previewY=-1
     private var flashUntil=0L;private var flashLines=0;private var comboUntil=0L;private var placementUntil=0L;private var placementX=-1;private var placementY=-1;private var placementSize=0;private var invalidUntil=0L
     private fun goal()=min(6+level/5,24)
     private fun campaignShapeIds():List<Int>{val maxSize=when{level<15->2;level<45->3;level<100->4;else->5};return shapes.indices.filter{shapes[it].size<=maxSize}}
@@ -51,7 +51,7 @@ class BlockPuzzleView(context: Context, private val onNaturalBreak: (() -> Unit)
         gameOver = !anyMoves()
         if (!validBoard || !validOffers || replenished) save()
     }
-    fun restart(){for(row in board)row.fill(0);offers=freshOffers();selected=0;score=0;levelLines=0;combo=0;gameOver=false;dragging=false;previewX=-1;previewY=-1;performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);save();invalidate()}
+    fun restart(){for(row in board)row.fill(0);offers=freshOffers();selected=0;score=0;levelLines=0;combo=0;gameOver=false;dragging=false;powerPressed=false;previewX=-1;previewY=-1;performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);save();invalidate()}
     private fun canFitAnywhere(id:Int)=(0..7).any{y->(0..7).any{x->fits(id,x,y)}}
     private fun freshOffers():MutableList<Int>{val campaignPool=campaignShapeIds();val fitting=campaignPool.filter{canFitAnywhere(it)};if(fitting.isEmpty())return mutableListOf(-1,-1,-1);val small=fitting.filter{shapes[it].size<=2};val out=mutableListOf<Int>();out+=(small.ifEmpty{fitting}).random();while(out.size<3)out+=fitting.random();return out.shuffled().toMutableList()}
     private fun save(){prefs.edit().putString("board",board.joinToString(""){it.joinToString("")}).putString("offers",offers.joinToString(",")).putInt("score",score).putInt("best",best).putInt("level",level).putInt("total_lines",totalLines).putInt("level_lines",levelLines).putInt("combo",combo).putInt("best_combo",bestCombo).putInt("reshuffles",reshuffles).apply()}
@@ -67,5 +67,63 @@ class BlockPuzzleView(context: Context, private val onNaturalBreak: (() -> Unit)
     private fun reshuffle(){if(reshuffles<=0)return;val next=freshOffers();if(next.all{it<0})return;offers=next;selected=offers.indexOfFirst{it>=0}.let{if(it>=0)it else 0};reshuffles--;combo=0;gameOver=!anyMoves();performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);save();invalidate()}
     private fun completeLevel(){if(level>=250){levelLines=goal();return};level++;levelLines=0;combo=0;if(level%3==0)reshuffles++;for(row in board)row.fill(0);offers=freshOffers();selected=0;performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);post{onNaturalBreak?.invoke()}}
     private fun place(x:Int,y:Int){val id=offers[selected];if(id<0)return;if(!fits(id,x,y)){invalidUntil=System.currentTimeMillis()+240;performHapticFeedback(HapticFeedbackConstants.REJECT);invalidate();return};val pieceSize=shapes[id].size;shapes[id].forEach{(dx,dy)->board[y+dy][x+dx]=selected+1};placementX=x;placementY=y;placementSize=pieceSize;placementUntil=System.currentTimeMillis()+300;score+=pieceSize*(1+level/20);offers[selected]=-1;val rows=(0..7).filter{r->board[r].all{it!=0}};val cols=(0..7).filter{col->(0..7).all{r->board[r][col]!=0}};rows.forEach{board[it].fill(0)};cols.forEach{col->(0..7).forEach{r->board[r][col]=0}};val lines=rows.size+cols.size;if(lines>0){combo++;bestCombo=maxOf(bestCombo,combo);totalLines+=lines;levelLines+=lines;score+=lines*25*(1+level/20)+combo*15;flashLines=lines;flashUntil=System.currentTimeMillis()+420;comboUntil=System.currentTimeMillis()+760;performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);if(levelLines>=goal())completeLevel()}else{combo=0;performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)};best=maxOf(best,score);if(offers.all{it<0})offers=freshOffers();selected=offers.indexOfFirst{it>=0}.let{if(it>=0)it else 0};val wasOver=gameOver;gameOver=!anyMoves();save();if(gameOver&&!wasOver)post{onNaturalBreak?.invoke()}}
-    override fun onTouchEvent(e:MotionEvent):Boolean{val(cell,ox,oy)=geo();val sy=oy+8*cell+34;val powerY=sy+148;if(e.actionMasked==MotionEvent.ACTION_UP&&e.x in ox..(width-ox)&&e.y in powerY..powerY+82){if(gameOver&&reshuffles<=0)restart()else reshuffle();return true};if(gameOver)return true;val w=(width-ox*2)/3f;when(e.actionMasked){MotionEvent.ACTION_DOWN->{if(e.y in sy..sy+136&&e.x>=ox){selected=((e.x-ox)/w).toInt().coerceIn(0,2);if(offers[selected]>=0){dragging=true;performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)};invalidate();return true};boardPos(e.x,e.y)?.let{(x,y)->previewX=x;previewY=y}};MotionEvent.ACTION_MOVE->if(dragging){boardPos(e.x,e.y-cell*1.25f)?.let{(x,y)->previewX=x;previewY=y}?:run{previewX=-1;previewY=-1};invalidate()};MotionEvent.ACTION_UP->{if(dragging){val release=boardPos(e.x,e.y-cell*1.25f);previewX=release?.first?:-1;previewY=release?.second?:-1};if(dragging&&previewX>=0&&previewY>=0)place(previewX,previewY)else if(dragging){invalidUntil=System.currentTimeMillis()+240;performHapticFeedback(HapticFeedbackConstants.REJECT)}else boardPos(e.x,e.y)?.let{(x,y)->place(x,y)};dragging=false;previewX=-1;previewY=-1;invalidate();return true};MotionEvent.ACTION_CANCEL->{dragging=false;previewX=-1;previewY=-1;invalidate()}};return true}
+    override fun onTouchEvent(e:MotionEvent):Boolean {
+        val (cell,ox,oy)=geo()
+        val sy=oy+8*cell+34
+        val powerY=sy+148
+        val insidePower={x:Float,y:Float->x>=ox&&x<=width-ox&&y>=powerY&&y<=powerY+78}
+        when(e.actionMasked){
+            MotionEvent.ACTION_DOWN->{
+                powerPressed=insidePower(e.x,e.y)
+                if(powerPressed)return true
+                if(gameOver)return true
+                val w=(width-ox*2)/3f
+                if(e.y in sy..sy+132&&e.x>=ox&&e.x<=width-ox){
+                    selected=((e.x-ox)/w).toInt().coerceIn(0,2)
+                    if(offers[selected]>=0){
+                        dragging=true
+                        performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                    }
+                    invalidate()
+                    return true
+                }
+                boardPos(e.x,e.y)?.let{(x,y)->previewX=x;previewY=y}
+            }
+            MotionEvent.ACTION_MOVE->{
+                if(dragging){
+                    boardPos(e.x,e.y-cell*1.25f)?.let{(x,y)->previewX=x;previewY=y}
+                        ?:run{previewX=-1;previewY=-1}
+                    invalidate()
+                }
+            }
+            MotionEvent.ACTION_UP->{
+                if(powerPressed){
+                    powerPressed=false
+                    if(insidePower(e.x,e.y)){
+                        if(gameOver&&reshuffles<=0)restart() else reshuffle()
+                    }
+                    return true
+                }
+                if(gameOver)return true
+                if(dragging){
+                    val release=boardPos(e.x,e.y-cell*1.25f)
+                    previewX=release?.first?:-1
+                    previewY=release?.second?:-1
+                }
+                if(dragging&&previewX>=0&&previewY>=0)place(previewX,previewY)
+                else if(dragging){
+                    invalidUntil=System.currentTimeMillis()+240
+                    performHapticFeedback(HapticFeedbackConstants.REJECT)
+                } else boardPos(e.x,e.y)?.let{(x,y)->place(x,y)}
+                dragging=false;previewX=-1;previewY=-1
+                invalidate()
+                return true
+            }
+            MotionEvent.ACTION_CANCEL->{
+                powerPressed=false;dragging=false;previewX=-1;previewY=-1
+                invalidate()
+            }
+        }
+        return true
+    }
 }
