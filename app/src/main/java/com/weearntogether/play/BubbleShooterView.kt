@@ -77,7 +77,6 @@ class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Un
                 if(moving||ended)return true
                 if(hypot(e.x-rad*3.65f,e.y-(shooterY()+rad*.05f))<rad*1.3f){
                     swapGesture=true
-                    swapBubble()
                     return true
                 }
                 aimingGesture=true
@@ -91,9 +90,12 @@ class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Un
                 return true
             }
             MotionEvent.ACTION_UP->{
+                val shouldSwap=swapGesture&&!moving&&!ended&&
+                    hypot(e.x-rad*3.65f,e.y-(shooterY()+rad*.05f))<rad*1.3f
                 val canShoot=aimingGesture&&!swapGesture&&!moving&&!ended
                 aimingGesture=false
                 swapGesture=false
+                if(shouldSwap){swapBubble();return true}
                 if(!canShoot)return true
                 aimX=e.x;aimY=e.y
                 val dx=e.x-width/2f
