@@ -188,14 +188,14 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         override fun onProvideShadowMetrics(size:Point,touch:Point){
             val w=(boardView.width-boardView.paddingLeft-boardView.paddingRight)/8f
             val h=(boardView.height-boardView.paddingTop-boardView.paddingBottom)/8f
-            tile=minOf(w,h).coerceAtLeast(dp(12).toFloat())
+            tile=minOf(w,h).coerceAtLeast(1f)
             size.set((tile*columns).toInt().coerceAtLeast(1),(tile*rows).toInt().coerceAtLeast(1))
             touch.set(size.x/2,size.y/2)
         }
         override fun onDrawShadow(canvas:Canvas){
             val color=palette[offerIndex%palette.size]
             shape.forEach{(x,y)->
-                val inset=dp(3).toFloat()
+                val inset=minOf(dp(3).toFloat(),tile*.18f)
                 val drawable=filledTile(color)
                 drawable.setBounds((x*tile+inset).toInt(),(y*tile+inset).toInt(),
                     ((x+1)*tile-inset).toInt(),((y+1)*tile-inset).toInt())
