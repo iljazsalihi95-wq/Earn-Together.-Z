@@ -28,8 +28,17 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  private var paused=false
  private var flight:ValueAnimator?=null
  private var projectileView:View?=null
- fun setPaused(value:Boolean){paused=value;if(value){hideAim();flight?.pause()}else flight?.resume()}
- private fun cancelFlight(){flight?.removeAllListeners();flight?.cancel();flight=null;projectileView?.let{removeView(it)};projectileView=null;busy=false}
+ private var pendingSettlement:Pair<Int,Int>?=null
+ fun setPaused(value:Boolean){
+  paused=value
+  if(value){hideAim();flight?.pause()}
+  else {
+   val pending=pendingSettlement
+   if(pending!=null){pendingSettlement=null;settle(pending.first,pending.second)}
+   flight?.resume()
+  }
+ }
+ private fun cancelFlight(){pendingSettlement=null;flight?.removeAllListeners();flight?.cancel();flight=null;projectileView?.let{removeView(it)};projectileView=null;busy=false}
  override fun onDetachedFromWindow(){cancelFlight();super.onDetachedFromWindow()}
  private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt();private fun light(c:Int)=Color.rgb((Color.red(c)+85).coerceAtMost(255),(Color.green(c)+85).coerceAtMost(255),(Color.blue(c)+85).coerceAtMost(255));private fun shade(c:Int)=Color.rgb((Color.red(c)*.55f).toInt(),(Color.green(c)*.55f).toInt(),(Color.blue(c)*.55f).toInt());private fun bubble(c:Int)=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xffffffff.toInt(),light(c),c,shade(c))).apply{shape=GradientDrawable.OVAL;setStroke(dp(2),0xbbffffff.toInt())}
  // Older/cloud-restored preferences may contain numeric strings or Long values.
@@ -227,7 +236,10 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
     projectile.y=a.second+(b.second-a.second)*fraction-size/2f
    }
    addListener(object:AnimatorListenerAdapter(){
-    override fun onAnimationEnd(animation:Animator){flight=null;projectileView=null;removeView(projectile);settle(r,c)}
+    override fun onAnimationEnd(animation:Animator){
+     flight=null;projectileView=null;removeView(projectile)
+     if(paused)pendingSettlement=r to c else settle(r,c)
+    }
    })
    start()
   }
