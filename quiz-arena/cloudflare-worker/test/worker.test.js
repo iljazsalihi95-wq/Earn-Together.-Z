@@ -69,7 +69,7 @@ test('quota persists across instance recreation and serializes concurrent reserv
  q=new ArenaQuota({storage});assert.equal((await q.fetch(req('a'))).status,429);assert.equal((await q.fetch(req('b'))).status,200);assert.equal((await q.fetch(req('c'))).status,429);
 });
 test('voice normalization keeps religious abbreviations and ordinary words separate',()=>{
- assert.equal(arenaNormalizeVoice_('114 sure a.s. r.a. xh.sh.','sq'),'njëqind e katërmbëdhjetë sure alejhi selam radijallahu anhu xhel-le shanuhu');
+ assert.equal(arenaNormalizeVoice_('114 sure a.s. R. A. XH.SH.','sq'),'njëqind e katërmbëdhjetë sure alejhi selam radijallahu anhu xhel-le shanuhu');
  assert.equal(arenaNormalizeVoice_('as ra rast sure','sq'),'as ra rast sure');
 });
 
