@@ -137,7 +137,7 @@ class BlockPuzzleActivity : Activity() {
         dialog.setOnDismissListener { dialogOpen = false; game.setPaused(!hasWindowFocus()); refreshSavedProgress(); enterImmersive() }; dialog.show()
     }
 
-    override fun onResume() { super.onResume(); if (::game.isInitialized) game.setPaused(dialogOpen); if (::ads.isInitialized) ads.resume(); refreshSavedProgress(); if (!dialogOpen) enterImmersive() }
+    override fun onResume() { super.onResume(); if (::game.isInitialized) game.setPaused(dialogOpen || !hasWindowFocus()); if (::ads.isInitialized) ads.resume(); refreshSavedProgress(); if (!dialogOpen) enterImmersive() }
     override fun onPause() { if (::game.isInitialized) game.setPaused(true); if (::ads.isInitialized) ads.pause(); super.onPause() }
     override fun onDestroy() { if (::ads.isInitialized) ads.destroy(); super.onDestroy() }
     override fun onWindowFocusChanged(hasFocus: Boolean) { super.onWindowFocusChanged(hasFocus); if (::game.isInitialized) game.setPaused(!hasFocus || dialogOpen); if (hasFocus && !dialogOpen) enterImmersive() }
