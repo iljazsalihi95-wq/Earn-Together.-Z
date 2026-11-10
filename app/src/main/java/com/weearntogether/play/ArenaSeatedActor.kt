@@ -16,11 +16,11 @@ internal class ArenaSeatedActor(context:Context) {
         val e=energy.coerceIn(0f,1f)
         canvas.save()
         canvas.translate(0f,(sin(time/650.0)*e*1.5).toFloat())
-        val head=RectF(207f,42f,282f,170f)
+        val head=RectF(197f,28f,292f,170f)
         val outline=Path().apply {
-            moveTo(213f,42f);quadTo(244f,29f,276f,42f)
-            lineTo(282f,110f);quadTo(277f,153f,245f,170f)
-            quadTo(213f,153f,207f,110f);close()
+            moveTo(203f,28f);quadTo(244f,15f,286f,28f)
+            lineTo(292f,110f);quadTo(287f,153f,245f,170f)
+            quadTo(203f,153f,197f,110f);close()
         }
         canvas.clipPath(outline)
         if(photo!=null) {

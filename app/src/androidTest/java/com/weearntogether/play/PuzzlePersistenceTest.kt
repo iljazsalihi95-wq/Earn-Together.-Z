@@ -66,7 +66,7 @@ class PuzzlePersistenceTest {
  }
  @Test fun blockTouchPlacementPauseRestartAndRelaunchPreserveRealSavedState(){
   val p=ProgressPreferences.open(ctx,"block_puzzle_hd2d")
-  p.edit().clear().putString("board",List(64){"0"}.joinToString(",")).putString("offers","0,1,2").putInt("score",0).putInt("best",100).putInt("level",3).commit()
+  p.edit().clear().putString("board",List(64){"0"}.joinToString(",")).putString("offers","0,1,2").putInt("score",0).putInt("best",100).putInt("level",3).putInt("total_lines",10).putInt("level_lines",2).commit()
   var a=launch(BlockPuzzleActivity::class.java)
   try {
    val game=views(a.window.decorView).filterIsInstance<PremiumBlockPuzzleView>().single()
@@ -76,7 +76,7 @@ class PuzzlePersistenceTest {
    assertTrue(p.getInt("score",0)>0);val saved=p.getString("board","");assertNotEquals("0",saved!!.split(',').first())
    inst.runOnMainSync{a.finish()};a=launch(BlockPuzzleActivity::class.java);assertEquals(saved,p.getString("board",null))
    inst.runOnMainSync{views(a.window.decorView).filterIsInstance<PremiumBlockPuzzleView>().single().restart()};inst.waitForIdleSync()
-   assertEquals(0,p.getInt("score",-1));assertEquals(1,p.getInt("level",-1));assertTrue(p.getInt("best",0)>=100)
+   assertEquals(0,p.getInt("score",-1));assertEquals("Restart keeps the unlocked level",3,p.getInt("level",-1));assertEquals(10,p.getInt("total_lines",-1));assertEquals(0,p.getInt("level_lines",-1));assertTrue(p.getInt("best",0)>=100)
    assertTrue(p.getString("board","")!!.split(',').all{it=="0"})
   }finally{inst.runOnMainSync{a.finish()}}
  }

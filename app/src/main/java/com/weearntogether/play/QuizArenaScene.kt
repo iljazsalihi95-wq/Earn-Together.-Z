@@ -67,8 +67,8 @@ class QuizArenaScene(context:Context):View(context){
         p.style=Paint.Style.STROKE;p.color=0xff417c9b.toInt();p.strokeWidth=2f;c.drawOval(72f,374f,648f,491f,p);p.style=Paint.Style.FILL
         c.save();c.translate(62f,205f);c.scale(.43f,.43f);drawPlayer(c,time);c.restore()
         c.save();c.translate(438f,205f);c.scale(.43f,.43f);presenter.draw(c,if(friendSpeaking)0f else energy,speaking&&!friendSpeaking,reaction,time);c.restore()
-        p.color=0xff0b162b.toInt();c.drawRoundRect(264f,326f,456f,435f,12f,12f,p)
-        p.style=Paint.Style.STROKE;p.color=0xffbb995e.toInt();p.strokeWidth=2f;c.drawRoundRect(264f,326f,456f,435f,12f,12f,p);p.style=Paint.Style.FILL
+        p.color=0xff0b162b.toInt();c.drawRoundRect(290f,326f,430f,435f,12f,12f,p)
+        p.style=Paint.Style.STROKE;p.color=0xffbb995e.toInt();p.strokeWidth=2f;c.drawRoundRect(290f,326f,430f,435f,12f,12f,p);p.style=Paint.Style.FILL
         p.textSize=15f;p.color=0xff8ed8ed.toInt();c.drawText(questionNumber,360f,350f,p)
         p.textSize=if(timerText.length>6)22f else 35f;p.color=if(reaction<0)0xffffa5ad.toInt() else Color.WHITE;c.drawText(timerText,360f,389f,p)
         p.textSize=11f;p.color=0xffe3be7b.toInt();c.drawText(stageStatus.take(29),360f,416f,p)
