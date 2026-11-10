@@ -14,6 +14,10 @@ object ArenaAlbanianSpeech {
     fun forVoice(text:String, locale:String):String {
         if(locale!="sq")return text
         var t=text
+        // Speak quiz option letters in Albanian, rather than English letter names.
+        val letters=mapOf("A" to "a","B" to "bë","C" to "cë","D" to "dë","E" to "e")
+        t=t.replace(Regex("(^|[.!?]\\s+)([A-E])\\.\\s+")){it.groupValues[1]+"Alternativa "+letters[it.groupValues[2]]+", "}
+        t=t.replace(Regex("(Përgjigjja e saktë është )([A-E])\\.",RegexOption.IGNORE_CASE)){it.groupValues[1]+"alternativa "+letters[it.groupValues[2].uppercase()]+"."}
         for((pattern,spoken) in listOf("a(?:\\s*\\.\\s*|\\s+)s" to "alejhi selam","r(?:\\s*\\.\\s*|\\s+)a" to "radijallahu anhu","xh(?:\\s*\\.\\s*|\\s+)sh" to "xhel-le shanuhu"))
             t=t.replace(Regex("(?<![\\p{L}\\d])"+pattern+"\\.?(?![\\p{L}\\d])",RegexOption.IGNORE_CASE),spoken)
         t=t.replace("ﷺ","sal-lallahu alejhi ve sel-lem")

@@ -543,7 +543,7 @@ class ArenaCloudActivity:Activity(){
         voiceFailure=""
         val generation=voiceGeneration;val version=modeVersion
         val q=s.optJSONObject("question")?:run{ttsFallback(phase);return}
-        val cacheKey=java.security.MessageDigest.getInstance("SHA-256").digest(("worker-speech-v9|"+prefs.getString("name","")+locale+q.toString()+(s.optJSONObject("feedback")?.toString()?:"")+phase+if(phase=="clarify")dialogueText else if(phase=="friend")friendText else "").toByteArray()).joinToString(""){"%02x".format(it)}
+        val cacheKey=java.security.MessageDigest.getInstance("SHA-256").digest(("worker-speech-v10|"+prefs.getString("name","")+locale+q.toString()+(s.optJSONObject("feedback")?.toString()?:"")+phase+if(phase=="clarify")dialogueText else if(phase=="friend")friendText else "").toByteArray()).joinToString(""){"%02x".format(it)}
         val cachedAudio=java.io.File(cacheDir,"arena-voice-$cacheKey.mp3")
         fun playCached(){
             scene?.speechEnergy={speechEnvelope?.at(runCatching{player?.currentPosition?:0}.getOrDefault(0))?:0f}

@@ -106,7 +106,7 @@ async function speech(env,p,ctx){
  if(input.length>4000)throw new Failure('VOICE_TOO_LONG');
  const {voice,model}=speechConfiguration(env,ctx.locale,friend);
  const instructions=`Speak clearly and naturally in ${ctx.locale==='sq'?'Albanian':ctx.locale==='de'?'German':ctx.locale==='tr'?'Turkish':'English'}. ${friend?'You are a thoughtful friend giving an uncertain opinion.':'You are a natural adult male quiz presenter with a conversational tone and normal pitch; avoid robotic or exaggerated delivery.'} ${ctx.locale==='sq'?'Use native standard Albanian (sq-AL) pronunciation, never an English, Italian, Slavic or Turkish accent. Pronounce ë, ç, q, gj, nj, rr, ll, dh and th correctly. Read option letters as Albanian letter names. Use a warm, calm studio voice, with short natural pauses and no theatrical shouting.':''} Respect punctuation and pause between options. Do not translate or add facts.`;
- const key=await hash(['speech-v8',ctx.uid,input,voice,model,instructions].join('|'));
+ const key=await hash(['speech-v9',ctx.uid,input,voice,model,instructions].join('|'));
  const old=await cached(key);if(old)return new Response(old.body,{headers:{...HEADERS,'content-type':'audio/mpeg','cache-control':'private, max-age=86400','x-arena-cache':'hit'}});
  if(!env.OPENAI_API_KEY)throw new Failure('OPENAI_NOT_CONFIGURED',503);await budget(env,ctx.uid);
  const r=await timedFetch('https://api.openai.com/v1/audio/speech',{method:'POST',headers:{authorization:`Bearer ${env.OPENAI_API_KEY}`,'content-type':'application/json'},body:JSON.stringify({model,voice,input,instructions,response_format:'mp3'})},45000);

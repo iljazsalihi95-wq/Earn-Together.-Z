@@ -17,5 +17,9 @@ class ArenaAlbanianSpeechTest {
         assertEquals("dy presje pesë për qind",ArenaAlbanianSpeech.forVoice("2.5%","sq"))
         assertEquals("tridhjetë e një tetor dy mijë e njëzet e gjashtë",ArenaAlbanianSpeech.forVoice("31.10.2026","sq"))
     }
+    @Test fun optionLettersUseAlbanianNamesWithoutChangingVisualText() {
+        assertEquals("Pyetja? Alternativa a, Një. Alternativa bë, Dy. Alternativa cë, Tre. Alternativa dë, Katër.",ArenaAlbanianSpeech.forVoice("Pyetja? A. Një. B. Dy. C. Tre. D. Katër.","sq"))
+        assertEquals("Përgjigjja e saktë është alternativa bë.",ArenaAlbanianSpeech.forVoice("Përgjigjja e saktë është B.","sq"))
+    }
     @Test fun otherLanguagesRemainUntouched() { assertEquals("114 a.s.",ArenaAlbanianSpeech.forVoice("114 a.s.","de")) }
 }

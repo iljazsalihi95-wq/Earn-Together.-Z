@@ -25,6 +25,7 @@ class QuizArenaScene(context:Context):View(context){
     var timerText="";var stageStatus="";var remainingFraction=1f
     private var speechStarted=0L;private var reactionStarted=0L
     private val presenter=ArenaPresenter(context)
+    private val playerActor=ArenaSeatedActor(context)
     private val p=Paint(3);private val textPaint=TextPaint(3);private var attached=false
     private var layoutText="";private var questionLayout:StaticLayout?=null
     private val audience=StudioAssets.get(context,"audience");private val studio=StudioAssets.get(context,"arena")
@@ -64,17 +65,17 @@ class QuizArenaScene(context:Context):View(context){
         // Perspective floor and practical strip lighting.
         p.color=0xff102841.toInt();c.drawOval(72f,374f,648f,491f,p)
         p.style=Paint.Style.STROKE;p.color=0xff417c9b.toInt();p.strokeWidth=2f;c.drawOval(72f,374f,648f,491f,p);p.style=Paint.Style.FILL
-        c.save();c.translate(105f,288f);c.scale(.68f,.68f);chair(c,129f);drawPlayer(c,time);c.restore()
-        c.save();c.translate(423f,288f);c.scale(.68f,.68f);chair(c,100f);presenter.draw(c,if(friendSpeaking)0f else energy,speaking&&!friendSpeaking,reaction,time);c.restore()
+        c.save();c.translate(62f,205f);c.scale(.43f,.43f);drawPlayer(c,time);c.restore()
+        c.save();c.translate(438f,205f);c.scale(.43f,.43f);presenter.draw(c,if(friendSpeaking)0f else energy,speaking&&!friendSpeaking,reaction,time);c.restore()
         p.color=0xff0b162b.toInt();c.drawRoundRect(264f,326f,456f,435f,12f,12f,p)
         p.style=Paint.Style.STROKE;p.color=0xffbb995e.toInt();p.strokeWidth=2f;c.drawRoundRect(264f,326f,456f,435f,12f,12f,p);p.style=Paint.Style.FILL
         p.textSize=15f;p.color=0xff8ed8ed.toInt();c.drawText(questionNumber,360f,350f,p)
         p.textSize=if(timerText.length>6)22f else 35f;p.color=if(reaction<0)0xffffa5ad.toInt() else Color.WHITE;c.drawText(timerText,360f,389f,p)
         p.textSize=11f;p.color=0xffe3be7b.toInt();c.drawText(stageStatus.take(29),360f,416f,p)
-        p.textSize=13f;c.drawText(playerName.take(23),193f,466f,p);c.drawText("PREZANTUESI",491f,466f,p)
+        p.textSize=13f;c.drawText(playerName.take(23),172f,528f,p);c.drawText("PREZANTUESI",548f,528f,p)
         if(speaking)for(i in 0..8){val h=3f+14f*energy*(1f-abs(i-4)/6f);p.color=0xff67d8ed.toInt();c.drawRoundRect(312f+i*11,444f-h,317f+i*11,444f,2f,2f,p)}
         val audienceFrame=if(reaction>0&&(time/320)%2==1L)1 else 0
-        c.drawBitmap(audience,Rect(0,audienceFrame*audience.height/2,audience.width,(audienceFrame+1)*audience.height/2),RectF(0f,483f,720f,560f),p)
+        c.drawBitmap(audience,Rect(0,audienceFrame*audience.height/2,audience.width,(audienceFrame+1)*audience.height/2),RectF(0f,535f,720f,560f),p)
         c.restore()
         audienceVotes?.let { votes ->
             p.color=0xf00a152b.toInt();c.drawRoundRect(80f,302f,640f,485f,14f,14f,p)
@@ -96,14 +97,6 @@ class QuizArenaScene(context:Context):View(context){
         c.restoreToCount(save)
         if(attached&&windowVisibility==VISIBLE)postInvalidateDelayed(if(speaking||playerSpeaking||audienceVotes!=null)40 else 80)
     }
-    private fun chair(c:Canvas,x:Float){
-        p.color=0xff050914.toInt();c.drawOval(x-105,255f,x+110,283f,p)
-        p.shader=LinearGradient(x-85,90f,x+85,210f,0xff263b56.toInt(),0xff080f20.toInt(),Shader.TileMode.CLAMP)
-        c.drawRoundRect(x-91,65f,x+91,226f,32f,32f,p);c.drawRoundRect(x-105,179f,x+105,230f,16f,16f,p);p.shader=null
-        p.color=0xff1b263a.toInt();c.drawRoundRect(x-46,200f,x-7,270f,12f,12f,p);c.drawRoundRect(x+7,200f,x+46,270f,12f,12f,p)
-        p.color=0xff080c16.toInt();c.drawRoundRect(x-53,258f,x-4,275f,7f,7f,p);c.drawRoundRect(x+4,258f,x+53,275f,7f,7f,p)
-        p.color=0xff9ba6ad.toInt();c.drawRect(x-4,229f,x+4,278f,p);c.drawRect(x-70,276f,x+70,282f,p)
-    }
     private fun drawFireworks(c:Canvas,elapsed:Long){
         val colors=intArrayOf(0xffffd979.toInt(),0xff65e2ef.toInt(),0xffd9a6ff.toInt(),Color.WHITE)
         for(burst in 0..5){
@@ -124,19 +117,7 @@ class QuizArenaScene(context:Context):View(context){
         p.alpha=255
     }
     private fun drawPlayer(c:Canvas,time:Long){
-        p.shader=LinearGradient(72f,111f,186f,161f,suitColor,0xff142039.toInt(),Shader.TileMode.CLAMP)
-        c.drawRoundRect(48f,107f,208f,184f,24f,24f,p);p.shader=null
-        p.color=shirtColor;val shirt=Path().apply{moveTo(106f,108f);lineTo(129f,157f);lineTo(153f,108f);close()};c.drawPath(shirt,p)
-        p.color=tieColor;val tie=Path().apply{moveTo(125f,113f);lineTo(133f,113f);lineTo(138f,143f);lineTo(129f,154f);lineTo(120f,143f);close()};c.drawPath(tie,p)
-        val face=RectF(68f,8f,187f,131f);val clip=Path().apply{addOval(face,Path.Direction.CW)}
-        c.save();c.clipPath(clip)
-        val amplitude=if(playerSpeaking)(playerSpeechEnergy?.invoke()?:.35f).coerceIn(0f,1f) else 0f
-        val nod=if(playerSpeaking)kotlin.math.sin(time/145.0).toFloat()*amplitude*2f else 0f
-        c.translate(0f,nod)
-        val photo=portrait
-        if(photo!=null){val size=minOf(photo.width,photo.height);c.drawBitmap(photo,Rect((photo.width-size)/2,(photo.height-size)/2,(photo.width+size)/2,(photo.height+size)/2),face,p)}
-        else{p.color=0xff376999.toInt();c.drawRect(face,p);p.color=Color.WHITE;p.textAlign=Paint.Align.CENTER;p.textSize=42f;p.typeface=Typeface.DEFAULT_BOLD;c.drawText(playerName.take(1).uppercase(),129f,93f,p)}
-        c.restore();p.style=Paint.Style.STROKE;p.strokeWidth=2f;p.color=0xffe3bc74.toInt();c.drawOval(face,p);p.style=Paint.Style.FILL
+        val amplitude=if(playerSpeaking)(playerSpeechEnergy?.invoke()?:0f).coerceIn(0f,1f) else 0f
+        playerActor.draw(c,portrait,playerName,amplitude,time)
     }
-
 }

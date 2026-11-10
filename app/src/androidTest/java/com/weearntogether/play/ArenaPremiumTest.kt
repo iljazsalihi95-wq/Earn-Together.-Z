@@ -19,6 +19,23 @@ import java.nio.ByteOrder
 class ArenaPremiumTest {
     private val inst get()=InstrumentationRegistry.getInstrumentation()
     private fun views(v:View):List<View> = listOf(v)+if(v is ViewGroup)(0 until v.childCount).flatMap{views(v.getChildAt(it))} else emptyList()
+    @Test fun seatedStudioRendersBothPortraitsAndRealChairAsset() {
+        val ctx=inst.targetContext
+        val body=StudioAssets.get(ctx,"seated-suit")
+        assertTrue(body.hasAlpha());assertEquals(512,body.width);assertEquals(768,body.height)
+        val selected=Bitmap.createBitmap(80,120,Bitmap.Config.ARGB_8888).apply{eraseColor(Color.rgb(184,124,92))}
+        inst.runOnMainSync {
+            val stage=QuizArenaScene(ctx).apply{portrait=selected;playerName="TEST";questionPrompt="Cili planet është më afër Diellit?";questionCategory="SHKENCË";speaking=true;speechEnergy={.6f}}
+            stage.measure(View.MeasureSpec.makeMeasureSpec(720,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(560,View.MeasureSpec.EXACTLY));stage.layout(0,0,720,560)
+            val bitmap=Bitmap.createBitmap(720,560,Bitmap.Config.ARGB_8888)
+            stage.draw(android.graphics.Canvas(bitmap))
+            val dir=File(ctx.getExternalFilesDir(null),"native-qa").apply{mkdirs()}
+            File(dir,"22-arena-real-seated-studio.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}
+            assertNotEquals("Player and host stage must have rendered pixels",Color.TRANSPARENT,bitmap.getPixel(170,390))
+            bitmap.recycle()
+        }
+        selected.recycle()
+    }
     @Test fun approvedSheetSnapshotHasAtLeast200DistinctQuestionsAndDifficulty(){
         val bank=ArenaOfflineStore(inst.targetContext,"premium-bank-test").questions
         assertTrue(bank.size>=200);assertEquals(bank.size,bank.map{it.prompt.trim().lowercase()}.distinct().size)

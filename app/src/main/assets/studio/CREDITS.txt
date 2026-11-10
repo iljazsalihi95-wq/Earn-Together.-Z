@@ -4,3 +4,5 @@ Applause: Amada44, Sound Effects - Applause after a concert, 17 April 2014.
 https://commons.wikimedia.org/wiki/File:Sound_Effects_-_Applause_after_a_concert.ogg
 CC0 1.0 https://creativecommons.org/publicdomain/zero/1.0/
 Excerpt 2–6 seconds, faded in/out, Ogg Vorbis.
+
+Seated suit and leather armchair production sprite: generated for the native Quiz Arena scene, 10 November 2026. Host identity is composited locally from the existing authorised photograph; player portrait remains on device.

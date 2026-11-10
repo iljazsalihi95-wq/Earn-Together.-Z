@@ -1,0 +1,3927 @@
+QUIZ ARENA — PYETJET EKZISTUESE PËR INCIZIM
+Burimi: bankat e ruajtura në repository. Ky eksport nuk është rishikim i ri i saktësisë së pyetjeve.
+Mos i bashko pyetjen dhe shpjegimin në një audio.
+
+001 | sheet-1 | Kurban
+PYETJA — sheet-1-question.mp3
+Sa persona lejohet të bashkohen në kurbanin e vogël?
+
+Alternativa a. 1.
+
+Alternativa bë. 2.
+
+Alternativa cë. 3.
+
+Alternativa dë. 4.
+
+SHPJEGIMI — sheet-1-explanation.mp3
+Përgjigjja e saktë është alternativa a. 1. Vetëm 1 person lejohet.
+Burimi: Fikh – kurbani
+----------------------------------------
+
+002 | sheet-2 | Sira
+PYETJA — sheet-2-question.mp3
+Muhammedi ﷺ është rritur jetim që nga cila moshë?
+
+Alternativa a. 8 vjeç.
+
+Alternativa bë. 4 vjeç.
+
+Alternativa cë. 2 vjeç.
+
+Alternativa dë. Lindja.
+
+SHPJEGIMI — sheet-2-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Lindja. Ai mbeti jetim që nga lindja sepse babai i kishte vdekur para lindjes.
+Burimi: Sira
+----------------------------------------
+
+003 | sheet-4 | Dijetarë
+PYETJA — sheet-4-question.mp3
+Në cilin vit ka lindur dhe ka vdekur Imam Shafiu?
+
+Alternativa a. 150-206 H.
+
+Alternativa bë. 105-165 H.
+
+Alternativa cë. 156-204 H.
+
+Alternativa dë. 150-204 H.
+
+SHPJEGIMI — sheet-4-explanation.mp3
+Përgjigjja e saktë është alternativa dë. 150-204 H. Ka lindur vitin 150 H dhe ka vdekur vitin 204 Hixhrije.
+Burimi: Biografi Imam Shafiu
+----------------------------------------
+
+004 | sheet-5 | Fikh
+PYETJA — sheet-5-question.mp3
+Si quhet namazi i cili falet në kohën e vet?
+
+Alternativa a. Uda.
+
+Alternativa bë. Eda.
+
+Alternativa cë. Salah.
+
+Alternativa dë. Ida.
+
+SHPJEGIMI — sheet-5-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Eda. Namazi quhet Eda kur falet në kohën e vet.
+Burimi: Fikh – Namazi
+----------------------------------------
+
+005 | sheet-9 | Sira
+PYETJA — sheet-9-question.mp3
+Cila është gruaja e Pejgamberit ﷺ që vdiq e fundit?
+
+Alternativa a. Hatixhja r.a..
+
+Alternativa bë. Ummu Seleme r.a..
+
+Alternativa cë. Aishja r.a..
+
+Alternativa dë. Fatimja r.a..
+
+SHPJEGIMI — sheet-9-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Ummu Seleme r.a.. Ummu Seleme r.a. ishte nga gratë e Pejgamberit ﷺ që jetoi më gjatë.
+Burimi: Sira
+----------------------------------------
+
+006 | sheet-10 | Fikh
+PYETJA — sheet-10-question.mp3
+Shkenca e Fikhut merret me studimin e dispozitave praktike të Sheriatit?
+
+Alternativa a. E vërtetë.
+
+Alternativa bë. E pavërtetë.
+
+SHPJEGIMI — sheet-10-explanation.mp3
+Përgjigjja e saktë është alternativa a. E vërtetë. Fikhu studion dispozitat praktike të Sheriatit.
+Burimi: Usul el-Fikh
+----------------------------------------
+
+007 | sheet-11 | Sira
+PYETJA — sheet-11-question.mp3
+Kush i propozoi Pejgamberit ﷺ hapjen e Hendekut?
+
+Alternativa a. Omeri r.a..
+
+Alternativa bë. Othmani r.a..
+
+Alternativa cë. Aliu r.a..
+
+Alternativa dë. Selman el-Farisi r.a..
+
+SHPJEGIMI — sheet-11-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Selman el-Farisi r.a.. Selman el-Farisi r.a. propozoi hapjen e hendekut.
+Burimi: Sira – Hendeku
+----------------------------------------
+
+008 | sheet-13 | Kuran
+PYETJA — sheet-13-question.mp3
+Si quheshin pasuesit e Isa alejhis-selamit?
+
+Alternativa a. Havarijun.
+
+Alternativa bë. Sahabe.
+
+Alternativa cë. Ansar.
+
+Alternativa dë. Tabi'in.
+
+SHPJEGIMI — sheet-13-explanation.mp3
+Përgjigjja e saktë është alternativa a. Havarijun. Pasuesit e Isa a.s. quhen Havarijun.
+Burimi: Kur'an 3:52; 5:111
+----------------------------------------
+
+009 | sheet-15 | Akide
+PYETJA — sheet-15-question.mp3
+Isa a.s. ka lindur pa baba, por nuk është djali i Allahut?
+
+Alternativa a. E pavërtetë.
+
+Alternativa bë. E vërtetë.
+
+SHPJEGIMI — sheet-15-explanation.mp3
+Përgjigjja e saktë është alternativa bë. E vërtetë. Isa a.s. lindi pa baba dhe në Islam është rob dhe i dërguar i Allahut.
+Burimi: Kur'an 3:45-59; 4:171
+----------------------------------------
+
+010 | sheet-16 | Haxh
+PYETJA — sheet-16-question.mp3
+Si quhet haxhi kur bashkohet Umra dhe Haxhi në një ihram?
+
+Alternativa a. Haxhi Temettu.
+
+Alternativa bë. Haxhi Kiran.
+
+Alternativa cë. Haxhi Ifrad.
+
+Alternativa dë. Haxhi Farz.
+
+SHPJEGIMI — sheet-16-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Haxhi Kiran. Haxhi Kiran është bashkimi i Umres dhe Haxhit në një ihram.
+Burimi: Fikh – Haxh
+----------------------------------------
+
+011 | sheet-18 | Kuran
+PYETJA — sheet-18-question.mp3
+Sa sexhde të leximit gjenden në Kur’an sipas medhhebit Hanefi?
+
+Alternativa a. 14.
+
+Alternativa bë. 15.
+
+Alternativa cë. 16.
+
+Alternativa dë. 17.
+
+SHPJEGIMI — sheet-18-explanation.mp3
+Përgjigjja e saktë është alternativa a. 14. Sipas medhhebit Hanefi janë 14 sexhde tilaveti.
+Burimi: Fikh Hanefi
+----------------------------------------
+
+012 | sheet-19 | Familje
+PYETJA — sheet-19-question.mp3
+Fejesa sipas Islamit është:
+
+Alternativa a. Kontratë.
+
+Alternativa bë. Mashtrim.
+
+Alternativa cë. Marrëveshje.
+
+Alternativa dë. Premtim.
+
+SHPJEGIMI — sheet-19-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Premtim. Fejesa është premtim për martesë, jo kontrata e nikahut.
+Burimi: Fikh – Familje
+----------------------------------------
+
+013 | sheet-21 | Fikh Hanefi
+PYETJA — sheet-21-question.mp3
+Si duhet vepruar nëse harrohet tekbiri i kunutit në namazin e Vitrit?
+
+Alternativa a. Duhet të përsëritet namazi.
+
+Alternativa bë. Duhet të bëjë sehvi sexhde.
+
+SHPJEGIMI — sheet-21-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Duhet të bëjë sehvi sexhde. Për lënien e një vaxhibi nga harresa bëhet sehvi sexhde.
+Burimi: Fikh Hanefi – Vitr
+----------------------------------------
+
+014 | sheet-22 | Kuran
+PYETJA — sheet-22-question.mp3
+Cili i dërguar i Allahut u rrit në shtëpinë e Faraonit?
+
+Alternativa a. Sulejmani a.s..
+
+Alternativa bë. Nuhu a.s..
+
+Alternativa cë. Davudi a.s..
+
+Alternativa dë. Musa a.s..
+
+SHPJEGIMI — sheet-22-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Musa a.s.. Musa a.s. u mor dhe u rrit në shtëpinë e Faraonit.
+Burimi: Kur'an 28:7-13
+----------------------------------------
+
+015 | sheet-23 | Histori
+PYETJA — sheet-23-question.mp3
+Në cilin vend të Evropës myslimanët sunduan për shumë shekuj në periudhën e Andaluzisë?
+
+Alternativa a. Turqi.
+
+Alternativa bë. Abisini.
+
+Alternativa cë. Azi.
+
+Alternativa dë. Spanjë.
+
+Alternativa e. Marok.
+
+SHPJEGIMI — sheet-23-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Spanjë. Andaluzia përfshinte pjesë të Gadishullit Iberik.
+Burimi: Histori Islame
+----------------------------------------
+
+016 | sheet-26 | Kuran
+PYETJA — sheet-26-question.mp3
+Cila është sureja e vetme e emërtuar me emrin e një gruaje?
+
+Alternativa a. Sureja Merjem.
+
+Alternativa bë. Sureja Haxh.
+
+Alternativa cë. Sureja Nisa.
+
+Alternativa dë. Sureja Jusuf.
+
+SHPJEGIMI — sheet-26-explanation.mp3
+Përgjigjja e saktë është alternativa a. Sureja Merjem. Sureja Merjem mban emrin e Merjemes a.s.
+Burimi: Kur'an – Sureja 19
+----------------------------------------
+
+017 | sheet-30 | Akide
+PYETJA — sheet-30-question.mp3
+Besimi në melaiket nuk është kusht i besimit?
+
+Alternativa a. E pavërtetë.
+
+Alternativa bë. E vërtetë.
+
+SHPJEGIMI — sheet-30-explanation.mp3
+Përgjigjja e saktë është alternativa a. E pavërtetë. Besimi në melaiket është nga shtyllat e imanit.
+Burimi: Kur'an 2:285; Hadithi i Xhibrilit
+----------------------------------------
+
+018 | sheet-31 | Sira
+PYETJA — sheet-31-question.mp3
+Cila është xhamia e njohur si xhamia e parë e ndërtuar nga muslimanët pas Hixhretit?
+
+Alternativa a. Xhamia Kuba.
+
+Alternativa bë. Mesxhidul Aksa.
+
+Alternativa cë. Xhamia e Pejgamberit ﷺ.
+
+SHPJEGIMI — sheet-31-explanation.mp3
+Përgjigjja e saktë është alternativa a. Xhamia Kuba. Xhamia Kuba njihet si xhamia e parë e ndërtuar pas Hixhretit.
+Burimi: Kur'an 9:108; Sira
+----------------------------------------
+
+019 | sheet-33 | Fikh Hanefi
+PYETJA — sheet-33-question.mp3
+Cila nga këto është rukn/farz i namazit sipas fikhut Hanefi?
+
+Alternativa a. Leximi i Kur’anit.
+
+Alternativa bë. Thënia Amin.
+
+Alternativa cë. Semi'allahu limen hamideh.
+
+Alternativa dë. Leximi i Fatihasë si e tillë.
+
+SHPJEGIMI — sheet-33-explanation.mp3
+Përgjigjja e saktë është alternativa a. Leximi i Kur’anit. Kiraeti është farz; Fatiha është vaxhib në fikhun Hanefi.
+Burimi: Fikh Hanefi
+----------------------------------------
+
+020 | sheet-34 | Fikh Hanefi
+PYETJA — sheet-34-question.mp3
+Çfarë duhet bërë nëse gjatë namazit harrohet një vaxhib?
+
+Alternativa a. Nuk duhet bërë asgjë.
+
+Alternativa bë. Duhet bërë sehvi sexhde.
+
+Alternativa cë. Duhet falur gjysmën e namazit.
+
+Alternativa dë. Duhet përsëritur namazi gjithmonë.
+
+SHPJEGIMI — sheet-34-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Duhet bërë sehvi sexhde. Kur vaxhibi lihet nga harresa, bëhet sehvi sexhde.
+Burimi: Fikh Hanefi
+----------------------------------------
+
+021 | sheet-35 | Haxh
+PYETJA — sheet-35-question.mp3
+Telbije quhet thënia “Lebbejke Allahumme lebbejk…”?
+
+Alternativa a. E vërtetë.
+
+Alternativa bë. E pavërtetë.
+
+SHPJEGIMI — sheet-35-explanation.mp3
+Përgjigjja e saktë është alternativa a. E vërtetë. Kjo thënie quhet Telbije.
+Burimi: Haxh – Telbije
+----------------------------------------
+
+022 | sheet-36 | Kuran
+PYETJA — sheet-36-question.mp3
+Sa sure ka Kur'ani?
+
+Alternativa a. 114.
+
+Alternativa bë. 110.
+
+Alternativa cë. 120.
+
+Alternativa dë. 99.
+
+SHPJEGIMI — sheet-36-explanation.mp3
+Përgjigjja e saktë është alternativa a. 114. Kur'ani përbëhet nga 114 sure.
+Burimi: Kur'an – struktura
+----------------------------------------
+
+023 | sheet-37 | Kuran
+PYETJA — sheet-37-question.mp3
+Cila është sureja e parë në Mushaf?
+
+Alternativa a. El-Bekare.
+
+Alternativa bë. El-Fatiha.
+
+Alternativa cë. En-Nas.
+
+Alternativa dë. El-Alek.
+
+SHPJEGIMI — sheet-37-explanation.mp3
+Përgjigjja e saktë është alternativa bë. El-Fatiha. Sureja e parë është El-Fatiha.
+Burimi: Kur'an – Sureja 1
+----------------------------------------
+
+024 | sheet-38 | Kuran
+PYETJA — sheet-38-question.mp3
+Cila është sureja më e gjatë në Kur'an?
+
+Alternativa a. Ali Imran.
+
+Alternativa bë. En-Nisa.
+
+Alternativa cë. El-Bekare.
+
+Alternativa dë. El-Maide.
+
+SHPJEGIMI — sheet-38-explanation.mp3
+Përgjigjja e saktë është alternativa cë. El-Bekare. El-Bekare është sureja më e gjatë.
+Burimi: Kur'an – Sureja 2
+----------------------------------------
+
+025 | sheet-39 | Kuran
+PYETJA — sheet-39-question.mp3
+Cila është sureja më e shkurtër në Kur'an?
+
+Alternativa a. El-Kevther.
+
+Alternativa bë. El-Asr.
+
+Alternativa cë. El-Ihlas.
+
+Alternativa dë. En-Nasr.
+
+SHPJEGIMI — sheet-39-explanation.mp3
+Përgjigjja e saktë është alternativa a. El-Kevther. El-Kevther ka tre ajete.
+Burimi: Kur'an – Sureja 108
+----------------------------------------
+
+026 | sheet-41 | Kuran
+PYETJA — sheet-41-question.mp3
+Në cilin muaj u shpall Kur'ani sipas Kur'anit?
+
+Alternativa a. Muharrem.
+
+Alternativa bë. Ramazan.
+
+Alternativa cë. Shaban.
+
+Alternativa dë. Dhul-Hixhe.
+
+SHPJEGIMI — sheet-41-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Ramazan. Kur'ani përmend Ramazanin si muajin e shpalljes.
+Burimi: Kur'an 2:185
+----------------------------------------
+
+027 | sheet-42 | Kuran
+PYETJA — sheet-42-question.mp3
+Cila sure nuk fillon me Bismilah?
+
+Alternativa a. Et-Teube.
+
+Alternativa bë. Jasin.
+
+Alternativa cë. El-Mulk.
+
+Alternativa dë. El-Kehf.
+
+SHPJEGIMI — sheet-42-explanation.mp3
+Përgjigjja e saktë është alternativa a. Et-Teube. Et-Teube nuk fillon me Bismilah.
+Burimi: Kur'an – Sureja 9
+----------------------------------------
+
+028 | sheet-43 | Kuran
+PYETJA — sheet-43-question.mp3
+Në cilën sure përmendet Bismilah edhe brenda tekstit të sures?
+
+Alternativa a. En-Neml.
+
+Alternativa bë. El-Felek.
+
+Alternativa cë. El-Asr.
+
+Alternativa dë. El-Kadr.
+
+SHPJEGIMI — sheet-43-explanation.mp3
+Përgjigjja e saktë është alternativa a. En-Neml. Në En-Neml 27:30.
+Burimi: Kur'an 27:30
+----------------------------------------
+
+029 | sheet-44 | Kuran
+PYETJA — sheet-44-question.mp3
+Sa xhuze ka Kur'ani?
+
+Alternativa a. 20.
+
+Alternativa bë. 25.
+
+Alternativa cë. 30.
+
+Alternativa dë. 40.
+
+SHPJEGIMI — sheet-44-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 30. Kur'ani ndahet zakonisht në 30 xhuze.
+Burimi: Kur'an – struktura
+----------------------------------------
+
+030 | sheet-45 | Kuran
+PYETJA — sheet-45-question.mp3
+Cila sure quhet edhe Ummul-Kitab?
+
+Alternativa a. El-Fatiha.
+
+Alternativa bë. El-Bekare.
+
+Alternativa cë. El-Ihlas.
+
+Alternativa dë. Jasin.
+
+SHPJEGIMI — sheet-45-explanation.mp3
+Përgjigjja e saktë është alternativa a. El-Fatiha. El-Fatiha njihet si Ummul-Kitab.
+Burimi: Hadith – Fatiha
+----------------------------------------
+
+031 | sheet-46 | Kuran
+PYETJA — sheet-46-question.mp3
+Cila është fjala e parë e shpalljes së parë?
+
+Alternativa a. Kul.
+
+Alternativa bë. Ikra.
+
+Alternativa cë. Subhan.
+
+Alternativa dë. Elhamdu.
+
+SHPJEGIMI — sheet-46-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Ikra. Shpallja e parë filloi me Ikra.
+Burimi: Kur'an 96:1
+----------------------------------------
+
+032 | sheet-47 | Sira
+PYETJA — sheet-47-question.mp3
+Ku ndodhej Pejgamberi ﷺ kur mori shpalljen e parë?
+
+Alternativa a. Në shpellën Hira.
+
+Alternativa bë. Në Medinë.
+
+Alternativa cë. Në Taif.
+
+Alternativa dë. Në shpellën Theur.
+
+SHPJEGIMI — sheet-47-explanation.mp3
+Përgjigjja e saktë është alternativa a. Në shpellën Hira. Shpallja e parë erdhi në Hira.
+Burimi: Sira
+----------------------------------------
+
+033 | sheet-48 | Sira
+PYETJA — sheet-48-question.mp3
+Kush ishte gruaja e parë e Pejgamberit ﷺ?
+
+Alternativa a. Aishja r.a..
+
+Alternativa bë. Hafsa r.a..
+
+Alternativa cë. Hatixhja r.a..
+
+Alternativa dë. Ummu Seleme r.a..
+
+SHPJEGIMI — sheet-48-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Hatixhja r.a.. Hatixhja r.a. ishte gruaja e parë.
+Burimi: Sira
+----------------------------------------
+
+034 | sheet-49 | Sira
+PYETJA — sheet-49-question.mp3
+Kush e shoqëroi Pejgamberin ﷺ në Hixhret drejt Medinës?
+
+Alternativa a. Aliu r.a..
+
+Alternativa bë. Ebu Bekri r.a..
+
+Alternativa cë. Omeri r.a..
+
+Alternativa dë. Othmani r.a..
+
+SHPJEGIMI — sheet-49-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Ebu Bekri r.a.. Ebu Bekri r.a. e shoqëroi në Hixhret.
+Burimi: Kur'an 9:40; Sira
+----------------------------------------
+
+035 | sheet-50 | Sira
+PYETJA — sheet-50-question.mp3
+Në cilën shpellë u strehuan Pejgamberi ﷺ dhe Ebu Bekri r.a. gjatë Hixhretit?
+
+Alternativa a. Hira.
+
+Alternativa bë. Theur.
+
+Alternativa cë. Uhud.
+
+Alternativa dë. Safa.
+
+SHPJEGIMI — sheet-50-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Theur. Ata u strehuan në Theur.
+Burimi: Sira
+----------------------------------------
+
+036 | sheet-51 | Sira
+PYETJA — sheet-51-question.mp3
+Si quhet qyteti ku emigroi Pejgamberi ﷺ nga Meka?
+
+Alternativa a. Taif.
+
+Alternativa bë. Jerusalem.
+
+Alternativa cë. Medina.
+
+Alternativa dë. Damask.
+
+SHPJEGIMI — sheet-51-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Medina. Hixhreti ishte drejt Medinës.
+Burimi: Sira
+----------------------------------------
+
+037 | sheet-52 | Sira
+PYETJA — sheet-52-question.mp3
+Në cilin vit hixhri ndodhi Beteja e Bedrit?
+
+Alternativa a. 1 H.
+
+Alternativa bë. 2 H.
+
+Alternativa cë. 5 H.
+
+Alternativa dë. 8 H.
+
+SHPJEGIMI — sheet-52-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 2 H. Bedri ndodhi në vitin 2 H.
+Burimi: Sira
+----------------------------------------
+
+038 | sheet-53 | Sira
+PYETJA — sheet-53-question.mp3
+Në cilin vit hixhri ndodhi Çlirimi i Mekës?
+
+Alternativa a. 2 H.
+
+Alternativa bë. 5 H.
+
+Alternativa cë. 8 H.
+
+Alternativa dë. 10 H.
+
+SHPJEGIMI — sheet-53-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 8 H. Çlirimi i Mekës ndodhi në 8 H.
+Burimi: Sira
+----------------------------------------
+
+039 | sheet-54 | Sira
+PYETJA — sheet-54-question.mp3
+Si quhej xhaxhai i Pejgamberit ﷺ që e mbrojti për shumë vite në Mekë?
+
+Alternativa a. Ebu Talibi.
+
+Alternativa bë. Ebu Lehebi.
+
+Alternativa cë. Hamza r.a..
+
+Alternativa dë. Abbas r.a..
+
+SHPJEGIMI — sheet-54-explanation.mp3
+Përgjigjja e saktë është alternativa a. Ebu Talibi. Ebu Talibi e mbrojti për shumë vite.
+Burimi: Sira
+----------------------------------------
+
+040 | sheet-55 | Akide
+PYETJA — sheet-55-question.mp3
+Sa janë shtyllat e Islamit?
+
+Alternativa a. 4.
+
+Alternativa bë. 5.
+
+Alternativa cë. 6.
+
+Alternativa dë. 7.
+
+SHPJEGIMI — sheet-55-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 5. Shtyllat e Islamit janë pesë.
+Burimi: Hadithi i Xhibrilit
+----------------------------------------
+
+041 | sheet-56 | Akide
+PYETJA — sheet-56-question.mp3
+Sa janë shtyllat e Imanit?
+
+Alternativa a. 5.
+
+Alternativa bë. 6.
+
+Alternativa cë. 7.
+
+Alternativa dë. 8.
+
+SHPJEGIMI — sheet-56-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 6. Shtyllat e Imanit janë gjashtë.
+Burimi: Hadithi i Xhibrilit
+----------------------------------------
+
+042 | sheet-57 | Akide
+PYETJA — sheet-57-question.mp3
+Besimi në Ditën e Gjykimit është pjesë e:
+
+Alternativa a. Imanit.
+
+Alternativa bë. Vetëm fikhut.
+
+Alternativa cë. Historisë.
+
+Alternativa dë. Gjuhës arabe.
+
+SHPJEGIMI — sheet-57-explanation.mp3
+Përgjigjja e saktë është alternativa a. Imanit. Është nga shtyllat e Imanit.
+Burimi: Hadithi i Xhibrilit
+----------------------------------------
+
+043 | sheet-58 | Akide
+PYETJA — sheet-58-question.mp3
+Kush është meleku i shpalljes?
+
+Alternativa a. Mikaili a.s..
+
+Alternativa bë. Xhibrili a.s..
+
+Alternativa cë. Israfil a.s..
+
+Alternativa dë. Maliku.
+
+SHPJEGIMI — sheet-58-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Xhibrili a.s.. Xhibrili a.s. solli shpalljen.
+Burimi: Kur'an 2:97
+----------------------------------------
+
+044 | sheet-59 | Akide
+PYETJA — sheet-59-question.mp3
+Cili libër iu shpall Musait a.s.?
+
+Alternativa a. Teurati.
+
+Alternativa bë. Inxhili.
+
+Alternativa cë. Zeburi.
+
+Alternativa dë. Kur'ani.
+
+SHPJEGIMI — sheet-59-explanation.mp3
+Përgjigjja e saktë është alternativa a. Teurati. Musait a.s. iu dha Teurati.
+Burimi: Kur'an
+----------------------------------------
+
+045 | sheet-60 | Akide
+PYETJA — sheet-60-question.mp3
+Cili libër iu dha Davudit a.s.?
+
+Alternativa a. Teurati.
+
+Alternativa bë. Zeburi.
+
+Alternativa cë. Inxhili.
+
+Alternativa dë. Kur'ani.
+
+SHPJEGIMI — sheet-60-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Zeburi. Davudit a.s. iu dha Zeburi.
+Burimi: Kur'an 4:163
+----------------------------------------
+
+046 | sheet-61 | Akide
+PYETJA — sheet-61-question.mp3
+Cili libër iu dha Isait a.s.?
+
+Alternativa a. Teurati.
+
+Alternativa bë. Zeburi.
+
+Alternativa cë. Inxhili.
+
+Alternativa dë. Kur'ani.
+
+SHPJEGIMI — sheet-61-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Inxhili. Isait a.s. iu dha Inxhili.
+Burimi: Kur'an 5:46
+----------------------------------------
+
+047 | sheet-62 | Fikh
+PYETJA — sheet-62-question.mp3
+Sa farze ka abdesi sipas përmbledhjes së ajetit të abdesit?
+
+Alternativa a. 3.
+
+Alternativa bë. 4.
+
+Alternativa cë. 5.
+
+Alternativa dë. 6.
+
+SHPJEGIMI — sheet-62-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 4. Janë katër veprime themelore.
+Burimi: Kur'an 5:6
+----------------------------------------
+
+048 | sheet-63 | Fikh
+PYETJA — sheet-63-question.mp3
+Sa rekate është farzi i Sabahut?
+
+Alternativa a. 2.
+
+Alternativa bë. 3.
+
+Alternativa cë. 4.
+
+Alternativa dë. 5.
+
+SHPJEGIMI — sheet-63-explanation.mp3
+Përgjigjja e saktë është alternativa a. 2. Farzi i Sabahut është 2 rekate.
+Burimi: Fikh – Namazi
+----------------------------------------
+
+049 | sheet-64 | Fikh
+PYETJA — sheet-64-question.mp3
+Sa rekate është farzi i Drekës?
+
+Alternativa a. 2.
+
+Alternativa bë. 3.
+
+Alternativa cë. 4.
+
+Alternativa dë. 5.
+
+SHPJEGIMI — sheet-64-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 4. Farzi i Drekës është 4 rekate.
+Burimi: Fikh – Namazi
+----------------------------------------
+
+050 | sheet-65 | Fikh
+PYETJA — sheet-65-question.mp3
+Sa rekate është farzi i Akshamit?
+
+Alternativa a. 2.
+
+Alternativa bë. 3.
+
+Alternativa cë. 4.
+
+Alternativa dë. 5.
+
+SHPJEGIMI — sheet-65-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 3. Farzi i Akshamit është 3 rekate.
+Burimi: Fikh – Namazi
+----------------------------------------
+
+051 | sheet-66 | Fikh
+PYETJA — sheet-66-question.mp3
+Sa rekate është farzi i Jacisë?
+
+Alternativa a. 2.
+
+Alternativa bë. 3.
+
+Alternativa cë. 4.
+
+Alternativa dë. 5.
+
+SHPJEGIMI — sheet-66-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 4. Farzi i Jacisë është 4 rekate.
+Burimi: Fikh – Namazi
+----------------------------------------
+
+052 | sheet-67 | Fikh Hanefi
+PYETJA — sheet-67-question.mp3
+Sa rekate falet Vitri sipas medhhebit Hanefi?
+
+Alternativa a. 1.
+
+Alternativa bë. 2.
+
+Alternativa cë. 3.
+
+Alternativa dë. 4.
+
+SHPJEGIMI — sheet-67-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 3. Vitri falet 3 rekate.
+Burimi: Fikh Hanefi – Vitr
+----------------------------------------
+
+053 | sheet-68 | Fikh
+PYETJA — sheet-68-question.mp3
+Në cilin drejtim kthehen muslimanët në namaz?
+
+Alternativa a. Drejt Medinës.
+
+Alternativa bë. Drejt Qabes.
+
+Alternativa cë. Drejt Jerusalemit gjithmonë.
+
+Alternativa dë. Drejt lindjes.
+
+SHPJEGIMI — sheet-68-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Drejt Qabes. Kibla është Qabja.
+Burimi: Kur'an 2:144
+----------------------------------------
+
+054 | sheet-69 | Fikh
+PYETJA — sheet-69-question.mp3
+Çfarë quhet thirrja për hyrjen e kohës së namazit?
+
+Alternativa a. Hutbe.
+
+Alternativa bë. Ezan.
+
+Alternativa cë. Tekbir i teshrikut.
+
+Alternativa dë. Talbije.
+
+SHPJEGIMI — sheet-69-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Ezan. Thirrja quhet Ezan.
+Burimi: Fikh – Namazi
+----------------------------------------
+
+055 | sheet-70 | Fikh
+PYETJA — sheet-70-question.mp3
+Çfarë quhet thirrja menjëherë para fillimit të namazit me xhemat?
+
+Alternativa a. Ikamet.
+
+Alternativa bë. Ezan.
+
+Alternativa cë. Hutbe.
+
+Alternativa dë. Tesbih.
+
+SHPJEGIMI — sheet-70-explanation.mp3
+Përgjigjja e saktë është alternativa a. Ikamet. Quhet Ikamet.
+Burimi: Fikh – Namazi
+----------------------------------------
+
+056 | sheet-71 | Fikh
+PYETJA — sheet-71-question.mp3
+Cili namaz javor falet të premten në vend të Drekës për ata që e kanë obligim?
+
+Alternativa a. Vitri.
+
+Alternativa bë. Xhumaja.
+
+Alternativa cë. Teravia.
+
+Alternativa dë. Bajrami.
+
+SHPJEGIMI — sheet-71-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Xhumaja. Namazi i Xhumasë falet të premten.
+Burimi: Kur'an 62:9
+----------------------------------------
+
+057 | sheet-72 | Ramazan
+PYETJA — sheet-72-question.mp3
+Në cilin muaj agjërojnë muslimanët agjërimin farz?
+
+Alternativa a. Ramazan.
+
+Alternativa bë. Shaban.
+
+Alternativa cë. Muharrem.
+
+Alternativa dë. Rexheb.
+
+SHPJEGIMI — sheet-72-explanation.mp3
+Përgjigjja e saktë është alternativa a. Ramazan. Agjërimi farz është në Ramazan.
+Burimi: Kur'an 2:185
+----------------------------------------
+
+058 | sheet-73 | Ramazan
+PYETJA — sheet-73-question.mp3
+Si quhet vakti para agimit për agjëruesin?
+
+Alternativa a. Iftar.
+
+Alternativa bë. Syfyr.
+
+Alternativa cë. Akika.
+
+Alternativa dë. Talbije.
+
+SHPJEGIMI — sheet-73-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Syfyr. Vakti para agimit quhet syfyr.
+Burimi: Hadith – Agjërimi
+----------------------------------------
+
+059 | sheet-74 | Ramazan
+PYETJA — sheet-74-question.mp3
+Si quhet çelja e agjërimit pas perëndimit të diellit?
+
+Alternativa a. Iftar.
+
+Alternativa bë. Syfyr.
+
+Alternativa cë. Imsak.
+
+Alternativa dë. Itikaf.
+
+SHPJEGIMI — sheet-74-explanation.mp3
+Përgjigjja e saktë është alternativa a. Iftar. Quhet iftar.
+Burimi: Fikh – Agjërimi
+----------------------------------------
+
+060 | sheet-75 | Zekat
+PYETJA — sheet-75-question.mp3
+Cila përqindje përdoret zakonisht për zekatin e pasurisë monetare kur plotësohen kushtet?
+
+Alternativa a. 1%.
+
+Alternativa bë. 2.5%.
+
+Alternativa cë. 5%.
+
+Alternativa dë. 10%.
+
+SHPJEGIMI — sheet-75-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 2.5%. Norma e zakonshme është 2.5%.
+Burimi: Fikh – Zekat
+----------------------------------------
+
+061 | sheet-76 | Haxh
+PYETJA — sheet-76-question.mp3
+Në cilin qytet gjendet Qabja?
+
+Alternativa a. Medinë.
+
+Alternativa bë. Mekë.
+
+Alternativa cë. Jerusalem.
+
+Alternativa dë. Taif.
+
+SHPJEGIMI — sheet-76-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Mekë. Qabja gjendet në Mekë.
+Burimi: Haxh
+----------------------------------------
+
+062 | sheet-77 | Haxh
+PYETJA — sheet-77-question.mp3
+Si quhet rrotullimi rreth Qabes?
+
+Alternativa a. Sa'j.
+
+Alternativa bë. Tavaf.
+
+Alternativa cë. Vakfe.
+
+Alternativa dë. Rami.
+
+SHPJEGIMI — sheet-77-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Tavaf. Quhet Tavaf.
+Burimi: Fikh – Haxh
+----------------------------------------
+
+063 | sheet-78 | Haxh
+PYETJA — sheet-78-question.mp3
+Mes cilave dy kodra bëhet Sa'ji?
+
+Alternativa a. Safa dhe Merve.
+
+Alternativa bë. Arafat dhe Muzdelife.
+
+Alternativa cë. Mina dhe Arafat.
+
+Alternativa dë. Hira dhe Theur.
+
+SHPJEGIMI — sheet-78-explanation.mp3
+Përgjigjja e saktë është alternativa a. Safa dhe Merve. Sa'ji bëhet mes Safas dhe Merves.
+Burimi: Kur'an 2:158
+----------------------------------------
+
+064 | sheet-79 | Haxh
+PYETJA — sheet-79-question.mp3
+Cili qëndrim është shtyllë kryesore e Haxhit?
+
+Alternativa a. Qëndrimi në Arafat.
+
+Alternativa bë. Vizita në Taif.
+
+Alternativa cë. Qëndrimi në Hira.
+
+Alternativa dë. Namazi në Kuba.
+
+SHPJEGIMI — sheet-79-explanation.mp3
+Përgjigjja e saktë është alternativa a. Qëndrimi në Arafat. Qëndrimi në Arafat është thelbësor në Haxh.
+Burimi: Hadith: Haxhi është Arafati
+----------------------------------------
+
+065 | sheet-80 | Hadith
+PYETJA — sheet-80-question.mp3
+Sipas hadithit të njohur, veprat vlerësohen sipas:
+
+Alternativa a. Pasurisë.
+
+Alternativa bë. Nijetit.
+
+Alternativa cë. Moshës.
+
+Alternativa dë. Vendit.
+
+SHPJEGIMI — sheet-80-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Nijetit. Veprat janë sipas nijeteve.
+Burimi: Sahih Buhari 1
+----------------------------------------
+
+066 | sheet-81 | Hadith
+PYETJA — sheet-81-question.mp3
+Sipas hadithit, musliman i mirë është ai nga gjuha dhe dora e të cilit janë të sigurt:
+
+Alternativa a. Vetëm të afërmit.
+
+Alternativa bë. Muslimanët.
+
+Alternativa cë. Vetëm udhëtarët.
+
+Alternativa dë. Vetëm fqinjët.
+
+SHPJEGIMI — sheet-81-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Muslimanët. Hadithi përmend sigurinë nga gjuha dhe dora.
+Burimi: Sahih Buhari / Muslim
+----------------------------------------
+
+067 | sheet-82 | Etikë
+PYETJA — sheet-82-question.mp3
+Çfarë përgjigjeje i jepet selamit 'Es-selamu alejkum'?
+
+Alternativa a. Mirupafshim.
+
+Alternativa bë. Ve alejkum selam.
+
+Alternativa cë. Allahu ekber.
+
+Alternativa dë. Subhanallah.
+
+SHPJEGIMI — sheet-82-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Ve alejkum selam. Selami kthehet me përshëndetje.
+Burimi: Kur'an 4:86
+----------------------------------------
+
+068 | sheet-83 | Etikë
+PYETJA — sheet-83-question.mp3
+Cila cilësi është e kundërta e gënjeshtrës?
+
+Alternativa a. Sinqeriteti.
+
+Alternativa bë. Zilia.
+
+Alternativa cë. Krenaria.
+
+Alternativa dë. Përtacia.
+
+SHPJEGIMI — sheet-83-explanation.mp3
+Përgjigjja e saktë është alternativa a. Sinqeriteti. Sinqeriteti është cilësi e lavdëruar.
+Burimi: Etikë islame
+----------------------------------------
+
+069 | sheet-84 | Etikë
+PYETJA — sheet-84-question.mp3
+Çfarë urdhëron Kur'ani për prindërit?
+
+Alternativa a. Mirësjellje dhe respekt.
+
+Alternativa bë. T'i injorojmë.
+
+Alternativa cë. Vetëm ndihmë financiare.
+
+Alternativa dë. Asgjë.
+
+SHPJEGIMI — sheet-84-explanation.mp3
+Përgjigjja e saktë është alternativa a. Mirësjellje dhe respekt. Kur'ani urdhëron mirësi ndaj prindërve.
+Burimi: Kur'an 17:23
+----------------------------------------
+
+070 | sheet-85 | Etikë
+PYETJA — sheet-85-question.mp3
+A lejohet përgojimi?
+
+Alternativa a. Po, gjithmonë.
+
+Alternativa bë. Jo, në parim është i ndaluar.
+
+Alternativa cë. Vetëm natën.
+
+Alternativa dë. Vetëm në udhëtim.
+
+SHPJEGIMI — sheet-85-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Jo, në parim është i ndaluar. Kur'ani e ndalon përgojimin.
+Burimi: Kur'an 49:12
+----------------------------------------
+
+071 | sheet-86 | Histori
+PYETJA — sheet-86-question.mp3
+Kush ishte halifi i parë pas vdekjes së Pejgamberit ﷺ?
+
+Alternativa a. Omeri r.a..
+
+Alternativa bë. Ebu Bekri r.a..
+
+Alternativa cë. Othmani r.a..
+
+Alternativa dë. Aliu r.a..
+
+SHPJEGIMI — sheet-86-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Ebu Bekri r.a.. Ebu Bekri r.a. ishte halifi i parë.
+Burimi: Histori Islame
+----------------------------------------
+
+072 | sheet-87 | Histori
+PYETJA — sheet-87-question.mp3
+Kush ishte halifi i dytë?
+
+Alternativa a. Omeri r.a..
+
+Alternativa bë. Aliu r.a..
+
+Alternativa cë. Othmani r.a..
+
+Alternativa dë. Ebu Bekri r.a..
+
+SHPJEGIMI — sheet-87-explanation.mp3
+Përgjigjja e saktë është alternativa a. Omeri r.a.. Omeri r.a. ishte halifi i dytë.
+Burimi: Histori Islame
+----------------------------------------
+
+073 | sheet-88 | Histori
+PYETJA — sheet-88-question.mp3
+Kush ishte halifi i tretë?
+
+Alternativa a. Aliu r.a..
+
+Alternativa bë. Othmani r.a..
+
+Alternativa cë. Omeri r.a..
+
+Alternativa dë. Muavija r.a..
+
+SHPJEGIMI — sheet-88-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Othmani r.a.. Othmani r.a. ishte halifi i tretë.
+Burimi: Histori Islame
+----------------------------------------
+
+074 | sheet-89 | Histori
+PYETJA — sheet-89-question.mp3
+Kush ishte halifi i katërt nga Hulefai Rashidin?
+
+Alternativa a. Aliu r.a..
+
+Alternativa bë. Omeri r.a..
+
+Alternativa cë. Ebu Bekri r.a..
+
+Alternativa dë. Othmani r.a..
+
+SHPJEGIMI — sheet-89-explanation.mp3
+Përgjigjja e saktë është alternativa a. Aliu r.a.. Aliu r.a. ishte halifi i katërt.
+Burimi: Histori Islame
+----------------------------------------
+
+075 | sheet-90 | Histori
+PYETJA — sheet-90-question.mp3
+Nën cilin halif filloi mbledhja e Kur'anit në një përmbledhje pas Jemames?
+
+Alternativa a. Ebu Bekri r.a..
+
+Alternativa bë. Othmani r.a..
+
+Alternativa cë. Aliu r.a..
+
+Alternativa dë. Muavija r.a..
+
+SHPJEGIMI — sheet-90-explanation.mp3
+Përgjigjja e saktë është alternativa a. Ebu Bekri r.a.. U bë në kohën e Ebu Bekrit r.a.
+Burimi: Histori e Mushafit
+----------------------------------------
+
+076 | sheet-91 | Histori
+PYETJA — sheet-91-question.mp3
+Nën cilin halif u dërguan kopje të standardizuara të Mushafit?
+
+Alternativa a. Omeri r.a..
+
+Alternativa bë. Othmani r.a..
+
+Alternativa cë. Aliu r.a..
+
+Alternativa dë. Ebu Bekri r.a..
+
+SHPJEGIMI — sheet-91-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Othmani r.a.. U bë në kohën e Othmanit r.a.
+Burimi: Histori e Mushafit
+----------------------------------------
+
+077 | sheet-92 | Kuran
+PYETJA — sheet-92-question.mp3
+Cili pejgamber ndërtoi anijen me urdhrin e Allahut?
+
+Alternativa a. Nuhu a.s..
+
+Alternativa bë. Ibrahimi a.s..
+
+Alternativa cë. Musa a.s..
+
+Alternativa dë. Jusufi a.s..
+
+SHPJEGIMI — sheet-92-explanation.mp3
+Përgjigjja e saktë është alternativa a. Nuhu a.s.. Nuhu a.s. ndërtoi anijen.
+Burimi: Kur'an 11:37
+----------------------------------------
+
+078 | sheet-93 | Kuran
+PYETJA — sheet-93-question.mp3
+Cili pejgamber u hodh në zjarr nga populli i tij?
+
+Alternativa a. Ibrahimi a.s..
+
+Alternativa bë. Junusi a.s..
+
+Alternativa cë. Musa a.s..
+
+Alternativa dë. Jusufi a.s..
+
+SHPJEGIMI — sheet-93-explanation.mp3
+Përgjigjja e saktë është alternativa a. Ibrahimi a.s.. Ibrahimi a.s. u hodh në zjarr.
+Burimi: Kur'an 21:68-69
+----------------------------------------
+
+079 | sheet-94 | Kuran
+PYETJA — sheet-94-question.mp3
+Cili pejgamber u gëlltit nga peshku?
+
+Alternativa a. Junusi a.s..
+
+Alternativa bë. Nuhu a.s..
+
+Alternativa cë. Hudi a.s..
+
+Alternativa dë. Salihu a.s..
+
+SHPJEGIMI — sheet-94-explanation.mp3
+Përgjigjja e saktë është alternativa a. Junusi a.s.. Junusi a.s. u gëlltit nga peshku.
+Burimi: Kur'an 37:139-148
+----------------------------------------
+
+080 | sheet-95 | Kuran
+PYETJA — sheet-95-question.mp3
+Cili pejgamber interpretoi ëndrrën e mbretit në Egjipt?
+
+Alternativa a. Jusufi a.s..
+
+Alternativa bë. Ismaili a.s..
+
+Alternativa cë. Luti a.s..
+
+Alternativa dë. Ejubi a.s..
+
+SHPJEGIMI — sheet-95-explanation.mp3
+Përgjigjja e saktë është alternativa a. Jusufi a.s.. Jusufi a.s. interpretoi ëndrrën.
+Burimi: Kur'an 12:43-49
+----------------------------------------
+
+081 | sheet-96 | Kuran
+PYETJA — sheet-96-question.mp3
+Cili pejgamber njihet si Kelimullah?
+
+Alternativa a. Musa a.s..
+
+Alternativa bë. Davudi a.s..
+
+Alternativa cë. Sulejmani a.s..
+
+Alternativa dë. Jahja a.s..
+
+SHPJEGIMI — sheet-96-explanation.mp3
+Përgjigjja e saktë është alternativa a. Musa a.s.. Musa a.s. është ai të cilit Allahu i foli.
+Burimi: Kur'an 4:164
+----------------------------------------
+
+082 | sheet-97 | Kuran
+PYETJA — sheet-97-question.mp3
+Cili pejgamber ngriti themelet e Qabes së bashku me Ismailin a.s.?
+
+Alternativa a. Ibrahimi a.s..
+
+Alternativa bë. Nuhu a.s..
+
+Alternativa cë. Musa a.s..
+
+Alternativa dë. Davudi a.s..
+
+SHPJEGIMI — sheet-97-explanation.mp3
+Përgjigjja e saktë është alternativa a. Ibrahimi a.s.. Ibrahimi dhe Ismaili a.s. ngritën themelet.
+Burimi: Kur'an 2:127
+----------------------------------------
+
+083 | sheet-98 | Kuran
+PYETJA — sheet-98-question.mp3
+Cila sure përmban tregimin e banorëve të shpellës?
+
+Alternativa a. El-Kehf.
+
+Alternativa bë. El-Mulk.
+
+Alternativa cë. En-Nebe.
+
+Alternativa dë. El-Felek.
+
+SHPJEGIMI — sheet-98-explanation.mp3
+Përgjigjja e saktë është alternativa a. El-Kehf. Tregimi gjendet në El-Kehf.
+Burimi: Kur'an 18:9-26
+----------------------------------------
+
+084 | sheet-99 | Kuran
+PYETJA — sheet-99-question.mp3
+Cila sure mbyll Mushafin?
+
+Alternativa a. El-Felek.
+
+Alternativa bë. En-Nas.
+
+Alternativa cë. El-Ihlas.
+
+Alternativa dë. En-Nasr.
+
+SHPJEGIMI — sheet-99-explanation.mp3
+Përgjigjja e saktë është alternativa bë. En-Nas. Sureja e fundit është En-Nas.
+Burimi: Kur'an – Sureja 114
+----------------------------------------
+
+085 | sheet-100 | Kuran
+PYETJA — sheet-100-question.mp3
+Cili është ajeti më i gjatë në Kur'an?
+
+Alternativa a. Ajetul-Kursij.
+
+Alternativa bë. Ajeti i borxhit 2:282.
+
+Alternativa cë. Ajeti i dritës.
+
+Alternativa dë. Ajeti i agjërimit.
+
+SHPJEGIMI — sheet-100-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Ajeti i borxhit 2:282. Ajeti 2:282, i njohur si ajeti i borxhit, është ajeti më i gjatë.
+Burimi: Kur'an 2:282
+----------------------------------------
+
+086 | premium-kuran-ayat-kursi | Kurani
+PYETJA — premium-kuran-ayat-kursi-question.mp3
+Në cilën sure gjendet Ajeti i Kursisë?
+
+Alternativa a. El-Fatiha.
+
+Alternativa bë. El-Bekare.
+
+Alternativa cë. Ali Imran.
+
+Alternativa dë. En-Nisa.
+
+SHPJEGIMI — premium-kuran-ayat-kursi-explanation.mp3
+Përgjigjja e saktë është alternativa bë. El-Bekare. Ajeti i Kursisë është ajeti 255 i sures El-Bekare. Ai thekson njëshmërinë, jetën e përhershme, dijen dhe pushtetin e Allahut.
+Burimi: Kurani 2:255; Quran.com, Al-Baqarah 2:255
+----------------------------------------
+
+087 | premium-hadith-12-rawatib | Hadith
+PYETJA — premium-hadith-12-rawatib-question.mp3
+Sa rekate vullnetare përmenden në hadithin e Ummu Habibes si shkak për ndërtimin e një shtëpie në Xhenet?
+
+Alternativa a. 8.
+
+Alternativa bë. 10.
+
+Alternativa cë. 12.
+
+Alternativa dë. 14.
+
+SHPJEGIMI — premium-hadith-12-rawatib-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 12. Ummu Habibe transmeton se i Dërguari i Allahut ﷺ përmendi dymbëdhjetë rekate vullnetare gjatë ditës dhe natës dhe shpërblimin e një shtëpie në Xhenet.
+Burimi: Sahih Muslim 728a/728c
+----------------------------------------
+
+088 | premium-hadith-bukhari-10 | Hadith
+PYETJA — premium-hadith-bukhari-10-question.mp3
+Sa rekate nafile të rregullta kujton Ibn Umeri nga Profeti ﷺ në transmetimin e Sahih el-Buhari 1180?
+
+Alternativa a. 8.
+
+Alternativa bë. 10.
+
+Alternativa cë. 12.
+
+Alternativa dë. 16.
+
+SHPJEGIMI — premium-hadith-bukhari-10-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 10. Ibn Umeri përmend dhjetë rekate: dy para dhe dy pas drekës, dy pas akshamit, dy pas jacisë dhe dy para sabahut.
+Burimi: Sahih el-Buhari 1180–1181
+----------------------------------------
+
+089 | premium-fikh-kharaj-author | Fikhu Hanefi
+PYETJA — premium-fikh-kharaj-author-question.mp3
+Kush është autori i veprës së hershme hanefije Kitab el-Haraxh, mbi financat dhe administrimin publik?
+
+Alternativa a. Imam Maliku.
+
+Alternativa bë. Imam Ebu Jusuf.
+
+Alternativa cë. Imam Shafiu.
+
+Alternativa dë. Ibn Halduni.
+
+SHPJEGIMI — premium-fikh-kharaj-author-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Imam Ebu Jusuf. Kitab el-Haraxh është vepër e Ebu Jusufit, nxënësit të njohur të Ebu Hanifes. Vepra trajton haraxhin, taksat, sadakatë dhe çështje të administrimit shtetëror.
+Burimi: Ebu Jusuf, Kitab el-Haraxh; TDV İslâm Ansiklopedisi, Kitâbü'l-Harâc; Library of Congress, Kitab al-kharaj
+----------------------------------------
+
+090 | general-sq-001 | Shkencë
+PYETJA — general-sq-001-question.mp3
+Cili planet është më afër Diellit?
+
+Alternativa a. Venusi.
+
+Alternativa bë. Mërkuri.
+
+Alternativa cë. Marsi.
+
+Alternativa dë. Toka.
+
+SHPJEGIMI — general-sq-001-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Mërkuri. Mërkuri është planeti më i afërt me Diellin.
+Burimi: NASA Solar System Exploration, Mercury 
+----------------------------------------
+
+091 | general-sq-002 | Gjeografi
+PYETJA — general-sq-002-question.mp3
+Cili është oqeani më i madh në Tokë?
+
+Alternativa a. Atlantik.
+
+Alternativa bë. Indian.
+
+Alternativa cë. Arktik.
+
+Alternativa dë. Paqësor.
+
+SHPJEGIMI — general-sq-002-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Paqësor. Oqeani Paqësor është më i madhi për nga sipërfaqja.
+Burimi: NOAA, Pacific Ocean 
+----------------------------------------
+
+092 | general-sq-003 | Histori
+PYETJA — general-sq-003-question.mp3
+Në cilin vit ra Muri i Berlinit?
+
+Alternativa a. 1987.
+
+Alternativa bë. 1989.
+
+Alternativa cë. 1991.
+
+Alternativa dë. 1993.
+
+SHPJEGIMI — general-sq-003-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 1989. Muri i Berlinit u hap më 9 nëntor 1989.
+Burimi: Bundeszentrale für politische Bildung, Mauerfall 1989 
+----------------------------------------
+
+093 | general-sq-004 | Matematikë
+PYETJA — general-sq-004-question.mp3
+Sa është 15% e numrit 200?
+
+Alternativa a. 20.
+
+Alternativa bë. 25.
+
+Alternativa cë. 30.
+
+Alternativa dë. 35.
+
+SHPJEGIMI — general-sq-004-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 30. 0,15 × 200 = 30.
+Burimi: Llogaritje aritmetike 
+----------------------------------------
+
+094 | general-sq-005 | Biologji
+PYETJA — general-sq-005-question.mp3
+Cili organ pompon gjakun në trupin e njeriut?
+
+Alternativa a. Mushkëritë.
+
+Alternativa bë. Zemra.
+
+Alternativa cë. Mëlçia.
+
+Alternativa dë. Veshkat.
+
+SHPJEGIMI — general-sq-005-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Zemra. Zemra pompon gjakun përmes sistemit të qarkullimit.
+Burimi: Biologji bazë njerëzore 
+----------------------------------------
+
+095 | general-sq-006 | Astronomi
+PYETJA — general-sq-006-question.mp3
+Si quhet galaktika ku ndodhet Sistemi ynë Diellor?
+
+Alternativa a. Andromeda.
+
+Alternativa bë. Rruga e Qumështit.
+
+Alternativa cë. Triangulum.
+
+Alternativa dë. Sombrero.
+
+SHPJEGIMI — general-sq-006-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Rruga e Qumështit. Sistemi Diellor gjendet në galaktikën Rruga e Qumështit.
+Burimi: NASA, Milky Way 
+----------------------------------------
+
+096 | general-sq-007 | Gjeografi
+PYETJA — general-sq-007-question.mp3
+Cili është kryeqyteti i Kanadasë?
+
+Alternativa a. Toronto.
+
+Alternativa bë. Vankuver.
+
+Alternativa cë. Otava.
+
+Alternativa dë. Montreal.
+
+SHPJEGIMI — general-sq-007-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Otava. Otava është kryeqyteti federal i Kanadasë.
+Burimi: Government of Canada 
+----------------------------------------
+
+097 | general-sq-008 | Fizikë
+PYETJA — general-sq-008-question.mp3
+Cila është njësia SI e forcës?
+
+Alternativa a. Xhaul.
+
+Alternativa bë. Vat.
+
+Alternativa cë. Njuton.
+
+Alternativa dë. Paskal.
+
+SHPJEGIMI — general-sq-008-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Njuton. Forca matet në njuton (N); xhauli mat energjinë, vati fuqinë dhe paskali presionin.
+Burimi: BIPM, SI Brochure 
+----------------------------------------
+
+098 | general-sq-009 | Letërsi
+PYETJA — general-sq-009-question.mp3
+Kush e shkroi romanin 'Don Kishoti'?
+
+Alternativa a. Miguel de Servantes.
+
+Alternativa bë. Viktor Hygo.
+
+Alternativa cë. Dante Aligieri.
+
+Alternativa dë. Lev Tolstoi.
+
+SHPJEGIMI — general-sq-009-explanation.mp3
+Përgjigjja e saktë është alternativa a. Miguel de Servantes. Miguel de Servantes është autori i romanit Don Kishoti.
+Burimi: Biblioteca Nacional de España, Cervantes 
+----------------------------------------
+
+099 | general-sq-010 | Teknologji
+PYETJA — general-sq-010-question.mp3
+Çfarë do të thotë shkurtesa CPU në informatikë?
+
+Alternativa a. Central Processing Unit.
+
+Alternativa bë. Computer Power Utility.
+
+Alternativa cë. Control Program Upload.
+
+Alternativa dë. Core Peripheral Unit.
+
+SHPJEGIMI — general-sq-010-explanation.mp3
+Përgjigjja e saktë është alternativa a. Central Processing Unit. CPU është njësia qendrore e përpunimit të kompjuterit.
+Burimi: Terminologji standarde informatike 
+----------------------------------------
+
+100 | general-sq-011 | Kimi
+PYETJA — general-sq-011-question.mp3
+Cili është simboli kimik i hekurit?
+
+Alternativa a. He.
+
+Alternativa bë. H.
+
+Alternativa cë. Fe.
+
+Alternativa dë. Ir.
+
+SHPJEGIMI — general-sq-011-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Fe. Simboli Fe vjen nga emri latin ferrum.
+Burimi: IUPAC Periodic Table 
+----------------------------------------
+
+101 | general-sq-012 | Histori
+PYETJA — general-sq-012-question.mp3
+Në cilin vit përfundoi Lufta e Dytë Botërore?
+
+Alternativa a. 1943.
+
+Alternativa bë. 1944.
+
+Alternativa cë. 1945.
+
+Alternativa dë. 1946.
+
+SHPJEGIMI — general-sq-012-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 1945. Lufta e Dytë Botërore përfundoi në vitin 1945.
+Burimi: United States Holocaust Memorial Museum 
+----------------------------------------
+
+102 | general-sq-013 | Matematikë
+PYETJA — general-sq-013-question.mp3
+Sa është perimetri i një katrori me brinjë 7 cm?
+
+Alternativa a. 14 cm.
+
+Alternativa bë. 21 cm.
+
+Alternativa cë. 28 cm.
+
+Alternativa dë. 49 cm.
+
+SHPJEGIMI — general-sq-013-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 28 cm. Perimetri i katrorit është 4 × 7 = 28 cm.
+Burimi: Gjeometri elementare 
+----------------------------------------
+
+103 | general-sq-014 | Gjeografi
+PYETJA — general-sq-014-question.mp3
+Në cilin kontinent ndodhet shkretëtira e Saharasë?
+
+Alternativa a. Azi.
+
+Alternativa bë. Afrikë.
+
+Alternativa cë. Australi.
+
+Alternativa dë. Amerikë e Jugut.
+
+SHPJEGIMI — general-sq-014-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Afrikë. Saharaja shtrihet në Afrikën Veriore.
+Burimi: National Geographic, Sahara 
+----------------------------------------
+
+104 | general-sq-015 | Biologji
+PYETJA — general-sq-015-question.mp3
+Cili gaz merret kryesisht nga bimët gjatë fotosintezës?
+
+Alternativa a. Oksigjen.
+
+Alternativa bë. Azot.
+
+Alternativa cë. Dioksid karboni.
+
+Alternativa dë. Helium.
+
+SHPJEGIMI — general-sq-015-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Dioksid karboni. Bimët marrin dioksid karboni nga ajri dhe ujë nga mjedisi. Me energjinë e dritës prodhojnë përbërje që ruajnë energji, ndërsa çlirojnë oksigjen. Prandaj gazi që përdoret në këtë proces është CO₂.
+Burimi: OpenStax — Biology 2e, 8.1 Overview of Photosynthesis — https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis
+----------------------------------------
+
+105 | general-sq-016 | Sport
+PYETJA — general-sq-016-question.mp3
+Sa lojtarë ka një skuadër futbolli në fushë në fillim të ndeshjes?
+
+Alternativa a. 9.
+
+Alternativa bë. 10.
+
+Alternativa cë. 11.
+
+Alternativa dë. 12.
+
+SHPJEGIMI — general-sq-016-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 11. Një skuadër futbolli fillon normalisht me 11 lojtarë, përfshirë portierin.
+Burimi: IFAB Laws of the Game, Law 3 
+----------------------------------------
+
+106 | general-sq-017 | Gjuhë shqipe
+PYETJA — general-sq-017-question.mp3
+Cila nga këto fjalë është mbiemër?
+
+Alternativa a. Vrapoj.
+
+Alternativa bë. I bukur.
+
+Alternativa cë. Shkollë.
+
+Alternativa dë. Shpejt.
+
+SHPJEGIMI — general-sq-017-explanation.mp3
+Përgjigjja e saktë është alternativa bë. I bukur. 'I bukur' është mbiemër që tregon cilësi.
+Burimi: Gramatika e gjuhës shqipe 
+----------------------------------------
+
+107 | general-sq-018 | Astronomi
+PYETJA — general-sq-018-question.mp3
+Sa kohë i duhet afërsisht Tokës për një rrotullim rreth Diellit?
+
+Alternativa a. 24 orë.
+
+Alternativa bë. 30 ditë.
+
+Alternativa cë. 365 ditë.
+
+Alternativa dë. 10 vjet.
+
+SHPJEGIMI — general-sq-018-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 365 ditë. Një orbitë e Tokës rreth Diellit zgjat rreth 365,25 ditë. Kjo përcakton vitin. Rrotullimi rreth boshtit përcakton ditën dhe nuk duhet ngatërruar me orbitën.
+Burimi: NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/
+----------------------------------------
+
+108 | general-sq-019 | Muzikë
+PYETJA — general-sq-019-question.mp3
+Sa vija ka pentagrami muzikor?
+
+Alternativa a. 4.
+
+Alternativa bë. 5.
+
+Alternativa cë. 6.
+
+Alternativa dë. 7.
+
+SHPJEGIMI — general-sq-019-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 5. Pentagrami standard përbëhet nga pesë vija paralele.
+Burimi: Teoria bazë e muzikës 
+----------------------------------------
+
+109 | general-sq-020 | Logjikë
+PYETJA — general-sq-020-question.mp3
+Nëse të gjithë katrorët janë drejtkëndësha, cili pohim është patjetër i vërtetë?
+
+Alternativa a. Çdo drejtkëndësh është katror.
+
+Alternativa bë. Asnjë katror nuk është drejtkëndësh.
+
+Alternativa cë. Çdo katror ka katër kënde të drejta.
+
+Alternativa dë. Çdo katror ka tri brinjë.
+
+SHPJEGIMI — general-sq-020-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Çdo katror ka katër kënde të drejta. Katrori ka katër kënde të drejta; jo çdo drejtkëndësh është katror.
+Burimi: Gjeometri elementare 
+----------------------------------------
+
+110 | general-sq-021 | Gjeografi
+PYETJA — general-sq-021-question.mp3
+Cili është kryeqyteti i Australisë?
+
+Alternativa a. Sidnei.
+
+Alternativa bë. Melburni.
+
+Alternativa cë. Kanberra.
+
+Alternativa dë. Perthi.
+
+SHPJEGIMI — general-sq-021-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Kanberra. Kanberra është kryeqyteti i Australisë.
+Burimi: Australian Government 
+----------------------------------------
+
+111 | general-sq-022 | Shkencë
+PYETJA — general-sq-022-question.mp3
+Cili gaz përbën pjesën më të madhe të atmosferës së Tokës?
+
+Alternativa a. Oksigjeni.
+
+Alternativa bë. Azoti.
+
+Alternativa cë. Dioksidi i karbonit.
+
+Alternativa dë. Hidrogjeni.
+
+SHPJEGIMI — general-sq-022-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Azoti. Azoti përbën rreth 78% të atmosferës pranë sipërfaqes, oksigjeni rreth 21% dhe gazrat e tjera afërsisht 1%. Oksigjeni është thelbësor për frymëmarrjen, por nuk është gazi më i bollshëm.
+Burimi: NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/
+----------------------------------------
+
+112 | general-sq-023 | Matematikë
+PYETJA — general-sq-023-question.mp3
+Sa është rrënja katrore e numrit 144?
+
+Alternativa a. 10.
+
+Alternativa bë. 11.
+
+Alternativa cë. 12.
+
+Alternativa dë. 14.
+
+SHPJEGIMI — general-sq-023-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 12. 12 × 12 = 144.
+Burimi: Aritmetikë 
+----------------------------------------
+
+113 | general-sq-024 | Biologji
+PYETJA — general-sq-024-question.mp3
+Cili organ është përgjegjës kryesisht për filtrimin e gjakut dhe prodhimin e urinës?
+
+Alternativa a. Zemra.
+
+Alternativa bë. Veshkat.
+
+Alternativa cë. Mushkëritë.
+
+Alternativa dë. Stomaku.
+
+SHPJEGIMI — general-sq-024-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Veshkat. Veshkat filtrojnë gjakun dhe prodhojnë urinën.
+Burimi: NIDDK 
+----------------------------------------
+
+114 | general-sq-026 | Astronomi
+PYETJA — general-sq-026-question.mp3
+Cili planet njihet për unazat e tij të dukshme?
+
+Alternativa a. Marsi.
+
+Alternativa bë. Venusi.
+
+Alternativa cë. Saturni.
+
+Alternativa dë. Mërkuri.
+
+SHPJEGIMI — general-sq-026-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Saturni. Saturni njihet për sistemin e gjerë të unazave.
+Burimi: NASA Saturn 
+----------------------------------------
+
+115 | general-sq-029 | Fizikë
+PYETJA — general-sq-029-question.mp3
+Cila është njësia SI e rezistencës elektrike?
+
+Alternativa a. Volti.
+
+Alternativa bë. Amperi.
+
+Alternativa cë. Ohmi.
+
+Alternativa dë. Vati.
+
+SHPJEGIMI — general-sq-029-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Ohmi. Rezistenca elektrike matet në ohm (Ω).
+Burimi: BIPM SI 
+----------------------------------------
+
+116 | logic-v3-multiply-sq | Logjikë
+PYETJA — logic-v3-multiply-sq-question.mp3
+Sa është 12 × 8?
+
+Alternativa a. 84.
+
+Alternativa bë. 96.
+
+Alternativa cë. 108.
+
+Alternativa dë. 88.
+
+SHPJEGIMI — logic-v3-multiply-sq-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 96. 12 × 8 = 96.
+Burimi: Aritmetikë / gjeometri elementare; verifikuar me llogaritje
+----------------------------------------
+
+117 | logic-v3-divide-sq | Logjikë
+PYETJA — logic-v3-divide-sq-question.mp3
+Sa është 144 ÷ 12?
+
+Alternativa a. 10.
+
+Alternativa bë. 11.
+
+Alternativa cë. 12.
+
+Alternativa dë. 14.
+
+SHPJEGIMI — logic-v3-divide-sq-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 12. 12 × 12 = 144, prandaj 144 ÷ 12 = 12.
+Burimi: Aritmetikë / gjeometri elementare; verifikuar me llogaritje
+----------------------------------------
+
+118 | logic-v3-perimeter-sq | Logjikë
+PYETJA — logic-v3-perimeter-sq-question.mp3
+Një katror ka brinjën 9 cm. Sa është perimetri?
+
+Alternativa a. 18 cm.
+
+Alternativa bë. 27 cm.
+
+Alternativa cë. 36 cm.
+
+Alternativa dë. 81 cm.
+
+SHPJEGIMI — logic-v3-perimeter-sq-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 36 cm. Perimetri është 4 × 9 = 36 cm.
+Burimi: Aritmetikë / gjeometri elementare; verifikuar me llogaritje
+----------------------------------------
+
+119 | logic-v3-triangle-sq | Logjikë
+PYETJA — logic-v3-triangle-sq-question.mp3
+Dy kënde të një trekëndëshi në plan janë 50° dhe 60°. Sa është i treti?
+
+Alternativa a. 60°.
+
+Alternativa bë. 70°.
+
+Alternativa cë. 80°.
+
+Alternativa dë. 90°.
+
+SHPJEGIMI — logic-v3-triangle-sq-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 70°. Këndet bëjnë 180°: 180 − 50 − 60 = 70°.
+Burimi: Aritmetikë / gjeometri elementare; verifikuar me llogaritje
+----------------------------------------
+
+120 | logic-v3-sum-sq | Logjikë
+PYETJA — logic-v3-sum-sq-question.mp3
+Sa është shuma 1 + 2 + … + 10?
+
+Alternativa a. 45.
+
+Alternativa bë. 50.
+
+Alternativa cë. 55.
+
+Alternativa dë. 60.
+
+SHPJEGIMI — logic-v3-sum-sq-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 55. Pesë çifte me shumën 11 japin 55.
+Burimi: Aritmetikë / gjeometri elementare; verifikuar me llogaritje
+----------------------------------------
+
+121 | logic-v3-doubling-sq | Logjikë
+PYETJA — logic-v3-doubling-sq-question.mp3
+Vazhdo duke dyfishuar: 3, 6, 12, 24, …
+
+Alternativa a. 30.
+
+Alternativa bë. 36.
+
+Alternativa cë. 42.
+
+Alternativa dë. 48.
+
+SHPJEGIMI — logic-v3-doubling-sq-explanation.mp3
+Përgjigjja e saktë është alternativa dë. 48. 24 × 2 = 48.
+Burimi: Aritmetikë / gjeometri elementare; verifikuar me llogaritje
+----------------------------------------
+
+122 | logic-v3-probability-sq | Logjikë
+PYETJA — logic-v3-probability-sq-question.mp3
+Në një qese ka 3 topa blu dhe 2 të kuq. Me zgjedhje të rastësishme, sa është mundësia për blu?
+
+Alternativa a. 1/5.
+
+Alternativa bë. 2/5.
+
+Alternativa cë. 3/5.
+
+Alternativa dë. 4/5.
+
+SHPJEGIMI — logic-v3-probability-sq-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 3/5. 3 nga 5 topa janë blu: 3/5.
+Burimi: Aritmetikë / gjeometri elementare; verifikuar me llogaritje
+----------------------------------------
+
+123 | logic-v3-units-sq | Logjikë
+PYETJA — logic-v3-units-sq-question.mp3
+Sa metra janë 2,5 km?
+
+Alternativa a. 25.
+
+Alternativa bë. 250.
+
+Alternativa cë. 2500.
+
+Alternativa dë. 25000.
+
+SHPJEGIMI — logic-v3-units-sq-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 2500. 1 km = 1000 m; 2,5 × 1000 = 2500 m.
+Burimi: Aritmetikë / gjeometri elementare; verifikuar me llogaritje
+----------------------------------------
+
+124 | logic-v3-prime-sq | Logjikë
+PYETJA — logic-v3-prime-sq-question.mp3
+Cili nga numrat është i thjeshtë?
+
+Alternativa a. 21.
+
+Alternativa bë. 27.
+
+Alternativa cë. 29.
+
+Alternativa dë. 33.
+
+SHPJEGIMI — logic-v3-prime-sq-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 29. 29 ka vetëm pjesëtuesit pozitivë 1 dhe 29.
+Burimi: Aritmetikë / gjeometri elementare; verifikuar me llogaritje
+----------------------------------------
+
+125 | logic-v3-area-sq | Logjikë
+PYETJA — logic-v3-area-sq-question.mp3
+Një drejtkëndësh ka brinjët 7 m dhe 6 m. Sa është sipërfaqja?
+
+Alternativa a. 13 m².
+
+Alternativa bë. 26 m².
+
+Alternativa cë. 42 m².
+
+Alternativa dë. 49 m².
+
+SHPJEGIMI — logic-v3-area-sq-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 42 m². Sipërfaqja është 7 × 6 = 42 m².
+Burimi: Aritmetikë / gjeometri elementare; verifikuar me llogaritje
+----------------------------------------
+
+126 | premium-sq-030 | Shkencë
+PYETJA — premium-sq-030-question.mp3
+Cili gaz zë afërsisht 21% të atmosferës pranë sipërfaqes së Tokës?
+
+Alternativa a. Azoti.
+
+Alternativa bë. Oksigjeni.
+
+Alternativa cë. Heliumi.
+
+Alternativa dë. Hidrogjeni.
+
+SHPJEGIMI — premium-sq-030-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Oksigjeni. Oksigjeni zë rreth një të pestën e atmosferës. Azoti është më i bollshëm, me rreth 78%. Përqindja më e vogël nuk e zvogëlon rolin e oksigjenit në frymëmarrje.
+Burimi: NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/
+----------------------------------------
+
+127 | premium-sq-031 | Astronomi
+PYETJA — premium-sq-031-question.mp3
+Cili veprim i Tokës përcakton kryesisht alternimin e ditës dhe natës?
+
+Alternativa a. Rrotullimi rreth boshtit.
+
+Alternativa bë. Ndryshimi i stinëve.
+
+Alternativa cë. Lëvizja e Hënës.
+
+Alternativa dë. Një orbitë e plotë rreth Diellit.
+
+SHPJEGIMI — premium-sq-031-explanation.mp3
+Përgjigjja e saktë është alternativa a. Rrotullimi rreth boshtit. Toka rrotullohet rreth boshtit të saj në afërsisht 24 orë. Pjesa e kthyer drejt Diellit ka ditë, ndërsa pjesa tjetër natë. Një orbitë rreth Diellit përcakton vitin.
+Burimi: NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/
+----------------------------------------
+
+128 | premium-sq-032 | Astronomi
+PYETJA — premium-sq-032-question.mp3
+Nga çfarë përbëhen kryesisht grimcat e unazave të Saturnit?
+
+Alternativa a. Vetëm gaz.
+
+Alternativa bë. Akull dhe shkëmbinj.
+
+Alternativa cë. Vetëm ujë i lëngshëm.
+
+Alternativa dë. Dritë e ngurtësuar.
+
+SHPJEGIMI — premium-sq-032-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Akull dhe shkëmbinj. Unazat përmbajnë miliarda copa akulli dhe shkëmbinjsh, shpesh të mbuluara me pluhur. Ato nuk janë një disk i vetëm i ngurtë; janë grimca që orbitojnë planetin.
+Burimi: NASA Science — Saturn Facts — https://science.nasa.gov/saturn/facts/
+----------------------------------------
+
+129 | premium-sq-033 | Biologji
+PYETJA — premium-sq-033-question.mp3
+Në cilën organele zhvillohet fotosinteza te bimët?
+
+Alternativa a. Bërthama.
+
+Alternativa bë. Ribozomi.
+
+Alternativa cë. Kloroplasti.
+
+Alternativa dë. Lizozomi.
+
+SHPJEGIMI — premium-sq-033-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Kloroplasti. Kloroplastet përmbajnë strukturat dhe pigmentet që mundësojnë fotosintezën. Klorofili ndihmon në përthithjen e dritës. Kjo energji përdoret për formimin e përbërjeve organike.
+Burimi: OpenStax — Biology 2e, 8.1 Overview of Photosynthesis — https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis
+----------------------------------------
+
+130 | premium-sq-034 | Biologji
+PYETJA — premium-sq-034-question.mp3
+Cila është forma fillestare e energjisë që shfrytëzohet në fotosintezë?
+
+Alternativa a. Energjia e dritës.
+
+Alternativa bë. Energjia e zërit.
+
+Alternativa cë. Energjia bërthamore e bimës.
+
+Alternativa dë. Energjia e erës.
+
+SHPJEGIMI — premium-sq-034-explanation.mp3
+Përgjigjja e saktë është alternativa a. Energjia e dritës. Fotosinteza shndërron energjinë e dritës në energji kimike të ruajtur në përbërje organike. Bima nuk e krijon energjinë nga asgjë; e shndërron dhe e ruan atë.
+Burimi: OpenStax — Biology 2e, 8.1 Overview of Photosynthesis — https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis
+----------------------------------------
+
+131 | premium-sq-035 | Shkencë
+PYETJA — premium-sq-035-question.mp3
+Çfarë shkakton kryesisht ciklin vjetor të stinëve në Tokë?
+
+Alternativa a. Ndryshimi i madhësisë së Diellit.
+
+Alternativa bë. Pjerrësia e boshtit të Tokës gjatë orbitës.
+
+Alternativa cë. Fazat e Hënës.
+
+Alternativa dë. Rrotullimi i reve.
+
+SHPJEGIMI — premium-sq-035-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Pjerrësia e boshtit të Tokës gjatë orbitës. Boshti i Tokës është i pjerrët ndaj planit të orbitës. Gjatë vitit, secila hemisferë merr rreze më të drejtpërdrejta dhe ditë më të gjata në periudha të ndryshme. Kjo krijon ciklin e stinëve.
+Burimi: NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/
+----------------------------------------
+
+132 | premium-sq-036 | Biologji
+PYETJA — premium-sq-036-question.mp3
+Cili gaz çlirohet gjatë fotosintezës së bimëve?
+
+Alternativa a. Oksigjeni.
+
+Alternativa bë. Heliumi.
+
+Alternativa cë. Neoni.
+
+Alternativa dë. Hidrogjeni.
+
+SHPJEGIMI — premium-sq-036-explanation.mp3
+Përgjigjja e saktë është alternativa a. Oksigjeni. Gjatë fotosintezës çlirohet oksigjen. Bima përdor dritë, ujë dhe dioksid karboni për të formuar përbërje organike që ruajnë energji.
+Burimi: OpenStax — Biology 2e, 8.1 Overview of Photosynthesis — https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis
+----------------------------------------
+
+133 | premium-sq-037 | Biologji
+PYETJA — premium-sq-037-question.mp3
+Cilat struktura të gjethes rregullojnë shkëmbimin e gazeve?
+
+Alternativa a. Stomatet.
+
+Alternativa bë. Rrënjët.
+
+Alternativa cë. Farat.
+
+Alternativa dë. Petalet.
+
+SHPJEGIMI — premium-sq-037-explanation.mp3
+Përgjigjja e saktë është alternativa a. Stomatet. Stomatet janë hapje të vogla të rregulluara nga qelizat rojtare. Përmes tyre kryhet shkëmbimi i gazeve dhe ndikohet humbja e ujit.
+Burimi: OpenStax — Biology 2e, 8.1 Overview of Photosynthesis — https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis
+----------------------------------------
+
+134 | premium-sq-038 | Astronomi
+PYETJA — premium-sq-038-question.mp3
+Sa satelitë natyrorë ka Toka?
+
+Alternativa a. Asnjë.
+
+Alternativa bë. Një.
+
+Alternativa cë. Dy.
+
+Alternativa dë. Katër.
+
+SHPJEGIMI — premium-sq-038-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Një. Toka ka një satelit natyror: Hënën. Satelitët artificialë janë pajisje të ndërtuara nga njeriu dhe nuk llogariten si satelitë natyrorë.
+Burimi: NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/
+----------------------------------------
+
+135 | premium-sq-039 | Astronomi
+PYETJA — premium-sq-039-question.mp3
+Çfarë përfaqëson afërsisht një njësi astronomike?
+
+Alternativa a. Distancën mesatare Tokë–Diell.
+
+Alternativa bë. Diametrin e Tokës.
+
+Alternativa cë. Distancën Tokë–Hënë.
+
+Alternativa dë. Një vit kohor.
+
+SHPJEGIMI — premium-sq-039-explanation.mp3
+Përgjigjja e saktë është alternativa a. Distancën mesatare Tokë–Diell. Njësia astronomike përdoret për distancat në Sistemin Diellor. Ajo lidhet me distancën mesatare Tokë–Diell, afërsisht 150 milionë kilometra; nuk është njësi kohe.
+Burimi: NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/
+----------------------------------------
+
+136 | premium-sq-040 | Shkencë
+PYETJA — premium-sq-040-question.mp3
+Cila shtresë ndihmon që shumë meteoroide të digjen para se të arrijnë tokën?
+
+Alternativa a. Atmosfera.
+
+Alternativa bë. Bërthama e brendshme.
+
+Alternativa cë. Korja oqeanike.
+
+Alternativa dë. Manteli.
+
+SHPJEGIMI — premium-sq-040-explanation.mp3
+Përgjigjja e saktë është alternativa a. Atmosfera. Pjesa më e madhe e meteoroideve të vogla shpërbëhet gjatë kalimit në atmosferë. Shkëlqimi që shohim quhet meteor; atmosfera ofron kështu edhe mbrojtje.
+Burimi: NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/
+----------------------------------------
+
+137 | premium-sq-041 | Shkencë
+PYETJA — premium-sq-041-question.mp3
+Sa për qind zënë afërsisht së bashku azoti dhe oksigjeni në atmosferën pranë sipërfaqes?
+
+Alternativa a. 50%.
+
+Alternativa bë. 78%.
+
+Alternativa cë. 99%.
+
+Alternativa dë. 21%.
+
+SHPJEGIMI — premium-sq-041-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 99%. Azoti zë rreth 78% dhe oksigjeni rreth 21%; së bashku afërsisht 99%. Pjesa tjetër përfshin argon, dioksid karboni dhe gaze të tjera.
+Burimi: NASA Science — Earth Facts — https://science.nasa.gov/earth/facts/
+----------------------------------------
+
+138 | premium-20261105-sq-001 | Shkencë
+PYETJA — premium-20261105-sq-001-question.mp3
+Cila është njësia bazë SI e kohës?
+
+Alternativa a. Sekonda.
+
+Alternativa bë. Metri.
+
+Alternativa cë. Kelvini.
+
+Alternativa dë. Amperi.
+
+SHPJEGIMI — premium-20261105-sq-001-explanation.mp3
+Përgjigjja e saktë është alternativa a. Sekonda. Njësia bazë SI e kohës është sekonda.
+Burimi: https://www.bipm.org/en/measurement-units/si-base-units
+----------------------------------------
+
+139 | premium-20261105-sq-002 | Shkencë
+PYETJA — premium-20261105-sq-002-question.mp3
+Cila është njësia bazë SI e gjatësisë?
+
+Alternativa a. Kandela.
+
+Alternativa bë. Metri.
+
+Alternativa cë. Sekonda.
+
+Alternativa dë. Moli.
+
+SHPJEGIMI — premium-20261105-sq-002-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Metri. Njësia bazë SI e gjatësisë është metri.
+Burimi: https://www.bipm.org/en/measurement-units/si-base-units
+----------------------------------------
+
+140 | premium-20261105-sq-003 | Shkencë
+PYETJA — premium-20261105-sq-003-question.mp3
+Cila është njësia bazë SI e masës?
+
+Alternativa a. Metri.
+
+Alternativa bë. Sekonda.
+
+Alternativa cë. Kilogrami.
+
+Alternativa dë. Njutoni.
+
+SHPJEGIMI — premium-20261105-sq-003-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Kilogrami. Njësia bazë SI e masës është kilogrami.
+Burimi: https://www.bipm.org/en/measurement-units/si-base-units
+----------------------------------------
+
+141 | premium-20261105-sq-004 | Shkencë
+PYETJA — premium-20261105-sq-004-question.mp3
+Cila është njësia bazë SI e rrymës elektrike?
+
+Alternativa a. Volti.
+
+Alternativa bë. Ohmi.
+
+Alternativa cë. Vati.
+
+Alternativa dë. Amperi.
+
+SHPJEGIMI — premium-20261105-sq-004-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Amperi. Njësia bazë SI e rrymës elektrike është amperi.
+Burimi: https://www.bipm.org/en/measurement-units/si-base-units
+----------------------------------------
+
+142 | premium-20261105-sq-005 | Shkencë
+PYETJA — premium-20261105-sq-005-question.mp3
+Cila është njësia bazë SI e temperaturës termodinamike?
+
+Alternativa a. Kelvini.
+
+Alternativa bë. Grada Celsius.
+
+Alternativa cë. Xhauli.
+
+Alternativa dë. Moli.
+
+SHPJEGIMI — premium-20261105-sq-005-explanation.mp3
+Përgjigjja e saktë është alternativa a. Kelvini. Njësia bazë SI e temperaturës termodinamike është kelvini.
+Burimi: https://www.bipm.org/en/measurement-units/si-base-units
+----------------------------------------
+
+143 | premium-20261105-sq-006 | Shkencë
+PYETJA — premium-20261105-sq-006-question.mp3
+Cila është njësia bazë SI e sasisë së lëndës?
+
+Alternativa a. Metri.
+
+Alternativa bë. Moli.
+
+Alternativa cë. Kilogrami.
+
+Alternativa dë. Kandela.
+
+SHPJEGIMI — premium-20261105-sq-006-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Moli. Njësia bazë SI e sasisë së lëndës është moli.
+Burimi: https://www.bipm.org/en/measurement-units/si-base-units
+----------------------------------------
+
+144 | premium-20261105-sq-007 | Shkencë
+PYETJA — premium-20261105-sq-007-question.mp3
+Cila është njësia bazë SI e intensitetit të dritës?
+
+Alternativa a. Vati.
+
+Alternativa bë. Lumen.
+
+Alternativa cë. Kandela.
+
+Alternativa dë. Luksi.
+
+SHPJEGIMI — premium-20261105-sq-007-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Kandela. Njësia bazë SI e intensitetit të dritës është kandela.
+Burimi: https://www.bipm.org/en/measurement-units/si-base-units
+----------------------------------------
+
+145 | premium-20261105-sq-008 | Shkencë
+PYETJA — premium-20261105-sq-008-question.mp3
+Me cilën njësi SI matet madhësia e frekuencës?
+
+Alternativa a. Xhauli.
+
+Alternativa bë. Paskali.
+
+Alternativa cë. Volti.
+
+Alternativa dë. Herci.
+
+SHPJEGIMI — premium-20261105-sq-008-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Herci. Herci është njësia SI e frekuencës.
+Burimi: https://www.nist.gov/pml/special-publication-330/sp-330-section-2
+----------------------------------------
+
+146 | premium-20261105-sq-009 | Shkencë
+PYETJA — premium-20261105-sq-009-question.mp3
+Me cilën njësi SI matet madhësia e presionit?
+
+Alternativa a. Paskali.
+
+Alternativa bë. Amperi.
+
+Alternativa cë. Vati.
+
+Alternativa dë. Faradi.
+
+SHPJEGIMI — premium-20261105-sq-009-explanation.mp3
+Përgjigjja e saktë është alternativa a. Paskali. Paskali është njësia SI e presionit.
+Burimi: https://www.nist.gov/pml/special-publication-330/sp-330-section-2
+----------------------------------------
+
+147 | premium-20261105-sq-010 | Shkencë
+PYETJA — premium-20261105-sq-010-question.mp3
+Me cilën njësi SI matet madhësia e energjisë?
+
+Alternativa a. Teslla.
+
+Alternativa bë. Xhauli.
+
+Alternativa cë. Volti.
+
+Alternativa dë. Herci.
+
+SHPJEGIMI — premium-20261105-sq-010-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Xhauli. Xhauli është njësia SI e energjisë.
+Burimi: https://www.nist.gov/pml/special-publication-330/sp-330-section-2
+----------------------------------------
+
+148 | premium-20261105-sq-011 | Shkencë
+PYETJA — premium-20261105-sq-011-question.mp3
+Me cilën njësi SI matet madhësia e fuqisë?
+
+Alternativa a. Kuloni.
+
+Alternativa bë. Ohmi.
+
+Alternativa cë. Vati.
+
+Alternativa dë. Xhauli.
+
+SHPJEGIMI — premium-20261105-sq-011-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Vati. Vati është njësia SI e fuqisë.
+Burimi: https://www.nist.gov/pml/special-publication-330/sp-330-section-2
+----------------------------------------
+
+149 | premium-20261105-sq-012 | Shkencë
+PYETJA — premium-20261105-sq-012-question.mp3
+Me cilën njësi SI matet madhësia e ngarkesës elektrike?
+
+Alternativa a. Volti.
+
+Alternativa bë. Herci.
+
+Alternativa cë. Paskali.
+
+Alternativa dë. Kuloni.
+
+SHPJEGIMI — premium-20261105-sq-012-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Kuloni. Kuloni është njësia SI e ngarkesës elektrike.
+Burimi: https://www.nist.gov/pml/special-publication-330/sp-330-section-2
+----------------------------------------
+
+150 | premium-20261105-sq-013 | Shkencë
+PYETJA — premium-20261105-sq-013-question.mp3
+Me cilën njësi SI matet madhësia e diferencës së potencialit elektrik?
+
+Alternativa a. Volti.
+
+Alternativa bë. Kuloni.
+
+Alternativa cë. Faradi.
+
+Alternativa dë. Metri.
+
+SHPJEGIMI — premium-20261105-sq-013-explanation.mp3
+Përgjigjja e saktë është alternativa a. Volti. Volti është njësia SI e diferencës së potencialit elektrik.
+Burimi: https://www.nist.gov/pml/special-publication-330/sp-330-section-2
+----------------------------------------
+
+151 | premium-20261105-sq-014 | Shkencë
+PYETJA — premium-20261105-sq-014-question.mp3
+Me cilën njësi SI matet madhësia e kapacitetit elektrik?
+
+Alternativa a. Herci.
+
+Alternativa bë. Faradi.
+
+Alternativa cë. Amperi.
+
+Alternativa dë. Vati.
+
+SHPJEGIMI — premium-20261105-sq-014-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Faradi. Faradi është njësia SI e kapacitetit elektrik.
+Burimi: https://www.nist.gov/pml/special-publication-330/sp-330-section-2
+----------------------------------------
+
+152 | premium-20261105-sq-015 | Shkencë
+PYETJA — premium-20261105-sq-015-question.mp3
+Me cilën njësi SI matet madhësia e përçueshmërisë elektrike?
+
+Alternativa a. Volti.
+
+Alternativa bë. Njutoni.
+
+Alternativa cë. Simensi.
+
+Alternativa dë. Ohmi.
+
+SHPJEGIMI — premium-20261105-sq-015-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Simensi. Simensi është njësia SI e përçueshmërisë elektrike.
+Burimi: https://www.nist.gov/pml/special-publication-330/sp-330-section-2
+----------------------------------------
+
+153 | premium-20261105-sq-016 | Shkencë
+PYETJA — premium-20261105-sq-016-question.mp3
+Me cilën njësi SI matet madhësia e fluksit magnetik?
+
+Alternativa a. Teslla.
+
+Alternativa bë. Herci.
+
+Alternativa cë. Xhauli.
+
+Alternativa dë. Veberi.
+
+SHPJEGIMI — premium-20261105-sq-016-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Veberi. Veberi është njësia SI e fluksit magnetik.
+Burimi: https://www.nist.gov/pml/special-publication-330/sp-330-section-2
+----------------------------------------
+
+154 | premium-20261105-sq-017 | Astronomi
+PYETJA — premium-20261105-sq-017-question.mp3
+Sa planetë ka Sistemi Diellor sipas klasifikimit të IAU-së?
+
+Alternativa a. 8.
+
+Alternativa bë. 9.
+
+Alternativa cë. 10.
+
+Alternativa dë. 7.
+
+SHPJEGIMI — premium-20261105-sq-017-explanation.mp3
+Përgjigjja e saktë është alternativa a. 8. Sistemi Diellor ka tetë planetë.
+Burimi: https://science.nasa.gov/solar-system/planets/
+----------------------------------------
+
+155 | premium-20261105-sq-018 | Astronomi
+PYETJA — premium-20261105-sq-018-question.mp3
+Cili është planeti më i vogël në Sistemin Diellor?
+
+Alternativa a. Marsi.
+
+Alternativa bë. Mërkuri.
+
+Alternativa cë. Venusi.
+
+Alternativa dë. Toka.
+
+SHPJEGIMI — premium-20261105-sq-018-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Mërkuri. Mërkuri është më i vogli nga tetë planetët.
+Burimi: https://science.nasa.gov/solar-system/planets/
+----------------------------------------
+
+156 | premium-20261105-sq-019 | Astronomi
+PYETJA — premium-20261105-sq-019-question.mp3
+Cili planet është i dyti nga Dielli?
+
+Alternativa a. Marsi.
+
+Alternativa bë. Saturni.
+
+Alternativa cë. Venusi.
+
+Alternativa dë. Toka.
+
+SHPJEGIMI — premium-20261105-sq-019-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Venusi. Venusi është planeti i dytë nga Dielli.
+Burimi: https://science.nasa.gov/solar-system/planets/
+----------------------------------------
+
+157 | premium-20261105-sq-020 | Astronomi
+PYETJA — premium-20261105-sq-020-question.mp3
+Cili planet vjen menjëherë pas Tokës duke u larguar nga Dielli?
+
+Alternativa a. Venusi.
+
+Alternativa bë. Mërkuri.
+
+Alternativa cë. Neptuni.
+
+Alternativa dë. Marsi.
+
+SHPJEGIMI — premium-20261105-sq-020-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Marsi. Toka është e treta dhe Marsi i katërti nga Dielli.
+Burimi: https://science.nasa.gov/solar-system/planets/
+----------------------------------------
+
+158 | premium-20261105-sq-021 | Astronomi
+PYETJA — premium-20261105-sq-021-question.mp3
+Cili çift përbëhet nga gjigantë akulli?
+
+Alternativa a. Urani dhe Neptuni.
+
+Alternativa bë. Jupiteri dhe Saturni.
+
+Alternativa cë. Venusi dhe Mërkuri.
+
+Alternativa dë. Toka dhe Marsi.
+
+SHPJEGIMI — premium-20261105-sq-021-explanation.mp3
+Përgjigjja e saktë është alternativa a. Urani dhe Neptuni. NASA i klasifikon Uranin dhe Neptunin si gjigantë akulli.
+Burimi: https://science.nasa.gov/solar-system/planets/
+----------------------------------------
+
+159 | premium-20261105-sq-022 | Astronomi
+PYETJA — premium-20261105-sq-022-question.mp3
+Mes orbitave të cilëve planetë gjendet brezi kryesor i asteroideve ku ndodhet Ceresi?
+
+Alternativa a. Saturnit dhe Uranit.
+
+Alternativa bë. Marsit dhe Jupiterit.
+
+Alternativa cë. Mërkurit dhe Venusit.
+
+Alternativa dë. Tokës dhe Marsit.
+
+SHPJEGIMI — premium-20261105-sq-022-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Marsit dhe Jupiterit. Ceresi ndodhet në brezin e asteroideve mes Marsit dhe Jupiterit.
+Burimi: https://science.nasa.gov/solar-system/planets/
+----------------------------------------
+
+160 | premium-20261105-sq-023 | Astronomi
+PYETJA — premium-20261105-sq-023-question.mp3
+Në cilin vit Plutoni u riklasifikua si planet xhuxh?
+
+Alternativa a. 1989.
+
+Alternativa bë. 2000.
+
+Alternativa cë. 2006.
+
+Alternativa dë. 1969.
+
+SHPJEGIMI — premium-20261105-sq-023-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 2006. IAU e riklasifikoi Plutonin në vitin 2006.
+Burimi: https://science.nasa.gov/solar-system/planets/
+----------------------------------------
+
+161 | premium-20261105-sq-024 | Astronomi
+PYETJA — premium-20261105-sq-024-question.mp3
+Çfarë quhet ekzoplanet?
+
+Alternativa a. Satelit i Tokës.
+
+Alternativa bë. Asteroid pranë Marsit.
+
+Alternativa cë. Një lloj komete.
+
+Alternativa dë. Planet jashtë Sistemit Diellor.
+
+SHPJEGIMI — premium-20261105-sq-024-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Planet jashtë Sistemit Diellor. Ekzoplaneti është planet jashtë Sistemit Diellor.
+Burimi: https://science.nasa.gov/solar-system/planets/
+----------------------------------------
+
+162 | premium-20261105-sq-025 | Histori
+PYETJA — premium-20261105-sq-025-question.mp3
+Kush paraqiti më 9 maj 1950 planin për bashkëpunimin evropian të qymyrit dhe çelikut?
+
+Alternativa a. Robert Shuman.
+
+Alternativa bë. Isaak Njuton.
+
+Alternativa cë. Albert Ajnshtajn.
+
+Alternativa dë. Nikola Tesla.
+
+SHPJEGIMI — premium-20261105-sq-025-explanation.mp3
+Përgjigjja e saktë është alternativa a. Robert Shuman. Plani u paraqit nga ministri francez Robert Shuman.
+Burimi: https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en
+----------------------------------------
+
+163 | premium-20261105-sq-026 | Histori
+PYETJA — premium-20261105-sq-026-question.mp3
+Cilat industri propozonte të bashkonte Plani Shuman?
+
+Alternativa a. Tekstilin dhe ushqimin.
+
+Alternativa bë. Qymyrin dhe çelikun.
+
+Alternativa cë. Naftën dhe turizmin.
+
+Alternativa dë. Bujqësinë dhe peshkimin.
+
+SHPJEGIMI — premium-20261105-sq-026-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Qymyrin dhe çelikun. Plani synonte bashkimin e industrive të qymyrit dhe çelikut.
+Burimi: https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en
+----------------------------------------
+
+164 | premium-20261105-sq-027 | Histori
+PYETJA — premium-20261105-sq-027-question.mp3
+Sa shtete nënshkruan traktatin e Komunitetit Evropian të Qymyrit dhe Çelikut në vitin 1951?
+
+Alternativa a. 4.
+
+Alternativa bë. 5.
+
+Alternativa cë. 6.
+
+Alternativa dë. 12.
+
+SHPJEGIMI — premium-20261105-sq-027-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 6. Traktatin e vitit 1951 e nënshkruan gjashtë shtete.
+Burimi: https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en
+----------------------------------------
+
+165 | premium-20261105-sq-028 | Histori
+PYETJA — premium-20261105-sq-028-question.mp3
+Cili nga këto shtete NUK ishte ndër gjashtë nënshkruesit e traktatit të qymyrit dhe çelikut?
+
+Alternativa a. Italia.
+
+Alternativa bë. Belgjika.
+
+Alternativa cë. Luksemburgu.
+
+Alternativa dë. Mbretëria e Bashkuar.
+
+SHPJEGIMI — premium-20261105-sq-028-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Mbretëria e Bashkuar. Gjashtë shtetet ishin Gjermania, Franca, Italia, Holanda, Belgjika dhe Luksemburgu.
+Burimi: https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en
+----------------------------------------
+
+166 | premium-20261105-sq-029 | Histori
+PYETJA — premium-20261105-sq-029-question.mp3
+Në cilin qytet u nënshkruan traktatet evropiane të 25 marsit 1957?
+
+Alternativa a. Romë.
+
+Alternativa bë. Paris.
+
+Alternativa cë. Berlin.
+
+Alternativa dë. Madrid.
+
+SHPJEGIMI — premium-20261105-sq-029-explanation.mp3
+Përgjigjja e saktë është alternativa a. Romë. Traktatet e 25 marsit 1957 u nënshkruan në Romë.
+Burimi: https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en
+----------------------------------------
+
+167 | premium-20261105-sq-030 | Histori
+PYETJA — premium-20261105-sq-030-question.mp3
+Në cilin vit u krijua NATO-ja?
+
+Alternativa a. 1945.
+
+Alternativa bë. 1949.
+
+Alternativa cë. 1957.
+
+Alternativa dë. 1962.
+
+SHPJEGIMI — premium-20261105-sq-030-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 1949. NATO-ja u krijua më 4 prill 1949.
+Burimi: https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en
+----------------------------------------
+
+168 | premium-20261105-sq-031 | Kulturë
+PYETJA — premium-20261105-sq-031-question.mp3
+Në cilën datë BE-ja shënon Ditën e Evropës?
+
+Alternativa a. 1 janar.
+
+Alternativa bë. 8 mars.
+
+Alternativa cë. 9 maj.
+
+Alternativa dë. 24 tetor.
+
+SHPJEGIMI — premium-20261105-sq-031-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 9 maj. Dita e Evropës shënohet më 9 maj, datën e Deklaratës Shuman.
+Burimi: https://european-union.europa.eu/principles-countries-history/history-eu/1945-59_en
+----------------------------------------
+
+169 | premium-20261105-sq-032 | Teknologji
+PYETJA — premium-20261105-sq-032-question.mp3
+Kush e shpiku World Wide Web-in?
+
+Alternativa a. Nikola Tesla.
+
+Alternativa bë. Johanes Kepler.
+
+Alternativa cë. Alan Turing.
+
+Alternativa dë. Tim Berners-Li.
+
+SHPJEGIMI — premium-20261105-sq-032-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Tim Berners-Li. Tim Berners-Li e shpiku Web-in në CERN.
+Burimi: https://home.cern/science/computing/the-birth-of-the-web
+----------------------------------------
+
+170 | premium-20261105-sq-033 | Teknologji
+PYETJA — premium-20261105-sq-033-question.mp3
+Në cilin vit u shpik World Wide Web-i në CERN?
+
+Alternativa a. 1989.
+
+Alternativa bë. 2001.
+
+Alternativa cë. 1969.
+
+Alternativa dë. 1975.
+
+SHPJEGIMI — premium-20261105-sq-033-explanation.mp3
+Përgjigjja e saktë është alternativa a. 1989. Web-i u shpik në vitin 1989.
+Burimi: https://home.cern/science/computing/the-birth-of-the-web
+----------------------------------------
+
+171 | premium-20261105-sq-034 | Teknologji
+PYETJA — premium-20261105-sq-034-question.mp3
+Cila nevojë shkencore nxiti krijimin e Web-it?
+
+Alternativa a. Ndërtimi i satelitëve.
+
+Alternativa bë. Shkëmbimi i informacionit mes studiuesve.
+
+Alternativa cë. Prodhimi i baterive.
+
+Alternativa dë. Matja e temperaturës.
+
+SHPJEGIMI — premium-20261105-sq-034-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Shkëmbimi i informacionit mes studiuesve. Web-i synonte të lehtësonte shkëmbimin e informacionit shkencor.
+Burimi: https://home.cern/science/computing/the-birth-of-the-web
+----------------------------------------
+
+172 | premium-20261105-sq-035 | Teknologji
+PYETJA — premium-20261105-sq-035-question.mp3
+Në çfarë kompjuteri u strehua faqja e parë e Web-it?
+
+Alternativa a. Një tablet iPad.
+
+Alternativa bë. Një konsolë lojërash.
+
+Alternativa cë. NeXT i Berners-Lit.
+
+Alternativa dë. Një telefon Android.
+
+SHPJEGIMI — premium-20261105-sq-035-explanation.mp3
+Përgjigjja e saktë është alternativa cë. NeXT i Berners-Lit. Faqja e parë u strehua në kompjuterin NeXT të Berners-Lit.
+Burimi: https://home.cern/science/computing/the-birth-of-the-web
+----------------------------------------
+
+173 | premium-20261105-sq-036 | Teknologji
+PYETJA — premium-20261105-sq-036-question.mp3
+Çfarë bëri CERN-i me softuerin e Web-it më 30 prill 1993?
+
+Alternativa a. E fshiu përgjithmonë.
+
+Alternativa bë. E kufizoi vetëm për një universitet.
+
+Alternativa cë. E ndaloi përdorimin.
+
+Alternativa dë. E vendosi në domenin publik.
+
+SHPJEGIMI — premium-20261105-sq-036-explanation.mp3
+Përgjigjja e saktë është alternativa dë. E vendosi në domenin publik. CERN-i e vendosi softuerin e Web-it në domenin publik.
+Burimi: https://home.cern/science/computing/the-birth-of-the-web
+----------------------------------------
+
+174 | premium-20261105-sq-037 | Histori
+PYETJA — premium-20261105-sq-037-question.mp3
+Sa shtete themeluese kishte OKB-ja në vitin 1945?
+
+Alternativa a. 51.
+
+Alternativa bë. 60.
+
+Alternativa cë. 40.
+
+Alternativa dë. 50.
+
+SHPJEGIMI — premium-20261105-sq-037-explanation.mp3
+Përgjigjja e saktë është alternativa a. 51. OKB-ja kishte 51 shtete themeluese në vitin 1945.
+Burimi: https://research.un.org/en/unmembers/founders
+----------------------------------------
+
+175 | premium-20261105-sq-038 | Histori
+PYETJA — premium-20261105-sq-038-question.mp3
+Kur hyri në fuqi Karta e OKB-së?
+
+Alternativa a. 25 mars 1957.
+
+Alternativa bë. 24 tetor 1945.
+
+Alternativa cë. 1 janar 1940.
+
+Alternativa dë. 9 maj 1950.
+
+SHPJEGIMI — premium-20261105-sq-038-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 24 tetor 1945. Karta hyri në fuqi më 24 tetor 1945.
+Burimi: https://research.un.org/en/unmembers/founders
+----------------------------------------
+
+176 | premium-20261105-sq-039 | Histori
+PYETJA — premium-20261105-sq-039-question.mp3
+Në cilin qytet u zhvillua konferenca e vitit 1945 ku u miratua Karta e OKB-së?
+
+Alternativa a. Romë.
+
+Alternativa bë. Tokio.
+
+Alternativa cë. San Francisko.
+
+Alternativa dë. Gjenevë.
+
+SHPJEGIMI — premium-20261105-sq-039-explanation.mp3
+Përgjigjja e saktë është alternativa cë. San Francisko. Konferenca themeluese e vitit 1945 u zhvillua në San Francisko.
+Burimi: https://research.un.org/en/unmembers/founders
+----------------------------------------
+
+177 | premium-20261105-sq-040 | Histori
+PYETJA — premium-20261105-sq-040-question.mp3
+Cili shtet u bë anëtar themelues i OKB-së pasi nënshkroi Kartën më 15 tetor 1945?
+
+Alternativa a. Italia.
+
+Alternativa bë. Spanja.
+
+Alternativa cë. Kanadaja.
+
+Alternativa dë. Polonia.
+
+SHPJEGIMI — premium-20261105-sq-040-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Polonia. Polonia nënshkroi më 15 tetor 1945 dhe është ndër 51 themeluesit.
+Burimi: https://research.un.org/en/unmembers/founders
+----------------------------------------
+
+178 | premium-20261105-sq-041 | Teknologji
+PYETJA — premium-20261105-sq-041-question.mp3
+Në komunikimin HTTP, kush e nis zakonisht kërkesën?
+
+Alternativa a. Klienti, p.sh. shfletuesi.
+
+Alternativa bë. Vetëm printeri.
+
+Alternativa cë. Serveri pa klient.
+
+Alternativa dë. Vetëm ruteri.
+
+SHPJEGIMI — premium-20261105-sq-041-explanation.mp3
+Përgjigjja e saktë është alternativa a. Klienti, p.sh. shfletuesi. HTTP përdor modelin klient–server; klienti dërgon kërkesën.
+Burimi: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview
+----------------------------------------
+
+179 | premium-20261105-sq-042 | Teknologji
+PYETJA — premium-20261105-sq-042-question.mp3
+Si quhet mesazhi që serveri kthen pas një kërkese HTTP?
+
+Alternativa a. Kabllo.
+
+Alternativa bë. Përgjigje.
+
+Alternativa cë. Kompilues.
+
+Alternativa dë. Procesor.
+
+SHPJEGIMI — premium-20261105-sq-042-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Përgjigje. Mesazhi i kthyer nga serveri quhet përgjigje HTTP.
+Burimi: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview
+----------------------------------------
+
+180 | premium-20261105-sq-043 | Teknologji
+PYETJA — premium-20261105-sq-043-question.mp3
+A ruan vetë protokolli HTTP domosdoshmërisht gjendjen mes dy kërkesave?
+
+Alternativa a. Vetëm natën.
+
+Alternativa bë. Vetëm për fotografi.
+
+Alternativa cë. Jo, është pa gjendje.
+
+Alternativa dë. Po, gjithmonë.
+
+SHPJEGIMI — premium-20261105-sq-043-explanation.mp3
+Përgjigjja e saktë është alternativa cë. Jo, është pa gjendje. HTTP është pa gjendje; sesionet mund të ndërtohen mbi të.
+Burimi: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview
+----------------------------------------
+
+181 | premium-20261105-sq-044 | Teknologji
+PYETJA — premium-20261105-sq-044-question.mp3
+Cili mekanizëm HTTP përdoret zakonisht për të lidhur kërkesat me një sesion?
+
+Alternativa a. Ventilatori.
+
+Alternativa bë. Rezolucioni i ekranit.
+
+Alternativa cë. Altoparlantët.
+
+Alternativa dë. Cookies.
+
+SHPJEGIMI — premium-20261105-sq-044-explanation.mp3
+Përgjigjja e saktë është alternativa dë. Cookies. Cookies mundësojnë lidhjen e kërkesave me kontekstin e një sesioni.
+Burimi: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview
+----------------------------------------
+
+182 | premium-20261105-sq-045 | Teknologji
+PYETJA — premium-20261105-sq-045-question.mp3
+Cili element HTML përdoret për një lidhje me një faqe tjetër?
+
+Alternativa a. <a>.
+
+Alternativa bë. <table>.
+
+Alternativa cë. <p>.
+
+Alternativa dë. <img>.
+
+SHPJEGIMI — premium-20261105-sq-045-explanation.mp3
+Përgjigjja e saktë është alternativa a. <a>. Elementi <a> me atributin href krijon një lidhje.
+Burimi: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a
+----------------------------------------
+
+183 | premium-20261105-sq-046 | Teknologji
+PYETJA — premium-20261105-sq-046-question.mp3
+Cili atribut i elementit <a> jep adresën e lidhjes?
+
+Alternativa a. height.
+
+Alternativa bë. href.
+
+Alternativa cë. alt.
+
+Alternativa dë. width.
+
+SHPJEGIMI — premium-20261105-sq-046-explanation.mp3
+Përgjigjja e saktë është alternativa bë. href. Atributi href përcakton destinacionin e lidhjes.
+Burimi: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a
+----------------------------------------
+
+184 | premium-20261105-sq-047 | Teknologji
+PYETJA — premium-20261105-sq-047-question.mp3
+Cili element HTML fut një fotografi në faqe?
+
+Alternativa a. <p>.
+
+Alternativa bë. <h1>.
+
+Alternativa cë. <img>.
+
+Alternativa dë. <a>.
+
+SHPJEGIMI — premium-20261105-sq-047-explanation.mp3
+Përgjigjja e saktë është alternativa cë. <img>. Elementi <img> fut një imazh në dokumentin HTML.
+Burimi: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img
+----------------------------------------
+
+185 | premium-20261105-sq-048 | Teknologji
+PYETJA — premium-20261105-sq-048-question.mp3
+Cili atribut i imazhit HTML përmban tekstin alternativ?
+
+Alternativa a. id.
+
+Alternativa bë. class.
+
+Alternativa cë. href.
+
+Alternativa dë. alt.
+
+SHPJEGIMI — premium-20261105-sq-048-explanation.mp3
+Përgjigjja e saktë është alternativa dë. alt. Atributi alt jep përshkrimin tekstual alternativ të imazhit.
+Burimi: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img
+----------------------------------------
+
+186 | premium-20261105-sq-049 | Teknologji
+PYETJA — premium-20261105-sq-049-question.mp3
+Cila metodë HTTP përdoret për të kërkuar një paraqitje të një burimi?
+
+Alternativa a. GET.
+
+Alternativa bë. CONNECT.
+
+Alternativa cë. DELETE.
+
+Alternativa dë. PATCH.
+
+SHPJEGIMI — premium-20261105-sq-049-explanation.mp3
+Përgjigjja e saktë është alternativa a. GET. GET kërkon një paraqitje të burimit të identifikuar.
+Burimi: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/GET
+----------------------------------------
+
+187 | premium-20261105-sq-050 | Teknologji
+PYETJA — premium-20261105-sq-050-question.mp3
+Çfarë nënkupton zakonisht statusi HTTP 404?
+
+Alternativa a. Lidhja u ruajt.
+
+Alternativa bë. Burimi nuk u gjet.
+
+Alternativa cë. Kërkesa pati sukses.
+
+Alternativa dë. Serveri kërkon pagesë.
+
+SHPJEGIMI — premium-20261105-sq-050-explanation.mp3
+Përgjigjja e saktë është alternativa bë. Burimi nuk u gjet. 404 tregon se serveri nuk e gjeti burimin e kërkuar.
+Burimi: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/404
+----------------------------------------
+
+188 | premium-20261105-sq-051 | Matematikë
+PYETJA — premium-20261105-sq-051-question.mp3
+Sa është −7 + 12?
+
+Alternativa a. −19.
+
+Alternativa bë. −5.
+
+Alternativa cë. 5.
+
+Alternativa dë. 19.
+
+SHPJEGIMI — premium-20261105-sq-051-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 5. Nga −7 shtojmë 12 dhe arrijmë në 5.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+189 | premium-20261105-sq-052 | Matematikë
+PYETJA — premium-20261105-sq-052-question.mp3
+Sa është 6 + 4 × 3?
+
+Alternativa a. 24.
+
+Alternativa bë. 21.
+
+Alternativa cë. 30.
+
+Alternativa dë. 18.
+
+SHPJEGIMI — premium-20261105-sq-052-explanation.mp3
+Përgjigjja e saktë është alternativa dë. 18. Shumëzimi kryhet para mbledhjes: 6 + 12 = 18.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+190 | premium-20261105-sq-053 | Matematikë
+PYETJA — premium-20261105-sq-053-question.mp3
+Sa është (6 + 4) × 3?
+
+Alternativa a. 30.
+
+Alternativa bë. 18.
+
+Alternativa cë. 24.
+
+Alternativa dë. 28.
+
+SHPJEGIMI — premium-20261105-sq-053-explanation.mp3
+Përgjigjja e saktë është alternativa a. 30. Së pari kllapat japin 10; pastaj 10 × 3 = 30.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+191 | premium-20261105-sq-054 | Matematikë
+PYETJA — premium-20261105-sq-054-question.mp3
+Nëse 3x + 5 = 20, sa është x?
+
+Alternativa a. 15.
+
+Alternativa bë. 5.
+
+Alternativa cë. 4.
+
+Alternativa dë. 6.
+
+SHPJEGIMI — premium-20261105-sq-054-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 5. 3x = 15, prandaj x = 5.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+192 | premium-20261105-sq-055 | Matematikë
+PYETJA — premium-20261105-sq-055-question.mp3
+Sa është 2⁵?
+
+Alternativa a. 10.
+
+Alternativa bë. 25.
+
+Alternativa cë. 32.
+
+Alternativa dë. 64.
+
+SHPJEGIMI — premium-20261105-sq-055-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 32. 2 × 2 × 2 × 2 × 2 = 32.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+193 | premium-20261105-sq-056 | Matematikë
+PYETJA — premium-20261105-sq-056-question.mp3
+Sa është kubi i numrit 3?
+
+Alternativa a. 18.
+
+Alternativa bë. 81.
+
+Alternativa cë. 9.
+
+Alternativa dë. 27.
+
+SHPJEGIMI — premium-20261105-sq-056-explanation.mp3
+Përgjigjja e saktë është alternativa dë. 27. 3³ = 3 × 3 × 3 = 27.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+194 | premium-20261105-sq-057 | Matematikë
+PYETJA — premium-20261105-sq-057-question.mp3
+Sa është vëllimi i kubit me brinjë 4 cm, në cm³?
+
+Alternativa a. 64.
+
+Alternativa bë. 12.
+
+Alternativa cë. 16.
+
+Alternativa dë. 48.
+
+SHPJEGIMI — premium-20261105-sq-057-explanation.mp3
+Përgjigjja e saktë është alternativa a. 64. Vëllimi i kubit është 4³ = 64 cm³.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+195 | premium-20261105-sq-058 | Matematikë
+PYETJA — premium-20261105-sq-058-question.mp3
+Një trekëndësh ka bazë 10 cm dhe lartësi 6 cm. Sa është sipërfaqja në cm²?
+
+Alternativa a. 32.
+
+Alternativa bë. 30.
+
+Alternativa cë. 60.
+
+Alternativa dë. 16.
+
+SHPJEGIMI — premium-20261105-sq-058-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 30. Sipërfaqja është baza × lartësia ÷ 2 = 30 cm².
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+196 | premium-20261105-sq-059 | Matematikë
+PYETJA — premium-20261105-sq-059-question.mp3
+Cila është mesatarja e numrave 10, 15 dhe 20?
+
+Alternativa a. 10.
+
+Alternativa bë. 12.
+
+Alternativa cë. 15.
+
+Alternativa dë. 20.
+
+SHPJEGIMI — premium-20261105-sq-059-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 15. Shuma 45 pjesëtohet me 3 dhe jep 15.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+197 | premium-20261105-sq-060 | Matematikë
+PYETJA — premium-20261105-sq-060-question.mp3
+Cila është mediana e listës së renditur 2, 4, 9, 11, 20?
+
+Alternativa a. 11.
+
+Alternativa bë. 20.
+
+Alternativa cë. 4.
+
+Alternativa dë. 9.
+
+SHPJEGIMI — premium-20261105-sq-060-explanation.mp3
+Përgjigjja e saktë është alternativa dë. 9. Vlera e mesit në pesë numra të renditur është e treta: 9.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+198 | premium-20261105-sq-061 | Matematikë
+PYETJA — premium-20261105-sq-061-question.mp3
+Një çmim 80 € ulet me 10%. Sa euro mbeten për t’u paguar?
+
+Alternativa a. 72.
+
+Alternativa bë. 8.
+
+Alternativa cë. 70.
+
+Alternativa dë. 78.
+
+SHPJEGIMI — premium-20261105-sq-061-explanation.mp3
+Përgjigjja e saktë është alternativa a. 72. Ulja është 8 €; 80 − 8 = 72 €.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+199 | premium-20261105-sq-062 | Matematikë
+PYETJA — premium-20261105-sq-062-question.mp3
+Një mall kushton 50 €. Çmimi rritet me 20%. Sa euro bëhet?
+
+Alternativa a. 100.
+
+Alternativa bë. 60.
+
+Alternativa cë. 55.
+
+Alternativa dë. 70.
+
+SHPJEGIMI — premium-20261105-sq-062-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 60. 20% e 50 është 10; çmimi i ri është 60 €.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+200 | premium-20261105-sq-063 | Matematikë
+PYETJA — premium-20261105-sq-063-question.mp3
+Sa sekonda janë 4 minuta?
+
+Alternativa a. 120.
+
+Alternativa bë. 180.
+
+Alternativa cë. 240.
+
+Alternativa dë. 400.
+
+SHPJEGIMI — premium-20261105-sq-063-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 240. Çdo minutë ka 60 sekonda; 4 × 60 = 240.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+201 | premium-20261105-sq-064 | Matematikë
+PYETJA — premium-20261105-sq-064-question.mp3
+Sa centimetra janë 3 metra?
+
+Alternativa a. 3000.
+
+Alternativa bë. 3.
+
+Alternativa cë. 30.
+
+Alternativa dë. 300.
+
+SHPJEGIMI — premium-20261105-sq-064-explanation.mp3
+Përgjigjja e saktë është alternativa dë. 300. Një metër ka 100 centimetra; 3 × 100 = 300.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+202 | premium-20261105-sq-065 | Matematikë
+PYETJA — premium-20261105-sq-065-question.mp3
+Sa gramë janë 2 kilogramë?
+
+Alternativa a. 2000.
+
+Alternativa bë. 20.
+
+Alternativa cë. 200.
+
+Alternativa dë. 20000.
+
+SHPJEGIMI — premium-20261105-sq-065-explanation.mp3
+Përgjigjja e saktë është alternativa a. 2000. Një kilogram ka 1000 gramë; 2 × 1000 = 2000.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+203 | premium-20261105-sq-066 | Matematikë
+PYETJA — premium-20261105-sq-066-question.mp3
+Një automjet ecën me 60 km/orë për 2 orë, pa ndalesë. Sa kilometra përshkon?
+
+Alternativa a. 180.
+
+Alternativa bë. 120.
+
+Alternativa cë. 30.
+
+Alternativa dë. 62.
+
+SHPJEGIMI — premium-20261105-sq-066-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 120. Distanca është shpejtësia × koha: 60 × 2 = 120 km.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+204 | premium-20261105-sq-067 | Matematikë
+PYETJA — premium-20261105-sq-067-question.mp3
+Sa faqe ka një kub?
+
+Alternativa a. 4.
+
+Alternativa bë. 5.
+
+Alternativa cë. 6.
+
+Alternativa dë. 8.
+
+SHPJEGIMI — premium-20261105-sq-067-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 6. Kubi ka dy faqe për secilin nga tri drejtimet: 2 × 3 = 6.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+205 | premium-20261105-sq-068 | Matematikë
+PYETJA — premium-20261105-sq-068-question.mp3
+Sa brinjë ka një kub?
+
+Alternativa a. 8.
+
+Alternativa bë. 16.
+
+Alternativa cë. 6.
+
+Alternativa dë. 12.
+
+SHPJEGIMI — premium-20261105-sq-068-explanation.mp3
+Përgjigjja e saktë është alternativa dë. 12. Kubi ka 4 brinjë sipër, 4 poshtë dhe 4 vertikale: 12.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+206 | premium-20261105-sq-069 | Matematikë
+PYETJA — premium-20261105-sq-069-question.mp3
+Sa kulme ka një kub?
+
+Alternativa a. 8.
+
+Alternativa bë. 4.
+
+Alternativa cë. 6.
+
+Alternativa dë. 12.
+
+SHPJEGIMI — premium-20261105-sq-069-explanation.mp3
+Përgjigjja e saktë është alternativa a. 8. Kubi ka katër kulme në secilën nga dy faqet përballë: 8.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+207 | premium-20261105-sq-070 | Matematikë
+PYETJA — premium-20261105-sq-070-question.mp3
+Sa është pjesëtuesi më i madh i përbashkët i 18 dhe 24?
+
+Alternativa a. 9.
+
+Alternativa bë. 6.
+
+Alternativa cë. 3.
+
+Alternativa dë. 12.
+
+SHPJEGIMI — premium-20261105-sq-070-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 6. Pjesëtuesi më i madh i përbashkët i 18 dhe 24 është 6.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+208 | premium-20261105-sq-071 | Matematikë
+PYETJA — premium-20261105-sq-071-question.mp3
+Sa është shumëfishi më i vogël i përbashkët i 4 dhe 6?
+
+Alternativa a. 8.
+
+Alternativa bë. 10.
+
+Alternativa cë. 12.
+
+Alternativa dë. 24.
+
+SHPJEGIMI — premium-20261105-sq-071-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 12. 12 është numri më i vogël pozitiv që pjesëtohet me 4 dhe me 6.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+209 | premium-20261105-sq-072 | Logjikë
+PYETJA — premium-20261105-sq-072-question.mp3
+Nëse sot është e hënë, çfarë dite do të jetë pas 17 ditësh?
+
+Alternativa a. E martë.
+
+Alternativa bë. E enjte.
+
+Alternativa cë. E premte.
+
+Alternativa dë. E diel.
+
+SHPJEGIMI — premium-20261105-sq-072-explanation.mp3
+Përgjigjja e saktë është alternativa bë. E enjte. 17 ditë janë dy javë dhe tri ditë; pas së hënës vjen e enjtja.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+210 | premium-20261105-sq-073 | Logjikë
+PYETJA — premium-20261105-sq-073-question.mp3
+Katër persona shtrëngojnë duart me njëri-tjetrin, çdo çift vetëm një herë. Sa shtrëngime bëhen?
+
+Alternativa a. 6.
+
+Alternativa bë. 4.
+
+Alternativa cë. 8.
+
+Alternativa dë. 12.
+
+SHPJEGIMI — premium-20261105-sq-073-explanation.mp3
+Përgjigjja e saktë është alternativa a. 6. Ka 4 × 3 ÷ 2 = 6 çifte të ndryshme.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+211 | premium-20261105-sq-074 | Logjikë
+PYETJA — premium-20261105-sq-074-question.mp3
+Sa rezultate të mundshme ka hedhja e dy monedhave, duke dalluar rendin?
+
+Alternativa a. 8.
+
+Alternativa bë. 4.
+
+Alternativa cë. 2.
+
+Alternativa dë. 3.
+
+SHPJEGIMI — premium-20261105-sq-074-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 4. Rezultatet janë SS, SA, AS dhe AA: katër raste.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+212 | premium-20261105-sq-075 | Logjikë
+PYETJA — premium-20261105-sq-075-question.mp3
+Një kod ka dy shifra nga 0 deri në 9 dhe përsëritja lejohet. Sa kode të ndryshme ka?
+
+Alternativa a. 20.
+
+Alternativa bë. 90.
+
+Alternativa cë. 100.
+
+Alternativa dë. 99.
+
+SHPJEGIMI — premium-20261105-sq-075-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 100. Për çdo vend ka 10 zgjedhje; gjithsej 10 × 10 = 100.
+Burimi: Llogaritje origjinale; verifikuar me shprehjen matematikore të ruajtur në regjistrin e pyetjeve
+----------------------------------------
+
+213 | arena-math-101 | Matematikë
+PYETJA — arena-math-101-question.mp3
+Sa është 18 + 27?
+
+Alternativa a. 35.
+
+Alternativa bë. 45.
+
+Alternativa cë. 55.
+
+Alternativa dë. 46.
+
+SHPJEGIMI — arena-math-101-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 45. 18 + 27 = 45.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+214 | arena-math-102 | Matematikë
+PYETJA — arena-math-102-question.mp3
+Sa është 72 - 38?
+
+Alternativa a. 34.
+
+Alternativa bë. 44.
+
+Alternativa cë. 36.
+
+Alternativa dë. 32.
+
+SHPJEGIMI — arena-math-102-explanation.mp3
+Përgjigjja e saktë është alternativa a. 34. 72 - 38 = 34.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+215 | arena-math-103 | Matematikë
+PYETJA — arena-math-103-question.mp3
+Sa është 9 × 8?
+
+Alternativa a. 63.
+
+Alternativa bë. 72.
+
+Alternativa cë. 81.
+
+Alternativa dë. 64.
+
+SHPJEGIMI — arena-math-103-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 72. 9 × 8 = 72.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+216 | arena-math-104 | Matematikë
+PYETJA — arena-math-104-question.mp3
+Sa është 144 ÷ 12?
+
+Alternativa a. 10.
+
+Alternativa bë. 11.
+
+Alternativa cë. 12.
+
+Alternativa dë. 14.
+
+SHPJEGIMI — arena-math-104-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 12. 144 ÷ 12 = 12.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+217 | arena-math-105 | Matematikë
+PYETJA — arena-math-105-question.mp3
+Sa është 25% e numrit 80?
+
+Alternativa a. 15.
+
+Alternativa bë. 20.
+
+Alternativa cë. 25.
+
+Alternativa dë. 30.
+
+SHPJEGIMI — arena-math-105-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 20. 25% është një e katërta; 80 ÷ 4 = 20.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+218 | arena-math-106 | Matematikë
+PYETJA — arena-math-106-question.mp3
+Sa është 3/4 e numrit 40?
+
+Alternativa a. 20.
+
+Alternativa bë. 25.
+
+Alternativa cë. 30.
+
+Alternativa dë. 35.
+
+SHPJEGIMI — arena-math-106-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 30. 40 ÷ 4 = 10 dhe 10 × 3 = 30.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+219 | arena-math-107 | Matematikë
+PYETJA — arena-math-107-question.mp3
+Një trekëndësh ka kënde 50° dhe 60°. Sa është këndi i tretë?
+
+Alternativa a. 60°.
+
+Alternativa bë. 70°.
+
+Alternativa cë. 80°.
+
+Alternativa dë. 90°.
+
+SHPJEGIMI — arena-math-107-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 70°. Shuma e këndeve të trekëndëshit është 180°; 180 - 50 - 60 = 70°.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+220 | arena-math-108 | Matematikë
+PYETJA — arena-math-108-question.mp3
+Sa është perimetri i një drejtkëndëshi me gjatësi 8 cm dhe gjerësi 5 cm?
+
+Alternativa a. 13 cm.
+
+Alternativa bë. 26 cm.
+
+Alternativa cë. 40 cm.
+
+Alternativa dë. 30 cm.
+
+SHPJEGIMI — arena-math-108-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 26 cm. Perimetri është 2 × (8 + 5) = 26 cm.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+221 | arena-math-109 | Matematikë
+PYETJA — arena-math-109-question.mp3
+Sa është sipërfaqja e një drejtkëndëshi 7 cm × 6 cm?
+
+Alternativa a. 13 cm².
+
+Alternativa bë. 36 cm².
+
+Alternativa cë. 42 cm².
+
+Alternativa dë. 48 cm².
+
+SHPJEGIMI — arena-math-109-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 42 cm². Sipërfaqja është 7 × 6 = 42 cm².
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+222 | arena-math-110 | Matematikë
+PYETJA — arena-math-110-question.mp3
+Sa është 2³?
+
+Alternativa a. 6.
+
+Alternativa bë. 8.
+
+Alternativa cë. 9.
+
+Alternativa dë. 12.
+
+SHPJEGIMI — arena-math-110-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 8. 2³ = 2 × 2 × 2 = 8.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+223 | arena-math-111 | Matematikë
+PYETJA — arena-math-111-question.mp3
+Cili numër është 15 më i madh se 37?
+
+Alternativa a. 42.
+
+Alternativa bë. 47.
+
+Alternativa cë. 52.
+
+Alternativa dë. 62.
+
+SHPJEGIMI — arena-math-111-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 52. 37 + 15 = 52.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+224 | arena-math-112 | Matematikë
+PYETJA — arena-math-112-question.mp3
+Sa minuta janë 2 orë e 30 minuta?
+
+Alternativa a. 120.
+
+Alternativa bë. 130.
+
+Alternativa cë. 150.
+
+Alternativa dë. 180.
+
+SHPJEGIMI — arena-math-112-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 150. 2 orë janë 120 minuta; 120 + 30 = 150.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+225 | arena-math-113 | Matematikë
+PYETJA — arena-math-113-question.mp3
+Nëse 5 fletore kushtojnë 15 €, sa kushton një fletore?
+
+Alternativa a. 2 €.
+
+Alternativa bë. 3 €.
+
+Alternativa cë. 4 €.
+
+Alternativa dë. 5 €.
+
+SHPJEGIMI — arena-math-113-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 3 €. 15 ÷ 5 = 3 € për fletore.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+226 | arena-math-114 | Matematikë
+PYETJA — arena-math-114-question.mp3
+Sa është mesatarja e numrave 4, 6 dhe 8?
+
+Alternativa a. 5.
+
+Alternativa bë. 6.
+
+Alternativa cë. 7.
+
+Alternativa dë. 8.
+
+SHPJEGIMI — arena-math-114-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 6. (4 + 6 + 8) ÷ 3 = 18 ÷ 3 = 6.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+227 | arena-math-115 | Matematikë
+PYETJA — arena-math-115-question.mp3
+Sa është 0,5 × 60?
+
+Alternativa a. 20.
+
+Alternativa bë. 30.
+
+Alternativa cë. 40.
+
+Alternativa dë. 50.
+
+SHPJEGIMI — arena-math-115-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 30. 0,5 është gjysma; gjysma e 60 është 30.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+228 | arena-math-116 | Matematikë
+PYETJA — arena-math-116-question.mp3
+Sa është 10% e numrit 350?
+
+Alternativa a. 25.
+
+Alternativa bë. 30.
+
+Alternativa cë. 35.
+
+Alternativa dë. 40.
+
+SHPJEGIMI — arena-math-116-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 35. 10% e 350 është 350 ÷ 10 = 35.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+229 | arena-math-117 | Matematikë
+PYETJA — arena-math-117-question.mp3
+Një katror ka perimetër 36 cm. Sa është gjatësia e një brinje?
+
+Alternativa a. 6 cm.
+
+Alternativa bë. 8 cm.
+
+Alternativa cë. 9 cm.
+
+Alternativa dë. 12 cm.
+
+SHPJEGIMI — arena-math-117-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 9 cm. Katrori ka katër brinjë të barabarta; 36 ÷ 4 = 9 cm.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+230 | arena-math-118 | Matematikë
+PYETJA — arena-math-118-question.mp3
+Sa është 7 × 6 - 10?
+
+Alternativa a. 22.
+
+Alternativa bë. 32.
+
+Alternativa cë. 36.
+
+Alternativa dë. 42.
+
+SHPJEGIMI — arena-math-118-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 32. Së pari 7 × 6 = 42, pastaj 42 - 10 = 32.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+231 | arena-math-119 | Matematikë
+PYETJA — arena-math-119-question.mp3
+Cili është numri pasues në vargun 5, 10, 15, 20, ...?
+
+Alternativa a. 21.
+
+Alternativa bë. 24.
+
+Alternativa cë. 25.
+
+Alternativa dë. 30.
+
+SHPJEGIMI — arena-math-119-explanation.mp3
+Përgjigjja e saktë është alternativa cë. 25. Vargu rritet me 5; pas 20 vjen 25.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------
+
+232 | arena-math-120 | Matematikë
+PYETJA — arena-math-120-question.mp3
+Sa është 1/5 e numrit 100?
+
+Alternativa a. 10.
+
+Alternativa bë. 20.
+
+Alternativa cë. 25.
+
+Alternativa dë. 50.
+
+SHPJEGIMI — arena-math-120-explanation.mp3
+Përgjigjja e saktë është alternativa bë. 20. 100 ÷ 5 = 20.
+Burimi: Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht
+----------------------------------------

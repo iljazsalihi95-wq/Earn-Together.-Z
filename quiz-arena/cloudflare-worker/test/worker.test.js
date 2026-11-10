@@ -72,3 +72,9 @@ test('voice normalization keeps religious abbreviations and ordinary words separ
  assert.equal(arenaNormalizeVoice_('114 sure a.s. r.a. xh.sh.','sq'),'njëqind e katërmbëdhjetë sure alejhi selam radijallahu anhu xhel-le shanuhu');
  assert.equal(arenaNormalizeVoice_('as ra rast sure','sq'),'as ra rast sure');
 });
+
+test('quiz alternatives use Albanian letter names while other languages remain unchanged',()=>{
+ assert.equal(arenaNormalizeVoice_('Pyetja? A. Një. B. Dy. C. Tre. D. Katër.','sq'),'Pyetja? Alternativa a, Një. Alternativa bë, Dy. Alternativa cë, Tre. Alternativa dë, Katër.');
+ assert.equal(arenaNormalizeVoice_('Përgjigjja e saktë është B.','sq'),'Përgjigjja e saktë është alternativa bë.');
+ assert.equal(arenaNormalizeVoice_('A. One. B. Two.','en'),'A. One. B. Two.');
+});

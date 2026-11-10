@@ -1,0 +1,12 @@
+Paketa përmban 232 pyetje ekzistuese: 212 nga banka Sheet, 0 shtesë nga banka e përgjithshme dhe 20 nga kodi i matematikës. Pyetjet e përgjithshme me të njëjtat ID janë përfshirë vetëm një herë. Disa banka mund të kenë pyetje me përmbajtje të përafërt; ID-të janë ruajtur veçmas.
+
+1. Vendos PROMPT_SUNO.txt te stili/prompt-i.
+2. Kopjo vetëm tekstin e një skedari question.txt si tekst për lexim.
+3. Shkarko dhe emërto audion sipas ID-së: sheet-1-question.mp3, për shembull.
+4. Incizo veçmas explanation.txt dhe emërtoje sheet-1-explanation.mp3.
+5. Ruaj të njëjtin zë/persona për të gjitha. Mos përfshi numrin e skedarit ose etiketën PYETJA në audio.
+6. Dërgo MP3-të në grupe. Nuk nevojitet një incizim i vetëm i gjatë.
+
+Manifesti është PLAN, jo listë audiosh të përfunduara. Mos zëvendëso manifestin aktiv derisa MP3-të përkatëse të jenë dorëzuar dhe kontrolluar. Audio duhet të ruhet te app/src/main/assets/quiz-arena/voice-sq/. Aplikacioni verifikon ID-në, tekstin dhe rendin e alternativave para se të luajë incizimin. Shpjegimi jepet vetëm pas përgjigjes.
+
+Përmbajtja vjen nga skedarët ekzistues; nuk deklarohet kontroll i ri burimor ose përditësim i Sheet-it live.

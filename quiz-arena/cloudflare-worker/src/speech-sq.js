@@ -10,6 +10,9 @@ function arenaNumberSq_(n){
 export function arenaNormalizeVoice_(text,locale){
  if(locale!=='sq')return text;
  let t=String(text);
+ const letters={A:'a',B:'bë',C:'cë',D:'dë',E:'e'};
+ t=t.replace(/(^|[.!?]\s+)([A-E])\.\s+/g,(_,prefix,letter)=>prefix+'Alternativa '+letters[letter]+', ');
+ t=t.replace(/(Përgjigjja e saktë është )([A-E])\./gi,(_,prefix,letter)=>prefix+'alternativa '+letters[letter.toUpperCase()]+'.');
  for(const [pattern,spoken] of [['a(?:\\s*\\.\\s*|\\s+)s','alejhi selam'],['r(?:\\s*\\.\\s*|\\s+)a','radijallahu anhu'],['xh(?:\\s*\\.\\s*|\\s+)sh','xhel-le shanuhu']])
   t=t.replace(new RegExp('(?<![\\p{L}\\d])'+pattern+'\\.?(?![\\p{L}\\d])','giu'),spoken);
  t=t.replace(/ﷺ/g,'sal-lallahu alejhi ve sel-lem');
