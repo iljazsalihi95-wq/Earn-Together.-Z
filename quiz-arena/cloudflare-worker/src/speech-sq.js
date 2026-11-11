@@ -13,9 +13,7 @@ export function arenaNormalizeVoice_(text,locale){
  for(const [pattern,spoken] of [['a(?:\\s*\\.\\s*|\\s+)s','alejhi selam'],['r(?:\\s*\\.\\s*|\\s+)a','radijallahu anhu'],['xh(?:\\s*\\.\\s*|\\s+)sh','xhel-le shanuhu']])
   t=t.replace(new RegExp('(?<![\\p{L}\\d])'+pattern+'\\.?(?![\\p{L}\\d])','giu'),spoken);
  t=t.replace(/ﷺ/g,'sal-lallahu alejhi ve sel-lem');
- const letters={A:'a',B:'bë',C:'cë',D:'dë',E:'e'};
- t=t.replace(/(^|[.!?]\s+)([A-E])\.\s+/g,(_,prefix,letter)=>prefix+'Alternativa '+letters[letter]+', ');
- t=t.replace(/(Përgjigjja e saktë është )([A-E])\./gi,(_,prefix,letter)=>prefix+'alternativa '+letters[letter.toUpperCase()]+'.');
+ t=t.replace(/(^|[.!?]\s+)([A-E])\.\s+/g,(_,prefix,letter)=>prefix+letter+': ');
  // A colon in quiz literature denotes chapter:verse, never a clock.
  t=t.replace(/\b(\d{1,3}):(\d{1,3})\b/g,(_,s,a)=>'surja '+arenaNumberSq_(+s)+', ajeti '+arenaNumberSq_(+a));
  t=t.replace(/\b(\d{1,2})[./](\d{1,2})[./](\d{4})\b/g,(_,d,m,y)=>arenaNumberSq_(+d)+' '+['','janar','shkurt','mars','prill','maj','qershor','korrik','gusht','shtator','tetor','nëntor','dhjetor'][+m]+' '+arenaNumberSq_(+y));

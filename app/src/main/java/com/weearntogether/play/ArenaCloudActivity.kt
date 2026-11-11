@@ -539,11 +539,11 @@ class ArenaCloudActivity:Activity(){
         return true
     }
     private fun voice(phase:String,onDone:(()->Unit)?=null){
-        if(!audioEnabled){onDone?.invoke();return};val s=session?:return;stopVoice();voiceCompletion=onDone;if(recordedVoice(phase,s))return;if(isOfflineSession()){ttsFallback(phase);return}
+        if(!audioEnabled){onDone?.invoke();return};val s=session?:return;val practice=s.optBoolean("offline");stopVoice();voiceCompletion=onDone;if(recordedVoice(phase,s))return;if(practice&&(!accounts.isSignedIn()||phase !in setOf("question","explanation","intro"))){ttsFallback(phase);return}
         voiceFailure=""
         val generation=voiceGeneration;val version=modeVersion
         val q=s.optJSONObject("question")?:run{ttsFallback(phase);return}
-        val cacheKey=java.security.MessageDigest.getInstance("SHA-256").digest(("worker-speech-v10|"+prefs.getString("name","")+locale+q.toString()+(s.optJSONObject("feedback")?.toString()?:"")+phase+if(phase=="clarify")dialogueText else if(phase=="friend")friendText else "").toByteArray()).joinToString(""){"%02x".format(it)}
+        val cacheKey=java.security.MessageDigest.getInstance("SHA-256").digest(("worker-speech-v11|"+prefs.getString("name","")+locale+q.toString()+(s.optJSONObject("feedback")?.toString()?:"")+phase+if(phase=="clarify")dialogueText else if(phase=="friend")friendText else "").toByteArray()).joinToString(""){"%02x".format(it)}
         val cachedAudio=java.io.File(cacheDir,"arena-voice-$cacheKey.mp3")
         fun playCached(){
             scene?.speechEnergy={speechEnvelope?.at(runCatching{player?.currentPosition?:0}.getOrDefault(0))?:0f}
@@ -569,11 +569,24 @@ class ArenaCloudActivity:Activity(){
             voiceNetwork.execute{
                 if(generation!=voiceGeneration||version!=modeVersion||!resumed)return@execute
                 val result=runCatching{
+                    if(practice){
+                        val health=(java.net.URL(workerUrl+"/health").openConnection() as java.net.HttpURLConnection)
+                        try {
+                            health.connectTimeout=8000;health.readTimeout=8000;health.instanceFollowRedirects=false
+                            val ready=health.responseCode==200&&health.inputStream.bufferedReader().use{JSONObject(it.readText().take(8192))}.optBoolean("practice_speech")
+                            if(!ready)throw java.io.IOException("PRACTICE_VOICE_UPDATE_REQUIRED")
+                        }finally{health.disconnect()}
+                    }
                     val connection=(java.net.URL(workerUrl+"/api/ai/speech").openConnection() as java.net.HttpURLConnection)
                     try{
                         connection.requestMethod="POST";connection.connectTimeout=12000;connection.readTimeout=45000
                         connection.instanceFollowRedirects=false;connection.doOutput=true;connection.setRequestProperty("Content-Type","application/json")
-                        connection.outputStream.use{it.write(JSONObject().put("session_token",accounts.requireToken()).put("session_id",s.optString("session_id")).put("question_id",q.optString("id")).put("phase",phase).put("locale",locale).put("player_name",prefs.getString("name","Lojtari")).put("message",if(phase=="clarify")dialogueMessage else "").toString().toByteArray(Charsets.UTF_8))}
+                        val request=JSONObject().put("session_token",accounts.requireToken()).put("session_id",s.optString("session_id")).put("question_id",q.optString("id")).put("phase",phase).put("locale",locale).put("player_name",prefs.getString("name","Lojtari")).put("message",if(phase=="clarify")dialogueMessage else "")
+                        if(practice){
+                            request.put("practice",true).put("practice_prompt",q.optString("prompt")).put("practice_choices",q.getJSONArray("choices"))
+                            if(phase=="explanation")request.put("choice",s.optJSONObject("feedback")?.optInt("choice",s.optInt("local_choice",-1))?:-1)
+                        }
+                        connection.outputStream.use{it.write(request.toString().toByteArray(Charsets.UTF_8))}
                         if(connection.responseCode !in 200..299){
                             val error=runCatching{connection.errorStream?.bufferedReader()?.use{JSONObject(it.readText().take(8192))}?.optString("error")}.getOrNull()
                             throw java.io.IOException(error?.takeIf{it.matches(Regex("[A-Z_]{2,80}"))}?:"HTTP ${connection.responseCode}")
@@ -606,7 +619,7 @@ class ArenaCloudActivity:Activity(){
                                 }
                             }
                         }
-                    }.onFailure { voiceFailure=it.message?.take(80)?:"Lidhja dështoi";ttsFallback(phase) }
+                    }.onFailure { voiceFailure=if(it.message=="PRACTICE_VOICE_UPDATE_REQUIRED")"Serveri i zërit kërkon përditësim" else it.message?.take(80)?:"Lidhja dështoi";ttsFallback(phase) }
                 }
             }
             return

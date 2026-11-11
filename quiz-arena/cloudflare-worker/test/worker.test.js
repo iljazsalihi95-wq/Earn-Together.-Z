@@ -74,7 +74,34 @@ test('voice normalization keeps religious abbreviations and ordinary words separ
 });
 
 test('quiz alternatives use Albanian letter names while other languages remain unchanged',()=>{
- assert.equal(arenaNormalizeVoice_('Pyetja? A. Një. B. Dy. C. Tre. D. Katër.','sq'),'Pyetja? Alternativa a, Një. Alternativa bë, Dy. Alternativa cë, Tre. Alternativa dë, Katër.');
- assert.equal(arenaNormalizeVoice_('Përgjigjja e saktë është B.','sq'),'Përgjigjja e saktë është alternativa bë.');
+ assert.equal(arenaNormalizeVoice_('Pyetja? A. Një. B. Dy. C. Tre. D. Katër.','sq'),'Pyetja? A: Një. B: Dy. C: Tre. D: Katër.');
+ assert.equal(arenaNormalizeVoice_('Përgjigjja e saktë është B.','sq'),'Përgjigjja e saktë është B.');
  assert.equal(arenaNormalizeVoice_('A. One. B. Two.','en'),'A. One. B. Two.');
+});
+
+test('practice voice authenticates and reads canonical content without requiring a LIVE round',async()=>{
+ const h=harness();
+ const p={session_token:TOKEN,practice:true,locale:'sq',phase:'question',question_id:'sheet-1',practice_prompt:'Sa persona lejohet të bashkohen në kurbanin e vogël?',practice_choices:['1','2','3','4'],input:'Read my arbitrary text'};
+ let r=await worker.fetch(make('/api/ai/speech',p),h.env);assert.equal(r.status,200);
+ assert.equal(h.sent[0].action,'arenaBootstrap');assert.ok(!h.sent.some(x=>x.action==='arenaResume'));
+ const audio=h.sent.find(x=>x.response_format==='mp3');assert.ok(audio.input.includes('Sa persona'));assert.ok(!audio.input.includes('arbitrary'));assert.ok(!audio.input.includes('Vetëm'));assert.ok(!audio.input.includes('Alternativa'));
+ assert.deepEqual(h.stats(),{costs:1,aiCalls:1});
+ r=await worker.fetch(make('/api/ai/speech',{...p,phase:'explanation'}),h.env);assert.equal(r.status,409);
+ r=await worker.fetch(make('/api/ai/speech',{...p,phase:'explanation',choice:1}),h.env);assert.equal(r.status,200);
+ const explanation=h.sent.filter(x=>x.response_format==='mp3').at(-1).input;assert.ok(explanation.includes('Vetëm'));assert.ok(!explanation.includes('Shkëlqyeshëm'));
+});
+test('practice rejects altered choice order, missing auth and unsupported dialogue before synthesis',async()=>{
+ const h=harness();
+ const p={session_token:TOKEN,practice:true,locale:'sq',phase:'question',question_id:'sheet-1',practice_prompt:'Sa persona lejohet të bashkohen në kurbanin e vogël?',practice_choices:['2','1','3','4']};
+ assert.equal((await worker.fetch(make('/api/ai/speech',p),h.env)).status,409);
+ assert.equal((await worker.fetch(make('/api/ai/speech',{...p,session_token:''}),h.env)).status,401);
+ assert.equal((await worker.fetch(make('/api/ai/speech',{...p,phase:'friend'}),h.env)).status,400);
+ assert.deepEqual(h.stats(),{costs:0,aiCalls:0});
+});
+test('practice bank mirrors Android question text, option order and answer key',async()=>{
+ const {PRACTICE_BANK}=await import('../src/practice-bank.js');
+ const {readFile}=await import('node:fs/promises');
+ const source=JSON.parse(await readFile(new URL('../../../app/src/main/assets/quiz-arena/sheet-bank-sq.json',import.meta.url),'utf8'));
+ for(const q of source.questions){const p=PRACTICE_BANK[q.id];assert.equal(p.prompt,q.question);assert.deepEqual(p.choices,q.options);assert.equal(p.correct,q.correctIndex);assert.equal(p.explanation,q.explanation);}
+ assert.equal(Object.keys(PRACTICE_BANK).length,232);
 });
