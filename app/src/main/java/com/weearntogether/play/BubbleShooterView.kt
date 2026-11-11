@@ -103,7 +103,9 @@ class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Un
                 if(dy>=-rad){invalidate();return true}
                 val len=hypot(dx,dy).coerceAtLeast(1f)
                 px=width/2f;py=shooterY()
-                vx=dx/len*1350f;vy=dy/len*1350f
+                // Keep shot travel time consistent across compact and high-resolution Android screens.
+                val shotSpeed=width.toFloat()*3.5f
+                vx=dx/len*shotSpeed;vy=dy/len*shotSpeed
                 moving=true;lastFrame=0L
                 postInvalidateOnAnimation()
                 return true
