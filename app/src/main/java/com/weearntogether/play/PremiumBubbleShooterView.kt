@@ -262,7 +262,12 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   for(c in 0 until cols)grid[0][c]=if(Random.nextFloat()>.12f)1+Random.nextInt(colors)else 0
  }
  private fun randomBoardColor():Int{val a=mutableListOf<Int>();for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]>0&&grid[r][c] !in a)a+=grid[r][c];return if(a.isEmpty())1+Random.nextInt(palette.size)else a.random()}
- fun swapBubble(){if(paused || busy || campaignComplete)return;val t=current;current=next;next=t;save();rebuild()};fun restart(){cancelFlight();campaignComplete=false;score=0;level=1;streak=0;misses=0;newBoard();current=randomBoardColor();next=randomBoardColor();save();rebuild()}
+ fun swapBubble(){if(paused || busy || campaignComplete)return;val t=current;current=next;next=t;save();rebuild()};fun restart(){
+  // Restart the current board without discarding unlocked campaign levels.
+  cancelFlight();campaignComplete=false;streak=0;misses=0
+  newBoard();current=randomBoardColor();next=randomBoardColor()
+  save();rebuild()
+ }
  fun videoRescue(){
   if(busy || campaignComplete)return
   // Rescue the actual lowest occupied row. Clearing the last three empty
