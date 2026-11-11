@@ -54,7 +54,10 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         val h=View.MeasureSpec.getSize(heightMeasureSpec)
         if(View.MeasureSpec.getMode(widthMeasureSpec)!=View.MeasureSpec.UNSPECIFIED &&
             View.MeasureSpec.getMode(heightMeasureSpec)!=View.MeasureSpec.UNSPECIFIED){
-            val side=minOf(w-paddingLeft-paddingRight,h-dp(452)).coerceAtLeast(1)
+            // Reserve exactly the fixed vertical chrome (top inset, HUD, effects, tray, bottom inset and margins).
+            // The previous 452dp reservation double-counted 100dp, shrinking the board on phones.
+            val fixedChromeDp=108+58+28+126+16+4+12
+            val side=minOf(w-paddingLeft-paddingRight,h-dp(fixedChromeDp)).coerceAtLeast(1)
             val params=boardView.layoutParams as LayoutParams
             if(params.width!=side || params.height!=side){params.width=side;params.height=side}
         }
