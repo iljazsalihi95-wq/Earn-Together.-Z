@@ -75,19 +75,24 @@ jobs:
             echo '::warning::Persistent signing key is not configured. Register the exact artifact certificate with Android OAuth before Google Sign-In testing.'
           fi
       - name: Build debug APK
+        if: always()
         # Worker endpoint is public configuration; the OpenAI key stays in Cloudflare Secrets.
         env:
           QUIZ_ARENA_WORKER_URL: ${{ vars.QUIZ_ARENA_WORKER_URL }}
         run: gradle --no-daemon assembleDebug
       - name: Build future release AAB (unsigned)
+        if: always()
         run: gradle --no-daemon bundleRelease
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: We-Earn-Together-release-AAB-unsigned
           path: app/build/outputs/bundle/release/*.aab
       - name: Record public signing certificate fingerprints
+        if: always()
         run: gradle --no-daemon signingReport
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: We-Earn-Together-debug-APK
           path: app/build/outputs/apk/debug/*.apk
