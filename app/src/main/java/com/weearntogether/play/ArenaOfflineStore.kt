@@ -54,8 +54,8 @@ class ArenaOfflineStore(private val context:Context,user:String){
         val target=(10+(level-1)/3).coerceAtMost(15)
         val pool=if(graded.size>=minOf(target,categoryPool.size))graded else categoryPool
         val shuffled=pool.shuffled();val selected=shuffled.take(minOf(target,pool.size))
-        // The answer clock is intentionally fixed at 30 seconds for every offline question.
-        val config=JSONObject().put("seconds",30).put("points",100+level*10).put("bonus",50).put("pass",60).put("video","")
+        // The answer clock starts after narration and grants the agreed 60 seconds.
+        val config=JSONObject().put("seconds",60).put("points",100+level*10).put("bonus",50).put("pass",60).put("video","")
         fun encoded(q:QuizArenaActivity.Question)=JSONObject().put("id",q.id).put("category",q.category).put("prompt",q.prompt).put("choices",JSONArray(q.choices)).put("correct",q.correct).put("explanation",q.why).put("source",q.source).put("difficulty",q.difficulty)
         val qs=JSONArray(selected.map{encoded(it)})
         val s=JSONObject().put("offline",true).put("session_id","offline-"+java.util.UUID.randomUUID()).put("locale","sq").put("level",level).put("category",category).put("config",config).put("local_questions",qs).put("local_reserve",JSONArray(shuffled.drop(selected.size).map{encoded(it)})).put("index",0).put("total",qs.length()).put("score",0).put("correct",0).put("answers",JSONArray()).put("finished",false)

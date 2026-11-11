@@ -6,3 +6,5 @@ local.properties
 *.p12
 *.pem
 signing.properties
+.kotlin/
+.arena-wrangler.toml

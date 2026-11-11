@@ -36,6 +36,37 @@ class ArenaPremiumTest {
         }
         selected.recycle()
     }
+    @Test fun callerHasAVisiblePortraitAndMouthOpensOnlyWithPlaybackEnergy() {
+        inst.runOnMainSync {
+            val caller=ArenaPhoneParticipant()
+            fun frame(speaking:Boolean,energy:Float)=Bitmap.createBitmap(720,560,Bitmap.Config.ARGB_8888).apply {
+                caller.draw(android.graphics.Canvas(this),"SHOKU U PËRGJIGJ",speaking,energy,0L)
+            }
+            val waiting=frame(false,1f);val silent=frame(true,0f);val talking=frame(true,.9f)
+            assertNotEquals("Caller avatar must be visible in the phone screen",Color.TRANSPARENT,waiting.getPixel(570,390))
+            assertEquals("A silent playback frame must not invent mouth movement",waiting.getPixel(572,416),silent.getPixel(572,416))
+            assertNotEquals("Actual audio energy must animate the caller mouth",silent.getPixel(572,416),talking.getPixel(572,416))
+            val stage=QuizArenaScene(inst.targetContext).apply{playerName="LOJTARI";questionPrompt="Pyetja mbetet në studio gjatë telefonatës";questionCategory="QUIZ ARENA";phoneState="SHOKU U PËRGJIGJ";speaking=true;friendSpeaking=true;speechEnergy={.9f};timerText="00:42"}
+            stage.measure(View.MeasureSpec.makeMeasureSpec(720,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(560,View.MeasureSpec.EXACTLY));stage.layout(0,0,720,560)
+            val bitmap=Bitmap.createBitmap(720,560,Bitmap.Config.ARGB_8888);stage.draw(android.graphics.Canvas(bitmap))
+            val dir=File(inst.targetContext.getExternalFilesDir(null),"native-qa").apply{mkdirs()}
+            File(dir,"23-arena-phone-participant.png").outputStream().use{bitmap.compress(Bitmap.CompressFormat.PNG,100,it)}
+            waiting.recycle();silent.recycle();talking.recycle();bitmap.recycle()
+        }
+    }
+    @Test fun clothingSelectionChangesFabricWhilePreservingChairAndHands() {
+        inst.runOnMainSync {
+            val actor=ArenaSeatedActor(inst.targetContext)
+            fun frame(suit:Int)=Bitmap.createBitmap(512,768,Bitmap.Config.ARGB_8888).apply{
+                actor.draw(android.graphics.Canvas(this),null,"L",0f,0L,suit,Color.WHITE,0xffc99b4e.toInt())
+            }
+            val original=frame(0xff273b68.toInt());val selected=frame(0xffa74a79.toInt())
+            assertNotEquals("Selected suit must reach the actual photographic character",original.getPixel(180,250),selected.getPixel(180,250))
+            assertEquals("Chair must keep its original material",original.getPixel(40,480),selected.getPixel(40,480))
+            assertEquals("Hands must retain their original skin colour",original.getPixel(100,390),selected.getPixel(100,390))
+            original.recycle();selected.recycle()
+        }
+    }
     @Test fun approvedSheetSnapshotHasAtLeast200DistinctQuestionsAndDifficulty(){
         val bank=ArenaOfflineStore(inst.targetContext,"premium-bank-test").questions
         assertTrue(bank.size>=200);assertEquals(bank.size,bank.map{it.prompt.trim().lowercase()}.distinct().size)

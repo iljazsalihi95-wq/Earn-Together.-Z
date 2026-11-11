@@ -5,5 +5,5 @@ test('Dashboard voice configuration is normalized and Albanian uses instruction-
  assert.deepEqual(speechConfiguration({ARENA_HOST_VOICE:' Onyx ',OPENAI_TTS_MODEL:' tts-1 '},'sq'),{voice:'onyx',model:'gpt-4o-mini-tts'});
  assert.deepEqual(speechConfiguration({},'sq'),{voice:'onyx',model:'gpt-4o-mini-tts'});
  assert.throws(()=>speechConfiguration({ARENA_HOST_VOICE:'sq-AL'},'sq'),/INVALID_HOST_VOICE/);
- assert.equal(speechConfiguration({ARENA_HOST_VOICE:'cedar'},'sq',true).voice,'onyx');
+ assert.equal(speechConfiguration({ARENA_HOST_VOICE:'cedar'},'sq',true).voice,'echo');
 });

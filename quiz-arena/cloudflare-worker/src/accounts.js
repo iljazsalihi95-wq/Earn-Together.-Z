@@ -39,7 +39,8 @@ export class NativeAccounts {
    const p=await request.json();if(!p||Array.isArray(p)||typeof p!=='object')fail('INVALID_REQUEST');
    // Persist rate limits independently of failed authentication transactions.
    const ip=request.headers.get('x-native-client-ip')||'unknown';
-   await this.storage.transaction(async tx=>{
+   const trusted=request.headers.get('x-arena-internal')==='1'&&['validateSession','getBalance','awardArenaLevel'].includes(p.action);
+   if(!trusted)await this.storage.transaction(async tx=>{
     const now=Date.now(),key='rate:'+ip;
     const rate=await tx.get(key)||{start:now,count:0};
     if(now-rate.start>60000){rate.start=now;rate.count=0}
@@ -97,6 +98,16 @@ export class NativeAccounts {
     if(['balance','coins','verified','status','amount_cents','user_id'].some(k=>p[k]!==undefined))fail('CLIENT_AUTHORITY');
     const prefix='wallet:'+user.user_id+':';
     const wallet=await tx.get(prefix+'balance')||{game_coins:0,pending_coins:0,verified_coins:0,available_cents:0,total_earned_cents:0,total_paid_cents:0,pending_cashout_cents:0,cashout_allowed:false};
+    if(p.action==='awardArenaLevel'){
+     if(request.headers.get('x-arena-internal')!=='1')fail('FORBIDDEN',403);
+     if(!Number.isInteger(p.level)||p.level<1||p.level>20)fail('INVALID_LEVEL');
+     const receipt=prefix+'receipt:Quiz Arena:'+p.level;
+     const previous=await tx.get(receipt);if(previous)return {...previous,duplicate:true};
+     const row={transaction_id:crypto.randomUUID(),source:'LEVEL',game_id:'Quiz Arena',coins:20,status:'GAME_ONLY',timestamp:new Date(now).toISOString(),verification_reason:'D1 verified arena level; noncash gameplay currency'};
+     wallet.game_coins+=20;
+     const response={success:true,transaction_id:row.transaction_id,status:row.status,coins:20,balance:wallet};
+     await tx.put(prefix+'event:'+row.transaction_id,row);await tx.put(prefix+'balance',wallet);await tx.put(receipt,response);return response;
+    }
     if(p.action==='getConversionQuote')return {success:true,...conversionQuote(wallet.verified_coins)};
     if(['getBalance','getCashoutEligibility','getWalletProfile'].includes(p.action))return {success:true,...wallet,eligible:false,balance:wallet,profile:{username:user.name,email:user.email,user_id:user.user_id,joined_date:user.created_at},reward_rules:{video_reward_coins:100,level_game_coins:20,video_status:'PENDING',automatic_cash_conversion:false},conversion_preview:conversionQuote(wallet.verified_coins)};
     if(p.action==='getOfferwallConfig')return {success:true,provider:'ayet',enabled:!!this.env.AYET_OFFERWALL_URL,url:this.env.AYET_OFFERWALL_URL||'',rewards_require_verified_partner_callback:true};
