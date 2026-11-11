@@ -96,6 +96,7 @@ test('practice rejects altered choice order, missing auth and unsupported dialog
  assert.equal((await worker.fetch(make('/api/ai/speech',p),h.env)).status,409);
  assert.equal((await worker.fetch(make('/api/ai/speech',{...p,session_token:''}),h.env)).status,401);
  assert.equal((await worker.fetch(make('/api/ai/speech',{...p,phase:'friend'}),h.env)).status,400);
+ assert.equal((await worker.fetch(make('/api/ai/speech',{session_token:TOKEN,practice:true,locale:'sq',phase:'question',question_id:'__proto__'}),h.env)).status,409);
  assert.deepEqual(h.stats(),{costs:0,aiCalls:0});
 });
 test('practice bank mirrors Android question text, option order and answer key',async()=>{

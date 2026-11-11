@@ -48,6 +48,7 @@ async function context(env,p,t){
 async function practiceContext(env,p,t){
  if(p.locale!=='sq')throw new Failure('PRACTICE_LANGUAGE_UNSUPPORTED');
  if(!['question','explanation','intro'].includes(p.phase))throw new Failure('INVALID_PHASE');
+ if(typeof p.question_id!=="string"||!Object.hasOwn(PRACTICE_BANK,p.question_id))throw new Failure("PRACTICE_QUESTION_CHANGED",409);
  const q=PRACTICE_BANK[p.question_id];
  if(!q||p.practice_prompt!==q.prompt||JSON.stringify(p.practice_choices)!==JSON.stringify(q.choices))throw new Failure('PRACTICE_QUESTION_CHANGED',409);
  if(p.phase==='explanation'&&(!Number.isInteger(p.choice)||p.choice< -1||p.choice>=q.choices.length))throw new Failure('ANSWER_FIRST',409);
