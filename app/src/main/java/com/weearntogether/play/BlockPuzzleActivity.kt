@@ -134,7 +134,7 @@ class BlockPuzzleActivity : Activity() {
             .setMessage(ui("The current board restarts. Your best score stays saved.", "Tabela aktuale rifillon. Rekordi më i mirë mbetet i ruajtur.", "Das aktuelle Spielfeld startet neu. Der Bestwert bleibt gespeichert.", "La griglia riparte. Il record resta salvato."))
             .setNegativeButton(ui("CANCEL", "ANULO", "ABBRECHEN", "ANNULLA"), null)
             .setPositiveButton(ui("RESTART", "RIFILLO", "NEUSTART", "RIPROVA")) { _, _ -> game.restart(); refreshSavedProgress() }.create()
-        dialog.setOnDismissListener { dialogOpen = false; game.setPaused(!hasWindowFocus()); refreshSavedProgress(); enterImmersive() }; dialog.show()
+        dialog.setOnDismissListener { dialogOpen = false; game.setPaused(isFinishing || !hasWindowFocus()); refreshSavedProgress(); if (!isFinishing) enterImmersive() }; dialog.show()
     }
 
     /** Android back uses the same pause flow as the on-screen control, avoiding accidental lost play. */
