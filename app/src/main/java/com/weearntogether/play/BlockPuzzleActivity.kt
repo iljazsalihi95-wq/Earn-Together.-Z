@@ -123,7 +123,7 @@ class BlockPuzzleActivity : Activity() {
             .setMessage(ui("Your board and progress are kept.","Tabela dhe progresi yt ruhen.","Spielfeld und Fortschritt bleiben erhalten.","La griglia e i progressi sono conservati."))
             .setPositiveButton(ui("CONTINUE","VAZHDO","WEITER","CONTINUA")){_,_->}
             .setNegativeButton(ui("HOME","BALLINA","STARTSEITE","HOME")){_,_->finish()}.create()
-        dialog.setOnDismissListener{dialogOpen=false;game.setPaused(!hasWindowFocus());enterImmersive()};dialog.show()
+        dialog.setOnDismissListener { dialogOpen = false; game.setPaused(isFinishing || !hasWindowFocus()); if (!isFinishing) enterImmersive() }; dialog.show()
     }
     private fun confirmRestart() {
         if (dialogOpen) return
