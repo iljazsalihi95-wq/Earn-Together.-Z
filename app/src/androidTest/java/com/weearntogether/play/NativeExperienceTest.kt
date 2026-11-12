@@ -175,7 +175,8 @@ class NativeExperienceTest {
         try{
             inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("HYR NË USHTRIM OFFLINE")}.performClick()};inst.waitForIdleSync();shot("06-arena-offline-question")
             assertTrue(views(a.window.decorView).filterIsInstance<TextView>().any{it.text.contains("USHTRIM OFFLINE")})
-            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")}.performClick()};inst.waitForIdleSync();shot("07-arena-offline-explanation")
+            inst.runOnMainSync{views(a.window.decorView).filterIsInstance<Button>().firstOrNull{it.text.startsWith("KALO LEXIMIN • FILLO KOHËN")}?.performClick()};inst.waitForIdleSync()
+            inst.runOnMainSync{val answer=views(a.window.decorView).filterIsInstance<Button>().first{it.text.startsWith("A   ")};assertTrue("Offline answer must be enabled after question presentation",answer.isEnabled);answer.performClick()};inst.waitForIdleSync();shot("07-arena-offline-explanation")
             val saved=ArenaOfflineStore(inst.targetContext,"guest").saved()!!;assertNotNull(saved.optJSONObject("feedback"));assertEquals(1,saved.getJSONArray("answers").length())
             inst.runOnMainSync{a.finish()};a=launch(ArenaCloudActivity::class.java);assertTrue(views(a.window.decorView).filterIsInstance<Button>().any{it.text=="VAZHDO ›"});assertEquals(saved.getString("session_id"),ArenaOfflineStore(inst.targetContext,"guest").saved()!!.getString("session_id"))
             inst.runOnMainSync{a.onBackPressed()};assertTrue(views(a.window.decorView).filterIsInstance<Button>().any{it.text.contains("VAZHDO USHTRIMIN OFFLINE")})
