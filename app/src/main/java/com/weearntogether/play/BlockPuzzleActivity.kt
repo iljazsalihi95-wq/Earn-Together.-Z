@@ -99,7 +99,7 @@ class BlockPuzzleActivity : Activity() {
             text = "BLOCK PUZZLE • PREMIUM"; contentDescription = text; textSize = 17f; setTextColor(Color.WHITE); gravity = Gravity.CENTER
             setTypeface(null, Typeface.BOLD); letterSpacing = .06f
         }, FrameLayout.LayoutParams(dp(250), dp(28), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(48) })
-        host.addView(chip("‹  " + ui("BACK", "PRAPA", "ZURÜCK", "INDIETRO")) { finish() }.apply { contentDescription = ui("Back", "Prapa", "Zurück", "Indietro") }, FrameLayout.LayoutParams(dp(104), dp(42), Gravity.TOP or Gravity.START).apply { leftMargin = dp(12); topMargin = dp(6) })
+        host.addView(chip("‹  " + ui("BACK", "PRAPA", "ZURÜCK", "INDIETRO")) { pauseGame() }.apply { contentDescription = ui("Back", "Prapa", "Zurück", "Indietro") }, FrameLayout.LayoutParams(dp(104), dp(42), Gravity.TOP or Gravity.START).apply { leftMargin = dp(12); topMargin = dp(6) })
         host.addView(chip("↻  " + ui("RESTART", "RIFILLO", "NEUSTART", "RIPROVA"), true) { confirmRestart() }.apply { contentDescription = ui("Restart level", "Rifillo nivelin", "Level neu starten", "Riavvia livello") }, FrameLayout.LayoutParams(dp(126), dp(42), Gravity.TOP or Gravity.END).apply { rightMargin = dp(12); topMargin = dp(6) })
 
         status = TextView(this).apply {
