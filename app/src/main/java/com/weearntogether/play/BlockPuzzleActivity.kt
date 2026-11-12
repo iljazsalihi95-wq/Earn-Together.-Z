@@ -137,6 +137,12 @@ class BlockPuzzleActivity : Activity() {
         dialog.setOnDismissListener { dialogOpen = false; game.setPaused(!hasWindowFocus()); refreshSavedProgress(); enterImmersive() }; dialog.show()
     }
 
+    /** Android back uses the same pause flow as the on-screen control, avoiding accidental lost play. */
+    @Suppress("DEPRECATION")
+    override fun onBackPressed() {
+        pauseGame()
+    }
+
     override fun onResume() { super.onResume(); if (::game.isInitialized) game.setPaused(dialogOpen || !hasWindowFocus()); if (::ads.isInitialized) ads.resume(); refreshSavedProgress(); if (!dialogOpen) enterImmersive() }
     override fun onPause() { if (::game.isInitialized) game.setPaused(true); if (::ads.isInitialized) ads.pause(); super.onPause() }
     override fun onDestroy() { if (::ads.isInitialized) ads.destroy(); super.onDestroy() }
