@@ -255,12 +255,12 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
     }
     fun restart(){selectedOffer=-1;renderRevision++;resolvingMove=false;cancelBoardAnimations();fx.animate().cancel();fx.alpha=0f;fx.text="";best=max(best,score);for(r in board)r.fill(0);score=0;levelLines=0;combo=0;gameOver=false;offers=nextOffers();ensurePlayableTray();save();refresh()}
     fun videoRescue(){
-        renderRevision++
-        resolvingMove=false
-        cancelBoardAnimations()
-        // Clear the lowest occupied row, not an arbitrary densest row. An empty
-        // board must not claim a rescue or alter the player's saved progress.
+        // A paused game or an unresolved placement cannot consume a rescue.
+        // Check for an occupied row before cancelling animations or changing state.
+        if(paused || resolvingMove || gameOver)return
         val row=(7 downTo 0).firstOrNull { r -> board[r].any { it != 0 } } ?: return
+        renderRevision++
+        cancelBoardAnimations()
         board[row].fill(0)
         ensurePlayableTray()
         gameOver=!hasAnyMove()
