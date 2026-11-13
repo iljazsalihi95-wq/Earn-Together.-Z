@@ -253,7 +253,7 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
             cell?.apply{scaleX=1f;scaleY=1f;rotation=0f;alpha=1f}
         }
     }
-    fun restart(){selectedOffer=-1;renderRevision++;resolvingMove=false;cancelBoardAnimations();fx.animate().cancel();fx.alpha=0f;fx.text="";best=max(best,score);for(r in board)r.fill(0);score=0;levelLines=0;combo=0;gameOver=false;offers=nextOffers();ensurePlayableTray();save();refresh()}
+    fun restart(){selectedOffer=-1;renderRevision++;resolvingMove=false;cancelBoardAnimations();fx.animate().cancel();fx.alpha=0f;fx.text="";best=max(best,score);for(r in board)r.fill(0);levelLines=0;combo=0;gameOver=false;offers=nextOffers();ensurePlayableTray();save();refresh()}
     fun videoRescue(){
         // A paused game or an unresolved placement cannot consume a rescue.
         // Check for an occupied row before cancelling animations or changing state.
