@@ -1,6 +1,7 @@
 package com.weearntogether.play
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
@@ -24,8 +25,15 @@ class PremiumHomeActivity : Activity() {
         ads=NativeGameAds(this,"home");build();rewardButton.isEnabled=true
     }
     private fun launchRealLazyGarden(){
-        try{startActivity(Intent().setClassName("com.lazygarden.game","com.lazygarden.game.MainActivity"))}
-        catch(_:ActivityNotFoundException){startActivity(Intent(this,com.weearntogether.lazygarden.LazyGardenActivity::class.java))}
+        try {
+            startActivity(Intent().setClassName("com.lazygarden.game", "com.lazygarden.game.MainActivity"))
+        } catch (_: ActivityNotFoundException) {
+            AlertDialog.Builder(this)
+                .setTitle("LazyGarden")
+                .setMessage("Për të luajtur, instalo aplikacionin origjinal LazyGarden në këtë telefon.")
+                .setPositiveButton(android.R.string.ok, null)
+                .show()
+        }
     }
     private fun build(){host=FrameLayout(this).apply{setBackgroundColor(0xfff5f7ff.toInt())};val scroll=ScrollView(this).apply{isFillViewport=true;clipToPadding=false};root=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(16),0,dp(16),dp(108))};scroll.addView(root);host.addView(scroll,FrameLayout.LayoutParams(-1,-1));setContentView(host);host.setOnApplyWindowInsetsListener{v,i->v.setPadding(i.systemWindowInsetLeft,i.systemWindowInsetTop,i.systemWindowInsetRight,i.systemWindowInsetBottom);i};host.requestApplyInsets();header();sectionTitle("✦","Lojërat e tua","LUAJ • VAZHDO");gameCatalog();rewardCard();bottomNav()}
     private fun header(){val h=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(18),dp(12),dp(16),dp(14));background=premiumGradient(0);minimumHeight=dp(82)};val portrait=PlayerPortrait.image(this).apply{setOnClickListener{PlayerPortrait.pick(this@PremiumHomeActivity)}};h.addView(portrait,LinearLayout.LayoutParams(dp(48),dp(48)).apply{rightMargin=dp(12)});val identity=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL};identity.addView(text("WE EARN TOGETHER",11,gold,true));identity.addView(text(accounts.currentName()?:"Lojtari",20,Color.WHITE,true));h.addView(identity,LinearLayout.LayoutParams(0,-2,1f));coinText=text("★ ${loyalty.points}",16,gold,true).apply{gravity=Gravity.CENTER;background=round(0x33202a55,18);setPadding(dp(12),dp(8),dp(12),dp(8))};h.addView(coinText);root.addView(h,LinearLayout.LayoutParams(-1,-2).apply{leftMargin=-dp(16);rightMargin=-dp(16);bottomMargin=dp(14)})}
@@ -34,7 +42,7 @@ class PremiumHomeActivity : Activity() {
     private fun gameCatalog(){
         val games=listOf(
             HomeGame("arena","QUIZ ARENA","Pyetje • studio • nivele • zë",ArenaCloudActivity::class.java),
-            HomeGame("garden","LAZYGARDEN","Match-3 • histori • restaurim"),
+            HomeGame("garden","LAZYGARDEN","Loja origjinale • Match-3 • restaurim"),
             HomeGame("knife","BLADE QUEST","Thika • botë magjike • arsenal",KnifeHitActivity::class.java),
             HomeGame("block","BLOCK PUZZLE","250 nivele • kombinime • progres",BlockPuzzleActivity::class.java),
             HomeGame("bubble","BUBBLE SHOOTER","250 nivele • shënjim • kombinime",BubbleShooterActivity::class.java),
