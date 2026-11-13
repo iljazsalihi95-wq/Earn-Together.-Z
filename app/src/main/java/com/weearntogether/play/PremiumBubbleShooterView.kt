@@ -29,6 +29,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  private var flight:ValueAnimator?=null
  private var projectileView:View?=null
  private var pendingSettlement:Pair<Int,Int>?=null
+ private var activeShot:Pair<Int,Int>?=null
  fun setPaused(value:Boolean){
   paused=value
   if(value){hideAim();flight?.pause()}
@@ -38,8 +39,16 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
    flight?.resume()
   }
  }
- private fun cancelFlight(){pendingSettlement=null;flight?.removeAllListeners();flight?.cancel();flight=null;projectileView?.let{removeView(it)};projectileView=null;busy=false}
- override fun onDetachedFromWindow(){cancelFlight();super.onDetachedFromWindow()}
+ private fun cancelFlight(){activeShot=null;pendingSettlement=null;flight?.removeAllListeners();flight?.cancel();flight=null;projectileView?.let{removeView(it)};projectileView=null;busy=false}
+ override fun onDetachedFromWindow(){
+  // A projectile already launched is a committed move. Finish it before the
+  // view disappears so rotation/navigation cannot silently refund the shot.
+  val committed=activeShot ?: pendingSettlement
+  cancelFlight()
+  activeShot=null
+  if(committed!=null)settle(committed.first,committed.second)
+  super.onDetachedFromWindow()
+ }
  private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt();private fun light(c:Int)=Color.rgb((Color.red(c)+85).coerceAtMost(255),(Color.green(c)+85).coerceAtMost(255),(Color.blue(c)+85).coerceAtMost(255));private fun shade(c:Int)=Color.rgb((Color.red(c)*.55f).toInt(),(Color.green(c)*.55f).toInt(),(Color.blue(c)*.55f).toInt());private fun bubble(c:Int)=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xffffffff.toInt(),light(c),c,shade(c))).apply{shape=GradientDrawable.OVAL;setStroke(dp(2),0xbbffffff.toInt())}
  // Older/cloud-restored preferences may contain numeric strings or Long values.
  // Reading them through getInt/getString can throw ClassCastException.
@@ -191,6 +200,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  private fun shoot(r:Int,c:Int,path:List<Pair<Float,Float>>){
   if(busy || campaignComplete || r !in 0 until rows || c !in 0 until cols || grid[r][c]!=0 || !isAttachable(r,c))return
   busy=true
+  activeShot=r to c
   val size=bubbleSize()
   val projectile=View(context).apply{background=bubble(palette[current-1]);elevation=dp(18).toFloat()}
   addView(projectile,LayoutParams(size,size))
@@ -238,6 +248,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
    addListener(object:AnimatorListenerAdapter(){
     override fun onAnimationEnd(animation:Animator){
      flight=null;projectileView=null;removeView(projectile)
+     activeShot=null
      if(paused)pendingSettlement=r to c else settle(r,c)
     }
    })
