@@ -210,7 +210,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  // Animate along the same wall-reflected trajectory shown by the aiming dots.
  // The final segment snaps to the validated hex-grid attachment cell.
  private fun shoot(r:Int,c:Int,path:List<Pair<Float,Float>>){
-  if(busy || campaignComplete || r !in 0 until rows || c !in 0 until cols || grid[r][c]!=0 || !isAttachable(r,c))return
+  if(paused || busy || campaignComplete || r !in 0 until rows || c !in 0 until cols || grid[r][c]!=0 || !isAttachable(r,c))return
   busy=true
   activeShot=r to c
   val size=bubbleSize()
