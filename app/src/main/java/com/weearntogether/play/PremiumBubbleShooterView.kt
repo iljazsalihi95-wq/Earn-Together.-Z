@@ -24,7 +24,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  private val prefs=ProgressPreferences.open(context,"bubble_shooter_hd2d"); private val rows=11; private val cols=9; private val grid=Array(rows){IntArray(cols)}
  private val palette=intArrayOf(0xff35c6fa.toInt(),0xffa478ff.toInt(),0xffffc857.toInt(),0xff49e1aa.toInt(),0xffff638f.toInt()); private val field=FrameLayout(context); private val hud=TextView(context); private val danger=TextView(context); private val launcher=TextView(context); private val nextView=TextView(context); private val aimDots=mutableListOf<View>(); private val fxLayer=FrameLayout(context)
  private var campaignComplete=false;private var score=0;private var best=0;private var level=1;private var streak=0;private var current=1;private var next=2;private var misses=0;private var busy=false;private var cell=1;private var fieldTop=0;private var aiming:Pair<Int,Int>?=null;private var aimPath=emptyList<Pair<Float,Float>>()
- init{setBackgroundColor(0xff071020.toInt());field.background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff07162f.toInt(),0xff1c1042.toInt(),0xff071a38.toInt())).apply{cornerRadius=dp(24).toFloat();setStroke(dp(1),0x6658c8ff)};addView(field,LayoutParams(-1,-1).apply{setMargins(dp(12),dp(116),dp(12),dp(112))});addView(fxLayer,LayoutParams(-1,-1));fxLayer.isClickable=false;hud.apply{setTextColor(Color.WHITE);textSize=14f;gravity=Gravity.CENTER;setTypeface(null,android.graphics.Typeface.BOLD)};addView(hud,LayoutParams(-1,dp(48),Gravity.TOP).apply{topMargin=dp(112)});danger.apply{textSize=11f;gravity=Gravity.CENTER;setTypeface(null,android.graphics.Typeface.BOLD)};addView(danger,LayoutParams(-1,dp(28),Gravity.TOP).apply{topMargin=dp(158)});launcher.gravity=Gravity.CENTER;launcher.text="✦";launcher.textSize=24f;launcher.setTextColor(Color.WHITE);launcher.elevation=dp(16).toFloat();addView(launcher,LayoutParams(dp(62),dp(62),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(34)});nextView.gravity=Gravity.CENTER;nextView.text="•";nextView.textSize=18f;nextView.elevation=dp(12).toFloat();addView(nextView,LayoutParams(dp(40),dp(40),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(46);leftMargin=dp(112)});nextView.apply{isClickable=true;isFocusable=true;contentDescription="Swap current and next bubble";setOnClickListener{swapBubble()}};repeat(18){val d=View(context).apply{visibility=View.GONE;background=GradientDrawable().apply{shape=GradientDrawable.OVAL;setColor(0xeeffffff.toInt());setStroke(dp(1),0xaaffc857.toInt())}};aimDots+=d;addView(d,LayoutParams(dp(7),dp(7)))};restoreOrNew();post{rebuild()}}
+ init{setBackgroundColor(0xff071020.toInt());field.background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff07162f.toInt(),0xff1c1042.toInt(),0xff071a38.toInt())).apply{cornerRadius=dp(24).toFloat();setStroke(dp(1),0x6658c8ff)};addView(field,LayoutParams(-1,-1).apply{setMargins(dp(12),dp(116),dp(12),dp(112))});addView(fxLayer,LayoutParams(-1,-1));fxLayer.isClickable=false;hud.apply{setTextColor(Color.WHITE);textSize=14f;gravity=Gravity.CENTER;setTypeface(null,android.graphics.Typeface.BOLD)};addView(hud,LayoutParams(-1,dp(48),Gravity.TOP).apply{topMargin=dp(112)});danger.apply{textSize=11f;gravity=Gravity.CENTER;setTypeface(null,android.graphics.Typeface.BOLD)};addView(danger,LayoutParams(-1,dp(28),Gravity.TOP).apply{topMargin=dp(158)});launcher.gravity=Gravity.CENTER;launcher.text="✦";launcher.textSize=24f;launcher.setTextColor(Color.WHITE);launcher.elevation=dp(16).toFloat();launcher.isClickable=true;launcher.isFocusable=true;launcher.contentDescription="Fire bubble straight ahead";launcher.setOnClickListener{fireStraightAhead()};addView(launcher,LayoutParams(dp(62),dp(62),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(34)});nextView.gravity=Gravity.CENTER;nextView.text="•";nextView.textSize=18f;nextView.elevation=dp(12).toFloat();addView(nextView,LayoutParams(dp(40),dp(40),Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply{bottomMargin=dp(46);leftMargin=dp(112)});nextView.apply{isClickable=true;isFocusable=true;contentDescription="Swap current and next bubble";setOnClickListener{swapBubble()}};repeat(18){val d=View(context).apply{visibility=View.GONE;background=GradientDrawable().apply{shape=GradientDrawable.OVAL;setColor(0xeeffffff.toInt());setStroke(dp(1),0xaaffc857.toInt())}};aimDots+=d;addView(d,LayoutParams(dp(7),dp(7)))};restoreOrNew();post{rebuild()}}
  private var paused=false
  private var flight:ValueAnimator?=null
  private var projectileView:View?=null
@@ -193,6 +193,18 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
    val t=(i+1f)/(aimDots.size+1f)
    d.alpha=.42f+t*.58f;d.scaleX=.7f+t*.45f;d.scaleY=d.scaleX;d.visibility=View.VISIBLE
   }
+ }
+ // The launcher is also an accessible fire control. It uses the exact same
+ // collision prediction and trajectory as a touch shot, never a shortcut.
+ private fun fireStraightAhead(){
+  if(paused || busy || campaignComplete || field.width<=0)return
+  val x=width/2f
+  val y=(field.top+fieldTop+dp(8)).toFloat()
+  updateAim(x,y)
+  val target=aiming
+  val path=aimPath.toList()
+  hideAim()
+  if(target!=null)shoot(target.first,target.second,path)
  }
  private fun hideAim(){aiming=null;aimPath=emptyList();aimDots.forEach{it.visibility=View.GONE}}
  // Animate along the same wall-reflected trajectory shown by the aiming dots.
