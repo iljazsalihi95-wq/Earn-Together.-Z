@@ -80,6 +80,26 @@ class PuzzlePersistenceTest {
    assertTrue(p.getString("board","")!!.split(',').all{it=="0"})
   }finally{inst.runOnMainSync{a.finish()}}
  }
+ @Test fun bubbleVideoRescueCannotChangePausedBoardAndPersistsRealClear(){
+  val p=ProgressPreferences.open(ctx,"bubble_shooter_hd2d")
+  val initial=List(99){i->if(i<9) "1" else if(i in 45..47) "2" else "0"}.joinToString(",")
+  p.edit().clear().putString("grid",initial).putInt("score",80).putInt("level",4).putInt("current",1).putInt("next",2).commit()
+  val a=launch(BubbleShooterActivity::class.java)
+  try {
+   val game=views(a.window.decorView).filterIsInstance<PremiumBubbleShooterView>().single()
+   inst.runOnMainSync{game.setPaused(true);game.videoRescue()}
+   assertEquals("Paused rescue must not consume or mutate progress",initial,p.getString("grid",null))
+   assertEquals(80,p.getInt("score",-1))
+   inst.runOnMainSync{game.setPaused(false);game.videoRescue()}
+   inst.waitForIdleSync()
+   val after=p.getString("grid",null)!!.split(',')
+   assertEquals(99,after.size)
+   assertTrue("Rescue clears the lowest occupied row", (45..47).all{after[it]=="0"})
+   assertTrue("Ceiling remains attached", (0..8).all{after[it]=="1"})
+   assertEquals(4,p.getInt("level",-1))
+   assertEquals(80,p.getInt("score",-1))
+  }finally{inst.runOnMainSync{a.finish()}}
+ }
  @Test fun bubbleFlightPausesAndResumesWithoutDuplicateSettlement(){
   val p=ProgressPreferences.open(ctx,"bubble_shooter_hd2d")
   p.edit().clear().putString("grid",List(99){if(it<9)(it%3+1).toString()else "0"}.joinToString(",")).putInt("score",10).putInt("best",100).putInt("level",2).putInt("current",1).putInt("next",2).commit()
