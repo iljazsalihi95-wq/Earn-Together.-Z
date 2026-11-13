@@ -292,7 +292,8 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   save();rebuild()
  }
  fun videoRescue(){
-  if(busy || campaignComplete)return
+  // Never mutate a paused board or interrupt a projectile in flight.
+  if(paused || busy || campaignComplete)return
   // Rescue the actual lowest occupied row. Clearing the last three empty
   // rows did nothing on most boards while still consuming the rescue action.
   val lowest=(rows-1 downTo 0).firstOrNull{r->grid[r].any{it!=0}}?:return
