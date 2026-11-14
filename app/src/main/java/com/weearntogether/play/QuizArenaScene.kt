@@ -93,7 +93,7 @@ private var reactionStarted=0L
         // Perspective floor and practical strip lighting.
         p.color=0xff102841.toInt();c.drawOval(72f,374f,648f,491f,p)
         p.style=Paint.Style.STROKE;p.color=0xff417c9b.toInt();p.strokeWidth=2f;c.drawOval(72f,374f,648f,491f,p);p.style=Paint.Style.FILL
-        c.save();c.translate(73f, 303f);c.scale(.31f,.31f);drawPlayer(c,time);c.restore()
+        c.save();c.translate(73f, 303f);c.scale(.31f,.31f);drawPlayer(c);c.restore()
         c.save()
         c.translate(267f, 277f)
         c.scale(.48f, .48f)
@@ -203,8 +203,7 @@ private var reactionStarted=0L
         }
         p.alpha=255
     }
-    private fun drawPlayer(c:Canvas,time:Long){
-        val amplitude=if(playerSpeaking)(playerSpeechEnergy?.invoke()?:0f).coerceIn(0f,1f) else 0f
-        playerActor.draw(c,portrait ?: if(useInitials) null else defaultPlayer,playerName,amplitude,time,suitColor,shirtColor,tieColor)
+    private fun drawPlayer(c:Canvas){
+        playerActor.draw(c,portrait ?: if(useInitials) null else defaultPlayer,playerName,suitColor,shirtColor,tieColor)
     }
 }

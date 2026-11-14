@@ -17,6 +17,10 @@ class ArenaCloudActivity:Activity(){
     private val localStore by lazy{ArenaOfflineStore(this,accounts.currentUserId()?:"guest")}
     private var offline=false;private var modeVersion=0
     private val network=java.util.concurrent.Executors.newSingleThreadExecutor()
+    private val voiceAnalysis = java.util.concurrent.Executors.newSingleThreadExecutor()
+    private var voiceAnalysisTask: java.util.concurrent.Future<*>? = null
+    private var voiceTimeout: Runnable? = null
+    private var retryNarration: Button? = null
     private val voiceNetwork=java.util.concurrent.Executors.newSingleThreadExecutor()
     private val retryHandler=android.os.Handler(android.os.Looper.getMainLooper())
     private val retry=object:Runnable{override fun run(){if(resumed&&!live&&!busy)refresh();retryHandler.postDelayed(this,30000)}}
@@ -126,7 +130,7 @@ class ArenaCloudActivity:Activity(){
         if(!accounts.isSignedIn())add(button("HYR NË LLOGARI • AKTIVIZO LIVE"){startActivity(android.content.Intent(this,MainActivity::class.java).putExtra("open_profile",true))});add(button("SFIDA TË REJA • FJALË • AJETE • MEMORIE"){startActivity(android.content.Intent(this,ArenaLearningGamesActivity::class.java))});add(button("RIPROVO LIDHJEN LIVE"){refresh()});add(button("USHTRIM OFFLINE • PA RENDITJE"){startOffline(localStore.saved()!=null)});add(label("Regjistrimet shqip përdoren kur janë të disponueshme; për pyetjet e tjera përdoret zëri AI. Recitimet kërkojnë audio autentike. Pikët e arenës janë rezultat loje.",11,0xffb9c9df.toInt()));ads.banner(root)
     }
     private fun accept(v:JSONObject){val previous=session;if(previous!=null&&questionKey(previous)!=questionKey(v)){phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;sound?.stopTone()};if(previous!=null&&questionKey(previous)==questionKey(v)&&previous.has("learning_choice"))v.put("learning_choice",previous.getInt("learning_choice"));val f=v.optJSONObject("feedback");if(f?.optString("reason")=="timeout"&&f.optInt("submitted_choice",-1)>=0)v.put("learning_choice",f.getInt("submitted_choice"));session=v;offline=v.optBoolean("offline");if(offline)locale="sq" else if(v.optString("locale") in setOf("sq","de","en","tr"))locale=v.getString("locale");if(v.optJSONObject("feedback")==null&&v.optLong("remaining_ms")<=0)v.put("timed_out",true);deadline=android.os.SystemClock.elapsedRealtime()+v.optLong("remaining_ms");if(offline)localStore.save(v) else prefs.edit().putString("session",v.toString()).putString("active_id",v.optString("session_id")).apply();render()}
-    private fun render(){val s=session?:return;timer?.cancel();stopVoice();answerButtons.clear();updateStudioBed();shell();val config=s.getJSONObject("config");add(label("${if(isOfflineSession())"USHTRIM OFFLINE" else "LIVE"} • NIVELI ${s.getInt("level")}  •  ${s.getInt("index")+1}/${s.getInt("total")}  •  ★ ${s.getInt("score")}",14,gold));scene=QuizArenaScene(this).apply{playerName=prefs.getString("name","")?:"";useInitials=prefs.getBoolean("initial_avatar",false);portrait=if(useInitials)null else PlayerPortrait.load(this@ArenaCloudActivity);suitColor=prefs.getInt("suit",0xff273b68.toInt());shirtColor=prefs.getInt("shirt",Color.WHITE);tieColor=prefs.getInt("tie",0xffc99b4e.toInt());reaction=if(s.optJSONObject("feedback")?.optString("reason")=="timeout")0 else if(s.optJSONObject("feedback")?.optBoolean("right")==true)1 else if(s.optJSONObject("feedback")!=null)-1 else 0};add(scene!!,((resources.displayMetrics.widthPixels/resources.displayMetrics.density-40f)*560f/720f).toInt().coerceAtLeast(1))
+    private fun render(){val s=session?:return;timer?.cancel();stopVoice();retryNarration=null;answerButtons.clear();updateStudioBed();shell();val config=s.getJSONObject("config");add(label("${if(isOfflineSession())"USHTRIM OFFLINE" else "LIVE"} • NIVELI ${s.getInt("level")}  •  ${s.getInt("index")+1}/${s.getInt("total")}  •  ★ ${s.getInt("score")}",14,gold));scene=QuizArenaScene(this).apply{playerName=prefs.getString("name","")?:"";useInitials=prefs.getBoolean("initial_avatar",false);portrait=if(useInitials)null else PlayerPortrait.load(this@ArenaCloudActivity);suitColor=prefs.getInt("suit",0xff273b68.toInt());shirtColor=prefs.getInt("shirt",Color.WHITE);tieColor=prefs.getInt("tie",0xffc99b4e.toInt());reaction=if(s.optJSONObject("feedback")?.optString("reason")=="timeout")0 else if(s.optJSONObject("feedback")?.optBoolean("right")==true)1 else if(s.optJSONObject("feedback")!=null)-1 else 0};add(scene!!,((resources.displayMetrics.widthPixels/resources.displayMetrics.density-40f)*560f/720f).toInt().coerceAtLeast(1))
         if(s.optBoolean("finished")){if(!isOfflineSession())prefs.edit().remove("active_id").remove("pending_answer").remove("pending_next").apply();add(label(if(s.optBoolean("passed"))"NIVELI U KALUA!" else "PROVO PËRSËRI",27,gold));add(label("${s.getInt("correct")} / ${s.getInt("total")} të sakta • ★ ${s.getInt("score")}",21));scene?.apply{reaction=if(s.optBoolean("passed"))1 else -1;questionPrompt=if(s.optBoolean("passed"))"NIVELI U KALUA!" else "PROVO PËRSËRI";questionCategory="${s.getInt("correct")} / ${s.getInt("total")} TË SAKTA";questionNumber="NIVELI ${s.getInt("level")}";timerText="★ ${s.getInt("score")}";stageStatus="REZULTATI YT"};root.translationY=dp(22).toFloat();root.animate().translationY(0f).setDuration(550).start();if(s.optBoolean("passed")&&resultCueKey!=questionKey(s)){resultCueKey=questionKey(s);playStudioCue(R.raw.arena_win)};addRewardPanel();add(button("VAZHDO • KAPËRCE SKENËN"){home();refresh()});val video=config.optString("video");if(video.startsWith("https://"))add(button("SHIKO VIDEON E KALIMIT"){video(video)});if(audioEnabled)voice("result"){ads.naturalBreak()} else ads.naturalBreak();return}
         val q=s.getJSONObject("question");scene?.apply{questionPrompt=q.getString("prompt");questionCategory=q.getString("category");questionNumber="PYETJA ${s.getInt("index")+1} / ${s.getInt("total")}";contentDescription=questionPrompt};val feedback=s.optJSONObject("feedback");val choices=q.getJSONArray("choices")
         val hidden = if (feedback == null) ArenaLifelines.hidden(s) else emptySet()
@@ -472,7 +476,10 @@ class ArenaCloudActivity:Activity(){
     private fun beginQuestionReading(s:JSONObject){
         scene?.apply{timerText="%02d:%02d".format(s.getJSONObject("config").getInt("seconds")/60,s.getJSONObject("config").getInt("seconds")%60);stageStatus="LEXIM • KOHA E NDALUR";remainingFraction=1f}
         add(button("KALO LEXIMIN • FILLO KOHËN"){stopVoice();finishQuestionReading(questionKey(s))})
-        add(button("RIPROVO ZËRIN E PREZANTUESIT"){voice("question")}.apply { isEnabled = audioEnabled })
+        retryNarration = button("RIPROVO ZËRIN E PREZANTUESIT"){voice("question")}.apply {
+            visibility = View.GONE
+            add(this)
+        }
         narrationKey=questionKey(s);val welcome="welcome:"+s.optString("session_id");if(audioEnabled&&s.optInt("index")==0&&!prefs.getBoolean(welcome,false)){prefs.edit().putBoolean(welcome,true).apply();voice("intro"){if(session===s&&resumed)voice("question")}}else if(audioEnabled)voice("question") else finishQuestionReading(questionKey(s))
     }
     private fun finishQuestionReading(key:String){
@@ -497,9 +504,10 @@ class ArenaCloudActivity:Activity(){
         call("arenaNext",data){prefs.edit().remove("pending_next").apply();accept(it)}
     }
     private fun retryAnswer(){if(isOfflineSession()){render();return};val next=runCatching{JSONObject(prefs.getString("pending_next","")?:"")}.getOrNull();if(next!=null){call("arenaNext",next){prefs.edit().remove("pending_next").apply();accept(it)};return};val p=runCatching{JSONObject(prefs.getString("pending_answer","")?:"")}.getOrNull();if(p!=null)call("arenaAnswer",p){prefs.edit().remove("pending_answer").apply();accept(it)}else session?.let{call("arenaResume",JSONObject().put("session_id",it.getString("session_id"))){v->accept(v)}}}
-    private fun stopVoice(){voiceGeneration++;sound?.stopTone();applause?.release();applause=null;voiceCompletion=null;player?.release();player=null;speechEnvelope=null;scene?.speaking=false;scene?.friendSpeaking=false;scene?.speechEnergy=null}
+    private fun stopVoice(){voiceGeneration++;voiceTimeout?.let(retryHandler::removeCallbacks);voiceTimeout=null;voiceAnalysisTask?.cancel(true);voiceAnalysisTask=null;sound?.stopTone();applause?.release();applause=null;voiceCompletion=null;player?.release();player=null;speechEnvelope=null;scene?.speaking=false;scene?.friendSpeaking=false;scene?.speechEnergy=null}
     private fun narrationFinished(phase:String,key:String){
         if(key!=questionKey())return
+        voiceTimeout?.let(retryHandler::removeCallbacks);voiceTimeout=null
         scene?.speaking=false;scene?.friendSpeaking=false
         val completion=voiceCompletion;voiceCompletion=null
         if(phase=="question")finishQuestionReading(key)
@@ -510,11 +518,13 @@ class ArenaCloudActivity:Activity(){
     private fun voiceUnavailable(phase:String){
         if(!resumed)return
         val s=session?:return
+        voiceTimeout?.let(retryHandler::removeCallbacks);voiceTimeout=null
         scene?.speaking=false;scene?.friendSpeaking=false
         status.text="Audioja nuk u realizua"+(if(voiceFailure.isBlank())"" else ": $voiceFailure")+". Riprovo audion ose vazhdo me tekst."
         if(phase=="question"&&s.optBoolean("presentation_pending")){
             timer?.cancel()
             voiceCompletion=null
+            retryNarration?.visibility = View.VISIBLE
             // The existing Skip Reading control explicitly starts the answer clock.
             return
         }
@@ -583,12 +593,12 @@ class ArenaCloudActivity:Activity(){
                             temp.delete()
                         }
                     }
-                    file to runCatching { ArenaSpeechEnvelope.decode(file) }.getOrNull()
+                    file
                 }
                 runOnUiThread {
-                    if(current())prepared.onSuccess { (file,envelope)->
+                    if(current())prepared.onSuccess { file->
                         runCatching {
-                            player?.release();speechEnvelope=envelope
+                            player?.release();analyzeSpeech(file, generation)
                             scene?.speechEnergy={speechEnvelope?.at(runCatching { player?.currentPosition?:0 }.getOrDefault(0))?:0f}
                             player=android.media.MediaPlayer().apply {
                                 setDataSource(file.absolutePath)
@@ -605,14 +615,48 @@ class ArenaCloudActivity:Activity(){
         playClip(0)
         return true
     }
+    private fun analyzeSpeech(file: java.io.File, generation: Int) {
+        voiceAnalysisTask?.cancel(true)
+        speechEnvelope = null
+        voiceAnalysisTask = voiceAnalysis.submit {
+            val envelope = runCatching { ArenaSpeechEnvelope.decode(file) }.getOrNull()
+            runOnUiThread {
+                if (generation == voiceGeneration && resumed) speechEnvelope = envelope
+            }
+        }
+    }
+
     private fun voice(phase:String,useRecordings:Boolean=true,onDone:(()->Unit)?=null){
-        if(!audioEnabled){onDone?.invoke();return};val s=session?:return;val practice=s.optBoolean("offline");stopVoice();voiceCompletion=onDone;if(useRecordings&&recordedVoice(phase,s))return;if(practice&&(!accounts.isSignedIn()||phase !in setOf("question","explanation","intro"))){voiceUnavailable(phase);return}
-        voiceFailure=""
-        val generation=voiceGeneration;val version=modeVersion
+        if (!audioEnabled) { onDone?.invoke(); return }
+        val s = session ?: return
+        val practice = s.optBoolean("offline")
+        stopVoice()
+        voiceFailure = ""
+        voiceCompletion = onDone
+        val generation = voiceGeneration
+        val version = modeVersion
+        if (phase == "question" && s.optBoolean("presentation_pending")) {
+            retryNarration?.visibility = View.GONE
+            status.text = "Po ngarkohet zëri i prezantuesit…"
+        }
+        voiceTimeout = Runnable {
+            if (generation != voiceGeneration || !resumed || session !== s) return@Runnable
+            val completion = voiceCompletion
+            stopVoice()
+            voiceCompletion = completion
+            voiceFailure = "Pritja për audion skadoi"
+            voiceUnavailable(phase)
+        }.also { retryHandler.postDelayed(it, 65_000L) }
+        if (useRecordings && recordedVoice(phase,s)) return
+        if (practice && (!accounts.isSignedIn() || phase !in setOf("question","explanation","intro"))) {
+            voiceUnavailable(phase)
+            return
+        }
         val q=s.optJSONObject("question")?:run{voiceUnavailable(phase);return}
         val cacheKey=java.security.MessageDigest.getInstance("SHA-256").digest(("worker-speech-v12|"+prefs.getString("name","")+locale+q.toString()+(s.optJSONObject("feedback")?.toString()?:"")+phase+if(phase=="clarify")dialogueText else if(phase=="friend")friendText else "").toByteArray()).joinToString(""){"%02x".format(it)}
         val cachedAudio=java.io.File(cacheDir,"arena-voice-$cacheKey.mp3")
         fun playCached(){
+            analyzeSpeech(cachedAudio, generation)
             scene?.speechEnergy={speechEnvelope?.at(runCatching{player?.currentPosition?:0}.getOrDefault(0))?:0f}
             player=android.media.MediaPlayer().apply{
                 setDataSource(cachedAudio.absolutePath)
@@ -626,7 +670,10 @@ class ArenaCloudActivity:Activity(){
                 prepareAsync()
             }
         }
-        if(cachedAudio.exists()){voiceNetwork.execute{val envelope=runCatching{ArenaSpeechEnvelope.decode(cachedAudio)}.getOrNull();runOnUiThread{if(generation==voiceGeneration&&resumed&&session===s){speechEnvelope=envelope;runCatching{playCached()}.onFailure{cachedAudio.delete();voiceUnavailable(phase)}}}};return}
+        if (cachedAudio.isFile && cachedAudio.length() > 0L) {
+            runCatching { playCached() }.onFailure { cachedAudio.delete(); voiceUnavailable(phase) }
+            return
+        }
         val workerUrl=BuildConfig.QUIZ_ARENA_WORKER_URL.trimEnd('/')
         val trustedWorker=runCatching{
             val uri=java.net.URI(workerUrl)
@@ -678,11 +725,10 @@ class ArenaCloudActivity:Activity(){
                     if(isFinishing||isDestroyed||!resumed||generation!=voiceGeneration||version!=modeVersion)return@runOnUiThread
                     result.onSuccess { audio ->
                         voiceNetwork.execute {
-                            val envelope=runCatching { cachedAudio.writeBytes(audio);trimVoiceCache(cachedAudio);ArenaSpeechEnvelope.decode(cachedAudio) }.getOrNull()
+                            val saved=runCatching { cachedAudio.writeBytes(audio);trimVoiceCache(cachedAudio) }
                             runOnUiThread {
                                 if(generation==voiceGeneration&&resumed&&session===s){
-                                    speechEnvelope=envelope
-                                    runCatching { playCached() }.onFailure { voiceUnavailable(phase) }
+                                    saved.mapCatching { playCached() }.onFailure { voiceUnavailable(phase) }
                                 }
                             }
                         }
@@ -694,7 +740,7 @@ class ArenaCloudActivity:Activity(){
         val testTransport=qaTransport?.takeIf { qa() }?:run{voiceUnavailable(phase);return}
         val payload=JSONObject().put("session_id",s.getString("session_id")).put("phase",phase).put("question_id",q.getString("id")).put("locale",locale);if(accounts.isSignedIn())payload.put("session_token",accounts.requireToken())
         voiceNetwork.execute{val r=runCatching{testTransport("arenaVoice",payload)};runOnUiThread{if(isFinishing||isDestroyed||!resumed||generation!=voiceGeneration||version!=modeVersion)return@runOnUiThread
-            r.onSuccess{runCatching{require(it.optString("question_id")==q.getString("id")){"Audio question mismatch"};cachedAudio.writeBytes(android.util.Base64.decode(it.getString("audio"),android.util.Base64.DEFAULT));voiceNetwork.execute{val envelope=runCatching{ArenaSpeechEnvelope.decode(cachedAudio)}.getOrNull();runOnUiThread{if(generation==voiceGeneration&&resumed&&session===s){speechEnvelope=envelope;playCached()}}}}.onFailure{voiceUnavailable(phase)}}.onFailure{voiceUnavailable(phase)}
+            r.onSuccess{runCatching{require(it.optString("question_id")==q.getString("id")){"Audio question mismatch"};cachedAudio.writeBytes(android.util.Base64.decode(it.getString("audio"),android.util.Base64.DEFAULT));playCached()}.onFailure{voiceUnavailable(phase)}}.onFailure{voiceUnavailable(phase)}
         }}
     }
     private fun playUrl(url:String){stopVoice();val generation=voiceGeneration;player=android.media.MediaPlayer().apply{setDataSource(url);setOnPreparedListener{if(generation==voiceGeneration&&resumed)it.start()};setOnErrorListener{_,_,_->status.text="Audioja nuk është e disponueshme.";true};prepareAsync()}}
@@ -707,8 +753,8 @@ class ArenaCloudActivity:Activity(){
             answerInput(key,transcript,"Kontrollo tekstin që u kuptua dhe korrigjoje nëse duhet.")
         }
         return
-    };if(code==3116){val s=pendingChallenge;pendingChallenge=null;advancing=false;if(s!=null&&session===s){if(result==RESULT_OK){prefs.edit().putBoolean("challenge:"+questionKey(s),true).apply();if(isOfflineSession())accept(localStore.next(s)) else nextLive(s)}else render()};return};if(code==PlayerPortrait.REQUEST&&PlayerPortrait.receive(this,result,data)){prefs.edit().putBoolean("initial_avatar",false).apply();PlayerPortrait.adjust(this){home()}}}
+    };if(code==3116){val s=pendingChallenge;pendingChallenge=null;advancing=false;if(s!=null&&session===s){if(result==RESULT_OK){prefs.edit().putBoolean("challenge:"+questionKey(s),true).apply();if(isOfflineSession())accept(localStore.next(s)) else nextLive(s)}else render()};return};if(code==PlayerPortrait.REQUEST&&PlayerPortrait.receive(this,result,data)){prefs.edit().putBoolean("initial_avatar",false).apply();PlayerPortrait.adjust(this){if(session!=null)render() else home()}}}
     override fun onResume(){super.onResume();resumed=true;ads.resume();if(isOfflineSession()&&!advancing){deadline=android.os.SystemClock.elapsedRealtime()+(session?.optLong("remaining_ms")?:0);render()}else if(session!=null&&!busy&&!advancing){retryAnswer()};if(!qa()){retryHandler.removeCallbacks(retry);retryHandler.postDelayed(retry,1000)}}
     override fun onPause(){releaseStudioSound();phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;scene?.phoneState="";sound?.stopTone();if(player!=null||scene?.speaking==true||session?.optBoolean("presentation_pending")==true)narrationKey="";persistLocal();timer?.cancel();retryHandler.removeCallbacks(retry);resumed=false;stopVoice();applause?.pause();ads.pause();super.onPause()}
-    override fun onDestroy(){releaseStudioSound();learningDialog?.dismiss();retryHandler.removeCallbacks(retry);network.shutdownNow();voiceNetwork.shutdownNow();timer?.cancel();stopVoice();sound?.release();applause?.release();ads.destroy();super.onDestroy()}
+    override fun onDestroy(){releaseStudioSound();learningDialog?.dismiss();retryHandler.removeCallbacks(retry);network.shutdownNow();voiceNetwork.shutdownNow();voiceAnalysis.shutdownNow();timer?.cancel();stopVoice();sound?.release();applause?.release();ads.destroy();super.onDestroy()}
 }
