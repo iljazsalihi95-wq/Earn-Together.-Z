@@ -11,7 +11,8 @@
         "4"
       ],
       "correct": 0,
-      "explanation": "Vetëm 1 person lejohet."
+      "explanation": "Vetëm 1 person lejohet.",
+      "questionAvailable": false
     },
     "sheet-2": {
       "prompt": "Muhammedi ﷺ është rritur jetim që nga cila moshë?",
@@ -33,7 +34,8 @@
         "150-204 H"
       ],
       "correct": 3,
-      "explanation": "Ka lindur vitin 150 H dhe ka vdekur vitin 204 Hixhrije."
+      "explanation": "Ka lindur vitin 150 H dhe ka vdekur vitin 204 Hixhrije.",
+      "questionAvailable": false
     },
     "sheet-5": {
       "prompt": "Si quhet namazi i cili falet në kohën e vet?",
@@ -55,7 +57,8 @@
         "Fatimja r.a."
       ],
       "correct": 1,
-      "explanation": "Ummu Seleme r.a. ishte nga gratë e Pejgamberit ﷺ që jetoi më gjatë."
+      "explanation": "Ummu Seleme r.a. ishte nga gratë e Pejgamberit ﷺ që jetoi më gjatë.",
+      "questionAvailable": false
     },
     "sheet-10": {
       "prompt": "Shkenca e Fikhut merret me studimin e dispozitave praktike të Sheriatit?",
@@ -75,7 +78,8 @@
         "Selman el-Farisi r.a."
       ],
       "correct": 3,
-      "explanation": "Selman el-Farisi r.a. propozoi hapjen e hendekut."
+      "explanation": "Selman el-Farisi r.a. propozoi hapjen e hendekut.",
+      "questionAvailable": false
     },
     "sheet-13": {
       "prompt": "Si quheshin pasuesit e Isa alejhis-selamit?",
@@ -95,7 +99,9 @@
         "E vërtetë"
       ],
       "correct": 1,
-      "explanation": "Isa a.s. lindi pa baba dhe në Islam është rob dhe i dërguar i Allahut."
+      "explanation": "Isa a.s. lindi pa baba dhe në Islam është rob dhe i dërguar i Allahut.",
+      "questionAvailable": false,
+      "explanationAvailable": false
     },
     "sheet-16": {
       "prompt": "Si quhet haxhi kur bashkohet Umra dhe Haxhi në një ihram?",

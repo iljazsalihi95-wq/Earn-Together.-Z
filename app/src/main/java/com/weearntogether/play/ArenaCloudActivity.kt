@@ -586,9 +586,9 @@ class ArenaCloudActivity:Activity(){
             "phone_outro"->listOf("phone-outro")
             "timeout"->listOf("timeout")
             "result"->if(s.optBoolean("finished")&&s.optBoolean("passed"))listOf("level-up") else emptyList()
-            "question"->if(matches)listOf(q!!.optString("id")+"-question") else emptyList()
+            "question"->if(matches&&row?.optBoolean("questionAvailable",true)==true)listOf(q!!.optString("id")+"-question") else emptyList()
             "explanation"->if(matches&&feedback!=null&&row!!.optInt("correct",-2)==feedback.optInt("correct",-1)&&
-                row.optString("explanation").isNotBlank()&&row.optString("explanation")==feedback.optString("explanation")) {
+                row.optBoolean("explanationAvailable",true)&&row.optString("explanation").isNotBlank()&&row.optString("explanation")==feedback.optString("explanation")) {
                 val reaction=if(feedback.optInt("choice",s.optInt("local_choice",-2))==-1)"timeout"
                     else if(feedback.optBoolean("right"))if(s.optInt("index")%2==0)"correct-01" else "correct-02" else "wrong-01"
                 listOf(reaction,q!!.optString("id")+"-explanation")
