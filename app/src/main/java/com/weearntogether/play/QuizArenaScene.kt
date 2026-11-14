@@ -29,6 +29,11 @@ class QuizArenaScene(context:Context):View(context){
     var timerText="";var stageStatus="";var remainingFraction=1f
 private var reactionStarted=0L
     private val presenter=ArenaPresenter(context)
+    private val defaultPlayer by lazy {
+        val atlas = StudioAssets.get(context, "host")
+        Bitmap.createBitmap(atlas, 384 + 143, 26, 143, 203)
+    }
+    var useInitials = false
     private val playerActor=ArenaSeatedActor(context)
     private val phoneParticipant=ArenaPhoneParticipant()
     private val p=Paint(3);private val textPaint=TextPaint(3);private val namePaint=TextPaint(3);private var attached=false
@@ -200,6 +205,6 @@ private var reactionStarted=0L
     }
     private fun drawPlayer(c:Canvas,time:Long){
         val amplitude=if(playerSpeaking)(playerSpeechEnergy?.invoke()?:0f).coerceIn(0f,1f) else 0f
-        playerActor.draw(c,portrait,playerName,amplitude,time,suitColor,shirtColor,tieColor)
+        playerActor.draw(c,portrait ?: if(useInitials) null else defaultPlayer,playerName,amplitude,time,suitColor,shirtColor,tieColor)
     }
 }

@@ -13,8 +13,8 @@ internal class ArenaPresenter(context: Context) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
     private val body = Rect(0, 0, atlas.width / 4, atlas.height / 2)
     private val bounds = RectF(0f, 0f, 384f, 512f)
-    private val faceBounds = RectF(126f, 50f, 260f, 216f)
-    private val face = Bitmap.createBitmap(atlas, 126, 50, 134, 166)
+    private val faceBounds = RectF(143f, 33f, 280f, 220f)
+    private val face = Bitmap.createBitmap(atlas, 143, 33, 137, 187)
     private val mesh = FloatArray(9 * 9 * 2)
 
     fun draw(canvas: Canvas, energy: Float, time: Long) {
@@ -28,8 +28,8 @@ internal class ArenaPresenter(context: Context) {
                 val x = col * face.width / 8f
                 val y = row * face.height / 8f
                 val center = (1f - kotlin.math.abs(col - 4) / 4f).coerceAtLeast(0f)
-                val mouth = (1f - kotlin.math.abs(y - face.height * .72f) / 26f).coerceAtLeast(0f)
-                val eyes = (1f - kotlin.math.abs(y - face.height * .40f) / 15f).coerceAtLeast(0f)
+                val mouth = (1f - kotlin.math.abs(y - face.height * .68f) / 26f).coerceAtLeast(0f)
+                val eyes = (1f - kotlin.math.abs(y - face.height * .44f) / 15f).coerceAtLeast(0f)
                 mesh[cursor++] = x + kotlin.math.sin(time / 1300.0).toFloat() * center
                 mesh[cursor++] = y + center * (energy * mouth * 10f + if (blink) eyes * 4f else 0f)
             }

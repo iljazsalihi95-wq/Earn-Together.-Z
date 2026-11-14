@@ -33,6 +33,8 @@ class ArenaCloudActivity:Activity(){
     private var busy=false;private var live=false;private var resumed=false;private var audioEnabled=true
     private var deadline=0L;private var tick=-1;private var timer:android.os.CountDownTimer?=null
     private var player:android.media.MediaPlayer?=null;private var sound:android.media.ToneGenerator?=null
+    private var soundBed: android.media.MediaPlayer? = null
+    private var cue: android.media.MediaPlayer? = null
     private var applause:android.media.MediaPlayer?=null;private var voiceGeneration=0
     private val answerButtons=mutableListOf<Button>()
     private var narrationKey=""
@@ -110,7 +112,7 @@ class ArenaCloudActivity:Activity(){
             add(label("Pikët e kuizit shënohen veçmas nga Game Coins.", 13, blue))
         }
     }
-    private fun home(){phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;sound?.stopTone();persistLocal();timer?.cancel();stopVoice();session=null;offline=!live;shell();val hero=FrameLayout(this);val art=StudioArtwork(this,"arena");hero.addView(art,FrameLayout.LayoutParams(-1,-1));val overlay=LinearLayout(this).apply{orientation=1;gravity=Gravity.BOTTOM;setPadding(dp(18),dp(12),dp(18),dp(14));background=GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,intArrayOf(0x00000000,0xee101635.toInt()))};overlay.addView(label("Hyr në skenën e diturisë",25,gold));overlay.addView(label("Mëso pas çdo përgjigjeje.\nPërparo, sfido veten, ndriço arenën.",14));hero.addView(overlay,FrameLayout.LayoutParams(-1,-1));add(hero,208);hero.alpha=0f;hero.animate().alpha(1f).setDuration(450).start()
+    private fun home(){releaseStudioSound();phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;sound?.stopTone();persistLocal();timer?.cancel();stopVoice();session=null;offline=!live;shell();val hero=FrameLayout(this);val art=StudioArtwork(this,"arena");hero.addView(art,FrameLayout.LayoutParams(-1,-1));val overlay=LinearLayout(this).apply{orientation=1;gravity=Gravity.BOTTOM;setPadding(dp(18),dp(12),dp(18),dp(14));background=GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,intArrayOf(0x00000000,0xee101635.toInt()))};overlay.addView(label("Hyr në skenën e diturisë",25,gold));overlay.addView(label("Mëso pas çdo përgjigjeje.\nPërparo, sfido veten, ndriço arenën.",14));hero.addView(overlay,FrameLayout.LayoutParams(-1,-1));add(hero,208);hero.alpha=0f;hero.animate().alpha(1f).setDuration(450).start()
         val profile=LinearLayout(this).apply{gravity=Gravity.CENTER_VERTICAL};profile.addView(PlayerPortrait.image(this).apply{setOnClickListener{PlayerPortrait.pick(this@ArenaCloudActivity)}},LinearLayout.LayoutParams(dp(68),dp(68)));val name=EditText(this).apply{hint="Emri i lojtarit";setText(prefs.getString("name",accounts.currentName()?:"Lojtari"));setTextColor(Color.WHITE);setHintTextColor(0xffb5c5e6.toInt());setSingleLine();filters=arrayOf(android.text.InputFilter.LengthFilter(80))};profile.addView(name,LinearLayout.LayoutParams(0,-2,1f));add(profile);add(button("ZGJIDH AVATARIN / FOTON"){PlayerPortrait.pick(this)});add(button("KOSTUMI • KËMISHA • KRAVATA"){outfit()})
         val languages=arrayOf("Shqip", "Deutsch • vetëm pyetjet", "English • vetëm pyetjet", "Türkçe • vetëm pyetjet");val codes=arrayOf("sq","de","en","tr");val spinner=Spinner(this).apply{adapter=ArrayAdapter(this@ArenaCloudActivity,android.R.layout.simple_spinner_dropdown_item,languages);setSelection(codes.indexOf(locale).coerceAtLeast(0));background=gradient(0xffc5e2ff.toInt(),0xffaabfff.toInt())};var initial=true;spinner.onItemSelectedListener=object:AdapterView.OnItemSelectedListener{override fun onNothingSelected(p:AdapterView<*>?){};override fun onItemSelected(p:AdapterView<*>?,v:View?,position:Int,id:Long){if(initial){initial=false;return};locale=codes[position];prefs.edit().putString("locale",locale).apply();category="";refresh()}};add(spinner,48)
         add(button("RUAJ LOJTARIN"){val n=name.text.toString().trim();if(n.length<2){name.error="Të paktën 2 shkronja";return@button};prefs.edit().putString("name",n).apply();if(live)call("arenaRegister",JSONObject().put("name",n)){refresh()} else {status.text="Emri u ruajt në telefon • USHTRIM OFFLINE"}})
@@ -124,8 +126,8 @@ class ArenaCloudActivity:Activity(){
         if(!accounts.isSignedIn())add(button("HYR NË LLOGARI • AKTIVIZO LIVE"){startActivity(android.content.Intent(this,MainActivity::class.java).putExtra("open_profile",true))});add(button("SFIDA TË REJA • FJALË • AJETE • MEMORIE"){startActivity(android.content.Intent(this,ArenaLearningGamesActivity::class.java))});add(button("RIPROVO LIDHJEN LIVE"){refresh()});add(button("USHTRIM OFFLINE • PA RENDITJE"){startOffline(localStore.saved()!=null)});add(label("Regjistrimet shqip përdoren kur janë të disponueshme; për pyetjet e tjera përdoret zëri AI. Recitimet kërkojnë audio autentike. Pikët e arenës janë rezultat loje.",11,0xffb9c9df.toInt()));ads.banner(root)
     }
     private fun accept(v:JSONObject){val previous=session;if(previous!=null&&questionKey(previous)!=questionKey(v)){phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;sound?.stopTone()};if(previous!=null&&questionKey(previous)==questionKey(v)&&previous.has("learning_choice"))v.put("learning_choice",previous.getInt("learning_choice"));val f=v.optJSONObject("feedback");if(f?.optString("reason")=="timeout"&&f.optInt("submitted_choice",-1)>=0)v.put("learning_choice",f.getInt("submitted_choice"));session=v;offline=v.optBoolean("offline");if(offline)locale="sq" else if(v.optString("locale") in setOf("sq","de","en","tr"))locale=v.getString("locale");if(v.optJSONObject("feedback")==null&&v.optLong("remaining_ms")<=0)v.put("timed_out",true);deadline=android.os.SystemClock.elapsedRealtime()+v.optLong("remaining_ms");if(offline)localStore.save(v) else prefs.edit().putString("session",v.toString()).putString("active_id",v.optString("session_id")).apply();render()}
-    private fun render(){val s=session?:return;timer?.cancel();stopVoice();answerButtons.clear();shell();val config=s.getJSONObject("config");add(label("${if(isOfflineSession())"USHTRIM OFFLINE" else "LIVE"} • NIVELI ${s.getInt("level")}  •  ${s.getInt("index")+1}/${s.getInt("total")}  •  ★ ${s.getInt("score")}",14,gold));scene=QuizArenaScene(this).apply{playerName=prefs.getString("name","")?:"";portrait=if(prefs.getBoolean("initial_avatar",false))null else PlayerPortrait.load(this@ArenaCloudActivity);suitColor=prefs.getInt("suit",0xff273b68.toInt());shirtColor=prefs.getInt("shirt",Color.WHITE);tieColor=prefs.getInt("tie",0xffc99b4e.toInt());reaction=if(s.optJSONObject("feedback")?.optString("reason")=="timeout")0 else if(s.optJSONObject("feedback")?.optBoolean("right")==true)1 else if(s.optJSONObject("feedback")!=null)-1 else 0};add(scene!!,((resources.displayMetrics.widthPixels/resources.displayMetrics.density-40f)*560f/720f).toInt().coerceAtLeast(1))
-        if(s.optBoolean("finished")){if(!isOfflineSession())prefs.edit().remove("active_id").remove("pending_answer").remove("pending_next").apply();add(label(if(s.optBoolean("passed"))"NIVELI U KALUA!" else "PROVO PËRSËRI",27,gold));add(label("${s.getInt("correct")} / ${s.getInt("total")} të sakta • ★ ${s.getInt("score")}",21));scene?.apply{reaction=if(s.optBoolean("passed"))1 else -1;questionPrompt=if(s.optBoolean("passed"))"NIVELI U KALUA!" else "PROVO PËRSËRI";questionCategory="${s.getInt("correct")} / ${s.getInt("total")} TË SAKTA";questionNumber="NIVELI ${s.getInt("level")}";timerText="★ ${s.getInt("score")}";stageStatus="REZULTATI YT"};root.translationY=dp(22).toFloat();root.animate().translationY(0f).setDuration(550).start();addRewardPanel();add(button("VAZHDO • KAPËRCE SKENËN"){home();refresh()});val video=config.optString("video");if(video.startsWith("https://"))add(button("SHIKO VIDEON E KALIMIT"){video(video)});if(audioEnabled)voice("result"){ads.naturalBreak()} else ads.naturalBreak();return}
+    private fun render(){val s=session?:return;timer?.cancel();stopVoice();answerButtons.clear();updateStudioBed();shell();val config=s.getJSONObject("config");add(label("${if(isOfflineSession())"USHTRIM OFFLINE" else "LIVE"} • NIVELI ${s.getInt("level")}  •  ${s.getInt("index")+1}/${s.getInt("total")}  •  ★ ${s.getInt("score")}",14,gold));scene=QuizArenaScene(this).apply{playerName=prefs.getString("name","")?:"";useInitials=prefs.getBoolean("initial_avatar",false);portrait=if(useInitials)null else PlayerPortrait.load(this@ArenaCloudActivity);suitColor=prefs.getInt("suit",0xff273b68.toInt());shirtColor=prefs.getInt("shirt",Color.WHITE);tieColor=prefs.getInt("tie",0xffc99b4e.toInt());reaction=if(s.optJSONObject("feedback")?.optString("reason")=="timeout")0 else if(s.optJSONObject("feedback")?.optBoolean("right")==true)1 else if(s.optJSONObject("feedback")!=null)-1 else 0};add(scene!!,((resources.displayMetrics.widthPixels/resources.displayMetrics.density-40f)*560f/720f).toInt().coerceAtLeast(1))
+        if(s.optBoolean("finished")){if(!isOfflineSession())prefs.edit().remove("active_id").remove("pending_answer").remove("pending_next").apply();add(label(if(s.optBoolean("passed"))"NIVELI U KALUA!" else "PROVO PËRSËRI",27,gold));add(label("${s.getInt("correct")} / ${s.getInt("total")} të sakta • ★ ${s.getInt("score")}",21));scene?.apply{reaction=if(s.optBoolean("passed"))1 else -1;questionPrompt=if(s.optBoolean("passed"))"NIVELI U KALUA!" else "PROVO PËRSËRI";questionCategory="${s.getInt("correct")} / ${s.getInt("total")} TË SAKTA";questionNumber="NIVELI ${s.getInt("level")}";timerText="★ ${s.getInt("score")}";stageStatus="REZULTATI YT"};root.translationY=dp(22).toFloat();root.animate().translationY(0f).setDuration(550).start();if(s.optBoolean("passed")&&resultCueKey!=questionKey(s)){resultCueKey=questionKey(s);playStudioCue(R.raw.arena_win)};addRewardPanel();add(button("VAZHDO • KAPËRCE SKENËN"){home();refresh()});val video=config.optString("video");if(video.startsWith("https://"))add(button("SHIKO VIDEON E KALIMIT"){video(video)});if(audioEnabled)voice("result"){ads.naturalBreak()} else ads.naturalBreak();return}
         val q=s.getJSONObject("question");scene?.apply{questionPrompt=q.getString("prompt");questionCategory=q.getString("category");questionNumber="PYETJA ${s.getInt("index")+1} / ${s.getInt("total")}";contentDescription=questionPrompt};val feedback=s.optJSONObject("feedback");val choices=q.getJSONArray("choices")
         val hidden = if (feedback == null) ArenaLifelines.hidden(s) else emptySet()
         scene?.apply {
@@ -133,6 +135,7 @@ class ArenaCloudActivity:Activity(){
             correctChoice = feedback?.optInt("correct", -1) ?: -1
             selectedChoice = feedback?.optInt("choice", s.optInt("local_choice", -1)) ?: -1
         }
+        add(label(q.getString("prompt"), 18))
         for(i in 0 until choices.length()){val option=button("${'A'+i}   ${choices.getString(i)}"){sendAnswer(i)};option.gravity=Gravity.START or Gravity.CENTER_VERTICAL;option.isEnabled=feedback==null&&!s.optBoolean("answer_pending")&&!s.optBoolean("presentation_pending");answerButtons.add(option);if(feedback!=null&&i==feedback.getInt("correct"))option.background=gradient(0xff0b9a76.toInt(),0xff146b63.toInt());if(feedback!=null&&i==feedback.optInt("choice",s.optInt("local_choice",-2))&&!feedback.getBoolean("right"))option.background=gradient(0xffa73551.toInt(),0xff682544.toInt());if(i in ArenaLifelines.hidden(s)&&feedback==null){option.isEnabled=false;option.alpha=.25f;option.text="${'A'+i}   —"};add(option)}
         if(feedback!=null){scene?.apply{timerText=if(feedback.optInt("choice",-2)==-1)"PA PËRGJIGJE" else if(feedback.getBoolean("right"))"SAKTË" else "GABIM";stageStatus="TESTIM DHE MËSIM"};add(label(if(feedback.optInt("choice",s.optInt("local_choice",-2))==-1)"KOHA PËRFUNDOI • PA PËRGJIGJE" else if(feedback.getBoolean("right"))"✓ SAKTË" else "GABIM • PËRGJIGJJA E SAKTË: ${'A'+feedback.getInt("correct")}",20,gold));val selected=feedback.optInt("choice",s.optInt("local_choice",-2));if(selected>=0)add(label("Zgjedhja jote: ${'A'+selected} • ${choices.optString(selected)}",14,blue));if(s.has("learning_choice"))add(label(lateChoiceText(s),16,blue));if(selected==-1)add(label("Përgjigjja e saktë: ${'A'+feedback.getInt("correct")} • ${choices.optString(feedback.getInt("correct"))}",16,gold));add(label(feedback.getString("explanation"),17));add(label(feedback.optString("source"),12,blue));add(button("DËGJO SHPJEGIMIN"){voice("explanation")});add(button("HAP SHPJEGIMIN • TESTIM DHE MËSIM"){showLearning(s)});add(button("VAZHDO ›"){continueAfterLearning(s)});add(button("PYET PREZANTUESIN PËR SHPJEGIMIN"){clarify(s)});presentFeedback(s)}
         else if(s.optBoolean("presentation_pending")){beginQuestionReading(s)}
@@ -140,6 +143,45 @@ class ArenaCloudActivity:Activity(){
         else{val clock=label("",15,gold);fun update(){val sec=((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000;scene?.apply{timerText="%02d:%02d".format(sec/60,sec%60);stageStatus="KOHA E PËRGJIGJES";remainingFraction=(sec.toFloat()/(config.optInt("seconds",60).coerceAtLeast(1))).coerceIn(0f,1f)};clock.text="⏱ ${((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000}s • ${config.getInt("points")} pikë për saktë"};update();timer=object:android.os.CountDownTimer((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(1),200){override fun onTick(ms:Long){update();val sec=(ms/1000).toInt();if(sec!=tick){tick=sec;if(audioEnabled&&sec>0&&scene?.speaking!=true&&phoneDialog?.isShowing!=true)sound?.startTone(android.media.ToneGenerator.TONE_PROP_BEEP,if(sec<=10)145 else 80)}};override fun onFinish(){clock.text="Koha përfundoi • Asnjë përgjigje nuk u zgjodh";if(resumed)expireQuestion()}}.start();addAnswerInputs(s);addLifelineControls(s);add(button("DËGJO PYETJEN"){voice("question")});val rec=q.optString("recitation");if(rec.startsWith("https://"))add(button("DËGJO RECITIMIN AUTENTIK"){playUrl(rec)});add(button("RIPROVO / SINKRONIZO"){retryAnswer()});if(audioEnabled&&narrationKey!=questionKey(s)){narrationKey=questionKey(s);voice("question")}}
     }
 
+    private fun updateStudioBed() {
+        val active = resumed && audioEnabled && !qa() && session?.let {
+            it.optJSONObject("feedback") == null && !it.optBoolean("finished")
+        } == true
+        if (!active) {
+            soundBed?.release()
+            soundBed = null
+            return
+        }
+        if (soundBed == null) {
+            soundBed = android.media.MediaPlayer.create(this, R.raw.arena_bed)?.apply {
+                isLooping = true
+                setVolume(.32f, .32f)
+                start()
+            }
+        }
+    }
+
+    private fun playStudioCue(resource: Int) {
+        if (!audioEnabled || !resumed || qa()) return
+        cue?.release()
+        cue = android.media.MediaPlayer.create(this, resource)?.apply {
+            setVolume(.55f, .55f)
+            setOnCompletionListener {
+                if (cue === it) cue = null
+                it.release()
+            }
+            start()
+        }
+    }
+
+    private fun releaseStudioSound() {
+        soundBed?.release()
+        soundBed = null
+        cue?.release()
+        cue = null
+    }
+
+    private var resultCueKey = ""
     private var celebratedKey=""
     private fun presentFeedback(s:JSONObject){
         val key=questionKey(s)
@@ -161,7 +203,14 @@ class ArenaCloudActivity:Activity(){
             }else{
                 retryHandler.postDelayed({if(session===s&&resumed)narrate()},2800)
             }
-        }else narrate()
+        } else {
+            if (!correct && celebratedKey != key &&
+                s.optJSONObject("feedback")?.optString("reason") != "timeout") {
+                celebratedKey = key
+                playStudioCue(R.raw.arena_wrong)
+            }
+            narrate()
+        }
     }
     private fun showLearning(s:JSONObject){
         if(learningDialog?.isShowing==true)return
@@ -660,6 +709,6 @@ class ArenaCloudActivity:Activity(){
         return
     };if(code==3116){val s=pendingChallenge;pendingChallenge=null;advancing=false;if(s!=null&&session===s){if(result==RESULT_OK){prefs.edit().putBoolean("challenge:"+questionKey(s),true).apply();if(isOfflineSession())accept(localStore.next(s)) else nextLive(s)}else render()};return};if(code==PlayerPortrait.REQUEST&&PlayerPortrait.receive(this,result,data)){prefs.edit().putBoolean("initial_avatar",false).apply();PlayerPortrait.adjust(this){home()}}}
     override fun onResume(){super.onResume();resumed=true;ads.resume();if(isOfflineSession()&&!advancing){deadline=android.os.SystemClock.elapsedRealtime()+(session?.optLong("remaining_ms")?:0);render()}else if(session!=null&&!busy&&!advancing){retryAnswer()};if(!qa()){retryHandler.removeCallbacks(retry);retryHandler.postDelayed(retry,1000)}}
-    override fun onPause(){phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;scene?.phoneState="";sound?.stopTone();if(player!=null||scene?.speaking==true||session?.optBoolean("presentation_pending")==true)narrationKey="";persistLocal();timer?.cancel();retryHandler.removeCallbacks(retry);resumed=false;stopVoice();applause?.pause();ads.pause();super.onPause()}
-    override fun onDestroy(){learningDialog?.dismiss();retryHandler.removeCallbacks(retry);network.shutdownNow();voiceNetwork.shutdownNow();timer?.cancel();stopVoice();sound?.release();applause?.release();ads.destroy();super.onDestroy()}
+    override fun onPause(){releaseStudioSound();phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;scene?.phoneState="";sound?.stopTone();if(player!=null||scene?.speaking==true||session?.optBoolean("presentation_pending")==true)narrationKey="";persistLocal();timer?.cancel();retryHandler.removeCallbacks(retry);resumed=false;stopVoice();applause?.pause();ads.pause();super.onPause()}
+    override fun onDestroy(){releaseStudioSound();learningDialog?.dismiss();retryHandler.removeCallbacks(retry);network.shutdownNow();voiceNetwork.shutdownNow();timer?.cancel();stopVoice();sound?.release();applause?.release();ads.destroy();super.onDestroy()}
 }
