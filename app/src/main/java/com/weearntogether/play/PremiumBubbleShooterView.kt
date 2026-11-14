@@ -304,8 +304,10 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   streak=0
   val colors=grid.flatMap{it.asList()}.filter{it>0}.toSet()
   if(colors.isEmpty()){
-   val completedLevel=level
-   if(level<250){level++;score+=level*500;post{onLevelComplete(completedLevel)};newBoard()}else{campaignComplete=true;misses=0;post{onLevelComplete(completedLevel)}}
+   // A rescue is assistance, not a completed level. Do not grant level
+   // completion callbacks or bonus score for a board cleared by rescue.
+   // Start a fresh board at the SAME unlocked level to avoid farming rewards.
+   newBoard()
   }
   val active=grid.flatMap{it.asList()}.filter{it>0}.toSet()
   if(current !in active)current=randomBoardColor()
