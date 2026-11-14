@@ -14,11 +14,11 @@ for name in ('sheet-bank-sq.json','general-sq.json'):
             assert row['question']==by_id[row['id']]['question'],row['id']
             continue
         by_id[row['id']]=row;entries.append(row)
-# Also include the 24 authored mathematics questions encoded in the Android source.
+# Also include the 30 authored mathematics questions encoded in the Android source.
 source=(ROOT/'app/src/main/java/com/weearntogether/play/ArenaOfflineStore.kt').read_text()
 pattern=r'MathQ\(("(?:[^"\\]|\\.)*"),listOf\((.*?)\),(\d+),("(?:[^"\\]|\\.)*")\)'
 math=re.findall(pattern,source)
-assert len(math)==24,len(math)
+assert len(math)==30,len(math)
 for i,(prompt,choices,correct,explanation) in enumerate(math,101):
     q=dict(id=f'arena-math-{i}',category='Matematikë',question=json.loads(prompt),options=json.loads('['+choices+']'),correctIndex=int(correct),explanation=json.loads(explanation),source='Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht',bank='ArenaOfflineStore.kt')
     assert q['id'] not in by_id

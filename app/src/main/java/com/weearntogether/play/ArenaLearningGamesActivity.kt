@@ -31,7 +31,7 @@ class ArenaLearningGamesActivity:Activity(){
     override fun onCreate(b:Bundle?){super.onCreate(b);ads=NativeGameAds(this,"quiz_arena_learning");quickMode=b?.getBoolean("quickMode")?:intent.hasExtra("quick_mode");mode=b?.getString("mode")?:intent.getStringExtra("quick_mode")?:"";state=runCatching{JSONObject(b?.getString("state")?:prefs.getString("round_$mode",null)?:"{}")}.getOrDefault(JSONObject());if(mode.isEmpty())menu() else {if(b==null&&quickMode)newRound();render()}}
     private fun menu(){revision++;mode="";scene=null;shell("QUIZ ARENA • SFIDA TË REJA")
         add(label("Zgjidh mënyrën e lojës. Mëso, kujto dhe përmirëso rekordin tënd.",17))
-        listOf("word" to "◆ Gjeje fjalën e duhur","verse" to "▣ Plotëso ajetin","memory" to "◈ Kujtesa • gjej çiftet","true_false" to "✓ E saktë apo e gabuar","order" to "↔ Rendit fjalët").forEach{(key,title)->add(button(title){open(key)})}
+        listOf("word" to "◆ Gjeje fjalën e duhur","verse" to "▣ Plotëso ajetin","memory" to "◈ Kujtesa • gjej çiftet","true_false" to "✓ E saktë apo e gabuar","order" to "↔ Rendit fjalët","sequence" to "Plotëso vargun","compare" to "Krahaso numrat").forEach{(key,title)->add(button(title){open(key)})}
         add(label("Rekordi: ${prefs.getInt("best",0)} pikë",18));add(button("KTHEHU NË ARENË"){finish()})
     }
     private fun open(key:String){mode=key;state=runCatching{JSONObject(prefs.getString("round_$mode","{}")?:"{}")}.getOrDefault(JSONObject());if(!state.has("rounds")&&!state.has("cards")||key=="word"&&state.optJSONArray("rounds")?.optJSONObject(0)?.has("clues")!=true)newRound();render()}
@@ -60,6 +60,8 @@ class ArenaLearningGamesActivity:Activity(){
                 }
             }
             state.put("rounds",JSONArray(rows.shuffled().take(if(quickMode)1 else 10)))
+        }else if(mode=="sequence" || mode=="compare"){
+            state.put("rounds", JSONArray(numberRounds(mode).take(if(quickMode) 1 else 6)))
         }else if(mode=="true_false"){
             val rows=bank.shuffled().take(if(quickMode)1 else 10).map { q ->
                 val proposed=if(kotlin.random.Random.nextBoolean()) q.correct else q.choices.indices.filter { it!=q.correct }.random()
@@ -74,18 +76,41 @@ class ArenaLearningGamesActivity:Activity(){
         }
         save()
     }
+    private fun numberRounds(mode: String): List<JSONObject> = (2..13).shuffled().map { n ->
+        val compare = mode == "compare"
+        val offset = if(compare) (-1..1).random() else (2..5).random()
+        val left = n * 2
+        val right = left + offset
+        val answer = if(compare) when {
+            left < right -> "<"
+            left > right -> ">"
+            else -> "="
+        } else (n + 3 * offset).toString()
+        val options = if(compare) listOf("<", "=", ">")
+            else listOf(-2, -1, 0, 2).map { (answer.toInt() + it).toString() }.shuffled()
+        val prompt = if(compare) "$n + $n  ?  $right"
+            else "$n, ${n+offset}, ${n+2*offset}, …"
+        JSONObject()
+            .put("prompt", prompt)
+            .put("answer", answer)
+            .put("choices", JSONArray(options))
+            .put("full", if(compare) "$n + $n = $left. Pra, $left $answer $right."
+                else "Çdo numër rritet me $offset. Numri pasues është $answer.")
+    }
+
     private fun save(){if(mode.isNotEmpty()&&!quickMode)prefs.edit().putString("round_$mode",state.toString()).apply()}
     private fun render(){revision++;if(mode.isEmpty()){menu();return};if(!state.has("rounds")&&!state.has("cards")||mode=="word"&&state.optJSONArray("rounds")?.optJSONObject(0)?.has("clues")!=true){newRound()}
         if(mode=="memory"){memory();return}
         val rows=state.getJSONArray("rounds");val index=state.optInt("index")
         if(index>=rows.length()){results();return}
         val q=rows.getJSONObject(index);val answered=state.optBoolean("answered")
-        shell(when(mode){"verse"->"PLOTËSO AJETIN";"order"->"RENDIT FJALËT";"true_false"->"E SAKTË APO E GABUAR";else->"GJEJE FJALËN E DUHUR"})
+        shell(when(mode){"verse"->"PLOTËSO AJETIN";"order"->"RENDIT FJALËT";"true_false"->"E SAKTË APO E GABUAR";"sequence"->"PLOTËSO VARGUN";"compare"->"KRAHASO NUMRAT";else->"GJEJE FJALËN E DUHUR"})
         add(label("${index+1} / ${rows.length()}  •  ★ ${state.optInt("score")}",16))
         val progress=ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal).apply{max=rows.length();progress=index};add(progress)
         scene=QuizArenaScene(this).apply{playerName="SFIDA";questionPrompt=if(mode=="verse")"Gjej fjalën që mungon" else q.getString("prompt");questionCategory=if(mode=="verse")q.optString("source") else "MËSO DHE KUJTO";questionNumber="PYETJA ${index+1}";timerText="★ ${state.optInt("score")}";stageStatus="ILAZ SALIHI";reaction=if(answered&&state.optBoolean("right"))1 else 0}
         root.addView(scene,LinearLayout.LayoutParams(-1,dp(if(mode=="verse")160 else 220)))
         if(mode=="verse"){add(label("Ushtrim plotësimi • teksti i plotë shfaqet pas zgjedhjes",13));add(label(q.getString("prompt"),30).apply{textDirection=android.view.View.TEXT_DIRECTION_RTL})}
+        if(mode=="sequence" || mode=="compare")add(label(q.getString("prompt"),30))
         if(mode=="word"){associationBoard(q,answered)}else if(mode=="true_false"){
             add(label("Përgjigjja e propozuar",14))
             add(label(q.getString("proposed"),22))
@@ -100,7 +125,7 @@ class ArenaLearningGamesActivity:Activity(){
             val choices=q.getJSONArray("choices")
             for(i in 0 until choices.length())add(button(choices.getString(i)){answer(choices.getString(i)==q.getString("answer"))}.apply{isEnabled=!answered})
         }
-        if(answered){add(label(if(state.optBoolean("right"))"MASHALLAH • SAKTË!" else "MËSO DHE PROVO PËRSËRI",21));add(label(q.getString("answer"),24));add(label(q.optString("full"),if(mode=="verse")28 else 17));add(label(q.optString("source"),13))
+        if(answered){add(label(if(state.optBoolean("right"))"MASHALLAH • SAKTË!" else "MËSO DHE PROVO PËRSËRI",21));add(label(q.getString("answer"),24));add(label(q.optString("full"),if(mode=="verse")28 else 17));if(q.optString("source").isNotBlank())add(label(q.optString("source"),13))
             if(q.optString("url").startsWith("https://quran.com/"))add(button("LEXO AJETIN NË BURIM"){startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW,android.net.Uri.parse(q.getString("url"))))})
             add(button("VAZHDO ›"){state.put("index",index+1).put("answered",false);state.remove("selected");state.remove("chips");state.remove("revealed");save();render()})
         }

@@ -34,7 +34,13 @@ class ArenaOfflineStore(private val context:Context,user:String){
             MathQ("Sa minuta bëjnë 2 orë e 15 minuta?",listOf("115","125","135","145"),2,"Dy orë bëjnë 120 minuta. Kur shtojmë 15, bëhen 135 minuta."),
             MathQ("Sa është mesatarja e numrave 4, 8 dhe 12?",listOf("6","8","10","12"),1,"Shuma është 24. E pjesëtojmë me 3 dhe marrim 8."),
             MathQ("Sa është 15% e numrit 200?",listOf("15","20","25","30"),3,"Pesëmbëdhjetë për qind e 200 është 15 × 200 ÷ 100 = 30."),
-            MathQ("Sa centimetra ka një metër e gjysmë?",listOf("150","105","115","250"),0,"Një metër ka 100 centimetra dhe gjysmë metri ka 50. Gjithsej janë 150 centimetra.")
+            MathQ("Sa centimetra ka një metër e gjysmë?",listOf("150","105","115","250"),0,"Një metër ka 100 centimetra dhe gjysmë metri ka 50. Gjithsej janë 150 centimetra."),
+            MathQ("Sa është 12 × 15?",listOf("160","170","180","190"),2,"12 × 10 + 12 × 5 = 120 + 60 = 180."),
+            MathQ("Sa gramë janë 2 kilogramë e 250 gramë?",listOf("2250","2000","2500","2025"),0,"Dy kilogramë janë 2000 gramë. Me 250 gramë shtesë bëhen 2250 gramë."),
+            MathQ("Sa është perimetri i një katrori me brinjë 9 cm?",listOf("18 cm","27 cm","81 cm","36 cm"),3,"Katrori ka katër brinjë të barabarta. 4 × 9 = 36 cm."),
+            MathQ("Sa është 7/10 si numër dhjetor?",listOf("0,07","0,7","7,0","70,0"),1,"Shtatë të dhjetat shkruhen 0,7."),
+            MathQ("Sa mbeten nga 50 euro pasi paguan 17 euro e 50 cent?",listOf("33,50 €","32,00 €","32,50 €","33,00 €"),2,"50,00 € − 17,50 € = 32,50 €."),
+            MathQ("Sa orë janë 180 minuta?",listOf("2","3","4","5"),1,"Një orë ka 60 minuta. 180 ÷ 60 = 3.")
         )
         return rows.mapIndexed{i,q->QuizArenaActivity.Question("Matematikë",q.prompt,q.choices,q.correct,q.explanation,"arena-math-${101+i}","Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht")}
     }
