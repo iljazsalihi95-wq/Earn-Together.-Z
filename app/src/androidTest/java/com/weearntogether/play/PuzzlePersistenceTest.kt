@@ -73,10 +73,10 @@ class PuzzlePersistenceTest {
    fun place(){val piece=views(game).first{it.contentDescription?.toString()=="Piece 1, 1 blocks"};tap(piece);views(game).filterIsInstance<GridLayout>().first{it.childCount==64}.getChildAt(0).performClick()}
    inst.runOnMainSync{game.setPaused(true);place()};inst.waitForIdleSync();assertEquals(0,p.getInt("score",-1))
    inst.runOnMainSync{game.setPaused(false);place()};android.os.SystemClock.sleep(500);inst.waitForIdleSync()
-   assertTrue(p.getInt("score",0)>0);val saved=p.getString("board","");assertNotEquals("0",saved!!.split(',').first())
+   assertTrue(p.getInt("score",0)>0);val earnedScore=p.getInt("score",-1);val saved=p.getString("board","");assertNotEquals("0",saved!!.split(',').first())
    inst.runOnMainSync{a.finish()};a=launch(BlockPuzzleActivity::class.java);assertEquals(saved,p.getString("board",null))
    inst.runOnMainSync{views(a.window.decorView).filterIsInstance<PremiumBlockPuzzleView>().single().restart()};inst.waitForIdleSync()
-   assertEquals(0,p.getInt("score",-1));assertEquals("Restart keeps the unlocked level",3,p.getInt("level",-1));assertEquals(10,p.getInt("total_lines",-1));assertEquals(0,p.getInt("level_lines",-1));assertTrue(p.getInt("best",0)>=100)
+   assertEquals("Restart must retain earned points",earnedScore,p.getInt("score",-1));assertEquals("Restart keeps the unlocked level",3,p.getInt("level",-1));assertEquals(10,p.getInt("total_lines",-1));assertEquals(0,p.getInt("level_lines",-1));assertTrue(p.getInt("best",0)>=100)
    assertTrue(p.getString("board","")!!.split(',').all{it=="0"})
   }finally{inst.runOnMainSync{a.finish()}}
  }
