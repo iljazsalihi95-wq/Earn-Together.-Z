@@ -10,7 +10,8 @@
         "3",
         "4"
       ],
-      "correct": 0
+      "correct": 0,
+      "explanation": "Vetëm 1 person lejohet."
     },
     "sheet-2": {
       "prompt": "Muhammedi ﷺ është rritur jetim që nga cila moshë?",
@@ -20,7 +21,8 @@
         "2 vjeç",
         "Lindja"
       ],
-      "correct": 3
+      "correct": 3,
+      "explanation": "Ai mbeti jetim që nga lindja sepse babai i kishte vdekur para lindjes."
     },
     "sheet-4": {
       "prompt": "Në cilin vit ka lindur dhe ka vdekur Imam Shafiu?",
@@ -30,7 +32,8 @@
         "156-204 H",
         "150-204 H"
       ],
-      "correct": 3
+      "correct": 3,
+      "explanation": "Ka lindur vitin 150 H dhe ka vdekur vitin 204 Hixhrije."
     },
     "sheet-5": {
       "prompt": "Si quhet namazi i cili falet në kohën e vet?",
@@ -40,7 +43,8 @@
         "Salah",
         "Ida"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Namazi quhet Eda kur falet në kohën e vet."
     },
     "sheet-9": {
       "prompt": "Cila është gruaja e Pejgamberit ﷺ që vdiq e fundit?",
@@ -50,7 +54,8 @@
         "Aishja r.a.",
         "Fatimja r.a."
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Ummu Seleme r.a. ishte nga gratë e Pejgamberit ﷺ që jetoi më gjatë."
     },
     "sheet-10": {
       "prompt": "Shkenca e Fikhut merret me studimin e dispozitave praktike të Sheriatit?",
@@ -58,7 +63,8 @@
         "E vërtetë",
         "E pavërtetë"
       ],
-      "correct": 0
+      "correct": 0,
+      "explanation": "Fikhu studion dispozitat praktike të Sheriatit."
     },
     "sheet-11": {
       "prompt": "Kush i propozoi Pejgamberit ﷺ hapjen e Hendekut?",
@@ -68,7 +74,8 @@
         "Aliu r.a.",
         "Selman el-Farisi r.a."
       ],
-      "correct": 3
+      "correct": 3,
+      "explanation": "Selman el-Farisi r.a. propozoi hapjen e hendekut."
     },
     "sheet-13": {
       "prompt": "Si quheshin pasuesit e Isa alejhis-selamit?",
@@ -78,7 +85,8 @@
         "Ansar",
         "Tabi'in"
       ],
-      "correct": 0
+      "correct": 0,
+      "explanation": "Pasuesit e Isa a.s. quhen Havarijun."
     },
     "sheet-15": {
       "prompt": "Isa a.s. ka lindur pa baba, por nuk është djali i Allahut?",
@@ -86,7 +94,8 @@
         "E pavërtetë",
         "E vërtetë"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Isa a.s. lindi pa baba dhe në Islam është rob dhe i dërguar i Allahut."
     },
     "sheet-16": {
       "prompt": "Si quhet haxhi kur bashkohet Umra dhe Haxhi në një ihram?",
@@ -96,7 +105,8 @@
         "Haxhi Ifrad",
         "Haxhi Farz"
       ],
-      "correct": 1
+      "correct": 1,
+      "explanation": "Haxhi Kiran është bashkimi i Umres dhe Haxhit në një ihram."
     }
   },
   "files": [

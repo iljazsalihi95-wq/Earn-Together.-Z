@@ -167,6 +167,11 @@ class ArenaCloudActivity:Activity(){
         else{val clock=label("",15,gold);fun update(){val sec=((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000;scene?.apply{timerText="%02d:%02d".format(sec/60,sec%60);stageStatus="KOHA E PËRGJIGJES";remainingFraction=(sec.toFloat()/(config.optInt("seconds",60).coerceAtLeast(1))).coerceIn(0f,1f)};clock.text="⏱ ${((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(0)+999)/1000}s • ${config.getInt("points")} pikë për saktë"};update();timer=object:android.os.CountDownTimer((deadline-android.os.SystemClock.elapsedRealtime()).coerceAtLeast(1),200){override fun onTick(ms:Long){update();val sec=(ms/1000).toInt();if(sec!=tick){tick=sec;if(audioEnabled&&sec>0&&scene?.speaking!=true&&phoneDialog?.isShowing!=true)sound?.startTone(android.media.ToneGenerator.TONE_PROP_BEEP,if(sec<=10)145 else 80)}};override fun onFinish(){clock.text="Koha përfundoi • Asnjë përgjigje nuk u zgjodh";if(resumed)expireQuestion()}}.start();addAnswerInputs(s);addLifelineControls(s);add(button("DËGJO PYETJEN"){voice("question")});val rec=q.optString("recitation");if(rec.startsWith("https://"))add(button("DËGJO RECITIMIN AUTENTIK"){playUrl(rec)});add(button("RIPROVO / SINKRONIZO"){retryAnswer()});if(audioEnabled&&narrationKey!=questionKey(s)){narrationKey=questionKey(s);voice("question")}}
     }
 
+    private fun setNarrationMix(active: Boolean) {
+        val volume = if (active) .08f else .25f
+        soundBed?.setVolume(volume, volume)
+    }
+
     private fun updateStudioBed() {
         val active = resumed && audioEnabled && !qa() && session?.let {
             it.optJSONObject("feedback") == null && !it.optBoolean("finished")
@@ -179,7 +184,7 @@ class ArenaCloudActivity:Activity(){
         if (soundBed == null) {
             soundBed = android.media.MediaPlayer.create(this, R.raw.arena_bed)?.apply {
                 isLooping = true
-                setVolume(.32f, .32f)
+                setVolume(.25f, .25f)
                 start()
             }
         }
@@ -524,10 +529,11 @@ class ArenaCloudActivity:Activity(){
         call("arenaNext",data){prefs.edit().remove("pending_next").apply();accept(it)}
     }
     private fun retryAnswer(){if(isOfflineSession()){render();return};val next=runCatching{JSONObject(prefs.getString("pending_next","")?:"")}.getOrNull();if(next!=null){call("arenaNext",next){prefs.edit().remove("pending_next").apply();accept(it)};return};val p=runCatching{JSONObject(prefs.getString("pending_answer","")?:"")}.getOrNull();if(p!=null)call("arenaAnswer",p){prefs.edit().remove("pending_answer").apply();accept(it)}else session?.let{call("arenaResume",JSONObject().put("session_id",it.getString("session_id"))){v->accept(v)}}}
-    private fun stopVoice(){voiceGeneration++;voiceConnections.getAndSet(null)?.disconnect();clearVoiceTimeout();voiceAnalysisTask?.cancel(true);voiceAnalysisTask=null;sound?.stopTone();applause?.release();applause=null;voiceCompletion=null;player?.release();player=null;speechEnvelope=null;scene?.speaking=false;scene?.friendSpeaking=false;scene?.speechEnergy=null}
+    private fun stopVoice(){voiceGeneration++;setNarrationMix(false);voiceConnections.getAndSet(null)?.disconnect();clearVoiceTimeout();voiceAnalysisTask?.cancel(true);voiceAnalysisTask=null;sound?.stopTone();applause?.release();applause=null;voiceCompletion=null;player?.release();player=null;speechEnvelope=null;scene?.speaking=false;scene?.friendSpeaking=false;scene?.speechEnergy=null}
     private fun narrationFinished(phase:String,key:String){
         if(key!=questionKey())return
         clearVoiceTimeout()
+        setNarrationMix(false)
         scene?.speaking=false;scene?.friendSpeaking=false
         val completion=voiceCompletion;voiceCompletion=null
         if(phase=="question")finishQuestionReading(key)
@@ -539,6 +545,7 @@ class ArenaCloudActivity:Activity(){
         if(!resumed)return
         val s=session?:return
         clearVoiceTimeout()
+        setNarrationMix(false)
         scene?.speaking=false;scene?.friendSpeaking=false
         status.text="Audioja nuk u realizua"+(if(voiceFailure.isBlank())"" else ": $voiceFailure")+". Riprovo audion ose vazhdo me tekst."
         if(phase=="question"&&s.optBoolean("presentation_pending")){
@@ -580,7 +587,8 @@ class ArenaCloudActivity:Activity(){
             "timeout"->listOf("timeout")
             "result"->if(s.optBoolean("finished")&&s.optBoolean("passed"))listOf("level-up") else emptyList()
             "question"->if(matches)listOf(q!!.optString("id")+"-question") else emptyList()
-            "explanation"->if(matches&&feedback!=null&&row!!.optInt("correct",-2)==feedback.optInt("correct",-1)) {
+            "explanation"->if(matches&&feedback!=null&&row!!.optInt("correct",-2)==feedback.optInt("correct",-1)&&
+                row.optString("explanation").isNotBlank()&&row.optString("explanation")==feedback.optString("explanation")) {
                 val reaction=if(feedback.optInt("choice",s.optInt("local_choice",-2))==-1)"timeout"
                     else if(feedback.optBoolean("right"))if(s.optInt("index")%2==0)"correct-01" else "correct-02" else "wrong-01"
                 listOf(reaction,q!!.optString("id")+"-explanation")
@@ -622,7 +630,7 @@ class ArenaCloudActivity:Activity(){
                             scene?.speechEnergy={speechEnvelope?.at(runCatching { player?.currentPosition?:0 }.getOrDefault(0))?:0f}
                             player=android.media.MediaPlayer().apply {
                                 setDataSource(file.absolutePath)
-                                setOnPreparedListener { if(current()){clearVoiceTimeout();scene?.speaking=true;scene?.friendSpeaking=false;scene?.stageStatus="PREZANTUESI PO FLET";it.start()} }
+                                setOnPreparedListener { if(current()){clearVoiceTimeout();setNarrationMix(true);scene?.speaking=true;scene?.friendSpeaking=false;scene?.stageStatus="PREZANTUESI PO FLET";it.start()} }
                                 setOnCompletionListener { if(current())playClip(index+1) }
                                 setOnErrorListener { _,_,_->if(current()){player?.release();player=null;unavailable()};true }
                                 prepareAsync()
@@ -681,7 +689,7 @@ class ArenaCloudActivity:Activity(){
             player=android.media.MediaPlayer().apply{
                 setDataSource(cachedAudio.absolutePath)
                 setOnPreparedListener{
-                    if(generation==voiceGeneration&&resumed&&session===s){clearVoiceTimeout();scene?.speaking=true;scene?.friendSpeaking=phase=="friend";scene?.stageStatus=if(phase=="friend")"SHOKU PO FLET" else "PREZANTUESI PO FLET";it.start();runCatching{it.playbackParams=it.playbackParams.setSpeed(1f).setPitch(1f)}}
+                    if(generation==voiceGeneration&&resumed&&session===s){clearVoiceTimeout();setNarrationMix(true);scene?.speaking=true;scene?.friendSpeaking=phase=="friend";scene?.stageStatus=if(phase=="friend")"SHOKU PO FLET" else "PREZANTUESI PO FLET";it.start();runCatching{it.playbackParams=it.playbackParams.setSpeed(1f).setPitch(1f)}}
                 }
                 setOnCompletionListener{
                     if(generation==voiceGeneration&&resumed&&session===s)narrationFinished(phase,questionKey(s))

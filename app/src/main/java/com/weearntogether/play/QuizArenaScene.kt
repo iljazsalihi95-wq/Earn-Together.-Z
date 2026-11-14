@@ -35,9 +35,9 @@ private var reactionStarted=0L
     var useInitials = false
     private val playerActor=ArenaSeatedActor(context)
     private val phoneParticipant=ArenaPhoneParticipant()
-    private val p=Paint(3);private val textPaint=TextPaint(3);private val namePaint=TextPaint(3);private var attached=false
+    private val p=Paint(3);private val textPaint=TextPaint(3);private val optionPaint=TextPaint(3);private val namePaint=TextPaint(3);private var attached=false
     private var layoutText="";private var questionLayout:StaticLayout?=null
-    private val audience=StudioAssets.get(context,"audience");private val studio=StudioAssets.get(context,"arena")
+    private val audience=StudioAssets.get(context,"audience");private val studio=StudioAssets.get(context,"arena-tv")
     override fun onAttachedToWindow(){super.onAttachedToWindow();attached=true}
     override fun onDetachedFromWindow(){attached=false;super.onDetachedFromWindow()}
     private fun promptLayout():StaticLayout{
@@ -69,7 +69,7 @@ private var reactionStarted=0L
         framing += ((if (target == 0f) 0f else 1f) - framing) * .09f
         // One continuous stage: rear LED display, floor, two chairs, front audience.
         c.drawBitmap(studio,null,RectF(0f,0f,720f,560f),p)
-        p.shader=LinearGradient(0f,0f,0f,560f,0x66071025,0xe6071025.toInt(),Shader.TileMode.CLAMP)
+        p.shader=LinearGradient(0f,0f,0f,560f,0x22071025,0x77071025.toInt(),Shader.TileMode.CLAMP)
         c.drawRect(0f,0f,720f,560f,p);p.shader=null
         drawStudioLights(c,time)
         c.save();c.translate(-camera * 18f, 0f);c.scale(1f+framing*.035f,1f+framing*.035f,360f,360f)
@@ -92,14 +92,17 @@ private var reactionStarted=0L
         // Perspective floor and practical strip lighting.
         p.color=0xff102841.toInt();c.drawOval(72f,374f,648f,491f,p)
         p.style=Paint.Style.STROKE;p.color=0xff417c9b.toInt();p.strokeWidth=2f;c.drawOval(72f,374f,648f,491f,p);p.style=Paint.Style.FILL
-        c.save();c.translate(73f, 303f);c.scale(.31f,.31f);drawPlayer(c);c.restore()
+        c.save();c.translate(465f, 301f);c.scale(.32f,.32f)
+        drawPlayer(c)
+        c.restore()
+        drawContestantDesk(c)
         c.save()
         c.translate(267f, 277f)
         c.scale(.48f, .48f)
         presenter.draw(c, if (friendSpeaking) 0f else energy, time)
         c.restore()
         drawPodium(c)
-        nameplate(c,playerName,154f,if(playerSpeaking)0xff72e0e9.toInt() else 0xffffd782.toInt())
+        nameplate(c,playerName,548f,if(playerSpeaking)0xff72e0e9.toInt() else 0xffffd782.toInt())
         nameplate(c,"PREZANTUESI",360f,if(speaking&&!friendSpeaking)0xff72e0e9.toInt() else 0xffffd782.toInt())
         if(speaking && !friendSpeaking)for(i in 0..8){val h=3f+14f*energy*(1f-abs(i-4)/6f);p.color=0xff67d8ed.toInt();c.drawRoundRect(312f+i*11,498f-h,317f+i*11,498f,2f,2f,p)}
         val audienceFrame=if(reaction>0&&(time/320)%2==1L)1 else 0
@@ -126,7 +129,7 @@ private var reactionStarted=0L
         if(attached&&windowVisibility==VISIBLE)postInvalidateDelayed(if(speaking||playerSpeaking||audienceVotes!=null)40 else 80)
     }
     private fun drawAlternatives(canvas: Canvas, time: Long) {
-        textPaint.textSize = 17f
+        optionPaint.textSize = 17f
         for ((index, value) in alternatives.withIndex()) {
             val x = 72f + index % 2 * 292f
             val y = 175f + index / 2 * 40f
@@ -142,10 +145,20 @@ private var reactionStarted=0L
             p.color = 0xffffd782.toInt()
             canvas.drawText("${'A'+index}", x + 11f, y + 22f, p)
             p.color = Color.WHITE
-            canvas.drawText(android.text.TextUtils.ellipsize(value, textPaint, 242f,
+            canvas.drawText(android.text.TextUtils.ellipsize(value, optionPaint, 242f,
                 android.text.TextUtils.TruncateAt.END).toString(), x + 36f, y + 22f, p)
         }
         p.textAlign = Paint.Align.CENTER
+    }
+    private fun drawContestantDesk(canvas: Canvas) {
+        p.shader = LinearGradient(469f, 429f, 631f, 503f,
+            0xff314670.toInt(), 0xff151b37.toInt(), Shader.TileMode.CLAMP)
+        canvas.drawRoundRect(469f, 429f, 631f, 503f, 13f, 13f, p)
+        p.shader = null
+        p.color = 0xffc9a463.toInt()
+        canvas.drawRoundRect(467f, 427f, 633f, 432f, 2f, 2f, p)
+        p.color = 0xff845ae1.toInt()
+        canvas.drawRoundRect(489f, 486f, 611f, 489f, 2f, 2f, p)
     }
     private fun drawPodium(canvas: Canvas) {
         p.color = 0xffd6b56d.toInt()
