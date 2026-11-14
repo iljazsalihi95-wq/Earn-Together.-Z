@@ -89,7 +89,11 @@ console.log('PASS late correct choice retained as timeout, wrong-question audio 
 
 // Session-owned lifelines persist, never reveal the key, and cannot reset after restart.
 cache.clear();user='lifeline-user';call('arenaRegister',{name:'Lifeline tester'});
-let life=call('arenaStart',{level:1,protocol:2});
+let life=call('arenaStart',{level:1,protocol:2,strict_presentation:true});
+const lifeRow=tables['Arena - Sesionet'].find(r=>r[0]===life.session_id);
+const pending=JSON.parse(lifeRow[12]);pending.presentationUntil=Date.now()-1000;lifeRow[12]=JSON.stringify(pending);
+assert.equal(call('arenaResume',{session_id:life.session_id}).presentation_pending,true);
+assert.equal(life.remaining_ms,60000);
 assert.throws(()=>call('arenaLifeline',{session_id:life.session_id,question_id:life.question.id,kind:'fifty'}),/LIFELINE_UNAVAILABLE/);
 life=call('arenaReady',{session_id:life.session_id,question_id:life.question.id});
 const lifeId=life.session_id,lifeQ=life.question.id,lifeCorrect=context.arenaBank_('sq').find(q=>q.id===lifeQ).correct;
@@ -99,6 +103,7 @@ assert.deepEqual(call('arenaLifeline',{session_id:lifeId,question_id:lifeQ,kind:
 const friend=call('arenaLifeline',{session_id:lifeId,question_id:lifeQ,kind:'friend'});assert.equal(friend.lifeline.reserved,true);assert.ok(!('correct' in friend.lifeline));
 const audience=call('arenaLifeline',{session_id:lifeId,question_id:lifeQ,kind:'audience'});assert.equal(audience.lifeline.simulated,true);assert.equal(audience.lifeline.votes.reduce((a,b)=>a+b,0),100);
 cache.clear();assert.equal(call('arenaResume',{session_id:lifeId}).lifelines.friend.reserved,true);
-call('arenaAnswer',{session_id:lifeId,question_id:lifeQ,choice:0});life=call('arenaNext',{session_id:lifeId,question_id:lifeQ});life=call('arenaReady',{session_id:lifeId,question_id:life.question.id});
+assert.throws(()=>call('arenaAnswer',{session_id:lifeId,question_id:lifeQ,choice:fifty.lifeline.hidden[0]}),/INVALID_CHOICE/);
+call('arenaAnswer',{session_id:lifeId,question_id:lifeQ,choice:lifeCorrect});life=call('arenaNext',{session_id:lifeId,question_id:lifeQ});life=call('arenaReady',{session_id:lifeId,question_id:life.question.id});
 assert.throws(()=>call('arenaLifeline',{session_id:lifeId,question_id:life.question.id,kind:'friend'}),/LIFELINE_USED/);
 console.log('PASS persistent lifelines: owned session, presentation gate, 50:50, idempotent replay, simulated audience, one friend per round');

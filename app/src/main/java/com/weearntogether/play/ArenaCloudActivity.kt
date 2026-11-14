@@ -18,7 +18,6 @@ class ArenaCloudActivity:Activity(){
     private var offline=false;private var modeVersion=0
     private val network=java.util.concurrent.Executors.newSingleThreadExecutor()
     private val voiceNetwork=java.util.concurrent.Executors.newSingleThreadExecutor()
-    private val rewardNetwork=java.util.concurrent.Executors.newSingleThreadExecutor()
     private val retryHandler=android.os.Handler(android.os.Looper.getMainLooper())
     private val retry=object:Runnable{override fun run(){if(resumed&&!live&&!busy)refresh();retryHandler.postDelayed(this,30000)}}
     private fun qa()=BuildConfig.DEBUG&&intent.getBooleanExtra("native_qa",false)
@@ -82,7 +81,7 @@ class ArenaCloudActivity:Activity(){
         if(busy){android.widget.Toast.makeText(this,"Kërkesa e mëparshme është ende në proces.",android.widget.Toast.LENGTH_SHORT).show();return}
         if(!accounts.isSignedIn()&&!(qa()&&qaTransport!=null)){live=false;android.widget.Toast.makeText(this,"Sesioni LIVE kërkon hyrje në llogari. Hape profilin ose luaj OFFLINE.",android.widget.Toast.LENGTH_LONG).show();if(session==null)home();return}
         busy=true;val version=modeVersion;status.text=when(action){"arenaReady"->"Prezantuesi përfundoi • Po nis koha…";"arenaAnswer"->"Po kontrollohet zgjedhja jote…";"arenaNext"->"Po hapet pyetja tjetër…";"arenaLifeline"->"Po aktivizohet ndihma…";else->"Po provohet LIVE… Mund të luash OFFLINE."}
-        val payload=JSONObject(data.toString()).put("locale",locale).put("protocol",2)
+        val payload=JSONObject(data.toString()).put("locale",locale).put("protocol",2).put("strict_presentation",true)
         if(accounts.isSignedIn())payload.put("session_token",accounts.requireToken())
         network.execute{val result=runCatching{if(qa()&&qaTransport!=null)qaTransport!!.invoke(action,payload) else client.request(action,payload)}
             runOnUiThread{busy=false;if(isFinishing||isDestroyed||version!=modeVersion)return@runOnUiThread
@@ -101,44 +100,14 @@ class ArenaCloudActivity:Activity(){
         }
     }
     private fun refresh(){call("arenaBootstrap"){if(it.optInt("available",0)<=0||it.optJSONArray("categories")==null){live=false;if(session==null)home();return@call};bootstrap=it;prefs.edit().putString("bootstrap",it.toString()).apply();if(session==null)home() else if(isOfflineSession())status.text="USHTRIM OFFLINE • LIVE u rikthye; hapet nga ballina pa humbur progresin lokal."}}
-    /** Rewards use the same account wallet and durable SDK receipts as the app profile. */
-    private fun addRewardPanel(){
-        val panel=LinearLayout(this).apply{orientation=1;setPadding(dp(12),dp(8),dp(12),dp(8));background=gradient(0xff192751.toInt(),0xff382552.toInt())}
-        panel.addView(label("REWARD COIN",17,gold))
-        val balance=label(if(accounts.isSignedIn())"Po lexohet bilanci nga serveri…" else "Hyr në llogari për Reward Coin.",13,blue)
-        panel.addView(balance)
-        panel.addView(label("Videoja e përfunduar regjistrohet në portofolin tënd. Reward Coin në pritje shfaqen veçmas nga Game Coins.",12))
-        val rewardButton=button("VIDEO • REWARD COIN"){
-            stopVoice()
-            ads.rewarded(onGameplayReward={
-                balance.text="Videoja u përfundua • dëshmia po sinkronizohet me serverin."
-                retryHandler.postDelayed({if(panel.isAttachedToWindow)refreshRewardPanel(panel,balance)},12_000)
-            },onFinished={if(panel.isAttachedToWindow)refreshRewardPanel(panel,balance)})
-        }
-        rewardButton.isEnabled=accounts.isSignedIn()&&!qa()
-        panel.addView(rewardButton)
-        panel.addView(button("RIFRESKO REWARD COIN"){refreshRewardPanel(panel,balance)}.apply{isEnabled=accounts.isSignedIn()&&!qa()})
-        add(panel)
-        if(accounts.isSignedIn()&&!qa())refreshRewardPanel(panel,balance)
-    }
-    private fun refreshRewardPanel(panel:View,balance:TextView){
-        if(!accounts.isSignedIn())return
-        val user=accounts.currentUserId()
-        rewardNetwork.execute{
-            val response=runCatching{BackendClient().request("getWalletProfile",JSONObject().put("session_token",accounts.requireToken()))}
-            runOnUiThread{
-                if(isFinishing||isDestroyed||!panel.isAttachedToWindow||accounts.currentUserId()!=user)return@runOnUiThread
-                response.onSuccess{value->
-                    val wallet=value.optJSONObject("balance")?:value
-                    balance.text="REWARD COIN • Në pritje: ${wallet.optLong("pending_coins")} • Verifikuar: ${wallet.optLong("verified_coins")}"
-                    value.optJSONObject("reward_rules")?.let{rules->
-                        val amount=rules.optInt("video_reward_coins",0)
-                        if(amount>0)balance.append("\nVideo e përfunduar: $amount Reward Coin • në pritje të verifikimit")
-                    }
-                }.onFailure{
-                    balance.text="Bilanci nuk u konfirmua. Riprovo lidhjen; videot e përfunduara mbeten në radhën e sinkronizimit."
-                }
-            }
+    private fun addRewardPanel() {
+        val coins = session?.optInt("arena_game_coins", -1)?.takeIf { it >= 0 }
+            ?: bootstrap?.optInt("arena_game_coins", -1)?.takeIf { it >= 0 }
+        add(label("REWARD COIN • PIKË VIRTUALE", 16, gold))
+        if (coins != null && !isOfflineSession() && live) {
+            add(label("Game Coins nga Quiz Arena: $coins · Pa vlerë monetare", 13, blue))
+        } else {
+            add(label("Pikët e kuizit shënohen veçmas nga Game Coins.", 13, blue))
         }
     }
     private fun home(){phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;sound?.stopTone();persistLocal();timer?.cancel();stopVoice();session=null;offline=!live;shell();val hero=FrameLayout(this);val art=StudioArtwork(this,"arena");hero.addView(art,FrameLayout.LayoutParams(-1,-1));val overlay=LinearLayout(this).apply{orientation=1;gravity=Gravity.BOTTOM;setPadding(dp(18),dp(12),dp(18),dp(14));background=GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,intArrayOf(0x00000000,0xee101635.toInt()))};overlay.addView(label("Hyr në skenën e diturisë",25,gold));overlay.addView(label("Mëso pas çdo përgjigjeje.\nPërparo, sfido veten, ndriço arenën.",14));hero.addView(overlay,FrameLayout.LayoutParams(-1,-1));add(hero,208);hero.alpha=0f;hero.animate().alpha(1f).setDuration(450).start()
@@ -157,7 +126,14 @@ class ArenaCloudActivity:Activity(){
     private fun accept(v:JSONObject){val previous=session;if(previous!=null&&questionKey(previous)!=questionKey(v)){phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;sound?.stopTone()};if(previous!=null&&questionKey(previous)==questionKey(v)&&previous.has("learning_choice"))v.put("learning_choice",previous.getInt("learning_choice"));val f=v.optJSONObject("feedback");if(f?.optString("reason")=="timeout"&&f.optInt("submitted_choice",-1)>=0)v.put("learning_choice",f.getInt("submitted_choice"));session=v;offline=v.optBoolean("offline");if(offline)locale="sq" else if(v.optString("locale") in setOf("sq","de","en","tr"))locale=v.getString("locale");if(v.optJSONObject("feedback")==null&&v.optLong("remaining_ms")<=0)v.put("timed_out",true);deadline=android.os.SystemClock.elapsedRealtime()+v.optLong("remaining_ms");if(offline)localStore.save(v) else prefs.edit().putString("session",v.toString()).putString("active_id",v.optString("session_id")).apply();render()}
     private fun render(){val s=session?:return;timer?.cancel();stopVoice();answerButtons.clear();shell();val config=s.getJSONObject("config");add(label("${if(isOfflineSession())"USHTRIM OFFLINE" else "LIVE"} • NIVELI ${s.getInt("level")}  •  ${s.getInt("index")+1}/${s.getInt("total")}  •  ★ ${s.getInt("score")}",14,gold));scene=QuizArenaScene(this).apply{playerName=prefs.getString("name","")?:"";portrait=if(prefs.getBoolean("initial_avatar",false))null else PlayerPortrait.load(this@ArenaCloudActivity);suitColor=prefs.getInt("suit",0xff273b68.toInt());shirtColor=prefs.getInt("shirt",Color.WHITE);tieColor=prefs.getInt("tie",0xffc99b4e.toInt());reaction=if(s.optJSONObject("feedback")?.optString("reason")=="timeout")0 else if(s.optJSONObject("feedback")?.optBoolean("right")==true)1 else if(s.optJSONObject("feedback")!=null)-1 else 0};add(scene!!,((resources.displayMetrics.widthPixels/resources.displayMetrics.density-40f)*560f/720f).toInt().coerceAtLeast(1))
         if(s.optBoolean("finished")){if(!isOfflineSession())prefs.edit().remove("active_id").remove("pending_answer").remove("pending_next").apply();add(label(if(s.optBoolean("passed"))"NIVELI U KALUA!" else "PROVO PËRSËRI",27,gold));add(label("${s.getInt("correct")} / ${s.getInt("total")} të sakta • ★ ${s.getInt("score")}",21));scene?.apply{reaction=if(s.optBoolean("passed"))1 else -1;questionPrompt=if(s.optBoolean("passed"))"NIVELI U KALUA!" else "PROVO PËRSËRI";questionCategory="${s.getInt("correct")} / ${s.getInt("total")} TË SAKTA";questionNumber="NIVELI ${s.getInt("level")}";timerText="★ ${s.getInt("score")}";stageStatus="REZULTATI YT"};root.translationY=dp(22).toFloat();root.animate().translationY(0f).setDuration(550).start();addRewardPanel();add(button("VAZHDO • KAPËRCE SKENËN"){home();refresh()});val video=config.optString("video");if(video.startsWith("https://"))add(button("SHIKO VIDEON E KALIMIT"){video(video)});if(audioEnabled)voice("result"){ads.naturalBreak()} else ads.naturalBreak();return}
-        val q=s.getJSONObject("question");scene?.apply{questionPrompt=q.getString("prompt");questionCategory=q.getString("category");questionNumber="PYETJA ${s.getInt("index")+1} / ${s.getInt("total")}";contentDescription=questionPrompt};val feedback=s.optJSONObject("feedback");val choices=q.getJSONArray("choices");for(i in 0 until choices.length()){val option=button("${'A'+i}   ${choices.getString(i)}"){sendAnswer(i)};option.gravity=Gravity.START or Gravity.CENTER_VERTICAL;option.isEnabled=feedback==null&&!s.optBoolean("answer_pending")&&!s.optBoolean("presentation_pending");answerButtons.add(option);if(feedback!=null&&i==feedback.getInt("correct"))option.background=gradient(0xff0b9a76.toInt(),0xff146b63.toInt());if(feedback!=null&&i==feedback.optInt("choice",s.optInt("local_choice",-2))&&!feedback.getBoolean("right"))option.background=gradient(0xffa73551.toInt(),0xff682544.toInt());if(i in ArenaLifelines.hidden(s)&&feedback==null){option.isEnabled=false;option.alpha=.25f;option.text="${'A'+i}   —"};add(option)}
+        val q=s.getJSONObject("question");scene?.apply{questionPrompt=q.getString("prompt");questionCategory=q.getString("category");questionNumber="PYETJA ${s.getInt("index")+1} / ${s.getInt("total")}";contentDescription=questionPrompt};val feedback=s.optJSONObject("feedback");val choices=q.getJSONArray("choices")
+        val hidden = if (feedback == null) ArenaLifelines.hidden(s) else emptySet()
+        scene?.apply {
+            alternatives = List(choices.length()) { if (it in hidden) "—" else choices.getString(it) }
+            correctChoice = feedback?.optInt("correct", -1) ?: -1
+            selectedChoice = feedback?.optInt("choice", s.optInt("local_choice", -1)) ?: -1
+        }
+        for(i in 0 until choices.length()){val option=button("${'A'+i}   ${choices.getString(i)}"){sendAnswer(i)};option.gravity=Gravity.START or Gravity.CENTER_VERTICAL;option.isEnabled=feedback==null&&!s.optBoolean("answer_pending")&&!s.optBoolean("presentation_pending");answerButtons.add(option);if(feedback!=null&&i==feedback.getInt("correct"))option.background=gradient(0xff0b9a76.toInt(),0xff146b63.toInt());if(feedback!=null&&i==feedback.optInt("choice",s.optInt("local_choice",-2))&&!feedback.getBoolean("right"))option.background=gradient(0xffa73551.toInt(),0xff682544.toInt());if(i in ArenaLifelines.hidden(s)&&feedback==null){option.isEnabled=false;option.alpha=.25f;option.text="${'A'+i}   —"};add(option)}
         if(feedback!=null){scene?.apply{timerText=if(feedback.optInt("choice",-2)==-1)"PA PËRGJIGJE" else if(feedback.getBoolean("right"))"SAKTË" else "GABIM";stageStatus="TESTIM DHE MËSIM"};add(label(if(feedback.optInt("choice",s.optInt("local_choice",-2))==-1)"KOHA PËRFUNDOI • PA PËRGJIGJE" else if(feedback.getBoolean("right"))"✓ SAKTË" else "GABIM • PËRGJIGJJA E SAKTË: ${'A'+feedback.getInt("correct")}",20,gold));val selected=feedback.optInt("choice",s.optInt("local_choice",-2));if(selected>=0)add(label("Zgjedhja jote: ${'A'+selected} • ${choices.optString(selected)}",14,blue));if(s.has("learning_choice"))add(label(lateChoiceText(s),16,blue));if(selected==-1)add(label("Përgjigjja e saktë: ${'A'+feedback.getInt("correct")} • ${choices.optString(feedback.getInt("correct"))}",16,gold));add(label(feedback.getString("explanation"),17));add(label(feedback.optString("source"),12,blue));add(button("DËGJO SHPJEGIMIN"){voice("explanation")});add(button("HAP SHPJEGIMIN • TESTIM DHE MËSIM"){showLearning(s)});add(button("VAZHDO ›"){continueAfterLearning(s)});add(button("PYET PREZANTUESIN PËR SHPJEGIMIN"){clarify(s)});presentFeedback(s)}
         else if(s.optBoolean("presentation_pending")){beginQuestionReading(s)}
         else if(s.optBoolean("timed_out")){timeoutControls()}
@@ -319,6 +295,7 @@ class ArenaCloudActivity:Activity(){
 
     private fun addLifelineControls(s:JSONObject){
         add(label("NDIHMAT E STUDIOS",17,gold))
+        add(label("Secila përdoret një herë për nivel. Publiku dhe shoku japin mendime të simuluara.", 12, blue))
         val items=listOf(
             Triple("fifty","½","50:50"),
             Triple("audience","♟","PUBLIKU"),
@@ -359,6 +336,9 @@ class ArenaCloudActivity:Activity(){
     }
     private fun useLifeline(s:JSONObject,kind:String){
         if(session!==s){status.text="Pyetja ka ndryshuar. Provo ndihmën te pyetja aktuale.";return}
+        if (ArenaLifelines.used(s, kind) || s.optBoolean("presentation_pending") ||
+            s.optBoolean("answer_pending") || s.optJSONObject("feedback") != null ||
+            android.os.SystemClock.elapsedRealtime() >= deadline) return
         if(busy){android.widget.Toast.makeText(this,"Po pritet përgjigjja e serverit. Provo sërish pas pak.",android.widget.Toast.LENGTH_LONG).show();return}
         if(isOfflineSession()){
             runCatching{
@@ -404,9 +384,16 @@ class ArenaCloudActivity:Activity(){
     private fun phoneFriend(s:JSONObject,r:JSONObject){
         stopVoice();val generation=++phoneGeneration
         friendText=r.optString("text").ifBlank { if(isOfflineSession())ArenaLifelines.simulatedFriend(s.getJSONObject("question")) else "" }
-        val dialog=android.app.AlertDialog.Builder(this).setTitle("TELEFONO SHOKUN"+if(isOfflineSession())" • SIMULIM" else " • MENDIM AI").setMessage("☎ Po telefonohet…").setPositiveButton("MBYLL TELEFONATËN",null).create()
+        val dialog=android.app.AlertDialog.Builder(this).setTitle("TELEFONO SHOKUN"+if(isOfflineSession())" • SIMULIM" else " • MENDIM AI").setMessage("☎ Po telefonohet…").setNeutralButton("RIPROVO ZËRIN", null).setPositiveButton("MBYLL TELEFONATËN",null).create()
         (root.parent as? ScrollView)?.smoothScrollTo(0,0)
         phoneDialog=dialog;dialog.setOnDismissListener{if(generation==phoneGeneration){phoneGeneration++;stopVoice();sound?.stopTone();scene?.phoneState=""};phoneDialog=null};dialog.show();dialog.window?.apply{setGravity(Gravity.BOTTOM);clearFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND)};scene?.phoneState="PO TELEFONOHET…"
+        dialog.getButton(android.app.AlertDialog.BUTTON_NEUTRAL).apply {
+            visibility = View.GONE
+            setOnClickListener {
+                visibility = View.GONE
+                voice("friend"){if(generation==phoneGeneration&&dialog.isShowing)voice("phone_outro")}
+            }
+        }
         fun dial(){
         if(generation!=phoneGeneration||session!==s||!resumed||!dialog.isShowing)return
         scene?.phoneState="PO TELEFONOHET…"
@@ -415,7 +402,7 @@ class ArenaCloudActivity:Activity(){
             if(generation==phoneGeneration&&session===s&&resumed&&dialog.isShowing){
                 sound?.stopTone();scene?.phoneState="SHOKU U PËRGJIGJ"
                 dialog.setMessage("Për ${prefs.getString("name","Lojtari")}.\n\n"+if(friendText.isNotBlank())friendText else "Shoku po mendon për pyetjen… Mendimi i tij nuk është garanci.")
-                if(isOfflineSession()){if(audioEnabled)voice("friend"){if(generation==phoneGeneration&&dialog.isShowing)voice("phone_outro")}}
+                if(isOfflineSession()){scene?.phoneState="MENDIMI I SHOKUT";dialog.setMessage(friendText+"\n\nTelefonata me zë kërkon lidhje LIVE.")}
                 else voiceNetwork.execute{
                     val response=runCatching{BackendClient(BuildConfig.QUIZ_ARENA_WORKER_URL.trimEnd('/')+"/api/ai/respond",60000).request("arenaDialogue",JSONObject().put("session_token",accounts.requireToken()).put("session_id",s.optString("session_id")).put("question_id",s.getJSONObject("question").optString("id")).put("mode","friend").put("locale",locale))}
                     runOnUiThread{if(generation==phoneGeneration&&session===s&&resumed&&dialog.isShowing){
@@ -425,7 +412,7 @@ class ArenaCloudActivity:Activity(){
                             dialog.setTitle("TELEFONO SHOKUN • SIMULIM REZERVË")
                         }
                         dialog.setMessage(friendText+"\n\nMendimi i shokut nuk është garanci.")
-                        if(friendText.isNotBlank()&&audioEnabled)voice("friend"){if(generation==phoneGeneration&&dialog.isShowing)voice("phone_outro")}
+                        if(response.isSuccess&&response.getOrNull()?.optString("text")?.isNotBlank()==true&&audioEnabled)voice("friend"){if(generation==phoneGeneration&&dialog.isShowing)voice("phone_outro")}
                     }}
                 }
             }
@@ -436,7 +423,7 @@ class ArenaCloudActivity:Activity(){
     private fun beginQuestionReading(s:JSONObject){
         scene?.apply{timerText="%02d:%02d".format(s.getJSONObject("config").getInt("seconds")/60,s.getJSONObject("config").getInt("seconds")%60);stageStatus="LEXIM • KOHA E NDALUR";remainingFraction=1f}
         add(button("KALO LEXIMIN • FILLO KOHËN"){stopVoice();finishQuestionReading(questionKey(s))})
-        timer=object:android.os.CountDownTimer(s.optLong("presentation_remaining_ms",90000).coerceIn(1,75000),1000){override fun onTick(ms:Long){};override fun onFinish(){stopVoice();finishQuestionReading(questionKey(s))}}.start()
+        add(button("RIPROVO ZËRIN E PREZANTUESIT"){voice("question")}.apply { isEnabled = audioEnabled })
         narrationKey=questionKey(s);val welcome="welcome:"+s.optString("session_id");if(audioEnabled&&s.optInt("index")==0&&!prefs.getBoolean(welcome,false)){prefs.edit().putBoolean(welcome,true).apply();voice("intro"){if(session===s&&resumed)voice("question")}}else if(audioEnabled)voice("question") else finishQuestionReading(questionKey(s))
     }
     private fun finishQuestionReading(key:String){
@@ -454,7 +441,7 @@ class ArenaCloudActivity:Activity(){
     }
     private fun timeoutControls(){scene?.apply{timerText="00:00";stageStatus="KOHA PËRFUNDOI";remainingFraction=0f};status.text="Koha përfundoi • Nuk është zgjedhur përgjigje";add(label("Koha përfundoi. Mund të zgjedhësh një alternativë për të mësuar, pa pikë, ose të hapësh shpjegimin.",16,gold));add(button("SHFAQ PËRGJIGJEN DHE SHPJEGIMIN"){sendAnswer(-1)})}
     private fun expireQuestion(){val s=session?:return;if(s.optJSONObject("feedback")!=null||s.optBoolean("answer_pending")||s.optBoolean("timed_out"))return;s.put("timed_out",true).put("remaining_ms",0);timer?.cancel();answerButtons.forEachIndexed{i,b->b.isEnabled=i !in ArenaLifelines.hidden(s)};if(isOfflineSession())localStore.save(s) else prefs.edit().putString("session",s.toString()).apply();timeoutControls()}
-    private fun sendAnswer(choice:Int){val s=session?:return;val question=s.optJSONObject("question")?:return;val choices=question.optJSONArray("choices")?:return;if(choice < -1 || choice >= choices.length())return;if(choice == -1 && !s.optBoolean("timed_out"))return;if(s.optBoolean("presentation_pending"))return;if(s.optJSONObject("feedback")!=null||s.optBoolean("answer_pending"))return;if(busy){status.text="Po përfundon kërkesa LIVE. Provoje përsëri.";return};val late=choice>=0&&(s.optBoolean("timed_out")||android.os.SystemClock.elapsedRealtime()>=deadline);if(late){s.put("timed_out",true).put("remaining_ms",0).put("learning_choice",choice)};val submittedChoice=if(late)-1 else choice;timer?.cancel();stopVoice();s.put("answer_pending",true).put("local_choice",choice);answerButtons.forEach{it.isEnabled=false};if(isOfflineSession()){s.remove("answer_pending");timer?.cancel();persistLocal();val answered=localStore.answer(s,submittedChoice);answered.remove("answer_pending");accept(answered);return};val q=s.optJSONObject("question")?:return;val data=JSONObject().put("session_id",s.getString("session_id")).put("question_id",q.getString("id")).put("choice",submittedChoice);prefs.edit().putString("pending_answer",data.toString()).commit();stopVoice();call("arenaAnswer",data){prefs.edit().remove("pending_answer").apply();accept(it)}}
+    private fun sendAnswer(choice:Int){val s=session?:return;val question=s.optJSONObject("question")?:return;val choices=question.optJSONArray("choices")?:return;if(choice < -1 || choice >= choices.length() || choice in ArenaLifelines.hidden(s))return;if(choice == -1 && !s.optBoolean("timed_out"))return;if(s.optBoolean("presentation_pending"))return;if(s.optJSONObject("feedback")!=null||s.optBoolean("answer_pending"))return;if(busy){status.text="Po përfundon kërkesa LIVE. Provoje përsëri.";return};val late=choice>=0&&(s.optBoolean("timed_out")||android.os.SystemClock.elapsedRealtime()>=deadline);if(late){s.put("timed_out",true).put("remaining_ms",0).put("learning_choice",choice)};val submittedChoice=if(late)-1 else choice;timer?.cancel();stopVoice();s.put("answer_pending",true).put("local_choice",choice);answerButtons.forEach{it.isEnabled=false};if(choice>=0){answerButtons[choice].background=gradient(0xff815625.toInt(),0xff483359.toInt());scene?.selectedChoice=choice};if(isOfflineSession()){s.remove("answer_pending");timer?.cancel();persistLocal();val answered=localStore.answer(s,submittedChoice);answered.remove("answer_pending");accept(answered);return};val q=s.optJSONObject("question")?:return;val data=JSONObject().put("session_id",s.getString("session_id")).put("question_id",q.getString("id")).put("choice",submittedChoice);prefs.edit().putString("pending_answer",data.toString()).commit();stopVoice();call("arenaAnswer",data){prefs.edit().remove("pending_answer").apply();accept(it)}}
     private fun nextLive(s:JSONObject){
         val data=JSONObject().put("session_id",s.getString("session_id")).put("question_id",s.getJSONObject("question").getString("id"))
         prefs.edit().putString("pending_next",data.toString()).commit()
@@ -479,8 +466,13 @@ class ArenaCloudActivity:Activity(){
         if(phase=="question"&&s.optBoolean("presentation_pending")){
             timer?.cancel()
             voiceCompletion=null
-            add(button("RIPROVO ZËRIN E PREZANTUESIT"){voice("question")})
             // The existing Skip Reading control explicitly starts the answer clock.
+            return
+        }
+        if (phase == "friend") {
+            phoneDialog?.setMessage(friendText + "\n\nZëri nuk u ngarkua. Mund ta riprovosh.")
+            phoneDialog?.getButton(android.app.AlertDialog.BUTTON_NEUTRAL)?.visibility = View.VISIBLE
+            voiceCompletion = null
             return
         }
         narrationFinished(phase,questionKey(s))
@@ -669,5 +661,5 @@ class ArenaCloudActivity:Activity(){
     };if(code==3116){val s=pendingChallenge;pendingChallenge=null;advancing=false;if(s!=null&&session===s){if(result==RESULT_OK){prefs.edit().putBoolean("challenge:"+questionKey(s),true).apply();if(isOfflineSession())accept(localStore.next(s)) else nextLive(s)}else render()};return};if(code==PlayerPortrait.REQUEST&&PlayerPortrait.receive(this,result,data)){prefs.edit().putBoolean("initial_avatar",false).apply();PlayerPortrait.adjust(this){home()}}}
     override fun onResume(){super.onResume();resumed=true;ads.resume();if(isOfflineSession()&&!advancing){deadline=android.os.SystemClock.elapsedRealtime()+(session?.optLong("remaining_ms")?:0);render()}else if(session!=null&&!busy&&!advancing){retryAnswer()};if(!qa()){retryHandler.removeCallbacks(retry);retryHandler.postDelayed(retry,1000)}}
     override fun onPause(){phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;scene?.phoneState="";sound?.stopTone();if(player!=null||scene?.speaking==true||session?.optBoolean("presentation_pending")==true)narrationKey="";persistLocal();timer?.cancel();retryHandler.removeCallbacks(retry);resumed=false;stopVoice();applause?.pause();ads.pause();super.onPause()}
-    override fun onDestroy(){learningDialog?.dismiss();retryHandler.removeCallbacks(retry);network.shutdownNow();voiceNetwork.shutdownNow();rewardNetwork.shutdownNow();timer?.cancel();stopVoice();sound?.release();applause?.release();ads.destroy();super.onDestroy()}
+    override fun onDestroy(){learningDialog?.dismiss();retryHandler.removeCallbacks(retry);network.shutdownNow();voiceNetwork.shutdownNow();timer?.cancel();stopVoice();sound?.release();applause?.release();ads.destroy();super.onDestroy()}
 }

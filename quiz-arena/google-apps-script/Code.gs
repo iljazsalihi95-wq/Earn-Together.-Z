@@ -45,17 +45,22 @@ function arenaPlayer_(id){return arenaRows_('Arena - Lojtaret').slice(1).find(r=
 function arenaState_(id){const done=arenaRows_('Arena - Progresi').slice(1).filter(r=>r[0]===id&&r[7]==='PO');return {level:Math.min(20,1+Math.max(0,...done.map(r=>Number(r[1])))),points:done.reduce((s,r)=>s+Number(r[2]),0),completed:done.map(r=>Number(r[1]))};}
 function arenaSession_(id,user){const rows=arenaRows_('Arena - Sesionet'),i=rows.findIndex((r,j)=>j>0&&r[0]===id&&r[1]===user);if(i<1)arenaError_('SESSION_NOT_FOUND');let state;try{state=JSON.parse(rows[i][12]);}catch(_){arenaError_('SESSION_INVALID');}return {row:i+1,values:rows[i],state};}
 function arenaSave_(s){s.values[12]=JSON.stringify(s.state);getQuizSpreadsheet_().getSheetByName('Arena - Sesionet').getRange(s.row,1,1,13).setValues([s.values]);}
-function arenaBeginQuestion_(a,presentation){a.presentation=!!presentation;a.presentationUntil=presentation?Date.now()+90000:0;a.deadline=Date.now()+a.config.seconds*1000+(presentation?90000:0);}
-function arenaPublic_(s){const a=s.state,q=a.questions[a.index];if(a.feedback&&typeof a.feedback.choice!=='number'){const last=(a.answers||[]).find(x=>x.id===q.id);if(last)a.feedback.choice=last.choice;}return {session_id:s.values[0],locale:a.locale,level:a.level,score:a.score,correct:a.correct,index:a.index,total:a.questions.length,finished:a.finished||false,passed:a.passed||false,config:a.config,question:q?{id:q.id,category:q.category,prompt:q.question,choices:q.choices,recitation:q.recitation,difficulty:q.difficulty||1}:null,feedback:a.feedback||null,lifelines:a.lifelines||{},presentation_pending:!!a.presentation&&!a.feedback&&Date.now()<a.presentationUntil,presentation_remaining_ms:Math.max(0,(a.presentationUntil||0)-Date.now()),remaining_ms:a.presentation&&Date.now()<a.presentationUntil?a.config.seconds*1000:Math.max(0,a.deadline-Date.now())};}
+function arenaBeginQuestion_(a,presentation){
+ a.presentation=!!presentation;
+ a.presentationUntil=presentation?Date.now()+90000:0;
+ a.deadline=presentation&&a.strictPresentation?0:Date.now()+a.config.seconds*1000+(presentation?90000:0);
+}
+function arenaAwaitingReady_(a){return !!a.presentation&&!a.feedback&&!a.finished&&(a.strictPresentation||Date.now()<a.presentationUntil);}
+function arenaPublic_(s){const a=s.state,q=a.questions[a.index],pending=arenaAwaitingReady_(a);if(a.feedback&&typeof a.feedback.choice!=='number'){const last=(a.answers||[]).find(x=>x.id===q.id);if(last)a.feedback.choice=last.choice;}return {session_id:s.values[0],locale:a.locale,level:a.level,score:a.score,correct:a.correct,index:a.index,total:a.questions.length,finished:a.finished||false,passed:a.passed||false,config:a.config,question:q?{id:q.id,category:q.category,prompt:q.question,choices:q.choices,recitation:q.recitation,difficulty:q.difficulty||1}:null,feedback:a.feedback||null,lifelines:a.lifelines||{},presentation_pending:pending,presentation_remaining_ms:Math.max(0,(a.presentationUntil||0)-Date.now()),remaining_ms:pending?a.config.seconds*1000:Math.max(0,a.deadline-Date.now())};}
 function arenaRoute_(p){
  const u=arenaIdentity_(p),lock=LockService.getScriptLock();
  // Copy the owned session under the short gameplay lock; synthesis runs after release.
  if(p.action==='arenaVoice'){let snapshot;lock.waitLock(5000);try{snapshot=arenaSession_(String(p.session_id||''),u.id);}finally{lock.releaseLock();}return arenaVoice_(u,snapshot,p);}
  lock.waitLock(15000);
  try{
- const locale=String(p.locale||'sq');
+ const locale=String(p.locale||'sq'),strict=p.protocol===2&&p.strict_presentation===true;
  if(p.action==='arenaBootstrap'){
-  const bank=arenaBank_(locale),state=arenaState_(u.id),open=arenaRows_('Arena - Sesionet').slice(1).filter(r=>r[1]===u.id&&r[11]==='ACTIVE');
+  const bank=arenaBank_(locale).filter(q=>!strict||q.choices.length===4),state=arenaState_(u.id),open=arenaRows_('Arena - Sesionet').slice(1).filter(r=>r[1]===u.id&&r[11]==='ACTIVE');
   return {success:true,player_id:u.id,progress:state,levels:arenaLevels_(),categories:[...new Set(bank.map(q=>q.category))],available:bank.length,resume:open.length?open[open.length-1][0]:null};
  }
  if(p.action==='arenaRegister'){
@@ -68,10 +73,11 @@ function arenaRoute_(p){
  if(p.action==='arenaStart'){
   if(!arenaPlayer_(u.id))arenaError_('REGISTER_FIRST');const progress=arenaState_(u.id),level=Number(p.level),config=arenaLevels_().find(x=>x.level===level);if(!config||level>progress.level)arenaError_('LEVEL_LOCKED');
   const sh=getQuizSpreadsheet_().getSheetByName('Arena - Sesionet');const active=sh.getDataRange().getValues().slice(1).find(r=>r[1]===u.id&&r[11]==='ACTIVE');if(active)return Object.assign({success:true},arenaPublic_(arenaSession_(active[0],u.id)));
-  let bank=arenaBank_(locale).filter(q=>!p.category||q.category===p.category);const graded=bank.filter(q=>(q.difficulty||1)<=Math.min(3,1+Math.floor((level-1)/4)));if(graded.length>=config.count)bank=graded;if(bank.length<config.count)arenaError_('NOT_ENOUGH_APPROVED_QUESTIONS');
+  if(strict)config.seconds=60;
+  let bank=arenaBank_(locale).filter(q=>(!strict||q.choices.length===4)&&(!p.category||q.category===p.category));const graded=bank.filter(q=>(q.difficulty||1)<=Math.min(3,1+Math.floor((level-1)/4)));if(graded.length>=config.count)bank=graded;if(bank.length<(strict?2:config.count))arenaError_('NOT_ENOUGH_APPROVED_QUESTIONS');if(strict)config.count=Math.min(config.count,bank.length);
   for(let i=bank.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[bank[i],bank[j]]=[bank[j],bank[i]];}
   const state={questions:bank.slice(0,config.count),locale,level,config,index:0,score:0,correct:0,answers:[],deadline:Date.now()+config.seconds*1000,feedback:null,finished:false};
-  state.category=String(p.category||'');state.presentationEnabled=p.protocol===2;arenaBeginQuestion_(state,state.presentationEnabled);
+  state.category=String(p.category||'');state.presentationEnabled=p.protocol===2;state.strictPresentation=strict;arenaBeginQuestion_(state,state.presentationEnabled);
   const id=Utilities.getUuid(),row=[id,u.id,new Date(),' ',arenaSafe_(p.category||'ALL'),level,config.count,0,0,0,0,'ACTIVE',JSON.stringify(state)];sh.appendRow(row);return Object.assign({success:true},arenaPublic_({values:row,state}));
  }
  const s=arenaSession_(String(p.session_id||''),u.id),a=s.state;
@@ -81,7 +87,7 @@ function arenaRoute_(p){
  if(p.action==='arenaAnswer'){
   if(a.finished)return Object.assign({success:true},arenaPublic_(s));const q=a.questions[a.index];
   if(p.question_id!==q.id)arenaError_('QUESTION_CHANGED');if(a.feedback)return Object.assign({success:true},arenaPublic_(s));
-  if(!Number.isInteger(p.choice)||p.choice < -1||p.choice>=q.choices.length)arenaError_('INVALID_CHOICE');if(a.presentation&&Date.now()<a.presentationUntil)arenaError_('PRESENTATION_PENDING');if(p.choice===-1&&Date.now()<a.deadline)arenaError_('TIMEOUT_NOT_REACHED');const choice=Date.now()>=a.deadline?-1:p.choice,right=choice===q.correct;
+  if(!Number.isInteger(p.choice)||p.choice < -1||p.choice>=q.choices.length)arenaError_('INVALID_CHOICE');if(arenaAwaitingReady_(a))arenaError_('PRESENTATION_PENDING');const fifty=a.lifelines&&a.lifelines.fifty;if(fifty&&fifty.question_id===q.id&&fifty.hidden.includes(p.choice))arenaError_('INVALID_CHOICE');if(p.choice===-1&&Date.now()<a.deadline)arenaError_('TIMEOUT_NOT_REACHED');const choice=Date.now()>=a.deadline?-1:p.choice,right=choice===q.correct;
   if(right){a.correct++;a.score+=a.config.points;}a.answers.push({id:q.id,choice,right});a.feedback={right,choice,submitted_choice:p.choice,reason:choice===-1?'timeout':right?'correct':'incorrect',correct:q.correct,explanation:q.explanation,source:q.source};arenaSave_(s);return Object.assign({success:true},arenaPublic_(s));
  }
  if(p.action==='arenaNext'){
@@ -157,7 +163,7 @@ function arenaLifeline_(s,p){
  const prior=a.lifelines&&a.lifelines[kind];
  if(prior&&prior.question_id===p.question_id)return Object.assign({success:true,lifeline:prior},arenaPublic_(s));
  if(p.question_id!==q.id)arenaError_('QUESTION_CHANGED');
- if(a.finished||a.feedback||a.presentation&&Date.now()<a.presentationUntil||Date.now()>=a.deadline)arenaError_('LIFELINE_UNAVAILABLE');
+ if(a.finished||a.feedback||arenaAwaitingReady_(a)||Date.now()>=a.deadline)arenaError_('LIFELINE_UNAVAILABLE');
  a.lifelines=a.lifelines||{};
  if(a.lifelines[kind]){
   if(a.lifelines[kind].question_id!==q.id)arenaError_('LIFELINE_USED');
@@ -174,7 +180,7 @@ function arenaLifeline_(s,p){
  }else if(kind==='switch'){
   // Keep session size and score intact; the replacement is not already in the round.
   const ids=new Set(a.questions.map(x=>x.id));
-  const pool=arenaBank_(a.locale).filter(x=>!ids.has(x.id)&&(!a.category||x.category===a.category));
+  const pool=arenaBank_(a.locale).filter(x=>!ids.has(x.id)&&(!a.strictPresentation||x.choices.length===4)&&(!a.category||x.category===a.category));
   if(!pool.length)arenaError_('NO_REPLACEMENT');
   a.questions[a.index]=pool[Math.floor(Math.random()*pool.length)];arenaBeginQuestion_(a,true);
  }else{r.reserved=true;}

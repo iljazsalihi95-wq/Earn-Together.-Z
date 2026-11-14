@@ -42,12 +42,12 @@ class ArenaOfflineStore(private val context:Context,user:String){
         val extra=emptyList<QuizArenaActivity.Question>()
         (primary+extra+verifiedMathQuestions()).filter{it.id.isNotBlank()&&it.prompt.isNotBlank()&&it.why.isNotBlank()&&it.source.isNotBlank()&&it.choices.size in 2..5&&it.choices.all(String::isNotBlank)&&it.correct in it.choices.indices}.distinctBy{it.prompt.trim().lowercase(Locale.ROOT)}
     }
-    fun categories()=questions.map{it.category}.filter{it.isNotBlank()}.distinct().sorted()
+    fun categories()=questions.filter{it.choices.size==4}.map{it.category}.filter{it.isNotBlank()}.distinct().sorted()
     fun progress():JSONObject=JSONObject().put("level",prefs.getInt("level",1)).put("points",prefs.getInt("points",0)).put("best",prefs.getInt("best",0))
     fun saved():JSONObject?=runCatching{JSONObject(prefs.getString("session",null)!!)}.getOrNull()?.takeIf{valid(it)&&!it.optBoolean("finished")}
     private fun valid(s:JSONObject):Boolean=runCatching{val qs=s.getJSONArray("local_questions");qs.length()>0&&s.getInt("index") in 0 until qs.length()&&(0 until qs.length()).all{val q=qs.getJSONObject(it);q.getInt("correct") in 0 until q.getJSONArray("choices").length()}}.getOrDefault(false)
     fun start(category:String):JSONObject{
-        val categoryPool=questions.filter{category.isEmpty()||it.category==category};require(categoryPool.isNotEmpty());val ceiling=(1+prefs.getInt("level",1)/4).coerceAtMost(3);val graded=categoryPool.filter{it.difficulty<=ceiling}
+        val categoryPool=questions.filter{it.choices.size==4&&(category.isEmpty()||it.category==category)};require(categoryPool.isNotEmpty());val ceiling=(1+prefs.getInt("level",1)/4).coerceAtMost(3);val graded=categoryPool.filter{it.difficulty<=ceiling}
         val level=prefs.getInt("level",1)
         // Arena rounds must feel like real quiz rounds, never 2-3 question demos.
         // Start at 10 questions and grow gradually to 15 when enough verified material exists.

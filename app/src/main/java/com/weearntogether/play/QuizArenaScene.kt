@@ -14,7 +14,7 @@ class QuizArenaScene(context:Context):View(context){
     var reaction=0
         set(value){field=value;reactionStarted=android.os.SystemClock.uptimeMillis();invalidate()}
     var speaking=false
-        set(value){if(value&&!field)speechStarted=android.os.SystemClock.uptimeMillis();field=value;invalidate()}
+        set(value){field=value;invalidate()}
     var speechEnergy:(()->Float)?=null
     var suitColor=0xff273b68.toInt();var shirtColor=Color.WHITE;var tieColor=0xffc99b4e.toInt()
     var phoneState="";var friendSpeaking=false
@@ -22,8 +22,12 @@ class QuizArenaScene(context:Context):View(context){
     var playerSpeaking=false
     var playerSpeechEnergy:(()->Float)?=null
     var questionPrompt="";var questionCategory="";var questionNumber=""
+    var alternatives: List<String> = emptyList()
+    var selectedChoice = -1
+        set(value) { field = value; invalidate() }
+    var correctChoice = -1
     var timerText="";var stageStatus="";var remainingFraction=1f
-    private var speechStarted=0L;private var reactionStarted=0L
+private var reactionStarted=0L
     private val presenter=ArenaPresenter(context)
     private val playerActor=ArenaSeatedActor(context)
     private val phoneParticipant=ArenaPhoneParticipant()
@@ -35,50 +39,65 @@ class QuizArenaScene(context:Context):View(context){
     private fun promptLayout():StaticLayout{
         if(questionLayout==null||layoutText!=questionPrompt){
             layoutText=questionPrompt;textPaint.color=Color.WHITE;textPaint.typeface=Typeface.create("sans-serif-medium",Typeface.BOLD)
-            var size=34f;var layout:StaticLayout
-            do{textPaint.textSize=size;layout=StaticLayout.Builder.obtain(questionPrompt,0,questionPrompt.length,textPaint,610).setAlignment(Layout.Alignment.ALIGN_CENTER).setIncludePad(false).setLineSpacing(2f,1f).build();size-=2f}while(layout.height>172&&size>=24f)
+            var size=30f;var layout:StaticLayout
+            do{textPaint.textSize=size;layout=StaticLayout.Builder.obtain(questionPrompt,0,questionPrompt.length,textPaint,610).setAlignment(Layout.Alignment.ALIGN_CENTER).setIncludePad(false).setLineSpacing(2f,1f).build();size-=2f}while(layout.height>106&&size>=18f)
             questionLayout=layout
         }
         return questionLayout!!
     }
     var audienceVotes:IntArray?=null
     private var camera=0f
+    private var framing=0f
     override fun onDraw(c:Canvas){
         super.onDraw(c)
         val save=c.save();val scale=minOf(width/720f,height/560f)
         c.translate((width-720f*scale)/2,(height-560f*scale)/2);c.scale(scale,scale)
         val time=android.os.SystemClock.uptimeMillis()
         val energy=if(speaking)(speechEnergy?.invoke()?:0f).coerceIn(0f,1f) else 0f
-        camera+=((if(audienceVotes!=null)1f else 0f)-camera)*.12f
+        val target = when {
+            audienceVotes != null -> -.7f
+            phoneState.isNotEmpty() -> -.3f
+            speaking -> 1f
+            reaction != 0 -> -.45f
+            else -> 0f
+        }
+        camera += (target - camera) * .09f
+        framing += ((if (target == 0f) 0f else 1f) - framing) * .09f
         // One continuous stage: rear LED display, floor, two chairs, front audience.
         c.drawBitmap(studio,null,RectF(0f,0f,720f,560f),p)
         p.shader=LinearGradient(0f,0f,0f,560f,0x66071025,0xe6071025.toInt(),Shader.TileMode.CLAMP)
         c.drawRect(0f,0f,720f,560f,p);p.shader=null
         drawStudioLights(c,time)
-        c.save();c.translate(0f,-camera*90f);c.scale(1f+camera*.12f,1f+camera*.12f,360f,500f)
+        c.save();c.translate(-camera * 18f, 0f);c.scale(1f+framing*.035f,1f+framing*.035f,360f,360f)
         p.textAlign=Paint.Align.CENTER;p.typeface=Typeface.DEFAULT_BOLD;p.textSize=10f;p.color=0xffffd782.toInt()
         c.drawText("WE EARN TOGETHER  •  QUIZ ARENA PREMIUM",360f,15f,p)
         p.color=0xff080e20.toInt();c.drawRoundRect(51f,25f,669f,283f,12f,12f,p)
         p.style=Paint.Style.STROKE;p.strokeWidth=4f;p.color=0xff8abed5.toInt();c.drawRoundRect(51f,25f,669f,283f,12f,12f,p);p.style=Paint.Style.FILL
         p.textAlign=Paint.Align.CENTER;p.typeface=Typeface.DEFAULT_BOLD;p.textSize=17f;p.color=0xffe3be7b.toInt()
         c.drawText(questionCategory.uppercase().take(48),360f,55f,p)
-        val prompt=promptLayout();c.save();c.translate(55f,67f+(172-prompt.height).coerceAtLeast(0)/2);prompt.draw(c);c.restore()
+        val prompt = promptLayout()
+        c.save()
+        c.clipRect(55f, 65f, 665f, 171f)
+        c.translate(55f, 65f + (106 - prompt.height).coerceAtLeast(0) / 2)
+        prompt.draw(c)
+        c.restore()
+        drawAlternatives(c, time)
         p.color=0xff233656.toInt();c.drawRoundRect(72f,258f,648f,265f,4f,4f,p)
         p.color=if(remainingFraction<.2f)0xffffa37e.toInt() else 0xff63d9ef.toInt()
         c.drawRoundRect(72f,258f,72f+576f*remainingFraction.coerceIn(0f,1f),265f,4f,4f,p)
         // Perspective floor and practical strip lighting.
         p.color=0xff102841.toInt();c.drawOval(72f,374f,648f,491f,p)
         p.style=Paint.Style.STROKE;p.color=0xff417c9b.toInt();p.strokeWidth=2f;c.drawOval(72f,374f,648f,491f,p);p.style=Paint.Style.FILL
-        c.save();c.translate(62f,205f);c.scale(.43f,.43f);drawPlayer(c,time);c.restore()
-        c.save();c.translate(438f,205f);c.scale(.43f,.43f);presenter.draw(c,if(friendSpeaking)0f else energy,speaking&&!friendSpeaking,reaction,time);c.restore()
-        p.color=0xff0b162b.toInt();c.drawRoundRect(290f,326f,430f,435f,12f,12f,p)
-        p.style=Paint.Style.STROKE;p.color=0xffbb995e.toInt();p.strokeWidth=2f;c.drawRoundRect(290f,326f,430f,435f,12f,12f,p);p.style=Paint.Style.FILL
-        p.textSize=15f;p.color=0xff8ed8ed.toInt();c.drawText(questionNumber,360f,350f,p)
-        p.textSize=if(timerText.length>6)22f else 35f;p.color=if(reaction<0)0xffffa5ad.toInt() else Color.WHITE;c.drawText(timerText,360f,389f,p)
-        p.textSize=11f;p.color=0xffe3be7b.toInt();c.drawText(stageStatus.take(29),360f,416f,p)
-        nameplate(c,playerName,172f,if(playerSpeaking)0xff72e0e9.toInt() else 0xffffd782.toInt())
-        nameplate(c,"PREZANTUESI",548f,if(speaking&&!friendSpeaking)0xff72e0e9.toInt() else 0xffffd782.toInt())
-        if(speaking)for(i in 0..8){val h=3f+14f*energy*(1f-abs(i-4)/6f);p.color=0xff67d8ed.toInt();c.drawRoundRect(312f+i*11,444f-h,317f+i*11,444f,2f,2f,p)}
+        c.save();c.translate(73f, 303f);c.scale(.31f,.31f);drawPlayer(c,time);c.restore()
+        c.save()
+        c.translate(267f, 277f)
+        c.scale(.48f, .48f)
+        presenter.draw(c, if (friendSpeaking) 0f else energy, time)
+        c.restore()
+        drawPodium(c)
+        nameplate(c,playerName,154f,if(playerSpeaking)0xff72e0e9.toInt() else 0xffffd782.toInt())
+        nameplate(c,"PREZANTUESI",360f,if(speaking&&!friendSpeaking)0xff72e0e9.toInt() else 0xffffd782.toInt())
+        if(speaking && !friendSpeaking)for(i in 0..8){val h=3f+14f*energy*(1f-abs(i-4)/6f);p.color=0xff67d8ed.toInt();c.drawRoundRect(312f+i*11,498f-h,317f+i*11,498f,2f,2f,p)}
         val audienceFrame=if(reaction>0&&(time/320)%2==1L)1 else 0
         c.drawBitmap(audience,Rect(0,audienceFrame*audience.height/2,audience.width,(audienceFrame+1)*audience.height/2),RectF(0f,535f,720f,560f),p)
         c.restore()
@@ -101,6 +120,50 @@ class QuizArenaScene(context:Context):View(context){
         if(reaction>0&&(time-reactionStarted)<4000)drawFireworks(c,time-reactionStarted)
         c.restoreToCount(save)
         if(attached&&windowVisibility==VISIBLE)postInvalidateDelayed(if(speaking||playerSpeaking||audienceVotes!=null)40 else 80)
+    }
+    private fun drawAlternatives(canvas: Canvas, time: Long) {
+        textPaint.textSize = 17f
+        for ((index, value) in alternatives.withIndex()) {
+            val x = 72f + index % 2 * 292f
+            val y = 175f + index / 2 * 40f
+            val pulse = ((1f + sin(time / 135.0).toFloat()) * 20f).toInt()
+            p.color = when (index) {
+                correctChoice -> Color.rgb(12, 110 + pulse, 91)
+                selectedChoice -> if (correctChoice < 0) 0xff80542d.toInt() else 0xff843650.toInt()
+                else -> 0xff222849.toInt()
+            }
+            canvas.drawRoundRect(x, y, x + 284f, y + 33f, 7f, 7f, p)
+            p.textAlign = Paint.Align.LEFT
+            p.textSize = 17f
+            p.color = 0xffffd782.toInt()
+            canvas.drawText("${'A'+index}", x + 11f, y + 22f, p)
+            p.color = Color.WHITE
+            canvas.drawText(android.text.TextUtils.ellipsize(value, textPaint, 242f,
+                android.text.TextUtils.TruncateAt.END).toString(), x + 36f, y + 22f, p)
+        }
+        p.textAlign = Paint.Align.CENTER
+    }
+    private fun drawPodium(canvas: Canvas) {
+        p.color = 0xffd6b56d.toInt()
+        p.strokeWidth = 4f
+        canvas.drawLine(409f, 410f, 387f, 365f, p)
+        p.color = 0xff142135.toInt()
+        canvas.drawRoundRect(373f, 358f, 394f, 369f, 5f, 5f, p)
+        p.shader = LinearGradient(280f, 415f, 446f, 521f,
+            intArrayOf(0xff284d87.toInt(), 0xff141b42.toInt(), 0xff41256e.toInt()),
+            null, Shader.TileMode.CLAMP)
+        canvas.drawRoundRect(282f, 411f, 438f, 510f, 10f, 10f, p)
+        p.shader = null
+        p.color = 0xffd6b56d.toInt()
+        canvas.drawRoundRect(278f, 409f, 442f, 414f, 2f, 2f, p)
+        p.textSize = 11f
+        canvas.drawText(questionNumber, 360f, 433f, p)
+        p.color = Color.WHITE
+        p.textSize = if (timerText.length > 6) 17f else 27f
+        canvas.drawText(timerText, 360f, 461f, p)
+        p.textSize = 9f
+        p.color = 0xffe3be7b.toInt()
+        canvas.drawText(stageStatus.take(29), 360f, 478f, p)
     }
     private fun nameplate(c:Canvas,name:String,center:Float,color:Int){
         p.color=0xe6111d39.toInt();c.drawRoundRect(center-113f,510f,center+113f,534f,7f,7f,p)

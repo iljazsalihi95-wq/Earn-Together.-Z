@@ -28,7 +28,7 @@ const address=s=>({session_id:s.session_id,question_id:s.question.id});
 async function solve(h,s,right=true){s=await h.call('arenaReady',address(s));const q=h.state(s.session_id).questions[s.index];return h.call('arenaAnswer',{...address(s),choice:right?q.correct:(q.correct+1)%q.choices.length,score:999999,coins:999999});}
 
 test('D1 round owns answer key, starts sixty seconds after narration, survives restart and isolates players',async()=>{
- const h=await harness();let s=await start(h);assert.equal(s.total,10);assert.equal(s.presentation_pending,true);assert.equal(s.remaining_ms,60000);assert.equal(s.question.correct,undefined);assert.equal(s.question.explanation,undefined);
+ const h=await harness();let s=await start(h);assert.equal(s.total,10);assert.equal(s.question.choices.length,4);assert.equal(s.presentation_pending,true);assert.equal(s.remaining_ms,60000);assert.equal(s.question.correct,undefined);assert.equal(s.question.explanation,undefined);
  assert.equal((await h.call('arenaStart',{level:1})).session_id,s.session_id);
  await assert.rejects(()=>h.call('arenaAnswer',{...address(s),choice:0}),/PRESENTATION_PENDING/);
  await assert.rejects(()=>h.call('arenaResume',{session_id:s.session_id},{user_id:'other',backend:'native'}),/SESSION_NOT_FOUND/);
@@ -58,6 +58,7 @@ test('lifelines are question-bound, repeat-safe and never supply answer-key-weig
  const h=await harness();let s=await start(h);s=await h.call('arenaReady',address(s));
  const fifty=await h.call('arenaLifeline',{...address(s),kind:'fifty'});const correct=h.state(s.session_id).questions[0].correct;
  assert.ok(!fifty.lifeline.hidden.includes(correct));assert.equal(fifty.lifeline.hidden.length,Math.max(0,s.question.choices.length-2));
+ await assert.rejects(()=>h.call('arenaAnswer',{...address(s),choice:fifty.lifeline.hidden[0]}),/INVALID_CHOICE/);
  const friend=await h.call('arenaLifeline',{...address(s),kind:'friend'});assert.ok(friend.remaining_ms>140000);
  const repeat=await h.call('arenaLifeline',{...address(s),kind:'friend'});assert.ok(repeat.remaining_ms<=friend.remaining_ms);
  const audience=await h.call('arenaLifeline',{...address(s),kind:'audience'});assert.equal(audience.lifeline.simulated,true);assert.equal(audience.lifeline.votes.reduce((a,b)=>a+b,0),100);
@@ -85,7 +86,6 @@ test('current Script account authenticates and imports old progress before D1 pl
   if(p.action==='getWalletProfile')return Response.json({success:true,profile:{user_id:'legacy-user',username:'Ilaz'},balance:{pending_coins:500},reward_rules:{video_reward_coins:100}});
   if(p.action==='arenaBootstrap')return Response.json({success:true,progress:{level:4,points:4321,completed:[1,2,3]},resume:null});
   if(p.action==='getBalance')return Response.json({success:true,balance:{pending_coins:500}});
-  if(p.action==='startRewardSession')return Response.json({success:true,session_id:'legacy-reward-session'});
   throw new Error('Unexpected upstream action');
  };
  try{
@@ -93,8 +93,21 @@ test('current Script account authenticates and imports old progress before D1 pl
   let boot=await nativeArena(h.env,{action:'arenaBootstrap',locale:'sq'},'legacy-session-token-12345',identity);
   assert.equal(boot.progress.level,4);assert.equal(boot.progress.points,4321);assert.equal(boot.wallet.pending_coins,500);assert.equal(boot.legacy_progress_imported,true);
   await nativeArena(h.env,{action:'arenaRegister',name:'Ilaz'},'legacy-session-token-12345',identity);
-  const s=await nativeArena(h.env,{action:'arenaStart',level:4},'legacy-session-token-12345',identity);assert.equal(s.engine,'D1');assert.equal(s.total,11);
+  let s=await nativeArena(h.env,{action:'arenaStart',level:4},'legacy-session-token-12345',identity);assert.equal(s.engine,'D1');assert.equal(s.total,11);
   boot=await nativeArena(h.env,{action:'arenaBootstrap'},'legacy-session-token-12345',identity);assert.equal(boot.resume,s.session_id);
+  const play=(action,p)=>nativeArena(h.env,{action,...p},'legacy-session-token-12345',identity);
+  while(!s.finished){
+   s=await play('arenaReady',address(s));
+   s=await play('arenaAnswer',{...address(s),choice:h.state(s.session_id).questions[s.index].correct});
+   s=await play('arenaNext',address(s));
+  }
+  assert.equal(s.level_award.status,'GAME_ONLY');
+  assert.equal(s.arena_game_coins,20);
+  assert.equal(s.wallet.pending_coins,500);
+  const replay=await play('arenaResume',{session_id:s.session_id});
+  assert.equal(replay.level_award.duplicate,true);
+  assert.equal(replay.arena_game_coins,20);
+
  }finally{globalThis.fetch=original;h.sqlite.close();}
 });
 

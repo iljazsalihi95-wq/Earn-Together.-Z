@@ -97,6 +97,10 @@ async function save(db,row){
  if(r.meta?.changes!==1)fail('SESSION_CHANGED',409);
  row.revision++;return row;
 }
+async function virtualCoins(db,uid){
+ const row=await db.prepare("SELECT COALESCE(SUM(coins),0) AS total FROM arena_wallet_audit WHERE player_id = ? AND status = 'GAME_ONLY'").bind(uid).first();
+ return row?.total||0;
+}
 async function finishReward(db,env,t,row,identity){
  const a=row.state;if(!a.finished||!a.passed)return {};
  try{
@@ -105,14 +109,12 @@ async function finishReward(db,env,t,row,identity){
  await db.prepare('INSERT OR IGNORE INTO arena_progress (player_id, level, score, correct, total, session_id, completed_at) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(row.player_id,a.level,a.score,a.correct,a.questions.length,row.session_id,Date.now()).run();
  let awarded;
  if(identity.backend==='legacy'){
-   if(!a.reward_session_id){
-   const reward=await accountFor(env,t,identity,{action:'startRewardSession',game_id:'html5_quiz_arena'});a.reward_session_id=reward.session_id;await save(db,row);
-   return {level_award:{coins:0,status:'RETRY_PENDING'},...await wallet(env,t,identity)};
-  }
-  awarded=await accountFor(env,t,identity,{action:'recordRewardEvent',source:'LEVEL',game_id:'html5_quiz_arena',session_id:a.reward_session_id,event_id:'arena-level-'+a.level,level:a.level});
+   // Existing Script accounts use the arena audit as their virtual balance.
+   // Never invoke the shared ad or financial reward routes for an Arena level.
+   awarded={transaction_id:'arena-level:'+a.level,coins:20,status:'GAME_ONLY'};
  }else awarded=await accountFor(env,t,identity,{action:'awardArenaLevel',level:a.level});
- await db.prepare('INSERT OR IGNORE INTO arena_wallet_audit (player_id, level, session_id, transaction_id, coins, status, awarded_at) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(row.player_id,a.level,row.session_id,awarded.transaction_id,awarded.coins,awarded.status,Date.now()).run();
- return {level_award:{coins:awarded.coins,status:awarded.status,duplicate:!!awarded.duplicate},...await wallet(env,t,identity),...(awarded.balance?{wallet:awarded.balance}:{})};
+ const receipt=await db.prepare('INSERT OR IGNORE INTO arena_wallet_audit (player_id, level, session_id, transaction_id, coins, status, awarded_at) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(row.player_id,a.level,row.session_id,awarded.transaction_id,awarded.coins,awarded.status,Date.now()).run();
+ return {level_award:{coins:awarded.coins,status:awarded.status,duplicate:!!awarded.duplicate||receipt.meta?.changes===0},arena_game_coins:await virtualCoins(db,row.player_id),...await wallet(env,t,identity),...(awarded.balance?{wallet:awarded.balance}:{})};
  }catch{return {level_award:{coins:0,status:'RETRY_PENDING'},...await wallet(env,t,identity)};}
 }
 export async function nativeArena(env,p,t,identity){
@@ -123,12 +125,12 @@ export async function nativeArena(env,p,t,identity){
  // This repository contains approved Albanian text only. Never claim a translated
  // bank is available until that language's reviewed source has been imported.
  if(locale!=='sq')fail('LANGUAGE_NOT_AVAILABLE',409);
- const bank=Object.values(PRACTICE_BANK);
+ const bank=Object.values(PRACTICE_BANK).filter(q=>q.choices.length===4);
  const imported=['arenaBootstrap','arenaStart'].includes(p.action)?await importLegacy(env,db,t,identity):await db.prepare('SELECT * FROM arena_legacy_progress WHERE player_id = ?').bind(uid).first();
  if(p.action==='arenaBootstrap'){
   const player=await db.prepare('SELECT name FROM arena_players WHERE player_id = ?').bind(uid).first();
   const active=await db.prepare('SELECT session_id FROM arena_sessions WHERE player_id = ? AND finished = 0 ORDER BY updated_at DESC LIMIT 1').bind(uid).first();
-  return {success:true,engine:'D1',player_id:uid,player:{name:player?.name||identity.name},progress:await progress(db,uid),levels:Array.from({length:20},(_,i)=>arenaConfig(i+1)),categories:[...new Set(bank.map(q=>q.category))],available:bank.length,resume:active?.session_id||imported?.resume_id||null,legacy_progress_imported:identity.backend==='legacy'?!!imported:undefined,...await wallet(env,t,identity)};
+  return {success:true,engine:'D1',player_id:uid,player:{name:player?.name||identity.name},progress:await progress(db,uid),levels:Array.from({length:20},(_,i)=>arenaConfig(i+1)),categories:[...new Set(bank.map(q=>q.category))],available:bank.length,resume:active?.session_id||imported?.resume_id||null,arena_game_coins:await virtualCoins(db,uid),legacy_progress_imported:identity.backend==='legacy'?!!imported:undefined,...await wallet(env,t,identity)};
  }
  if(p.action==='arenaRegister'){
   const name=safeName(p.name);if(name.length<2)fail('INVALID_NAME');
@@ -156,8 +158,7 @@ export async function nativeArena(env,p,t,identity){
   const graded=filtered.filter(q=>(q.difficulty||1)<=Math.min(3,1+Math.floor((level-1)/4)));
   const pool=graded.length>=Math.min(config.count,filtered.length)?graded:filtered;
   config.count=Math.min(config.count,pool.length);
-  let reward=null;if(identity.backend==='legacy')try{reward=await legacyAccount(env,{action:'startRewardSession',game_id:'html5_quiz_arena',session_token:t},4000);}catch{}
-  const state={reward_session_id:reward?.session_id||'',locale,level,config,questions:shuffled(pool).slice(0,config.count),category:p.category||'',index:0,score:0,correct:0,feedback:null,lifelines:{},finished:false,passed:false};begin(state);
+  const state={locale,level,config,questions:shuffled(pool).slice(0,config.count),category:p.category||'',index:0,score:0,correct:0,feedback:null,lifelines:{},finished:false,passed:false};begin(state);
   row={session_id:crypto.randomUUID(),player_id:uid,state,revision:0};
   const now=Date.now();
   // A partial unique index prevents two concurrent starts from creating two rounds.
@@ -186,6 +187,7 @@ export async function nativeArena(env,p,t,identity){
   if(!Number.isInteger(p.choice)||p.choice< -1||p.choice>=q.choices.length)fail('INVALID_CHOICE');
   if(!a.feedback){
    if(a.presentation)fail('PRESENTATION_PENDING',409);
+   if(a.lifelines?.fifty?.question_id===q.id&&a.lifelines.fifty.hidden.includes(p.choice))fail('INVALID_CHOICE');
    if(p.choice===-1&&Date.now()<a.deadline)fail('TIMEOUT_NOT_REACHED',409);
    const choice=Date.now()>=a.deadline?-1:p.choice,right=choice===q.correct;
    if(right){a.correct++;a.score+=a.config.points;}
