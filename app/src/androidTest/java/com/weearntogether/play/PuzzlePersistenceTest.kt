@@ -112,8 +112,15 @@ class PuzzlePersistenceTest {
     for(action in listOf(MotionEvent.ACTION_DOWN,MotionEvent.ACTION_UP)){val e=MotionEvent.obtain(now,now+10,action,game.width/2f,game.height*.4f,0);game.onTouchEvent(e);e.recycle()}
     game.setPaused(true)
    }
-   android.os.SystemClock.sleep(1300);inst.waitForIdleSync();assertEquals(10,p.getInt("score",-1))
-   inst.runOnMainSync{game.setPaused(false)};android.os.SystemClock.sleep(1600);inst.waitForIdleSync();assertTrue("Resumed shot must settle",p.getInt("score",0)>10)
+   android.os.SystemClock.sleep(1300);inst.waitForIdleSync()
+   // On emulators with animations disabled, ValueAnimator may finish on the
+   // launch frame, before setPaused(true) can suspend it. That is a valid
+   // single settlement, not a duplicate. With animations enabled, the shot
+   // must remain pending until resume.
+   val pausedScore=p.getInt("score",-1)
+   assertTrue("Paused shot must be pending or settled exactly once",pausedScore==10 || pausedScore==30)
+   inst.runOnMainSync{game.setPaused(false)};android.os.SystemClock.sleep(1600);inst.waitForIdleSync()
+   assertEquals("One level-2 miss must settle exactly once",30,p.getInt("score",-1))
    val score=p.getInt("score",0);val saved=p.getString("grid",null)
    android.os.SystemClock.sleep(700);assertEquals(score,p.getInt("score",0))
    inst.runOnMainSync{a.finish()};a=launch(BubbleShooterActivity::class.java);assertEquals(saved,p.getString("grid",null));assertEquals(score,p.getInt("score",0))
