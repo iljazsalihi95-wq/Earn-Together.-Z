@@ -421,6 +421,17 @@ class ArenaCloudActivity:Activity(){
             grid.addView(tile,params)
         }
         add(grid)
+        s.optJSONObject("lifelines")?.optJSONObject("friend")
+            ?.takeIf { it.optString("question_id") == s.getJSONObject("question").getString("id") }
+            ?.let { call ->
+                add(button("RIHAP TELEFONATËN") {
+                    if (session === s && !busy && !s.optBoolean("timed_out") &&
+                        s.optJSONObject("feedback") == null && android.os.SystemClock.elapsedRealtime() < deadline) {
+                        phoneDialog?.dismiss()
+                        phoneFriend(s, call)
+                    }
+                })
+            }
         add(button("✦  BISEDË ME PREZANTUESIN"){clarify(s)})
     }
     private fun useLifeline(s:JSONObject,kind:String){
@@ -501,6 +512,8 @@ class ArenaCloudActivity:Activity(){
                             dialog.setTitle("TELEFONO SHOKUN • SIMULIM REZERVË")
                         }
                         dialog.setMessage(friendText+"\n\nMendimi i shokut nuk është garanci.")
+                        scene?.phoneState = "MENDIMI I SHOKUT"
+                        scene?.invalidate()
                         if(response.isSuccess&&response.getOrNull()?.optString("text")?.isNotBlank()==true&&audioEnabled)voice("friend"){if(generation==phoneGeneration&&dialog.isShowing)voice("phone_outro")}
                     }}
                 }

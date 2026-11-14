@@ -205,7 +205,15 @@ export async function nativeArena(env,p,t,identity){
    if(a.feedback||a.presentation||Date.now()>=a.deadline)fail('LIFELINE_UNAVAILABLE',409);
    const r={kind,question_id:q.id};
    if(kind==='fifty')r.hidden=shuffled(q.choices.map((_,i)=>i).filter(i=>i!==q.correct)).slice(0,Math.max(0,q.choices.length-2));
-   else if(kind==='audience'){const w=q.choices.map(()=>10+crypto.getRandomValues(new Uint32Array(1))[0]%61),sum=w.reduce((n,x)=>n+x,0);r.votes=w.map(x=>Math.floor(x*100/sum));r.votes[0]+=100-r.votes.reduce((n,x)=>n+x,0);r.simulated=true;}
+   else if(kind==='audience'){
+    const fifty=a.lifelines.fifty;
+    const hidden=new Set(fifty?.question_id===q.id?fifty.hidden:[]);
+    const weights=q.choices.map((_,i)=>hidden.has(i)?0:10+crypto.getRandomValues(new Uint32Array(1))[0]%61);
+    const sum=weights.reduce((n,x)=>n+x,0);
+    r.votes=weights.map(x=>Math.floor(x*100/sum));
+    r.votes[weights.findIndex(x=>x>0)]+=100-r.votes.reduce((n,x)=>n+x,0);
+    r.simulated=true;
+   }
    else if(kind==='switch'){
     const pool=bank.filter(x=>!a.questions.some(y=>y.id===x.id)&&(!a.category||x.category===a.category));if(!pool.length)fail('NO_REPLACEMENT');a.questions[a.index]=shuffled(pool)[0];begin(a);
    }else r.reserved=true;

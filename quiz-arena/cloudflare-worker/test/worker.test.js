@@ -104,5 +104,5 @@ test('practice bank mirrors Android question text, option order and answer key',
  const {readFile}=await import('node:fs/promises');
  const source=JSON.parse(await readFile(new URL('../../../app/src/main/assets/quiz-arena/sheet-bank-sq.json',import.meta.url),'utf8'));
  for(const q of source.questions){const p=PRACTICE_BANK[q.id];assert.equal(p.prompt,q.question);assert.deepEqual(p.choices,q.options);assert.equal(p.correct,q.correctIndex);assert.equal(p.explanation,q.explanation);}
- assert.equal(Object.keys(PRACTICE_BANK).length,232);
+ assert.equal(Object.keys(PRACTICE_BANK).length,236);
 });

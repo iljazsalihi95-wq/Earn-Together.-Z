@@ -24,8 +24,9 @@ internal object ArenaLifelines {
                 result.put("text", simulatedFriend(q)).put("simulated", true)
             }
             "audience" -> {
-                val weights = List(choices.length()) { (10..70).random() }; val sum = weights.sum()
-                val votes = weights.map { it * 100 / sum }.toMutableList(); votes[0] += 100 - votes.sum()
+                val excluded = hidden(s)
+                val weights = List(choices.length()) { if (it in excluded) 0 else (10..70).random() }; val sum = weights.sum()
+                val votes = weights.map { it * 100 / sum }.toMutableList(); votes[weights.indexOfFirst { it > 0 }] += 100 - votes.sum()
                 result.put("votes", JSONArray(votes)).put("simulated", true)
             }
             "hint" -> result.put("text", hint(q))

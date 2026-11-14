@@ -30,7 +30,11 @@ class ArenaOfflineStore(private val context:Context,user:String){
             MathQ("Një katror ka perimetër 36 cm. Sa është gjatësia e një brinje?",listOf("6 cm","8 cm","9 cm","12 cm"),2,"Katrori ka katër brinjë të barabarta; 36 ÷ 4 = 9 cm."),
             MathQ("Sa është 7 × 6 - 10?",listOf("22","32","36","42"),1,"Së pari 7 × 6 = 42, pastaj 42 - 10 = 32."),
             MathQ("Cili është numri pasues në vargun 5, 10, 15, 20, ...?",listOf("21","24","25","30"),2,"Vargu rritet me 5; pas 20 vjen 25."),
-            MathQ("Sa është 1/5 e numrit 100?",listOf("10","20","25","50"),1,"100 ÷ 5 = 20.")
+            MathQ("Sa është 1/5 e numrit 100?",listOf("10","20","25","50"),1,"100 ÷ 5 = 20."),
+            MathQ("Sa minuta bëjnë 2 orë e 15 minuta?",listOf("115","125","135","145"),2,"Dy orë bëjnë 120 minuta. Kur shtojmë 15, bëhen 135 minuta."),
+            MathQ("Sa është mesatarja e numrave 4, 8 dhe 12?",listOf("6","8","10","12"),1,"Shuma është 24. E pjesëtojmë me 3 dhe marrim 8."),
+            MathQ("Sa është 15% e numrit 200?",listOf("15","20","25","30"),3,"Pesëmbëdhjetë për qind e 200 është 15 × 200 ÷ 100 = 30."),
+            MathQ("Sa centimetra ka një metër e gjysmë?",listOf("150","105","115","250"),0,"Një metër ka 100 centimetra dhe gjysmë metri ka 50. Gjithsej janë 150 centimetra.")
         )
         return rows.mapIndexed{i,q->QuizArenaActivity.Question("Matematikë",q.prompt,q.choices,q.correct,q.explanation,"arena-math-${101+i}","Llogaritje aritmetike/gjeometri elementare — verifikuar lokalisht")}
     }
