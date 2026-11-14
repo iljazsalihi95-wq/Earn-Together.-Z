@@ -15,11 +15,31 @@ import org.json.JSONArray
 class ArenaCloudActivity:Activity(){
     internal companion object { var qaTransport:((String,JSONObject)->JSONObject)?=null }
     private val localStore by lazy{ArenaOfflineStore(this,accounts.currentUserId()?:"guest")}
-    private var offline=false;private var modeVersion=0
+    private var offline=false;@Volatile private var modeVersion=0
     private val network=java.util.concurrent.Executors.newSingleThreadExecutor()
     private val voiceAnalysis = java.util.concurrent.Executors.newSingleThreadExecutor()
     private var voiceAnalysisTask: java.util.concurrent.Future<*>? = null
     private var voiceTimeout: Runnable? = null
+    private val voiceConnections = java.util.concurrent.atomic.AtomicReference<java.net.HttpURLConnection>()
+    private val dialogueNetwork = java.util.concurrent.Executors.newSingleThreadExecutor()
+    private fun clearVoiceTimeout() {
+        voiceTimeout?.let(retryHandler::removeCallbacks)
+        voiceTimeout = null
+    }
+    private fun <T> readVoiceConnection(
+        connection: java.net.HttpURLConnection,
+        generation: Int,
+        read: () -> T
+    ): T {
+        voiceConnections.set(connection)
+        try {
+            if (generation != voiceGeneration || !resumed) throw java.io.InterruptedIOException()
+            return read()
+        } finally {
+            voiceConnections.compareAndSet(connection, null)
+            connection.disconnect()
+        }
+    }
     private var retryNarration: Button? = null
     private val voiceNetwork=java.util.concurrent.Executors.newSingleThreadExecutor()
     private val retryHandler=android.os.Handler(android.os.Looper.getMainLooper())
@@ -34,12 +54,12 @@ class ArenaCloudActivity:Activity(){
     private val prefs by lazy{getSharedPreferences("arena_cloud_"+(accounts.currentUserId()?:"guest"),MODE_PRIVATE)}
     private val client=BackendClient(BuildConfig.QUIZ_ARENA_WORKER_URL.trimEnd('/')+"/api/arena",30_000)
     private var locale="sq";private var category="";private var session:JSONObject?=null;private var bootstrap:JSONObject?=null
-    private var busy=false;private var live=false;private var resumed=false;private var audioEnabled=true
+    private var busy=false;private var live=false;@Volatile private var resumed=false;private var audioEnabled=true
     private var deadline=0L;private var tick=-1;private var timer:android.os.CountDownTimer?=null
     private var player:android.media.MediaPlayer?=null;private var sound:android.media.ToneGenerator?=null
     private var soundBed: android.media.MediaPlayer? = null
     private var cue: android.media.MediaPlayer? = null
-    private var applause:android.media.MediaPlayer?=null;private var voiceGeneration=0
+    private var applause:android.media.MediaPlayer?=null;@Volatile private var voiceGeneration=0
     private val answerButtons=mutableListOf<Button>()
     private var narrationKey=""
     private var voiceFailure=""
@@ -427,7 +447,7 @@ class ArenaCloudActivity:Activity(){
         }
         val dialog=android.app.AlertDialog.Builder(this).setTitle("PREZANTUESI AI").setMessage("Po përgatitet sqarimi…").setPositiveButton("MBYLL",null).create();dialog.setOnDismissListener{stopVoice()};dialog.show()
         val version=modeVersion
-        voiceNetwork.execute{val r=runCatching{BackendClient(BuildConfig.QUIZ_ARENA_WORKER_URL.trimEnd('/')+"/api/ai/respond",60000).request("arenaDialogue",JSONObject().put("session_token",accounts.requireToken()).put("session_id",s.optString("session_id")).put("question_id",s.getJSONObject("question").optString("id")).put("mode",mode).put("message",message).put("locale",locale))};runOnUiThread{if(!isFinishing&&!isDestroyed&&version==modeVersion&&session===s&&dialog.isShowing){
+        dialogueNetwork.execute{val r=runCatching{BackendClient(BuildConfig.QUIZ_ARENA_WORKER_URL.trimEnd('/')+"/api/ai/respond",60000).request("arenaDialogue",JSONObject().put("session_token",accounts.requireToken()).put("session_id",s.optString("session_id")).put("question_id",s.getJSONObject("question").optString("id")).put("mode",mode).put("message",message).put("locale",locale))};runOnUiThread{if(!isFinishing&&!isDestroyed&&version==modeVersion&&session===s&&dialog.isShowing){
             dialogueText=r.getOrNull()?.optString("text").orEmpty();dialogueMessage=message
             if(dialogueText.isBlank())dialogueText=s.optJSONObject("feedback")?.optString("explanation")?:ArenaLifelines.hint(s.getJSONObject("question"))
             dialog.setMessage(dialogueText)
@@ -456,7 +476,7 @@ class ArenaCloudActivity:Activity(){
                 sound?.stopTone();scene?.phoneState="SHOKU U PËRGJIGJ"
                 dialog.setMessage("Për ${prefs.getString("name","Lojtari")}.\n\n"+if(friendText.isNotBlank())friendText else "Shoku po mendon për pyetjen… Mendimi i tij nuk është garanci.")
                 if(isOfflineSession()){scene?.phoneState="MENDIMI I SHOKUT";dialog.setMessage(friendText+"\n\nTelefonata me zë kërkon lidhje LIVE.")}
-                else voiceNetwork.execute{
+                else dialogueNetwork.execute{
                     val response=runCatching{BackendClient(BuildConfig.QUIZ_ARENA_WORKER_URL.trimEnd('/')+"/api/ai/respond",60000).request("arenaDialogue",JSONObject().put("session_token",accounts.requireToken()).put("session_id",s.optString("session_id")).put("question_id",s.getJSONObject("question").optString("id")).put("mode","friend").put("locale",locale))}
                     runOnUiThread{if(generation==phoneGeneration&&session===s&&resumed&&dialog.isShowing){
                         friendText=response.getOrNull()?.optString("text").orEmpty()
@@ -504,10 +524,10 @@ class ArenaCloudActivity:Activity(){
         call("arenaNext",data){prefs.edit().remove("pending_next").apply();accept(it)}
     }
     private fun retryAnswer(){if(isOfflineSession()){render();return};val next=runCatching{JSONObject(prefs.getString("pending_next","")?:"")}.getOrNull();if(next!=null){call("arenaNext",next){prefs.edit().remove("pending_next").apply();accept(it)};return};val p=runCatching{JSONObject(prefs.getString("pending_answer","")?:"")}.getOrNull();if(p!=null)call("arenaAnswer",p){prefs.edit().remove("pending_answer").apply();accept(it)}else session?.let{call("arenaResume",JSONObject().put("session_id",it.getString("session_id"))){v->accept(v)}}}
-    private fun stopVoice(){voiceGeneration++;voiceTimeout?.let(retryHandler::removeCallbacks);voiceTimeout=null;voiceAnalysisTask?.cancel(true);voiceAnalysisTask=null;sound?.stopTone();applause?.release();applause=null;voiceCompletion=null;player?.release();player=null;speechEnvelope=null;scene?.speaking=false;scene?.friendSpeaking=false;scene?.speechEnergy=null}
+    private fun stopVoice(){voiceGeneration++;voiceConnections.getAndSet(null)?.disconnect();clearVoiceTimeout();voiceAnalysisTask?.cancel(true);voiceAnalysisTask=null;sound?.stopTone();applause?.release();applause=null;voiceCompletion=null;player?.release();player=null;speechEnvelope=null;scene?.speaking=false;scene?.friendSpeaking=false;scene?.speechEnergy=null}
     private fun narrationFinished(phase:String,key:String){
         if(key!=questionKey())return
-        voiceTimeout?.let(retryHandler::removeCallbacks);voiceTimeout=null
+        clearVoiceTimeout()
         scene?.speaking=false;scene?.friendSpeaking=false
         val completion=voiceCompletion;voiceCompletion=null
         if(phase=="question")finishQuestionReading(key)
@@ -518,7 +538,7 @@ class ArenaCloudActivity:Activity(){
     private fun voiceUnavailable(phase:String){
         if(!resumed)return
         val s=session?:return
-        voiceTimeout?.let(retryHandler::removeCallbacks);voiceTimeout=null
+        clearVoiceTimeout()
         scene?.speaking=false;scene?.friendSpeaking=false
         status.text="Audioja nuk u realizua"+(if(voiceFailure.isBlank())"" else ": $voiceFailure")+". Riprovo audion ose vazhdo me tekst."
         if(phase=="question"&&s.optBoolean("presentation_pending")){
@@ -602,7 +622,7 @@ class ArenaCloudActivity:Activity(){
                             scene?.speechEnergy={speechEnvelope?.at(runCatching { player?.currentPosition?:0 }.getOrDefault(0))?:0f}
                             player=android.media.MediaPlayer().apply {
                                 setDataSource(file.absolutePath)
-                                setOnPreparedListener { if(current()){scene?.speaking=true;scene?.friendSpeaking=false;scene?.stageStatus="PREZANTUESI PO FLET";it.start()} }
+                                setOnPreparedListener { if(current()){clearVoiceTimeout();scene?.speaking=true;scene?.friendSpeaking=false;scene?.stageStatus="PREZANTUESI PO FLET";it.start()} }
                                 setOnCompletionListener { if(current())playClip(index+1) }
                                 setOnErrorListener { _,_,_->if(current()){player?.release();player=null;unavailable()};true }
                                 prepareAsync()
@@ -661,7 +681,7 @@ class ArenaCloudActivity:Activity(){
             player=android.media.MediaPlayer().apply{
                 setDataSource(cachedAudio.absolutePath)
                 setOnPreparedListener{
-                    if(generation==voiceGeneration&&resumed&&session===s){scene?.speaking=true;scene?.friendSpeaking=phase=="friend";scene?.stageStatus=if(phase=="friend")"SHOKU PO FLET" else "PREZANTUESI PO FLET";it.start();runCatching{it.playbackParams=it.playbackParams.setSpeed(1f).setPitch(1f)}}
+                    if(generation==voiceGeneration&&resumed&&session===s){clearVoiceTimeout();scene?.speaking=true;scene?.friendSpeaking=phase=="friend";scene?.stageStatus=if(phase=="friend")"SHOKU PO FLET" else "PREZANTUESI PO FLET";it.start();runCatching{it.playbackParams=it.playbackParams.setSpeed(1f).setPitch(1f)}}
                 }
                 setOnCompletionListener{
                     if(generation==voiceGeneration&&resumed&&session===s)narrationFinished(phase,questionKey(s))
@@ -685,14 +705,14 @@ class ArenaCloudActivity:Activity(){
                 val result=runCatching{
                     if(practice){
                         val health=(java.net.URL(workerUrl+"/health").openConnection() as java.net.HttpURLConnection)
-                        try {
+                        readVoiceConnection(health,generation) {
                             health.connectTimeout=8000;health.readTimeout=8000;health.instanceFollowRedirects=false
                             val ready=health.responseCode==200&&health.inputStream.bufferedReader().use{JSONObject(it.readText().take(8192))}.optBoolean("practice_speech")
                             if(!ready)throw java.io.IOException("PRACTICE_VOICE_UPDATE_REQUIRED")
-                        }finally{health.disconnect()}
+                        }
                     }
                     val connection=(java.net.URL(workerUrl+"/api/ai/speech").openConnection() as java.net.HttpURLConnection)
-                    try{
+                    readVoiceConnection(connection,generation) {
                         connection.requestMethod="POST";connection.connectTimeout=12000;connection.readTimeout=45000
                         connection.instanceFollowRedirects=false;connection.doOutput=true;connection.setRequestProperty("Content-Type","application/json")
                         val request=JSONObject().put("session_token",accounts.requireToken()).put("session_id",s.optString("session_id")).put("question_id",q.optString("id")).put("phase",phase).put("locale",locale).put("player_name",prefs.getString("name","Lojtari")).put("message",if(phase=="clarify")dialogueMessage else "")
@@ -719,7 +739,7 @@ class ArenaCloudActivity:Activity(){
                         }
                         if(audio.size<100)throw java.io.IOException("Empty Worker speech")
                         audio
-                    }finally{connection.disconnect()}
+                    }
                 }
                 runOnUiThread{
                     if(isFinishing||isDestroyed||!resumed||generation!=voiceGeneration||version!=modeVersion)return@runOnUiThread
@@ -756,5 +776,5 @@ class ArenaCloudActivity:Activity(){
     };if(code==3116){val s=pendingChallenge;pendingChallenge=null;advancing=false;if(s!=null&&session===s){if(result==RESULT_OK){prefs.edit().putBoolean("challenge:"+questionKey(s),true).apply();if(isOfflineSession())accept(localStore.next(s)) else nextLive(s)}else render()};return};if(code==PlayerPortrait.REQUEST&&PlayerPortrait.receive(this,result,data)){prefs.edit().putBoolean("initial_avatar",false).apply();PlayerPortrait.adjust(this){if(session!=null)render() else home()}}}
     override fun onResume(){super.onResume();resumed=true;ads.resume();if(isOfflineSession()&&!advancing){deadline=android.os.SystemClock.elapsedRealtime()+(session?.optLong("remaining_ms")?:0);render()}else if(session!=null&&!busy&&!advancing){retryAnswer()};if(!qa()){retryHandler.removeCallbacks(retry);retryHandler.postDelayed(retry,1000)}}
     override fun onPause(){releaseStudioSound();phoneGeneration++;phoneDialog?.dismiss();phoneDialog=null;scene?.phoneState="";sound?.stopTone();if(player!=null||scene?.speaking==true||session?.optBoolean("presentation_pending")==true)narrationKey="";persistLocal();timer?.cancel();retryHandler.removeCallbacks(retry);resumed=false;stopVoice();applause?.pause();ads.pause();super.onPause()}
-    override fun onDestroy(){releaseStudioSound();learningDialog?.dismiss();retryHandler.removeCallbacks(retry);network.shutdownNow();voiceNetwork.shutdownNow();voiceAnalysis.shutdownNow();timer?.cancel();stopVoice();sound?.release();applause?.release();ads.destroy();super.onDestroy()}
+    override fun onDestroy(){releaseStudioSound();learningDialog?.dismiss();retryHandler.removeCallbacks(retry);network.shutdownNow();voiceNetwork.shutdownNow();dialogueNetwork.shutdownNow();voiceAnalysis.shutdownNow();timer?.cancel();stopVoice();sound?.release();applause?.release();ads.destroy();super.onDestroy()}
 }
