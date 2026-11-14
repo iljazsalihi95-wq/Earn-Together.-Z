@@ -260,14 +260,23 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         // may restore legal placements without erasing earned progress.
         // Check for an occupied row before cancelling animations or changing state.
         if(paused || resolvingMove)return
-        val row=(7 downTo 0).firstOrNull { r -> board[r].any { it != 0 } } ?: return
+        if(board.none { row -> row.any { it != 0 } })return
         renderRevision++
         cancelBoardAnimations()
-        board[row].fill(0)
-        ensurePlayableTray()
+        // A single cleared row may still leave no legal placement for any
+        // offered shape. Recover the smallest number of bottom occupied rows
+        // necessary to make the tray playable again, preserving earned progress.
+        var clearedRows=0
+        for(row in 7 downTo 0){
+            if(board[row].none { it != 0 })continue
+            board[row].fill(0)
+            clearedRows++
+            ensurePlayableTray()
+            if(hasAnyMove())break
+        }
         gameOver=!hasAnyMove()
         save()
         refresh()
-        showFx("VIDEO RESCUE  ✦  ROW CLEARED",900)
+        showFx("RESCUE  ✦  $clearedRows ROWS CLEARED",900)
     }
 }
