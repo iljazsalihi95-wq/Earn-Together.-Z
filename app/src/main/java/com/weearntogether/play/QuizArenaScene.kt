@@ -28,10 +28,7 @@ class QuizArenaScene(context:Context):View(context){
     var timerText="";var stageStatus="";var remainingFraction=1f
 private var reactionStarted=0L
     private val presenter=ArenaPresenter(context)
-    private val defaultPlayer by lazy {
-        val atlas = StudioAssets.get(context, "host")
-        Bitmap.createBitmap(atlas, 384 + 143, 26, 143, 203)
-    }
+    private val defaultPlayer by lazy { StudioAssets.get(context, "arena-contestant") }
     var useInitials = false
     private val playerActor=ArenaSeatedActor(context)
     private val phoneParticipant=ArenaPhoneParticipant()
@@ -105,7 +102,7 @@ private var reactionStarted=0L
         nameplate(c,playerName,548f,if(playerSpeaking)0xff72e0e9.toInt() else 0xffffd782.toInt())
         nameplate(c,"PREZANTUESI",360f,if(speaking&&!friendSpeaking)0xff72e0e9.toInt() else 0xffffd782.toInt())
         if(speaking && !friendSpeaking)for(i in 0..8){val h=3f+14f*energy*(1f-abs(i-4)/6f);p.color=0xff67d8ed.toInt();c.drawRoundRect(312f+i*11,498f-h,317f+i*11,498f,2f,2f,p)}
-        val audienceFrame=if(reaction>0&&(time/320)%2==1L)1 else 0
+        val audienceFrame=if(reaction>0&&time-reactionStarted<4000&&(time/320)%2==1L)1 else 0
         c.drawBitmap(audience,Rect(0,audienceFrame*audience.height/2,audience.width,(audienceFrame+1)*audience.height/2),RectF(0f,535f,720f,560f),p)
         c.restore()
         audienceVotes?.let { votes ->
@@ -175,7 +172,8 @@ private var reactionStarted=0L
         canvas.drawRoundRect(278f, 409f, 442f, 414f, 2f, 2f, p)
         p.textSize = 11f
         canvas.drawText(questionNumber, 360f, 433f, p)
-        p.color = Color.WHITE
+        val urgent = timerText.startsWith("00:") && (timerText.substringAfter(':').toIntOrNull() ?: 60) in 1..10
+        p.color = if (urgent) 0xffff9d78.toInt() else Color.WHITE
         p.textSize = if (timerText.length > 6) 17f else 27f
         canvas.drawText(timerText, 360f, 461f, p)
         p.textSize = 9f
@@ -216,6 +214,11 @@ private var reactionStarted=0L
         p.alpha=255
     }
     private fun drawPlayer(c:Canvas){
-        playerActor.draw(c,portrait ?: if(useInitials) null else defaultPlayer,playerName,suitColor,shirtColor,tieColor)
+        if (portrait == null && !useInitials && suitColor == 0xff273b68.toInt() &&
+            shirtColor == Color.WHITE && tieColor == 0xffc99b4e.toInt()) {
+            c.drawBitmap(defaultPlayer, null, RectF(10f, 0f, 502f, 738f), p)
+        } else {
+            playerActor.draw(c, portrait, playerName, suitColor, shirtColor, tieColor)
+        }
     }
 }
