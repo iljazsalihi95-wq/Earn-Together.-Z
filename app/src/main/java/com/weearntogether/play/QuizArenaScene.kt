@@ -20,7 +20,6 @@ class QuizArenaScene(context:Context):View(context){
     var phoneState="";var friendSpeaking=false
     var playerName="LOJTARI";var portrait:Bitmap?=null
     var playerSpeaking=false
-    var playerSpeechEnergy:(()->Float)?=null
     var questionPrompt="";var questionCategory="";var questionNumber=""
     var alternatives: List<String> = emptyList()
     var selectedChoice = -1

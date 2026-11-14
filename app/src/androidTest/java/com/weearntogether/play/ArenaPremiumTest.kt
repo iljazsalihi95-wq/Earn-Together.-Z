@@ -58,13 +58,32 @@ class ArenaPremiumTest {
         inst.runOnMainSync {
             val actor=ArenaSeatedActor(inst.targetContext)
             fun frame(suit:Int)=Bitmap.createBitmap(512,768,Bitmap.Config.ARGB_8888).apply{
-                actor.draw(android.graphics.Canvas(this),null,"L",0f,0L,suit,Color.WHITE,0xffc99b4e.toInt())
+                actor.draw(android.graphics.Canvas(this),null,"L",suit,Color.WHITE,0xffc99b4e.toInt())
             }
             val original=frame(0xff273b68.toInt());val selected=frame(0xffa74a79.toInt())
             assertNotEquals("Selected suit must reach the actual photographic character",original.getPixel(180,250),selected.getPixel(180,250))
             assertEquals("Chair must keep its original material",original.getPixel(40,480),selected.getPixel(40,480))
             assertEquals("Hands must retain their original skin colour",original.getPixel(100,390),selected.getPixel(100,390))
             original.recycle();selected.recycle()
+        }
+    }
+    @Test fun portraitKeepsItsAspectRatioInsideTheSeatedActor() {
+        inst.runOnMainSync {
+            val actor = ArenaSeatedActor(inst.targetContext)
+            val photo = Bitmap.createBitmap(300, 150, Bitmap.Config.ARGB_8888)
+            val paint = android.graphics.Paint().apply { color = Color.MAGENTA }
+            android.graphics.Canvas(photo).apply {
+                drawColor(Color.GREEN)
+                drawCircle(150f, 75f, 30f, paint)
+            }
+            val frame = Bitmap.createBitmap(512, 768, Bitmap.Config.ARGB_8888)
+            actor.draw(android.graphics.Canvas(frame), photo, "L")
+            assertEquals(Color.MAGENTA, frame.getPixel(269, 96))
+            assertEquals(Color.MAGENTA, frame.getPixel(244, 120))
+            assertEquals(Color.GREEN, frame.getPixel(279, 96))
+            assertEquals(Color.GREEN, frame.getPixel(244, 131))
+            frame.recycle()
+            photo.recycle()
         }
     }
     @Test fun approvedSheetSnapshotHasAtLeast200DistinctQuestionsAndDifficulty(){
