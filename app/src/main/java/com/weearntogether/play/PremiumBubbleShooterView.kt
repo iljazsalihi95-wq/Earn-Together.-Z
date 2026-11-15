@@ -181,7 +181,20 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
    if(px<left){px=2*left-px;vx=-vx}
    if(px>right){px=2*right-px;vx=-vx}
    points.add(px to py)
-   if(py<=field.top+fieldTop+radius ||
+   // Stop the visual guide at the first real collision. Otherwise aiming
+   // dots can appear to pass through occupied bubbles before reaching a slot.
+   var struck=false
+   for(r in 0 until rows){
+    for(c in 0 until cols){
+     if(grid[r][c]==0)continue
+     val cx=field.left+xFor(r,c)+cell/2f
+     val cy=field.top+yFor(r)+cell/2f
+     val xx=px-cx;val yy=py-cy
+     if(xx*xx+yy*yy<=(cell*.88f)*(cell*.88f)){struck=true;break}
+    }
+    if(struck)break
+   }
+   if(struck || py<=field.top+fieldTop+radius ||
       (px-targetX)*(px-targetX)+(py-targetY)*(py-targetY)<=cell*cell*.75f)break
   }
   if(points.isEmpty()){hideAim();return}
