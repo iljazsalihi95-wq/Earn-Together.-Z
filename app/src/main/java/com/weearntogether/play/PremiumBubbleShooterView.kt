@@ -300,7 +300,20 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  private fun randomBoardColor():Int{val a=mutableListOf<Int>();for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]>0&&grid[r][c] !in a)a+=grid[r][c];return if(a.isEmpty())1+Random.nextInt(palette.size)else a.random()}
  fun swapBubble(){if(paused || busy || campaignComplete)return;val t=current;current=next;next=t;save();rebuild()};fun restart(){
   // Restart the current board without discarding unlocked campaign levels.
-  cancelFlight();campaignComplete=false;streak=0;misses=0
+  cancelFlight()
+  // A new round must not inherit the previous round's aiming guide, falling
+  // bubbles or screen shake. Cancel their animations before clearing the layer.
+  hideAim()
+  for(i in fxLayer.childCount-1 downTo 0)fxLayer.getChildAt(i).animate().cancel()
+  fxLayer.removeAllViews()
+  field.animate().cancel()
+  field.rotation=0f
+  field.scaleX=1f
+  field.scaleY=1f
+  launcher.animate().cancel()
+  launcher.scaleX=1f
+  launcher.scaleY=1f
+  campaignComplete=false;streak=0;misses=0
   // A new round starts with zero points, but keeps unlocked campaign levels
   // and the all-time best. Do not carry the previous round score forward.
   best=max(best,score);score=0
