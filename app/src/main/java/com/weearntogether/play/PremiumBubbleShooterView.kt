@@ -171,9 +171,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   val radius=cell*.44f
   val left=field.left+gridLeft()+radius
   val right=field.left+gridLeft()+gridWidth()-radius
-  val targetX=field.left+xFor(target.first,target.second)+cell/2f
-  val targetY=field.top+yFor(target.first)+cell/2f
-  val points=mutableListOf<Pair<Float,Float>>()
+   val points=mutableListOf<Pair<Float,Float>>()
   var px=sx;var py=sy
   val step=(cell*.22f).coerceAtLeast(2f)
   for(i in 0 until 1500){
@@ -194,8 +192,10 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
     }
     if(struck)break
    }
-   if(struck || py<=field.top+fieldTop+radius ||
-      (px-targetX)*(px-targetX)+(py-targetY)*(py-targetY)<=cell*cell*.75f)break
+   // The selected slot is a landing destination, not a physical obstacle.
+   // Stop only at the same occupied-bubble/ceiling collision used by
+   // nearestOpen(), so the guide cannot end prematurely beside a free slot.
+   if(struck || py<=field.top+fieldTop+radius)break
   }
   if(points.isEmpty()){hideAim();return}
   aimPath=points
