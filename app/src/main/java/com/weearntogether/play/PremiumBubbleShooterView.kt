@@ -301,6 +301,9 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  fun swapBubble(){if(paused || busy || campaignComplete)return;val t=current;current=next;next=t;save();rebuild()};fun restart(){
   // Restart the current board without discarding unlocked campaign levels.
   cancelFlight();campaignComplete=false;streak=0;misses=0
+  // A new round starts with zero points, but keeps unlocked campaign levels
+  // and the all-time best. Do not carry the previous round score forward.
+  best=max(best,score);score=0
   newBoard();current=randomBoardColor();next=randomBoardColor()
   save();rebuild()
  }
