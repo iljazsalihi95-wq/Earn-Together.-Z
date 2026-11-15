@@ -32,6 +32,13 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  // Cancel the previous round's delayed visual refresh before restarting.
  private var pendingRebuild:Runnable?=null
  private var detaching=false
+ // A view may be detached and attached again (navigation or window changes).
+ // Re-enable visual updates and redraw the saved board on reattachment.
+ override fun onAttachedToWindow(){
+  super.onAttachedToWindow()
+  detaching=false
+  post{if(isAttachedToWindow && !busy)rebuild()}
+ }
  private fun cancelPendingRebuild(){pendingRebuild?.let{removeCallbacks(it)};pendingRebuild=null}
  private var activeShot:Pair<Int,Int>?=null
  fun setPaused(value:Boolean){
