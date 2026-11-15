@@ -29,6 +29,9 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  private var flight:ValueAnimator?=null
  private var projectileView:View?=null
  private var pendingSettlement:Pair<Int,Int>?=null
+ // Cancel the previous round's delayed visual refresh before restarting.
+ private var pendingRebuild:Runnable?=null
+ private fun cancelPendingRebuild(){pendingRebuild?.let{removeCallbacks(it)};pendingRebuild=null}
  private var activeShot:Pair<Int,Int>?=null
  fun setPaused(value:Boolean){
   paused=value
@@ -45,6 +48,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   // view disappears so rotation/navigation cannot silently refund the shot.
   val committed=activeShot ?: pendingSettlement
   cancelFlight()
+  cancelPendingRebuild()
   activeShot=null
   if(committed!=null)settle(committed.first,committed.second)
   super.onDetachedFromWindow()
@@ -281,7 +285,12 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   }
  }
 
- private fun settle(r:Int,c:Int){if(r !in 0 until rows || c !in 0 until cols || grid[r][c]!=0 || !isAttachable(r,c)){busy=false;rebuild();return};grid[r][c]=current;val g=flood(r,c,current);if(g.size>=3){val color=current;g.forEach{(rr,cc)->grid[rr][cc]=0};streak++;val magic=streak>=3;val magicCells=if(magic)g.flatMap{(rr,cc)->hexNeighbors(rr,cc)}.filter{(rr,cc)->grid[rr][cc]!=0}.toSet() else emptySet();val magicDrops=magicCells.map{(rr,cc)->Triple(rr,cc,grid[rr][cc])};magicCells.forEach{(rr,cc)->grid[rr][cc]=0};val dropped=disconnectedCells().map{(rr,cc)->Triple(rr,cc,grid[rr][cc])};dropped.forEach{(rr,cc,_)->grid[rr][cc]=0};misses=(misses-2).coerceAtLeast(0);score+=g.size*45*level+(dropped.size+magicCells.size)*75*level+streak*35;if(magic){score+=500*level;streak=0;magicBurstFx(r,c)};popFx(g,color,dropped+magicDrops);performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)}else{streak=0;misses++;score+=10*level};if(misses>=pressureLimit()){if(!campaignComplete&&grid[rows-1].any{it!=0}){score=(score-level*150).coerceAtLeast(0);streak=0;newBoard()}else{pushPressureRow()};misses=0;performHapticFeedback(HapticFeedbackConstants.REJECT)};if(grid.all{row->row.all{it==0}}){val completedLevel=level;if(level<250){level++;score+=level*500;post{onLevelComplete(completedLevel)};newBoard()}else{campaignComplete=true;misses=0;post{onLevelComplete(completedLevel)}};streak=0};if(!campaignComplete&&grid[rows-1].any{it!=0}){score=(score-level*150).coerceAtLeast(0);streak=0;newBoard()};val availableColors=grid.flatMap{it.asList()}.filter{it>0}.toSet();current=if(next in availableColors)next else randomBoardColor();next=randomBoardColor();save();if(g.size>=3)postDelayed({busy=false;rebuild()},520)else{busy=false;rebuild()}}
+ private fun settle(r:Int,c:Int){if(r !in 0 until rows || c !in 0 until cols || grid[r][c]!=0 || !isAttachable(r,c)){busy=false;rebuild();return};grid[r][c]=current;val g=flood(r,c,current);if(g.size>=3){val color=current;g.forEach{(rr,cc)->grid[rr][cc]=0};streak++;val magic=streak>=3;val magicCells=if(magic)g.flatMap{(rr,cc)->hexNeighbors(rr,cc)}.filter{(rr,cc)->grid[rr][cc]!=0}.toSet() else emptySet();val magicDrops=magicCells.map{(rr,cc)->Triple(rr,cc,grid[rr][cc])};magicCells.forEach{(rr,cc)->grid[rr][cc]=0};val dropped=disconnectedCells().map{(rr,cc)->Triple(rr,cc,grid[rr][cc])};dropped.forEach{(rr,cc,_)->grid[rr][cc]=0};misses=(misses-2).coerceAtLeast(0);score+=g.size*45*level+(dropped.size+magicCells.size)*75*level+streak*35;if(magic){score+=500*level;streak=0;magicBurstFx(r,c)};popFx(g,color,dropped+magicDrops);performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)}else{streak=0;misses++;score+=10*level};if(misses>=pressureLimit()){if(!campaignComplete&&grid[rows-1].any{it!=0}){score=(score-level*150).coerceAtLeast(0);streak=0;newBoard()}else{pushPressureRow()};misses=0;performHapticFeedback(HapticFeedbackConstants.REJECT)};if(grid.all{row->row.all{it==0}}){val completedLevel=level;if(level<250){level++;score+=level*500;post{onLevelComplete(completedLevel)};newBoard()}else{campaignComplete=true;misses=0;post{onLevelComplete(completedLevel)}};streak=0};if(!campaignComplete&&grid[rows-1].any{it!=0}){score=(score-level*150).coerceAtLeast(0);streak=0;newBoard()};val availableColors=grid.flatMap{it.asList()}.filter{it>0}.toSet();current=if(next in availableColors)next else randomBoardColor();next=randomBoardColor();save();if(g.size>=3){
+  cancelPendingRebuild()
+  val refresh=object:Runnable{override fun run(){pendingRebuild=null;busy=false;rebuild()}}
+  pendingRebuild=refresh
+  postDelayed(refresh,520)
+ }else{cancelPendingRebuild();busy=false;rebuild()}}
  private fun magicBurstFx(r:Int,c:Int){val cx=field.left+xFor(r,c)+cell/2;val cy=field.top+yFor(r)+cell/2;repeat(3){ringIndex->val ring=TextView(context).apply{text="✦";gravity=Gravity.CENTER;textSize=(22+ringIndex*8).toFloat();setTextColor(if(ringIndex==1)0xffffc857.toInt() else 0xffa478ff.toInt());alpha=.95f;elevation=dp(30).toFloat()};val s=dp(58+ringIndex*18);fxLayer.addView(ring,LayoutParams(s,s).apply{leftMargin=cx-s/2;topMargin=cy-s/2});ring.scaleX=.2f;ring.scaleY=.2f;ring.animate().scaleX(2.8f).scaleY(2.8f).rotationBy(if(ringIndex%2==0)120f else -120f).alpha(0f).setStartDelay((ringIndex*55).toLong()).setDuration(480).withEndAction{fxLayer.removeView(ring)}.start()};field.animate().rotationBy(1.4f).setDuration(70).withEndAction{field.animate().rotation(0f).setDuration(120).start()}.start()}
  private fun hexNeighbors(r:Int,c:Int):List<Pair<Int,Int>>{val diagonal=if(r%2==0)arrayOf(-1 to -1,-1 to 0,1 to -1,1 to 0)else arrayOf(-1 to 0,-1 to 1,1 to 0,1 to 1);return (arrayOf(0 to -1,0 to 1)+diagonal).map{(dr,dc)->r+dr to c+dc}.filter{(rr,cc)->rr in 0 until rows&&cc in 0 until cols}}
  private fun flood(sr:Int,sc:Int,color:Int):Set<Pair<Int,Int>>{val seen=linkedSetOf<Pair<Int,Int>>();val q=ArrayDeque<Pair<Int,Int>>();q.add(sr to sc);while(q.isNotEmpty()){val p=q.removeFirst();if(p in seen)continue;val(r,c)=p;if(r !in 0 until rows||c !in 0 until cols||grid[r][c]!=color)continue;seen.add(p);hexNeighbors(r,c).forEach{q.add(it)}};return seen}
@@ -300,6 +309,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  private fun randomBoardColor():Int{val a=mutableListOf<Int>();for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]>0&&grid[r][c] !in a)a+=grid[r][c];return if(a.isEmpty())1+Random.nextInt(palette.size)else a.random()}
  fun swapBubble(){if(paused || busy || campaignComplete)return;val t=current;current=next;next=t;save();rebuild()};fun restart(){
   // Restart the current board without discarding unlocked campaign levels.
+  cancelPendingRebuild()
   cancelFlight()
   // A new round must not inherit the previous round's aiming guide, falling
   // bubbles or screen shake. Cancel their animations before clearing the layer.
