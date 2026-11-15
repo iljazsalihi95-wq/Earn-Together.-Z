@@ -59,6 +59,10 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   cancelPendingRebuild()
   activeShot=null
   detaching=true
+  // A completed match may still be waiting for its delayed redraw. Once
+  // detached that callback is cancelled, so clear its busy lock as well.
+  // Otherwise reattachment skips rebuild forever and the game cannot fire.
+  if(committed==null)busy=false
   if(committed!=null)settle(committed.first,committed.second)
   super.onDetachedFromWindow()
  }
