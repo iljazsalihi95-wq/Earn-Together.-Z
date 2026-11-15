@@ -64,6 +64,19 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   // Otherwise reattachment skips rebuild forever and the game cannot fire.
   if(committed==null)busy=false
   if(committed!=null)settle(committed.first,committed.second)
+  // Settling a committed shot can create pop and shake animations even while
+  // detached. Release those transient views now so they cannot leak into a
+  // later attachment or retain animation callbacks for an invisible board.
+  for(i in fxLayer.childCount-1 downTo 0)fxLayer.getChildAt(i).animate().cancel()
+  fxLayer.removeAllViews()
+  field.animate().cancel()
+  field.rotation=0f
+  field.scaleX=1f
+  field.scaleY=1f
+  launcher.animate().cancel()
+  launcher.scaleX=1f
+  launcher.scaleY=1f
+  hideAim()
   super.onDetachedFromWindow()
  }
  private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt();private fun light(c:Int)=Color.rgb((Color.red(c)+85).coerceAtMost(255),(Color.green(c)+85).coerceAtMost(255),(Color.blue(c)+85).coerceAtMost(255));private fun shade(c:Int)=Color.rgb((Color.red(c)*.55f).toInt(),(Color.green(c)*.55f).toInt(),(Color.blue(c)*.55f).toInt());private fun bubble(c:Int)=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xffffffff.toInt(),light(c),c,shade(c))).apply{shape=GradientDrawable.OVAL;setStroke(dp(2),0xbbffffff.toInt())}
