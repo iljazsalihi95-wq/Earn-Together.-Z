@@ -31,6 +31,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  private var pendingSettlement:Pair<Int,Int>?=null
  // Cancel the previous round's delayed visual refresh before restarting.
  private var pendingRebuild:Runnable?=null
+ private var detaching=false
  private fun cancelPendingRebuild(){pendingRebuild?.let{removeCallbacks(it)};pendingRebuild=null}
  private var activeShot:Pair<Int,Int>?=null
  fun setPaused(value:Boolean){
@@ -50,6 +51,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   cancelFlight()
   cancelPendingRebuild()
   activeShot=null
+  detaching=true
   if(committed!=null)settle(committed.first,committed.second)
   super.onDetachedFromWindow()
  }
@@ -289,8 +291,8 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   cancelPendingRebuild()
   val refresh=object:Runnable{override fun run(){pendingRebuild=null;busy=false;rebuild()}}
   pendingRebuild=refresh
-  postDelayed(refresh,520)
- }else{cancelPendingRebuild();busy=false;rebuild()}}
+  if(detaching){pendingRebuild=null;busy=false}else postDelayed(refresh,520)
+ }else{cancelPendingRebuild();busy=false;if(!detaching)rebuild()}}
  private fun magicBurstFx(r:Int,c:Int){val cx=field.left+xFor(r,c)+cell/2;val cy=field.top+yFor(r)+cell/2;repeat(3){ringIndex->val ring=TextView(context).apply{text="✦";gravity=Gravity.CENTER;textSize=(22+ringIndex*8).toFloat();setTextColor(if(ringIndex==1)0xffffc857.toInt() else 0xffa478ff.toInt());alpha=.95f;elevation=dp(30).toFloat()};val s=dp(58+ringIndex*18);fxLayer.addView(ring,LayoutParams(s,s).apply{leftMargin=cx-s/2;topMargin=cy-s/2});ring.scaleX=.2f;ring.scaleY=.2f;ring.animate().scaleX(2.8f).scaleY(2.8f).rotationBy(if(ringIndex%2==0)120f else -120f).alpha(0f).setStartDelay((ringIndex*55).toLong()).setDuration(480).withEndAction{fxLayer.removeView(ring)}.start()};field.animate().rotationBy(1.4f).setDuration(70).withEndAction{field.animate().rotation(0f).setDuration(120).start()}.start()}
  private fun hexNeighbors(r:Int,c:Int):List<Pair<Int,Int>>{val diagonal=if(r%2==0)arrayOf(-1 to -1,-1 to 0,1 to -1,1 to 0)else arrayOf(-1 to 0,-1 to 1,1 to 0,1 to 1);return (arrayOf(0 to -1,0 to 1)+diagonal).map{(dr,dc)->r+dr to c+dc}.filter{(rr,cc)->rr in 0 until rows&&cc in 0 until cols}}
  private fun flood(sr:Int,sc:Int,color:Int):Set<Pair<Int,Int>>{val seen=linkedSetOf<Pair<Int,Int>>();val q=ArrayDeque<Pair<Int,Int>>();q.add(sr to sc);while(q.isNotEmpty()){val p=q.removeFirst();if(p in seen)continue;val(r,c)=p;if(r !in 0 until rows||c !in 0 until cols||grid[r][c]!=color)continue;seen.add(p);hexNeighbors(r,c).forEach{q.add(it)}};return seen}
