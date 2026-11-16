@@ -126,4 +126,26 @@ class PuzzlePersistenceTest {
    inst.runOnMainSync{a.finish()};a=launch(BubbleShooterActivity::class.java);assertEquals(saved,p.getString("grid",null));assertEquals(score,p.getInt("score",0))
   }finally{inst.runOnMainSync{a.finish()}}
  }
+ @Test fun bubbleCompletedCampaignRestartStartsLevelOneWithoutLosingRecord(){
+  val p=ProgressPreferences.open(ctx,"bubble_shooter_hd2d")
+  p.edit().clear()
+   .putString("grid",List(99){"0"}.joinToString(","))
+   .putInt("level",250).putInt("score",1250).putInt("best",9000)
+   .putInt("current",1).putInt("next",2)
+   .putBoolean("campaign_complete",true).commit()
+  val a=launch(BubbleShooterActivity::class.java)
+  try {
+   val game=views(a.window.decorView).filterIsInstance<PremiumBubbleShooterView>().single()
+   assertEquals(250,p.getInt("level",-1))
+   inst.runOnMainSync{game.restart()}
+   inst.waitForIdleSync()
+   assertEquals("A completed campaign must restart at level one",1,p.getInt("level",-1))
+   assertFalse("Restart must clear the completed flag",p.getBoolean("campaign_complete",true))
+   assertEquals("A new campaign starts with zero round points",0,p.getInt("score",-1))
+   assertEquals("All-time best must survive a campaign restart",9000,p.getInt("best",-1))
+   val board=p.getString("grid",null)!!.split(',')
+   assertEquals(99,board.size)
+   assertTrue("Restart must generate a playable board",board.any{it!="0"})
+  }finally{inst.runOnMainSync{a.finish()}}
+ }
 }
