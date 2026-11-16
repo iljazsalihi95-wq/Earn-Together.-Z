@@ -129,9 +129,12 @@ class BlockPuzzleActivity : Activity() {
         if (dialogOpen) return
         dialogOpen = true
         game.setPaused(true)
+        val campaignComplete = ProgressPreferences.open(this, "block_puzzle_hd2d").getBoolean("campaign_complete", false)
         val dialog = AlertDialog.Builder(this)
-            .setTitle(ui("Restart level?", "Rifillo nivelin?", "Level neu starten?", "Riavviare il livello?"))
-            .setMessage(ui("The current board restarts. Your best score stays saved.", "Tabela aktuale rifillon. Rekordi më i mirë mbetet i ruajtur.", "Das aktuelle Spielfeld startet neu. Der Bestwert bleibt gespeichert.", "La griglia riparte. Il record resta salvato."))
+            .setTitle(if (campaignComplete) ui("Restart campaign?", "Rifillo fushatën?", "Kampagne neu starten?", "Riavviare la campagna?") else ui("Restart level?", "Rifillo nivelin?", "Level neu starten?", "Riavviare il livello?"))
+            .setMessage(if (campaignComplete)
+                ui("All 250 levels are complete. Restart from level 1? Your best score stays saved.", "Të 250 nivelet janë përfunduar. Të fillojë fushata nga niveli 1? Rekordi më i mirë ruhet.", "Alle 250 Level sind abgeschlossen. Kampagne ab Level 1 neu starten? Der Bestwert bleibt gespeichert.", "Tutti i 250 livelli sono completati. Ricominciare dal livello 1? Il record resta salvato.")
+                else ui("The current board restarts. Your best score stays saved.", "Tabela aktuale rifillon. Rekordi më i mirë mbetet i ruajtur.", "Das aktuelle Spielfeld startet neu. Der Bestwert bleibt gespeichert.", "La griglia riparte. Il record resta salvato."))
             .setNegativeButton(ui("CANCEL", "ANULO", "ABBRECHEN", "ANNULLA"), null)
             .setPositiveButton(ui("RESTART", "RIFILLO", "NEUSTART", "RIPROVA")) { _, _ -> game.restart(); refreshSavedProgress() }.create()
         dialog.setOnDismissListener { dialogOpen = false; game.setPaused(isFinishing || !hasWindowFocus()); refreshSavedProgress(); if (!isFinishing) enterImmersive() }; dialog.show()
