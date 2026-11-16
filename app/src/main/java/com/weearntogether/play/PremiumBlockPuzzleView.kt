@@ -294,7 +294,9 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
             cell?.apply{scaleX=1f;scaleY=1f;rotation=0f;alpha=1f}
         }
     }
-    fun restart(){selectedOffer=-1;cancelPendingRefresh();cancelBoardAnimations();fx.animate().cancel();fx.alpha=0f;fx.text="";best=max(best,score);for(r in board)r.fill(0);score=0;level=1;totalLines=0;levelLines=0;combo=0;gameOver=false;offers=nextOffers();ensurePlayableTray();save();refresh()}
+    // Retry the current campaign level without erasing unlocked levels or lifetime clears.
+    // Only the current round (board, score, combo and level goal) is reset.
+    fun restart(){selectedOffer=-1;cancelPendingRefresh();cancelBoardAnimations();fx.animate().cancel();fx.alpha=0f;fx.text="";best=max(best,score);for(r in board)r.fill(0);score=0;levelLines=0;combo=0;gameOver=false;offers=nextOffers();ensurePlayableTray();save();refresh()}
     fun videoRescue(){
         // A paused game or an unresolved placement cannot consume a rescue.
         // A finished board CAN be rescued: clearing its lowest occupied row
