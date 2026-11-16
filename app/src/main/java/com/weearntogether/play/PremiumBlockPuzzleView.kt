@@ -59,7 +59,7 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
     }
     private var selectedOffer=-1; private var previewCells=emptySet<Pair<Int,Int>>(); private var previewValid=false; private var previewOffer=-1; private var previewAnchorR=-1; private var previewAnchorC=-1
     init{
-        orientation=VERTICAL;gravity=Gravity.CENTER_HORIZONTAL;setPadding(dp(14),dp(108),dp(14),dp(16));background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff071020.toInt(),0xff14265a.toInt(),0xff25104f.toInt(),0xff071020.toInt()))
+        orientation=VERTICAL;gravity=Gravity.CENTER_HORIZONTAL;setPadding(dp(14),dp(108),dp(14),dp(56));background=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(0xff071020.toInt(),0xff14265a.toInt(),0xff25104f.toInt(),0xff071020.toInt()))
         hud.apply{setTextColor(Color.WHITE);textSize=15f;gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);letterSpacing=.04f};addView(hud,LayoutParams(-1,dp(58)))
         fx.apply{textSize=13f;gravity=Gravity.CENTER;setTypeface(null,Typeface.BOLD);setTextColor(0xffffd56a.toInt());alpha=0f};addView(fx,LayoutParams(-1,dp(28)))
         boardView.columnCount=8;boardView.rowCount=8;boardView.background=rounded(0xff09152f.toInt(),0x6658c8ff,22);boardView.setPadding(dp(8),dp(8),dp(8),dp(8));// A puzzle board must be square. Weighted vertical sizing stretched its
@@ -68,7 +68,8 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         // tray and lower board on short displays and landscape devices.
         val metrics=resources.displayMetrics
         val availableWidth=(metrics.widthPixels-dp(28)).coerceAtLeast(dp(1))
-        val reservedHeight=dp(108+58+28+126+16+4+12)
+        // Keep the tray above the 40dp bottom navigation chips (plus their 6dp margin).
+        val reservedHeight=dp(108+58+28+126+56+4+12)
         val availableHeight=(metrics.heightPixels-reservedHeight).coerceAtLeast(dp(1))
         val boardSide=minOf(availableWidth,availableHeight)
         addView(boardView,LayoutParams(boardSide,boardSide).apply{setMargins(0,dp(4),0,dp(12))})
@@ -82,9 +83,9 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         val h=View.MeasureSpec.getSize(heightMeasureSpec)
         if(View.MeasureSpec.getMode(widthMeasureSpec)!=View.MeasureSpec.UNSPECIFIED &&
             View.MeasureSpec.getMode(heightMeasureSpec)!=View.MeasureSpec.UNSPECIFIED){
-            // Reserve exactly the fixed vertical chrome (top inset, HUD, effects, tray, bottom inset and margins).
+            // Reserve top controls, HUD, effects, tray and 56dp bottom clearance for the navigation buttons.
             // The previous 452dp reservation double-counted 100dp, shrinking the board on phones.
-            val fixedChromeDp=108+58+28+126+16+4+12
+            val fixedChromeDp=108+58+28+126+56+4+12
             val side=minOf(w-paddingLeft-paddingRight,h-dp(fixedChromeDp)).coerceAtLeast(1)
             val params=boardView.layoutParams as LayoutParams
             if(params.width!=side || params.height!=side){params.width=side;params.height=side}
