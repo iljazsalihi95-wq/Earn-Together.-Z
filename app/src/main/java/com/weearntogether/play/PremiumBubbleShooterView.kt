@@ -349,9 +349,13 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   launcher.animate().cancel()
   launcher.scaleX=1f
   launcher.scaleY=1f
+  // After clearing all 250 levels, Restart begins a fresh campaign instead
+  // of trapping the player on the already-completed final level. A normal
+  // Restart still keeps the current unlocked level.
+  val completedCampaign=campaignComplete
   campaignComplete=false;streak=0;misses=0
-  // A new round starts with zero points, but keeps unlocked campaign levels
-  // and the all-time best. Do not carry the previous round score forward.
+  if(completedCampaign)level=1
+  // A new round starts with zero points but retains the all-time best.
   best=max(best,score);score=0
   newBoard();current=randomBoardColor();next=randomBoardColor()
   save();rebuild()
