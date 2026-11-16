@@ -148,4 +148,30 @@ class PuzzlePersistenceTest {
    assertTrue("Restart must generate a playable board",board.any{it!="0"})
   }finally{inst.runOnMainSync{a.finish()}}
  }
+
+ @Test fun blockCompletedCampaignRestartKeepsBestAndResetsLifetimeGoal(){
+  val p=ProgressPreferences.open(ctx,"block_puzzle_hd2d")
+  p.edit().clear()
+   .putString("board",List(64){"0"}.joinToString(","))
+   .putString("offers","0,1,2")
+   .putInt("level",250).putInt("score",2500).putInt("best",12000)
+   .putInt("total_lines",300).putInt("level_lines",12)
+   .putBoolean("campaign_complete",true).commit()
+  val a=launch(BlockPuzzleActivity::class.java)
+  try {
+   val game=views(a.window.decorView).filterIsInstance<PremiumBlockPuzzleView>().single()
+   assertTrue("Completed campaign must persist on launch",p.getBoolean("campaign_complete",false))
+   assertEquals(250,p.getInt("level",-1))
+   inst.runOnMainSync{game.restart()}
+   inst.waitForIdleSync()
+   assertEquals("New campaign starts at level one",1,p.getInt("level",-1))
+   assertFalse("Restart clears campaign completion",p.getBoolean("campaign_complete",true))
+   assertEquals(0,p.getInt("score",-1))
+   assertEquals(0,p.getInt("total_lines",-1))
+   assertEquals(0,p.getInt("level_lines",-1))
+   assertEquals("Historical best is preserved",12000,p.getInt("best",-1))
+   assertTrue(p.getString("board","")!!.split(',').all{it=="0"})
+   assertEquals(3,p.getString("offers","")!!.split(',').size)
+  }finally{inst.runOnMainSync{a.finish()}}
+ }
 }
