@@ -76,7 +76,7 @@ class PuzzlePersistenceTest {
    assertTrue(p.getInt("score",0)>0);val earnedScore=p.getInt("score",-1);val saved=p.getString("board","");assertNotEquals("0",saved!!.split(',').first())
    inst.runOnMainSync{a.finish()};a=launch(BlockPuzzleActivity::class.java);assertEquals(saved,p.getString("board",null))
    inst.runOnMainSync{views(a.window.decorView).filterIsInstance<PremiumBlockPuzzleView>().single().restart()};inst.waitForIdleSync()
-   assertEquals("Restart starts a fresh score",0,p.getInt("score",-1));assertEquals("Restart resets the level",1,p.getInt("level",-1));assertEquals("Restart resets cleared lines",0,p.getInt("total_lines",-1));assertEquals(0,p.getInt("level_lines",-1));assertEquals(0,p.getInt("combo",-1));assertTrue("Best score survives restart",p.getInt("best",0)>=maxOf(100,earnedScore))
+   assertEquals("Restart starts a fresh score",0,p.getInt("score",-1));assertEquals("Restart preserves the unlocked campaign level",3,p.getInt("level",-1));assertEquals("Restart preserves lifetime cleared lines",10,p.getInt("total_lines",-1));assertEquals(0,p.getInt("level_lines",-1));assertEquals(0,p.getInt("combo",-1));assertTrue("Best score survives restart",p.getInt("best",0)>=maxOf(100,earnedScore))
    assertTrue(p.getString("board","")!!.split(',').all{it=="0"})
   }finally{inst.runOnMainSync{a.finish()}}
  }
