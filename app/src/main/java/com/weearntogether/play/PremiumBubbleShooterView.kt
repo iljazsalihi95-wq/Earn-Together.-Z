@@ -344,7 +344,9 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   }
   for(r in rows-1 downTo 1)for(c in 0 until cols)grid[r][c]=grid[r-1][c]
   val colors=(3+level/55).coerceAtMost(palette.size)
-  for(c in 0 until cols)grid[0][c]=if(Random.nextFloat()>.12f)1+Random.nextInt(colors)else 0
+  // Keep the newly inserted ceiling row fully connected. Random holes here
+  // could strand shifted bubbles, violating the same anchoring rule as newBoard().
+  for(c in 0 until cols)grid[0][c]=1+Random.nextInt(colors)
  }
  private fun randomBoardColor():Int{val a=mutableListOf<Int>();for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]>0&&grid[r][c] !in a)a+=grid[r][c];return if(a.isEmpty())1+Random.nextInt(palette.size)else a.random()}
  fun swapBubble(){if(paused || busy || campaignComplete)return;val t=current;current=next;next=t;save();rebuild()};fun restart(){
