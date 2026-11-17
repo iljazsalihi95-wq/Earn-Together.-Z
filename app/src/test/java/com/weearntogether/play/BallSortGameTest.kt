@@ -7,7 +7,7 @@ import org.junit.Test
 
 class BallSortGameTest {
     @Test fun groupedPourMovesWholeExposedRun() {
-        val game = BallSortGame(1, listOf(listOf(1, 2, 2), listOf(2), emptyList(), emptyList(), emptyList()))
+        val game = BallSortGame(1, listOf(listOf(1, 2, 2), listOf(2), listOf(0, 0, 0, 0), listOf(1, 1, 1, 2), emptyList()))
         assertTrue(game.move(0, 1))
         assertEquals(listOf(1), game.tubes[0])
         assertEquals(listOf(2, 2, 2), game.tubes[1])
@@ -16,22 +16,22 @@ class BallSortGameTest {
     }
 
     @Test fun groupedPourStopsAtTubeCapacity() {
-        val game = BallSortGame(1, listOf(listOf(1, 1, 1), listOf(1, 1), emptyList(), emptyList(), emptyList()))
+        val game = BallSortGame(1, listOf(listOf(1, 1, 2, 2), listOf(2, 2), listOf(0, 0, 0, 0), listOf(1, 1), emptyList()))
         assertTrue(game.move(0, 1))
-        assertEquals(listOf(1), game.tubes[0])
+        assertEquals(listOf(1, 1), game.tubes[0])
         assertEquals(4, game.tubes[1].size)
         assertEquals(2, game.lastPourCount)
     }
 
     @Test fun incompatibleColourCannotReceivePour() {
-        val game = BallSortGame(1, listOf(listOf(1, 1), listOf(2), emptyList(), emptyList(), emptyList()))
+        val game = BallSortGame(1, listOf(listOf(1, 1), listOf(2), listOf(0, 0, 0, 0), listOf(1, 1, 2, 2), listOf(2)))
         assertFalse(game.move(0, 1))
         assertEquals(listOf(1, 1), game.tubes[0])
         assertEquals(listOf(2), game.tubes[1])
     }
 
     @Test fun undoRestoresWholeGroupedPour() {
-        val before = listOf(listOf(1, 2, 2), listOf(2), emptyList(), emptyList(), emptyList())
+        val before = listOf(listOf(1, 2, 2), listOf(2), listOf(0, 0, 0, 0), listOf(1, 1, 1, 2), emptyList())
         val game = BallSortGame(1, before)
         assertTrue(game.move(0, 1))
         assertTrue(game.undo())
