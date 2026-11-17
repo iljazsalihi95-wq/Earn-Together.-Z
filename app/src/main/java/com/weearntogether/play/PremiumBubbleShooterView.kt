@@ -92,7 +92,20 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  }
  private fun restoredString(key:String):String?=prefs.all[key] as? String
  private fun restoreOrNew(){campaignComplete=prefs.all["campaign_complete"]==true;score=restoredInt("score",0).coerceAtLeast(0);best=restoredInt("best",0).coerceAtLeast(score);level=restoredInt("level",1).coerceIn(1,250);streak=restoredInt("streak",0).coerceAtLeast(0);misses=restoredInt("misses",0).coerceIn(0,pressureLimit()-1);val raw=restoredString("grid")?.split(',')?.map{it.trim().toIntOrNull()};val valid=raw?.size==rows*cols&&raw.all{it!=null&&it in 0..palette.size};if(valid){raw!!.forEachIndexed{i,v->grid[i/cols][i%cols]=v!!}}else newBoard();val emptySavedBoard=grid.all{row->row.all{it==0}};if(emptySavedBoard&&!campaignComplete)newBoard();val active=grid.flatMap{it.asList()}.filter{it>0}.toSet();val savedCurrent=restoredInt("current",0);val savedNext=restoredInt("next",0);current=if(savedCurrent in active)savedCurrent else randomBoardColor();next=if(savedNext in active)savedNext else randomBoardColor();if(!valid||(emptySavedBoard&&!campaignComplete)||savedCurrent !in active||savedNext !in active)save()}
- private fun newBoard(){grid.forEach{it.fill(0)};val fill=(4+level/45).coerceAtMost(7);val colors=(3+level/55).coerceAtMost(palette.size);for(r in 0 until fill)for(c in 0 until cols)if(Random.nextFloat()>.08f)grid[r][c]=1+Random.nextInt(colors);misses=0}
+ private fun newBoard(){
+  grid.forEach{it.fill(0)}
+  val fill=(4+level/45).coerceAtMost(7)
+  val colors=(3+level/55).coerceAtMost(palette.size)
+  // Generate a ceiling-anchored hex cluster. Previously independent random
+  // holes could leave floating bubbles at the start of a level.
+  for(c in 0 until cols)grid[0][c]=1+Random.nextInt(colors)
+  for(r in 1 until fill)for(c in 0 until cols){
+   if(Random.nextFloat()>.08f && hexNeighbors(r,c).any{(rr,cc)->rr<r && grid[rr][cc]!=0}){
+    grid[r][c]=1+Random.nextInt(colors)
+   }
+  }
+  misses=0
+ }
  private fun save(){best=max(best,score);prefs.edit().putString("grid",grid.flatMap{it.asList()}.joinToString(",")).putInt("score",score).putInt("best",best).putInt("level",level).putInt("streak",streak).putInt("misses",misses).putInt("current",current).putInt("next",next).putBoolean("campaign_complete",campaignComplete).apply()}
  private fun pressureLimit()=(7-level/60).coerceAtLeast(4)
  private fun localized(en:String,sq:String,de:String,it:String)=when(java.util.Locale.getDefault().language.lowercase(java.util.Locale.ROOT)){"sq"->sq;"de"->de;"it"->it;else->en}
