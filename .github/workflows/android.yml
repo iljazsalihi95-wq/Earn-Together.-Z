@@ -39,10 +39,9 @@ jobs:
             quiz-arena/google-apps-script/AlbanianSpeech.gs
             docs/QUIZ_ARENA_DEPLOY_SQ.md
             wrangler.toml
-      - name: Compile and test Albanian voice normalization
+      - name: Run all Android debug unit tests (games, progress, voice)
         shell: bash
-        run: |
-          gradle --no-daemon testDebugUnitTest --tests 'com.weearntogether.play.ArenaAlbanianSpeechTest'
+        run: gradle --no-daemon testDebugUnitTest
       - name: Test bundled HTML5 game mechanics
         run: node --test tests/html5-games.test.cjs tests/html5-arcade.test.cjs
       - name: Test HTML5 interface in Chromium
