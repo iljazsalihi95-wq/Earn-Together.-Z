@@ -47,8 +47,8 @@ class BlockPuzzleActivity : Activity() {
     private fun savedInt(prefs: SharedPreferences, key: String, fallback: Int): Int = when (val value = prefs.all[key]) {
         is Int -> value
         is Long -> value.coerceIn(Int.MIN_VALUE.toLong(), Int.MAX_VALUE.toLong()).toInt()
-        is Float -> value.toInt()
-        is Double -> value.toInt()
+        is Float -> if (value.isFinite()) value.coerceIn(Int.MIN_VALUE.toFloat(), Int.MAX_VALUE.toFloat()).toInt() else fallback
+        is Double -> if (value.isFinite()) value.coerceIn(Int.MIN_VALUE.toDouble(), Int.MAX_VALUE.toDouble()).toInt() else fallback
         is Number -> value.toInt()
         is String -> value.trim().toIntOrNull() ?: fallback
         else -> fallback
@@ -129,7 +129,7 @@ class BlockPuzzleActivity : Activity() {
         if (dialogOpen) return
         dialogOpen = true
         game.setPaused(true)
-        val campaignComplete = ProgressPreferences.open(this, "block_puzzle_hd2d").getBoolean("campaign_complete", false)
+        val campaignComplete = (ProgressPreferences.open(this, "block_puzzle_hd2d").all["campaign_complete"] as? Boolean) == true
         val dialog = AlertDialog.Builder(this)
             .setTitle(if (campaignComplete) ui("Restart campaign?", "Rifillo fushatën?", "Kampagne neu starten?", "Riavviare la campagna?") else ui("Restart level?", "Rifillo nivelin?", "Level neu starten?", "Riavviare il livello?"))
             .setMessage(if (campaignComplete)
