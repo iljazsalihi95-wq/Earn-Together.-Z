@@ -102,6 +102,8 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
     private fun emptyTile()=rounded(0xff13254b.toInt(),0x334f9fe8,9)
     private fun filledTile(color:Int)=GradientDrawable(GradientDrawable.Orientation.TL_BR,intArrayOf(light(color),color,shade(color))).apply{cornerRadius=dp(10).toFloat();setStroke(dp(2),0x66ffffff)}
     private fun previewTile()=GradientDrawable().apply{setColor(0x2235c6fa);cornerRadius=dp(9).toFloat();setStroke(dp(1),0x8858c8ff.toInt())}
+    // Red feedback makes an invalid drag obvious without hiding existing blocks.
+    private fun invalidPreviewTile()=GradientDrawable().apply{setColor(0x33ff638f);cornerRadius=dp(9).toFloat();setStroke(dp(2),0xffff638f.toInt())}
     private fun buildBoard(){boardView.removeAllViews();repeat(8){r->repeat(8){c->val v=TextView(context).apply{gravity=Gravity.CENTER;background=emptyTile();elevation=dp(2).toFloat()};cells[r][c]=v;v.setOnClickListener{placeSelectedAt(r,c)};boardView.addView(v,GridLayout.LayoutParams(GridLayout.spec(r,1,1f),GridLayout.spec(c,1,1f)).apply{width=0;height=0;setMargins(gap,gap,gap,gap)})}}}
     // Cloud restores and older releases may encode progress as Long or String.
     // SharedPreferences.getInt throws ClassCastException for those values.
@@ -259,10 +261,12 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         clearPreview()
         previewCells=next;previewValid=valid;previewOffer=offer
         previewAnchorR=anchor.first;previewAnchorC=anchor.second
-        // Only legal landing positions get an outline; never obscure collisions.
-        if(valid) next.forEach{(r,c)->
+        // Show a blue legal preview or a red invalid preview on empty cells.
+        // Occupied cells retain their colors, so collisions remain visible.
+        next.forEach{(r,c)->
             if(board[r][c]==0)cells[r][c]?.apply{
-                background=previewTile();alpha=1f;scaleX=1f;scaleY=1f
+                background=if(valid)previewTile() else invalidPreviewTile()
+                alpha=1f;scaleX=1f;scaleY=1f
             }
         }
     }
