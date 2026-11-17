@@ -347,6 +347,10 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   // Keep the newly inserted ceiling row fully connected. Random holes here
   // could strand shifted bubbles, violating the same anchoring rule as newBoard().
   for(c in 0 until cols)grid[0][c]=1+Random.nextInt(colors)
+  // Shifting a staggered hex grid by one row flips the diagonal-neighbour
+  // parity. Clusters that were attached before the shift can become floating.
+  // Remove only those disconnected cells; pressure must not award match points.
+  disconnectedCells().forEach{(r,c)->grid[r][c]=0}
  }
  private fun randomBoardColor():Int{val a=mutableListOf<Int>();for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]>0&&grid[r][c] !in a)a+=grid[r][c];return if(a.isEmpty())1+Random.nextInt(palette.size)else a.random()}
  fun swapBubble(){if(paused || busy || campaignComplete)return;val t=current;current=next;next=t;save();rebuild()};fun restart(){
