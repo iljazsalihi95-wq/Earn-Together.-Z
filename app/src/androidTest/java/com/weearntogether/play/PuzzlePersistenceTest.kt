@@ -82,7 +82,8 @@ class PuzzlePersistenceTest {
  }
  @Test fun bubbleVideoRescueCannotChangePausedBoardAndPersistsRealClear(){
   val p=ProgressPreferences.open(ctx,"bubble_shooter_hd2d")
-  val initial=List(99){i->if(i<9) "1" else if(i in 45..47) "2" else "0"}.joinToString(",")
+  // Keep the lower rescue target attached to the ceiling: restored games discard orphaned bubbles.
+  val initial=List(99){i->if(i<9 || i in listOf(9,18,27,36)) "1" else if(i in 45..47) "2" else "0"}.joinToString(",")
   p.edit().clear().putString("grid",initial).putInt("score",80).putInt("level",4).putInt("current",1).putInt("next",2).commit()
   val a=launch(BubbleShooterActivity::class.java)
   try {
