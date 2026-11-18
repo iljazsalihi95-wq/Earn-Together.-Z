@@ -137,7 +137,19 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         val validOffers=saved?.size==3 && saved.all{it!=null && it in -1..shapes.lastIndex}
         offers=if(validOffers) saved!!.map{it!!}.toIntArray() else nextOffers()
         if(offers.all{it<0}) offers=nextOffers()
+        // Older versions could save duplicate shapes in the tray. Preserve
+        // consumed slots (-1) and the first copy of each remaining shape;
+        // repair only duplicates so resumed rounds keep their original pieces.
         val beforeRepair=offers.copyOf()
+        val seen=mutableSetOf<Int>()
+        for(slot in offers.indices){
+            val piece=offers[slot]
+            if(piece<0)continue
+            if(!seen.add(piece)){
+                val replacement=shapes.indices.filter{it !in seen}.randomOrNull()
+                if(replacement!=null){offers[slot]=replacement;seen.add(replacement)}
+            }
+        }
         ensurePlayableTray()
         gameOver=campaignComplete || !hasAnyMove()
         // Persist recovered state immediately, otherwise a process restart can
