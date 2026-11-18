@@ -147,7 +147,24 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         refresh()
     }
     private fun save(){best=max(best,score);prefs.edit().putString("board",board.flatMap{it.asList()}.joinToString(",")).putString("offers",offers.joinToString(",")).putInt("score",score).putInt("best",best).putInt("level",level).putInt("lines",totalLines).putInt("total_lines",totalLines).putInt("level_lines",levelLines).putInt("combo",combo).putBoolean("campaign_complete",campaignComplete).apply()}
-    private fun nextOffers():IntArray{val hard=(level/20).coerceAtMost(5);return IntArray(3){if(Random.nextInt(8)<hard) Random.nextInt(5,shapes.size) else Random.nextInt(shapes.size)}}
+    private fun nextOffers():IntArray{
+        // Each tray contains three distinct shapes. Repeated identical pieces
+        // made rounds feel arbitrary, especially after restarting a level.
+        // Difficulty still rises with the campaign, but early levels favour
+        // smaller shapes while later levels offer more complex combinations.
+        val hard=(level/20).coerceAtMost(5)
+        val available=shapes.indices.toMutableList()
+        val chosen=IntArray(3)
+        repeat(3){slot->
+            val complex=Random.nextInt(8)<hard
+            val preferred=available.filter{if(complex)it>=5 else it<5}
+            val pool=if(preferred.isNotEmpty())preferred else available
+            val pick=pool.random()
+            chosen[slot]=pick
+            available.remove(pick)
+        }
+        return chosen
+    }
     private fun shapeFits(shapeIndex:Int):Boolean{if(shapeIndex !in shapes.indices)return false;val shape=shapes[shapeIndex];for(r in 0..7)for(c in 0..7)if(canPlace(shape,r,c))return true;return false}
     private fun ensurePlayableTray(){
         // Guarantee a legal offer without recursively rerolling unusable trays.
