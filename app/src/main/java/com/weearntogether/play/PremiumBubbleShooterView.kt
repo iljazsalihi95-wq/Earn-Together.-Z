@@ -412,8 +412,12 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
    newBoard()
   }
   val active=grid.flatMap{it.asList()}.filter{it>0}.toSet()
+  // Rescue can remove the last bubble of a color. Rebuild both launcher
+  // choices from remaining colors, and preserve a useful distinct swap when
+  // at least two colors survive the rescue.
   if(current !in active)current=randomBoardColor()
-  if(next !in active)next=randomBoardColor(current)
+  if(next !in active || (active.size>1 && next==current))
+   next=randomBoardColor(current)
   save()
   rebuild()
  }
