@@ -50,3 +50,4 @@ jobs:
             native-instrumentation.txt
             app/build/reports/androidTests/
             app/build/outputs/androidTest-results/
+            app/build/outputs/apk/debug/app-debug.apk
