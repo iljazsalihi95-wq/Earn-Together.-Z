@@ -106,7 +106,7 @@ class BlockPuzzleActivity : Activity() {
             text = savedProgressLabel(); contentDescription = text; textSize = 9f; setTextColor(0xffffd66b.toInt()); gravity = Gravity.CENTER; setTypeface(null, Typeface.BOLD)
             background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(0xdd102a54.toInt(), 0xdd24164d.toInt(), 0xdd0b5f9f.toInt())).apply { cornerRadius = dp(12).toFloat(); setStroke(dp(1), 0x88ffc857.toInt()) }
         }
-        host.addView(status, FrameLayout.LayoutParams(dp(300), dp(24), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(80) })
+        host.addView(status, FrameLayout.LayoutParams(-1, dp(24), Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply { topMargin = dp(80); leftMargin = dp(12); rightMargin = dp(12) })
 
         val knife = chip(ui("BLADE QUEST", "THIKAT", "MESSER", "COLTELLI")) { openGame(KnifeHitActivity::class.java) }.apply { contentDescription = ui("Open Blade Quest", "Hap Blade Quest", "Blade Quest öffnen", "Apri Blade Quest") }
         host.addView(knife, FrameLayout.LayoutParams(dp(118), dp(40), Gravity.BOTTOM or Gravity.START).apply { leftMargin = dp(10); bottomMargin = dp(6) })
