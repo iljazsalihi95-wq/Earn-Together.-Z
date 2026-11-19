@@ -86,6 +86,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   is Int->value
   is Long->value.coerceIn(Int.MIN_VALUE.toLong(),Int.MAX_VALUE.toLong()).toInt()
   is Float->if(value.isFinite())value.coerceIn(Int.MIN_VALUE.toFloat(),Int.MAX_VALUE.toFloat()).toInt() else fallback
+  is Double->if(value.isFinite())value.coerceIn(Int.MIN_VALUE.toDouble(),Int.MAX_VALUE.toDouble()).toInt() else fallback
   is Number->value.toInt()
   is String->value.trim().toIntOrNull()?:fallback
   else->fallback
