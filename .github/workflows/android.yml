@@ -47,7 +47,7 @@ jobs:
       - name: Test HTML5 interface in Chromium
         run: |
           npm install --no-save --prefix "$RUNNER_TEMP/html5-browser" playwright@1.58.2
-          node "$RUNNER_TEMP/html5-browser/node_modules/playwright/cli.js" install --with-deps chromium
+          # Hosted Ubuntu runner already provides Chromium runtime libraries. Avoid\n          # --with-deps here: apt mirror outages must not fail the APK pipeline.\n          node "$RUNNER_TEMP/html5-browser/node_modules/playwright/cli.js" install chromium
           PLAYWRIGHT_MODULE="$RUNNER_TEMP/html5-browser/node_modules/playwright" node tests/html5-browser.cjs
       - uses: actions/upload-artifact@v4
         if: always()
