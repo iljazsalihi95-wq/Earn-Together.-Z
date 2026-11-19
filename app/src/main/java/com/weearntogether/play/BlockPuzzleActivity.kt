@@ -79,7 +79,7 @@ class BlockPuzzleActivity : Activity() {
     }
 
     private fun refreshSavedProgress() { if (::status.isInitialized) { status.text = savedProgressLabel(); status.contentDescription = status.text } }
-    private fun openGame(target: Class<out Activity>) { startActivity(Intent(this, target).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)) }
+    private fun openGame(target: Class<out Activity>) { startActivity(Intent(this, target).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
