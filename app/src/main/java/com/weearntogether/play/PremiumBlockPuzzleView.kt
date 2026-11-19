@@ -179,14 +179,20 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
     }
     private fun shapeFits(shapeIndex:Int):Boolean{if(shapeIndex !in shapes.indices)return false;val shape=shapes[shapeIndex];for(r in 0..7)for(c in 0..7)if(canPlace(shape,r,c))return true;return false}
     private fun ensurePlayableTray(){
-        // Guarantee a legal offer without recursively rerolling unusable trays.
+        // Repair a blocked tray without discarding previously used pieces.
+        // A rescue or late-game reroll must offer at least one legal move
+        // whenever the board has room for any shape.
         if(offers.any{it>=0&&shapeFits(it)})return
         val playable=shapes.indices.filter{shapeFits(it)}
         if(playable.isEmpty())return
+        if(offers.all{it<0})offers=nextOffers()
         val remaining=offers.indices.filter{offers[it]>=0}
-        if(remaining.isEmpty())offers=nextOffers()
-        val slot=remaining.randomOrNull() ?: offers.indices.random()
-        offers[slot]=playable.random()
+        if(remaining.isEmpty())return
+        val slot=remaining.random()
+        // Keep all three offered pieces distinct where possible.
+        val otherShapes=remaining.filter{it!=slot}.map{offers[it]}.toSet()
+        val uniquePlayable=playable.filter{it !in otherShapes}
+        offers[slot]=(if(uniquePlayable.isNotEmpty())uniquePlayable else playable).random()
     }
     private fun refresh(){if(selectedOffer !in offers.indices || (selectedOffer>=0 && offers[selectedOffer]<0))selectedOffer=-1;clearPreview(false);for(r in 0..7)for(c in 0..7){val v=board[r][c];cells[r][c]?.apply{background=if(v==0)emptyTile() else filledTile(palette[(v-1).coerceIn(0,palette.lastIndex)]);contentDescription="Row ${r+1}, column ${c+1}: ${if(v==0) "empty" else "occupied"}";alpha=if(v==0).72f else 1f;scaleX=1f;scaleY=1f;rotation=0f}};hud.text=if(campaignComplete)localized("CAMPAIGN COMPLETE 250/250 ✦ BEST $best\nRESTART TO PLAY FROM LEVEL 1","FUSHATA U PËRFUNDUA 250/250 ✦ REKORDI $best\nRIFILLO NGA NIVELI 1","KAMPAGNE ABGESCHLOSSEN 250/250 ✦ REKORD $best\nNEUSTART AB LEVEL 1","CAMPAGNA COMPLETATA 250/250 ✦ RECORD $best\nRIPARTI DAL LIVELLO 1") else if(gameOver)localized("RUN COMPLETE ✦ SCORE $score ✦ BEST $best\nTAP RESTART FOR A NEW BOARD","LOJA PËRFUNDOI ✦ PIKËT $score ✦ REKORDI $best\nSHTYP RIFILLO PËR TABELË TË RE","PARTIE BEENDET ✦ PUNKTE $score ✦ REKORD $best\nNEUSTART FÜR EIN NEUES SPIELFELD","PARTITA FINITA ✦ PUNTI $score ✦ RECORD $best\nRIAVVIA PER UNA NUOVA GRIGLIA") else localized("SCORE $score   BEST $best   LEVEL $level/250\n${modeName()} ✦ GOAL $levelLines/${goal()} ✦ COMBO x$combo","PIKËT $score   REKORDI $best   NIVELI $level/250\n${modeName()} ✦ SYNIMI $levelLines/${goal()} ✦ SERIA x$combo","PUNKTE $score   REKORD $best   LEVEL $level/250\n${modeName()} ✦ ZIEL $levelLines/${goal()} ✦ KOMBO x$combo","PUNTI $score   RECORD $best   LIVELLO $level/250\n${modeName()} ✦ OBIETTIVO $levelLines/${goal()} ✦ COMBO x$combo");tray.removeAllViews();offers.forEachIndexed{i,s->tray.addView(if(s<0||gameOver)View(context) else pieceView(i,s),LayoutParams(0,-1,1f).apply{setMargins(dp(5),0,dp(5),0)})};if(gameOver){fx.animate().cancel();fx.text=if(campaignComplete)localized("ALL 250 LEVELS COMPLETE ✦ RESTART TO PLAY AGAIN","250 NIVELET U PËRFUNDUAN ✦ RIFILLO","ALLE 250 LEVEL GESCHAFFT ✦ NEUSTART","250 LIVELLI COMPLETATI ✦ RIAVVIA") else localized("NO MOVES • BEST $best","NUK KA LËVIZJE • REKORDI $best","KEINE ZÜGE • REKORD $best","NESSUNA MOSSA • RECORD $best");fx.alpha=1f}}
     private fun placeSelectedAt(row:Int,col:Int){
