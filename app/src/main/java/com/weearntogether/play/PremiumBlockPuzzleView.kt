@@ -227,7 +227,15 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
                             tray.getChildAt(slot).background=rounded(0x221b83d4,0x3358c8ff,16)
                     }
                     v.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                    v.startDragAndDrop(ClipData.newPlainText("piece",index.toString()),BoardPieceShadow(v,shapeIndex,index),index,0)
+                    // Some Android windows reject a drag (for example during
+                    // a transition). Restore tap selection rather than leaving
+                    // this piece inert until the next touch sequence.
+                    if (!v.startDragAndDrop(ClipData.newPlainText("piece",index.toString()),BoardPieceShadow(v,shapeIndex,index),index,0)) {
+                        dragStarted=false
+                        selectedOffer=index
+                        v.background=rounded(0x553f2b70,0xffffc857.toInt(),16)
+                        showFx(localized("DRAG UNAVAILABLE — TAP A BOARD CELL","TËRHEQJA NUK U NIS — PREK NJË KATROR","ZIEHEN NICHT MÖGLICH — FELD ANTIPPEN","TRASCINAMENTO NON DISPONIBILE — TOCCA UNA CASELLA"),1100)
+                    }
                 }
                 true
             }
