@@ -170,6 +170,10 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   val right=field.left+gridLeft()+gridWidth()-radius
   var hitX=sx;var hitY=field.top+fieldTop+radius
   var collided:Pair<Int,Int>?=null
+  // Cache occupied centers once per aim, not on every trajectory step.
+  val occupied=ArrayList<Triple<Int,Int,Pair<Float,Float>>>()
+  for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]!=0)
+   occupied.add(Triple(r,c,(field.left+xFor(r,c)+cell/2f) to (field.top+yFor(r)+cell/2f)))
   val step=(cell*.22f).coerceAtLeast(2f)
   var hit=false
   for(i in 0 until 1500){
@@ -179,18 +183,12 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
    hitX=px;hitY=py
    if(py<=field.top+fieldTop+radius){hit=true;break}
    var collision=false
-   for(r in 0 until rows){
-    for(c in 0 until cols){
-     if(grid[r][c]==0)continue
-     val cx=field.left+xFor(r,c)+cell/2f
-     val cy=field.top+yFor(r)+cell/2f
-     val xx=px-cx;val yy=py-cy
-     if(xx*xx+yy*yy<=(cell*.88f)*(cell*.88f)){
-      collided=r to c
-      collision=true;break
-     }
+   for((r,c,center) in occupied){
+    val xx=px-center.first;val yy=py-center.second
+    if(xx*xx+yy*yy<=(cell*.88f)*(cell*.88f)){
+     collided=r to c
+     collision=true;break
     }
-    if(collision)break
    }
    if(collision){hit=true;break}
   }
@@ -225,6 +223,10 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   val right=field.left+gridLeft()+gridWidth()-radius
    val points=mutableListOf<Pair<Float,Float>>()
   var px=sx;var py=sy
+  // Precompute collision centers to keep dragging responsive on slower phones.
+  val occupied=ArrayList<Pair<Float,Float>>()
+  for(r in 0 until rows)for(c in 0 until cols)if(grid[r][c]!=0)
+   occupied.add((field.left+xFor(r,c)+cell/2f) to (field.top+yFor(r)+cell/2f))
   val step=(cell*.22f).coerceAtLeast(2f)
   for(i in 0 until 1500){
    px+=vx*step;py+=vy*step
@@ -234,15 +236,9 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
    // Stop the visual guide at the first real collision. Otherwise aiming
    // dots can appear to pass through occupied bubbles before reaching a slot.
    var struck=false
-   for(r in 0 until rows){
-    for(c in 0 until cols){
-     if(grid[r][c]==0)continue
-     val cx=field.left+xFor(r,c)+cell/2f
-     val cy=field.top+yFor(r)+cell/2f
-     val xx=px-cx;val yy=py-cy
-     if(xx*xx+yy*yy<=(cell*.88f)*(cell*.88f)){struck=true;break}
-    }
-    if(struck)break
+   for((cx,cy) in occupied){
+    val xx=px-cx;val yy=py-cy
+    if(xx*xx+yy*yy<=(cell*.88f)*(cell*.88f)){struck=true;break}
    }
    // The selected slot is a landing destination, not a physical obstacle.
    // Stop only at the same occupied-bubble/ceiling collision used by
