@@ -41,6 +41,8 @@ class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Un
     private fun finishGame(){if(ended)return;ended=true;save();performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)}
     private fun snap(){
         moving=false
+        // A completed shot must not leave the previous drag's aiming guide visible.
+        aimY=0f
         val rad=radius()
         val impact=mutableListOf<Pair<Int,Int>>()
         for(r in 0..11)for(c in 0..7)if(grid[r][c]>=0&&hypot(px-centerX(c,r),py-centerY(r))<=rad*2.15f)impact.add(r to c)
@@ -102,7 +104,7 @@ class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Un
                 aimX=e.x;aimY=e.y
                 val dx=e.x-width/2f
                 val dy=e.y-shooterY()
-                if(dy>=-rad){invalidate();return true}
+                if(dy>=-rad){aimY=0f;invalidate();return true}
                 val len=hypot(dx,dy).coerceAtLeast(1f)
                 px=width/2f;py=shooterY()
                 // Keep shot travel time consistent across compact and high-resolution Android screens.
