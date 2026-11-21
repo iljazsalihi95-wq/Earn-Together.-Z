@@ -38,7 +38,7 @@ class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Un
     private fun group(r:Int,c:Int,matching:Boolean):Set<Pair<Int,Int>>{val result=mutableSetOf(r to c);val q=ArrayDeque<Pair<Int,Int>>();q.add(r to c);while(q.isNotEmpty()){val(y,x)=q.removeFirst();for((yy,xx)in neighbors(y,x))if(grid[yy][xx]>=0&&(!matching||grid[yy][xx]==grid[r][c])&&result.add(yy to xx))q.add(yy to xx)};return result}
     private fun addPressureRow(){if(grid[11].any{it>=0}){finishGame();return};for(r in 11 downTo 1)for(c in 0..7)grid[r][c]=grid[r-1][c];val colorCount=(3+(level-1)/75).coerceAtMost(colors.size);for(c in 0..7)grid[0][c]=if(Random.nextFloat()<.82f)Random.nextInt(colorCount) else -1;misses=0;pressureStarted=System.nanoTime();performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)}
     private fun advanceLevel(){if(level>=250){points+=25000;ended=true;completed=true;save();performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);post{onLevelComplete?.invoke()};return};level++;bestLevel=maxOf(bestLevel,level);points+=250*level;startLevel(false);performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);post{onLevelComplete?.invoke()}}
-    private fun finishGame(){if(ended)return;ended=true;save();performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);post{onLevelComplete?.invoke()}}
+    private fun finishGame(){if(ended)return;ended=true;save();performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)}
     private fun snap(){
         moving=false
         val rad=radius()
