@@ -53,7 +53,7 @@ class BlockPuzzleView(context: Context, private val onNaturalBreak: (() -> Unit)
         gameOver = !anyMoves()
         if (!validBoard || !validOffers || replenished) save()
     }
-    fun restart(){for(row in board)row.fill(0);offers=freshOffers();selected=0;score=0;levelLines=0;combo=0;gameOver=false;dragging=false;powerPressed=false;previewX=-1;previewY=-1;performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);save();invalidate()}
+    fun restart(){for(row in board)row.fill(0);reshuffles=reshuffles.coerceAtLeast(1);offers=freshOffers();selected=0;score=0;levelLines=0;combo=0;gameOver=false;dragging=false;powerPressed=false;previewX=-1;previewY=-1;performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);save();invalidate()}
     private fun canFitAnywhere(id:Int)=(0..7).any{y->(0..7).any{x->fits(id,x,y)}}
     private fun freshOffers():MutableList<Int>{val campaignPool=campaignShapeIds();val fitting=campaignPool.filter{canFitAnywhere(it)};if(fitting.isEmpty())return mutableListOf(-1,-1,-1);val small=fitting.filter{shapes[it].size<=2};val out=mutableListOf<Int>();out+=(small.ifEmpty{fitting}).random();while(out.size<3)out+=fitting.random();return out.shuffled().toMutableList()}
     private fun save(){prefs.edit().putString("board",board.joinToString(""){it.joinToString("")}).putString("offers",offers.joinToString(",")).putInt("score",score).putInt("best",best).putInt("level",level).putInt("total_lines",totalLines).putInt("level_lines",levelLines).putInt("combo",combo).putInt("best_combo",bestCombo).putInt("reshuffles",reshuffles).apply()}
