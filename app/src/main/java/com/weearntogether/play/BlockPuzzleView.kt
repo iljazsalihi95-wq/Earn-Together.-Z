@@ -25,7 +25,7 @@ class BlockPuzzleView(context: Context, private val onNaturalBreak: (() -> Unit)
         arrayOf(1 to 0,0 to 1,1 to 1,2 to 1,1 to 2)
     )
     private val prefs=ProgressPreferences.open(context,"block_puzzle")
-    private var offers=MutableList(3){Random.nextInt(shapes.size)};private var selected=0;private var score=0;private var best=prefs.getInt("best",0);private var level=prefs.getInt("level",1).coerceIn(1,250);private var totalLines=prefs.getInt("total_lines",0);private var levelLines=prefs.getInt("level_lines",0);private var combo=prefs.getInt("combo",0);private var bestCombo=prefs.getInt("best_combo",0);private var reshuffles=prefs.getInt("reshuffles",1).coerceAtLeast(0);private var gameOver=false;private var dragging=false;private var powerPressed=false;private var previewX=-1;private var previewY=-1
+    private var offers=MutableList(3){Random.nextInt(shapes.size)};private var selected=0;private var score=0;private var best=prefs.getInt("best",0);private var level=prefs.getInt("level",1).coerceIn(1,250);private var totalLines=prefs.getInt("total_lines",0);private var levelLines=prefs.getInt("level_lines",0);private var combo=prefs.getInt("combo",0);private var bestCombo=prefs.getInt("best_combo",0);private var reshuffles=prefs.getInt("reshuffles",1).coerceAtLeast(0);private var gameOver=false;private var dragging=false;private var powerPressed=false;private var boardTouchStarted=false;private var previewX=-1;private var previewY=-1
     private var flashUntil=0L;private var flashLines=0;private var comboUntil=0L;private var placementUntil=0L;private var placementX=-1;private var placementY=-1;private var placementSize=0;private var invalidUntil=0L
     private fun goal()=min(6+level/5,24)
     // Gameplay totals must never wrap to negative values during long campaigns.
@@ -97,6 +97,7 @@ class BlockPuzzleView(context: Context, private val onNaturalBreak: (() -> Unit)
                     invalidate()
                     return true
                 }
+                boardTouchStarted=boardPos(e.x,e.y)!=null
                 boardPos(e.x,e.y)?.let{(x,y)->previewX=x;previewY=y}
             }
             MotionEvent.ACTION_MOVE->{
@@ -124,13 +125,13 @@ class BlockPuzzleView(context: Context, private val onNaturalBreak: (() -> Unit)
                 else if(dragging){
                     invalidUntil=System.currentTimeMillis()+240
                     performHapticFeedback(HapticFeedbackConstants.REJECT)
-                } else boardPos(e.x,e.y)?.let{(x,y)->place(x,y)}
-                dragging=false;previewX=-1;previewY=-1
+                } else if(boardTouchStarted) boardPos(e.x,e.y)?.let{(x,y)->place(x,y)}
+                dragging=false;boardTouchStarted=false;previewX=-1;previewY=-1
                 invalidate()
                 return true
             }
             MotionEvent.ACTION_CANCEL->{
-                powerPressed=false;dragging=false;previewX=-1;previewY=-1
+                powerPressed=false;dragging=false;boardTouchStarted=false;previewX=-1;previewY=-1
                 invalidate()
             }
         }
