@@ -43,7 +43,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  private var activeShot:Pair<Int,Int>?=null
  fun setPaused(value:Boolean){
   paused=value
-  if(value){hideAim();flight?.pause()}
+  if(value){aimTouchStarted=false;hideAim();flight?.pause()}
   else {
    val pending=pendingSettlement
    if(pending!=null){pendingSettlement=null;settle(pending.first,pending.second)}
@@ -76,6 +76,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   launcher.animate().cancel()
   launcher.scaleX=1f
   launcher.scaleY=1f
+  aimTouchStarted=false
   hideAim()
   super.onDetachedFromWindow()
  }
@@ -168,6 +169,11 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
     aimTouchStarted=false
     hideAim()
     if(target!=null)shoot(target.first,target.second,path)
+   }
+   MotionEvent.ACTION_POINTER_DOWN,MotionEvent.ACTION_POINTER_UP->{
+    // Cancel ambiguous multi-finger gestures; never fire using a different finger.
+    aimTouchStarted=false
+    hideAim()
    }
    MotionEvent.ACTION_CANCEL->{aimTouchStarted=false;hideAim()}
   }
