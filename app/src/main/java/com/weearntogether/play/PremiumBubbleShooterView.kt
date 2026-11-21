@@ -146,16 +146,33 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   if(w>0&&h>0&&oldw>0&&oldh>0&&(w!=oldw||h!=oldh))post{if(isAttachedToWindow&&!busy)rebuild()}
  }
  private fun addBubble(r:Int,c:Int,v:Int){field.addView(TextView(context).apply{gravity=Gravity.CENTER;text="•";textSize=12f;setTextColor(0xccffffff.toInt());background=bubble(palette[v-1]);elevation=dp(7).toFloat()},LayoutParams(bubbleSize(),bubbleSize()).apply{leftMargin=xFor(r,c);topMargin=yFor(r)})}
- override fun onTouchEvent(e:MotionEvent):Boolean{if(paused || busy || campaignComplete)return true;when(e.actionMasked){MotionEvent.ACTION_DOWN,MotionEvent.ACTION_MOVE->{if(e.y<field.top+fieldTop||e.y>height-dp(82)){hideAim();return true};updateAim(e.x,e.y)};MotionEvent.ACTION_UP->{
-   // Release outside the playable aiming area cancels the shot rather than
-   // firing at the last valid position seen during a drag.
-   val inside=e.y>=field.top+fieldTop && e.y<=height-dp(82)
-   if(inside)updateAim(e.x,e.y)
-   val target=if(inside)aiming else null
-   val path=if(inside)aimPath.toList() else emptyList()
-   hideAim()
-   if(target!=null)shoot(target.first,target.second,path)
-  };MotionEvent.ACTION_CANCEL->hideAim()};return true}
+ private var aimTouchStarted=false
+ override fun onTouchEvent(e:MotionEvent):Boolean{
+  if(paused || busy || campaignComplete){aimTouchStarted=false;hideAim();return true}
+  val inside=e.y>=field.top+fieldTop && e.y<=height-dp(82)
+  when(e.actionMasked){
+   MotionEvent.ACTION_DOWN->{
+    aimTouchStarted=inside
+    if(inside)updateAim(e.x,e.y) else hideAim()
+   }
+   MotionEvent.ACTION_MOVE->{
+    if(aimTouchStarted && inside)updateAim(e.x,e.y) else hideAim()
+   }
+   MotionEvent.ACTION_UP->{
+    // Only a gesture that began in the playfield can launch a shot.
+    // Lifting outside cancels it instead of using a stale aim target.
+    val canFire=aimTouchStarted && inside
+    if(canFire)updateAim(e.x,e.y)
+    val target=if(canFire)aiming else null
+    val path=if(canFire)aimPath.toList() else emptyList()
+    aimTouchStarted=false
+    hideAim()
+    if(target!=null)shoot(target.first,target.second,path)
+   }
+   MotionEvent.ACTION_CANCEL->{aimTouchStarted=false;hideAim()}
+  }
+  return true
+ }
  // Aim at the first bubble encountered by a rising shot, rather than
  // teleporting the projectile to any open cell near the player's finger.
  private fun nearestOpen(x:Float,y:Float):Pair<Int,Int>?{
