@@ -85,10 +85,14 @@ class BlockPuzzleView(context: Context, private val onNaturalBreak: (() -> Unit)
                 if(gameOver)return true
                 val w=(width-ox*2)/3f
                 if(e.y in sy..sy+132&&e.x>=ox&&e.x<=width-ox){
-                    selected=((e.x-ox)/w).toInt().coerceIn(0,2)
+                    val tapped=((e.x-ox)/w).toInt().coerceIn(0,2)
+                    // Consumed tray slots are not selectable: retain a playable piece.
+                    // Otherwise a tap on an empty slot can silently block board placement.
+                    if(offers[tapped]>=0)selected=tapped
+                    else if(offers[selected]<0)selected=offers.indexOfFirst{it>=0}.coerceAtLeast(0)
                     if(offers[selected]>=0){
-                        dragging=true
-                        performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                        dragging=offers[tapped]>=0
+                        if(dragging)performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                     }
                     invalidate()
                     return true
