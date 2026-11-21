@@ -316,7 +316,8 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         }
     }
     private fun clearPreview(redraw:Boolean=true){val old=previewCells;previewCells=emptySet();previewValid=false;previewOffer=-1;previewAnchorR=-1;previewAnchorC=-1;if(redraw)old.forEach{(r,c)->cells[r][c]?.apply{val v=board[r][c];background=if(v==0)emptyTile() else filledTile(palette[(v-1).coerceIn(0,palette.lastIndex)]);alpha=if(v==0).72f else 1f;scaleX=1f;scaleY=1f}}}
-    // Reject an invalid drop so ACTION_DRAG_ENDED reports result=false and\n    // restores the dragged piece selection for tap-to-place.\n    private fun handleBoardDrag(e:DragEvent):Boolean{if(paused || resolvingMove){clearPreview();return true};when(e.action){DragEvent.ACTION_DRAG_ENTERED,DragEvent.ACTION_DRAG_LOCATION->updatePreview(e);DragEvent.ACTION_DRAG_EXITED->clearPreview();DragEvent.ACTION_DRAG_ENDED->{
+    // Reject an invalid drop so ACTION_DRAG_ENDED reports result=false and\n    // restores the dragged piece selection for tap-to-place.
+    private fun handleBoardDrag(e:DragEvent):Boolean{if(paused || resolvingMove){clearPreview();return true};when(e.action){DragEvent.ACTION_DRAG_ENTERED,DragEvent.ACTION_DRAG_LOCATION->updatePreview(e);DragEvent.ACTION_DRAG_EXITED->clearPreview();DragEvent.ACTION_DRAG_ENDED->{
         clearPreview()
         // An unsuccessful drop should not silently deselect the piece.
         // Keep tap-to-place available after dropping outside the board.
