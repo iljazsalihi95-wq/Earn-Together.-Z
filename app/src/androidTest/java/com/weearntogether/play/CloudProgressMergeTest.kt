@@ -52,5 +52,25 @@ class CloudProgressMergeTest {
         }
     }
 
+
+    @Test fun malformedCloudBoardsCannotOverwriteValidOfflineRounds() {
+        for ((game, file, boardKey, size) in listOf(
+            Puzzle("Block Puzzle", "block_puzzle_hd2d", "board", 64),
+            Puzzle("Bubble Shooter", "bubble_shooter_hd2d", "grid", 99)
+        )) {
+            val prefs = ProgressPreferences.forUser(context, file, account)
+            try {
+                val board = List(size) { if (it == 0) "2" else "0" }.joinToString(",")
+                prefs.edit().clear().putString(boardKey, board).putInt("score", 15).commit()
+                val malformed = JSONObject().put(boardKey, "1,2,broken").put("score", 25)
+                ProgressPreferences.apply(context, account, game, JSONObject().put(file, malformed))
+                assertEquals("$game board survives malformed sync", board, prefs.getString(boardKey, null))
+                assertEquals("$game valid score still syncs", 25, prefs.getInt("score", -1))
+            } finally {
+                prefs.edit().clear().commit()
+            }
+        }
+    }
+
     private data class Puzzle(val game: String, val file: String, val boardKey: String, val size: Int)
 }
