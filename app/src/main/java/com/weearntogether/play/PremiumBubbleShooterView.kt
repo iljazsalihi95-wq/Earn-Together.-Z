@@ -150,7 +150,7 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
  private var aimTouchStarted=false
  override fun onTouchEvent(e:MotionEvent):Boolean{
   if(paused || busy || campaignComplete){aimTouchStarted=false;hideAim();return true}
-  val inside=e.y>=field.top+fieldTop && e.y<=height-dp(82)
+  val inside=e.x>=field.left && e.x<=field.right && e.y>=field.top+fieldTop && e.y<=field.bottom
   when(e.actionMasked){
    MotionEvent.ACTION_DOWN->{
     aimTouchStarted=inside
