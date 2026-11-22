@@ -34,7 +34,12 @@ class BubbleShooterActivity : Activity() {
     private fun migrateLegacyProgress(){val premium=ProgressPreferences.open(this,"bubble_shooter_hd2d");val premiumLevel=savedInt(premium,"level",-1);val premiumBest=savedInt(premium,"best",-1);if(premiumLevel>=0&&premiumBest>=0)return;val legacy=ProgressPreferences.open(this,"bubble_shooter");val legacyLevel=savedInt(legacy,"level",-1);val legacyBest=savedInt(legacy,"best",-1);if(legacyLevel<0&&legacyBest<0)return;premium.edit().apply{if(premiumLevel<0&&legacyLevel>=0)putInt("level",legacyLevel.coerceIn(1,250));if(premiumBest<0&&legacyBest>=0)putInt("best",legacyBest.coerceAtLeast(0))}.apply()}
     private fun savedProgressLabel():String{val l=savedInt("level",1).coerceIn(1,250);val b=savedInt("best",0).coerceAtLeast(0);return ui("AUTO-SAVE • LEVEL $l/250 • BEST $b","AUTO-RUAJTJE • NIVELI $l/250 • REKORDI $b","AUTO-SPEICHERN • LEVEL $l/250 • BEST $b","SALVATAGGIO AUTO • LIVELLO $l/250 • BEST $b")}
     private fun refreshSavedProgress(){if(::status.isInitialized){status.text=savedProgressLabel();status.contentDescription=status.text}}
-    private fun openGame(target:Class<out Activity>){startActivity(Intent(this,target).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP))}
+    private fun openGame(target:Class<out Activity>){
+        // Avoid leaving another active shooter behind when moving between native games.
+        game.setPaused(true)
+        startActivity(Intent(this,target).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP))
+        finish()
+    }
     private fun pauseGame(){
         if(dialogOpen)return
         dialogOpen=true;game.setPaused(true)
