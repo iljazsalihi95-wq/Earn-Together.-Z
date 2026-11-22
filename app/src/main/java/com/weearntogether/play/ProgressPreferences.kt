@@ -132,9 +132,12 @@ object ProgressPreferences {
     }
     fun apply(context: Context, user: String, game: String, state: JSONObject) {
         // A partial cloud payload must not erase a valid local game save.
-        // Only explicitly supplied, structured game snapshots may replace it.
+        // Only explicitly supplied, non-empty structured game snapshots may replace it.
+        // An empty cloud object means no usable save, not a request to wipe progress.
         gameFiles.getValue(game).forEach { name ->
-            state.optJSONObject(name)?.let { saved -> restore(forUser(context, name, user), saved) }
+            state.optJSONObject(name)?.takeIf { it.length() > 0 }?.let { saved ->
+                restore(forUser(context, name, user), saved)
+            }
         }
     }
 }
