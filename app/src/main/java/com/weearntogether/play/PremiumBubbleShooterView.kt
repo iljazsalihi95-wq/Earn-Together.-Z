@@ -103,7 +103,8 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   // Restore only ceiling-connected bubbles, as required by the live game rules.
   val orphaned=disconnectedCells()
   orphaned.forEach{(r,c)->grid[r][c]=0}
-  val emptySavedBoard=grid.all{row->row.all{it==0}};if(emptySavedBoard&&!campaignComplete){score=0;streak=0;newBoard()}val active=grid.flatMap{it.asList()}.filter{it>0}.toSet();val savedCurrent=restoredInt("current",0);val savedNext=restoredInt("next",0);current=if(savedCurrent in active)savedCurrent else randomBoardColor();next=if(savedNext in active && (active.size==1 || savedNext!=current))savedNext else randomBoardColor(current);if(!valid||orphaned.isNotEmpty()||(emptySavedBoard&&!campaignComplete)||savedCurrent !in active||savedNext !in active||(active.size>1 && savedNext==current))save()}
+  val emptySavedBoard=grid.all{row->row.all{it==0}};if(emptySavedBoard&&!campaignComplete){score=0;streak=0;newBoard()}
+   val active=grid.flatMap{it.asList()}.filter{it>0}.toSet();val savedCurrent=restoredInt("current",0);val savedNext=restoredInt("next",0);current=if(savedCurrent in active)savedCurrent else randomBoardColor();next=if(savedNext in active && (active.size==1 || savedNext!=current))savedNext else randomBoardColor(current);if(!valid||orphaned.isNotEmpty()||(emptySavedBoard&&!campaignComplete)||savedCurrent !in active||savedNext !in active||(active.size>1 && savedNext==current))save()}
  private fun newBoard(){
   grid.forEach{it.fill(0)}
   val fill=(4+level/45).coerceAtMost(7)
