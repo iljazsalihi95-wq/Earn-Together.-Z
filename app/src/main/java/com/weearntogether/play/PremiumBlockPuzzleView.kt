@@ -128,16 +128,18 @@ class PremiumBlockPuzzleView(context: Context, private val onLevelComplete: (Int
         val cells=raw?.split(',')?.map{it.trim().toIntOrNull()}
         val validBoard=cells?.size==64 && cells.all{it!=null && it in 0..palette.size}
         if(validBoard) cells!!.forEachIndexed{i,v->board[i/8][i%8]=v!!}
-        score=restoredInt("score",0).coerceAtLeast(0)
+        // A missing or malformed board cannot safely retain a partial round score.
+        // Keep the lifetime best and unlocked level, but start a clean round.
+        score=if(validBoard)restoredInt("score",0).coerceAtLeast(0) else 0
         best=restoredInt("best",0).coerceAtLeast(score)
         level=restoredInt("level",1).coerceIn(1,250)
         totalLines=restoredInt("total_lines",restoredInt("lines",0)).coerceAtLeast(0)
-        levelLines=restoredInt("level_lines",0).coerceAtLeast(0)
-        combo=restoredInt("combo",0).coerceAtLeast(0)
+        levelLines=if(validBoard)restoredInt("level_lines",0).coerceAtLeast(0) else 0
+        combo=if(validBoard)restoredInt("combo",0).coerceAtLeast(0) else 0
         campaignComplete=(prefs.all["campaign_complete"] as? Boolean)==true
         val saved=restoredString("offers")?.split(',')?.map{it.trim().toIntOrNull()}
         val validOffers=saved?.size==3 && saved.all{it!=null && it in -1..shapes.lastIndex}
-        offers=if(validOffers) saved!!.map{it!!}.toIntArray() else nextOffers()
+        offers=if(validBoard && validOffers) saved!!.map{it!!}.toIntArray() else nextOffers()
         if(offers.all{it<0}) offers=nextOffers()
         // Older versions could save duplicate shapes in the tray. Preserve
         // consumed slots (-1) and the first copy of each remaining shape;
