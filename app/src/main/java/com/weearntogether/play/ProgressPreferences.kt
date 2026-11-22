@@ -112,8 +112,11 @@ object ProgressPreferences {
             }
         }
     }
-    fun restore(prefs: SharedPreferences, data: JSONObject) {
-        val edit = prefs.edit().clear()
+    fun restore(prefs: SharedPreferences, data: JSONObject, clearExisting: Boolean = true) {
+        // Cloud snapshots may be partial: retain local keys that the server omitted.
+        // Legacy migration still uses a full replacement by default.
+        val edit = prefs.edit()
+        if (clearExisting) edit.clear()
         data.keys().forEach { key ->
             when (val value = data.get(key)) {
                 is Boolean -> edit.putBoolean(key, value)
@@ -136,7 +139,7 @@ object ProgressPreferences {
         // An empty cloud object means no usable save, not a request to wipe progress.
         gameFiles.getValue(game).forEach { name ->
             state.optJSONObject(name)?.takeIf { it.length() > 0 }?.let { saved ->
-                restore(forUser(context, name, user), saved)
+                restore(forUser(context, name, user), saved, clearExisting = false)
             }
         }
     }
