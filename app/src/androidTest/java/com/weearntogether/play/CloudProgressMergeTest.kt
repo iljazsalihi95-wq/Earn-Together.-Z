@@ -72,5 +72,42 @@ class CloudProgressMergeTest {
         }
     }
 
+
+    @Test fun invalidBlockOffersDoNotReplaceOfflineChoices() {
+        val prefs = ProgressPreferences.forUser(context, "block_puzzle_hd2d", account)
+        try {
+            val offers = "1,2,3"
+            prefs.edit().clear().putString("offers", offers).putInt("score", 10).commit()
+            val cloud = JSONObject().put("block_puzzle_hd2d",
+                JSONObject().put("offers", "1,99,3").put("score", 20))
+            ProgressPreferences.apply(context, account, "Block Puzzle", cloud)
+            assertEquals(offers, prefs.getString("offers", null))
+            assertEquals(20, prefs.getInt("score", -1))
+        } finally {
+            prefs.edit().clear().commit()
+        }
+    }
+
+    @Test fun validCloudPuzzleBoardsAndOffersAreRestored() {
+        for ((game, file, boardKey, size) in listOf(
+            Puzzle("Block Puzzle", "block_puzzle_hd2d", "board", 64),
+            Puzzle("Bubble Shooter", "bubble_shooter_hd2d", "grid", 99)
+        )) {
+            val prefs = ProgressPreferences.forUser(context, file, account)
+            try {
+                val board = List(size) { if (it == size - 1) "3" else "0" }.joinToString(",")
+                val saved = JSONObject().put(boardKey, board).put("level", 6)
+                if (game == "Block Puzzle") saved.put("offers", "2,-1,5")
+                prefs.edit().clear().putInt("level", 1).commit()
+                ProgressPreferences.apply(context, account, game, JSONObject().put(file, saved))
+                assertEquals(board, prefs.getString(boardKey, null))
+                assertEquals(6, prefs.getInt("level", -1))
+                if (game == "Block Puzzle") assertEquals("2,-1,5", prefs.getString("offers", null))
+            } finally {
+                prefs.edit().clear().commit()
+            }
+        }
+    }
+
     private data class Puzzle(val game: String, val file: String, val boardKey: String, val size: Int)
 }
