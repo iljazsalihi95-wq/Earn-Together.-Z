@@ -79,7 +79,12 @@ class BlockPuzzleActivity : Activity() {
     }
 
     private fun refreshSavedProgress() { if (::status.isInitialized) { status.text = savedProgressLabel(); status.contentDescription = status.text } }
-    private fun openGame(target: Class<out Activity>) { startActivity(Intent(this, target).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)) }
+    private fun openGame(target: Class<out Activity>) {
+        // Switching games replaces this screen rather than stacking paused game activities.
+        game.setPaused(true)
+        startActivity(Intent(this, target).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP))
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
