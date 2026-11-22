@@ -131,6 +131,10 @@ object ProgressPreferences {
         gameFiles.getValue(game).forEach { name -> put(name, snapshot(forUser(context, name, user))) }
     }
     fun apply(context: Context, user: String, game: String, state: JSONObject) {
-        gameFiles.getValue(game).forEach { name -> restore(forUser(context, name, user), state.optJSONObject(name) ?: JSONObject()) }
+        // A partial cloud payload must not erase a valid local game save.
+        // Only explicitly supplied, structured game snapshots may replace it.
+        gameFiles.getValue(game).forEach { name ->
+            state.optJSONObject(name)?.let { saved -> restore(forUser(context, name, user), saved) }
+        }
     }
 }
