@@ -175,4 +175,38 @@ class PuzzlePersistenceTest {
    assertEquals(3,p.getString("offers","")!!.split(',').size)
   }finally{inst.runOnMainSync{a.finish()}}
  }
+ @Test fun blockCorruptSavedBoardRecoversWithoutPhantomRoundPoints(){
+  val p=ProgressPreferences.open(ctx,"block_puzzle_hd2d")
+  p.edit().clear().putString("board","not,a,valid,board")
+   .putString("offers","0,1,2").putInt("score",730).putInt("combo",4)
+   .putInt("level_lines",6).putInt("level",12).putInt("best",1200)
+   .putInt("total_lines",42).commit()
+  val a=launch(BlockPuzzleActivity::class.java)
+  try {
+   assertEquals(0,p.getInt("score",-1))
+   assertEquals(0,p.getInt("combo",-1))
+   assertEquals(0,p.getInt("level_lines",-1))
+   assertEquals(12,p.getInt("level",-1))
+   assertEquals(1200,p.getInt("best",-1))
+   assertEquals(42,p.getInt("total_lines",-1))
+   assertEquals(64,p.getString("board","")!!.split(',').size)
+  } finally {inst.runOnMainSync{a.finish()}}
+ }
+ @Test fun bubbleCorruptSavedGridRecoversWithoutPhantomRoundPoints(){
+  val p=ProgressPreferences.open(ctx,"bubble_shooter_hd2d")
+  p.edit().clear().putString("grid","broken")
+   .putInt("score",730).putInt("streak",5).putInt("level",12)
+   .putInt("best",1200).putInt("current",1).putInt("next",2).commit()
+  val a=launch(BubbleShooterActivity::class.java)
+  try {
+   assertEquals(0,p.getInt("score",-1))
+   assertEquals(0,p.getInt("streak",-1))
+   assertEquals(12,p.getInt("level",-1))
+   assertEquals(1200,p.getInt("best",-1))
+   val board=p.getString("grid","")!!.split(',')
+   assertEquals(99,board.size)
+   assertTrue("Recovery must generate playable bubbles",board.any{it!="0"})
+  } finally {inst.runOnMainSync{a.finish()}}
+ }
+
 }
