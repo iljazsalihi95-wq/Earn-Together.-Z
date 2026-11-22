@@ -42,6 +42,10 @@ jobs:
       - name: Run all Android debug unit tests (games, progress, voice)
         shell: bash
         run: gradle --no-daemon testDebugUnitTest
+      - name: Compile native gameplay instrumentation tests
+        # Catch Kotlin/Android API regressions in the puzzle persistence and touch QA suite.
+        # Compilation is not equivalent to executing tests on an emulator.
+        run: gradle --no-daemon assembleDebugAndroidTest
       - name: Test bundled HTML5 game mechanics
         run: node --test tests/html5-games.test.cjs tests/html5-arcade.test.cjs
       - name: Test HTML5 interface in Chromium
