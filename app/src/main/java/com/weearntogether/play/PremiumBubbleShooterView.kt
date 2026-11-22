@@ -394,6 +394,9 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   cancelFlight()
   // A new round must not inherit the previous round's aiming guide, falling
   // bubbles or screen shake. Cancel their animations before clearing the layer.
+  // A restart invalidates the gesture that began on the previous board.
+  // Otherwise its later ACTION_UP can fire into the newly generated board.
+  aimTouchStarted=false
   hideAim()
   for(i in fxLayer.childCount-1 downTo 0)fxLayer.getChildAt(i).animate().cancel()
   fxLayer.removeAllViews()
