@@ -139,7 +139,25 @@ object ProgressPreferences {
         // An empty cloud object means no usable save, not a request to wipe progress.
         gameFiles.getValue(game).forEach { name ->
             state.optJSONObject(name)?.takeIf { it.length() > 0 }?.let { saved ->
-                restore(forUser(context, name, user), saved, clearExisting = false)
+                // Reject malformed cloud boards individually, without discarding valid metadata.
+                // Otherwise a truncated sync could replace a playable offline round.
+                val cleaned = JSONObject(saved.toString())
+                val csvFields = when (name) {
+                    "block_puzzle_hd2d" -> listOf(Triple("board", 64, 0..5), Triple("offers", 3, -1..11))
+                    "bubble_shooter_hd2d" -> listOf(Triple("grid", 99, 0..5))
+                    else -> emptyList()
+                }
+                csvFields.forEach { (key, expected, allowed) ->
+                    if (cleaned.has(key)) {
+                        val values = (cleaned.opt(key) as? String)?.split(',')
+                            ?.map { it.trim().toIntOrNull() }
+                        if (values == null || values.size != expected ||
+                            values.any { it == null || it !in allowed }) cleaned.remove(key)
+                    }
+                }
+                if (cleaned.length() > 0) {
+                    restore(forUser(context, name, user), cleaned, clearExisting = false)
+                }
             }
         }
     }
