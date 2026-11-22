@@ -93,12 +93,17 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
   else->fallback
  }
  private fun restoredString(key:String):String?=prefs.all[key] as? String
- private fun restoreOrNew(){campaignComplete=prefs.all["campaign_complete"]==true;score=restoredInt("score",0).coerceAtLeast(0);best=restoredInt("best",0).coerceAtLeast(score);level=restoredInt("level",1).coerceIn(1,250);streak=restoredInt("streak",0).coerceAtLeast(0);misses=restoredInt("misses",0).coerceIn(0,pressureLimit()-1);val raw=restoredString("grid")?.split(',')?.map{it.trim().toIntOrNull()};val valid=raw?.size==rows*cols&&raw.all{it!=null&&it in 0..palette.size};if(valid){raw!!.forEachIndexed{i,v->grid[i/cols][i%cols]=v!!}}else newBoard();
+ private fun restoreOrNew(){campaignComplete=prefs.all["campaign_complete"]==true;score=restoredInt("score",0).coerceAtLeast(0);best=restoredInt("best",0).coerceAtLeast(score);level=restoredInt("level",1).coerceIn(1,250);streak=restoredInt("streak",0).coerceAtLeast(0);misses=restoredInt("misses",0).coerceIn(0,pressureLimit()-1);val raw=restoredString("grid")?.split(',')?.map{it.trim().toIntOrNull()};val valid=raw?.size==rows*cols&&raw.all{it!=null&&it in 0..palette.size};if(valid){raw!!.forEachIndexed{i,v->grid[i/cols][i%cols]=v!!}}else {
+   // A missing or malformed board cannot carry a previous round's score/combo.
+   // Keep the unlocked level, historical best and completed campaign intact.
+   if(!campaignComplete){score=0;streak=0}
+   newBoard()
+  }
   // Older saves can contain orphaned bubbles after a pressure-row parity shift.
   // Restore only ceiling-connected bubbles, as required by the live game rules.
   val orphaned=disconnectedCells()
   orphaned.forEach{(r,c)->grid[r][c]=0}
-  val emptySavedBoard=grid.all{row->row.all{it==0}};if(emptySavedBoard&&!campaignComplete)newBoard();val active=grid.flatMap{it.asList()}.filter{it>0}.toSet();val savedCurrent=restoredInt("current",0);val savedNext=restoredInt("next",0);current=if(savedCurrent in active)savedCurrent else randomBoardColor();next=if(savedNext in active && (active.size==1 || savedNext!=current))savedNext else randomBoardColor(current);if(!valid||orphaned.isNotEmpty()||(emptySavedBoard&&!campaignComplete)||savedCurrent !in active||savedNext !in active||(active.size>1 && savedNext==current))save()}
+  val emptySavedBoard=grid.all{row->row.all{it==0}};if(emptySavedBoard&&!campaignComplete){score=0;streak=0;newBoard()}val active=grid.flatMap{it.asList()}.filter{it>0}.toSet();val savedCurrent=restoredInt("current",0);val savedNext=restoredInt("next",0);current=if(savedCurrent in active)savedCurrent else randomBoardColor();next=if(savedNext in active && (active.size==1 || savedNext!=current))savedNext else randomBoardColor(current);if(!valid||orphaned.isNotEmpty()||(emptySavedBoard&&!campaignComplete)||savedCurrent !in active||savedNext !in active||(active.size>1 && savedNext==current))save()}
  private fun newBoard(){
   grid.forEach{it.fill(0)}
   val fill=(4+level/45).coerceAtMost(7)
