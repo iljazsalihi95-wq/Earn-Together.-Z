@@ -39,6 +39,22 @@ class PremiumHomeActivity : Activity() {
     private fun header(){val h=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(dp(18),dp(12),dp(16),dp(14));background=premiumGradient(0);minimumHeight=dp(82)};val portrait=PlayerPortrait.image(this).apply{setOnClickListener{PlayerPortrait.pick(this@PremiumHomeActivity)}};h.addView(portrait,LinearLayout.LayoutParams(dp(48),dp(48)).apply{rightMargin=dp(12)});val identity=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL};identity.addView(text("WE EARN TOGETHER",11,gold,true));identity.addView(text(accounts.currentName()?:"Lojtari",20,Color.WHITE,true));h.addView(identity,LinearLayout.LayoutParams(0,-2,1f));coinText=text("★ ${loyalty.points}",16,gold,true).apply{gravity=Gravity.CENTER;background=round(0x33202a55,18);setPadding(dp(12),dp(8),dp(12),dp(8))};h.addView(coinText);root.addView(h,LinearLayout.LayoutParams(-1,-2).apply{leftMargin=-dp(16);rightMargin=-dp(16);bottomMargin=dp(14)})}
     private fun sectionTitle(icon:String,title:String,more:String){val r=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL};r.addView(text("$icon  $title",20,ink,true),LinearLayout.LayoutParams(0,-2,1f));r.addView(text(more,11,purple,true));root.addView(r,LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(8);bottomMargin=dp(12)})}
     private data class HomeGame(val key:String,val title:String,val subtitle:String,val activity:Class<out Activity>?=null,val htmlKey:String?=null)
+    // Read the same on-device progress used by the native puzzle games.
+    private fun puzzleProgress(key:String):String? {
+        val store=when(key){
+            "block"->"block_puzzle_hd2d"
+            "bubble"->"bubble_shooter_hd2d"
+            else->return null
+        }
+        val level=ProgressPreferences.open(this,store).getInt("level",1).coerceIn(1,250)
+        return "NIVELI $level / 250"
+    }
+    private fun refreshPuzzleProgress(){
+        for(key in listOf("block","bubble")){
+            val label=host.findViewWithTag<TextView>("progress:$key")
+            label?.text=puzzleProgress(key)
+        }
+    }
     private fun gameCatalog(){
         val games=listOf(
             HomeGame("arena","QUIZ ARENA","Pyetje • studio • nivele • zë",ArenaCloudActivity::class.java),
@@ -80,6 +96,12 @@ class PremiumHomeActivity : Activity() {
             val words=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL}
             words.addView(text(game.title,19,Color.WHITE,true))
             words.addView(text(game.subtitle,12,0xffdce5ff.toInt()).apply{setPadding(0,dp(5),0,dp(8))})
+            puzzleProgress(game.key)?.let { progress ->
+                words.addView(text(progress,12,gold,true).apply{
+                    tag="progress:"+game.key
+                    setPadding(0,0,0,dp(6))
+                })
+            }
             words.addView(text("LUAJ  ›",14,gold,true))
             card.addView(words,LinearLayout.LayoutParams(0,-2,1f))
             root.addView(card,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(13)})
@@ -89,7 +111,7 @@ class PremiumHomeActivity : Activity() {
     private fun bottomNav(){val bar=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER;background=premiumGradient(26);elevation=dp(14).toFloat();setPadding(dp(8),dp(6),dp(8),dp(6))};fun nav(icon:String,label:String,go:()->Unit){val v=text("$icon\n$label",12,Color.WHITE,true).apply{gravity=Gravity.CENTER;setOnClickListener{go()}};bar.addView(v,LinearLayout.LayoutParams(0,dp(60),1f))};nav("◉","Lojëra"){};nav("✦","Oferta"){startActivity(Intent(this,AyetOfferwallActivity::class.java))};nav("▣","Portofoli"){startActivity(Intent(this,WalletActivity::class.java))};nav("☺","Profili"){startActivity(Intent(this,MainActivity::class.java).putExtra("open_profile",true))};host.addView(bar,FrameLayout.LayoutParams(-1,dp(78),Gravity.BOTTOM).apply{leftMargin=dp(10);rightMargin=dp(10);bottomMargin=dp(10)})}
     private fun showRewarded(){ads.rewarded(onGameplayReward={coinText.text="★ Në pritje";refreshBalance()})}
     private fun refreshBalance(){if(!accounts.isSignedIn()||!::coinText.isInitialized)return;CloudWorker.executor.execute{val balance=runCatching{BackendClient().request("getBalance",org.json.JSONObject().put("session_token",accounts.requireToken()))}.getOrNull();runOnUiThread{if(!isFinishing&&!isDestroyed&&balance!=null){val pending=balance.optLong("pending_coins");coinText.text="★ ${balance.optLong("verified_coins")}"+if(pending>0)" (+$pending)" else ""}}}}
-    override fun onResume(){super.onResume();if(::ads.isInitialized)ads.resume();refreshBalance()}
+    override fun onResume(){super.onResume();if(::ads.isInitialized)ads.resume();if(::host.isInitialized)refreshPuzzleProgress();refreshBalance()}
     override fun onPause(){if(::ads.isInitialized)ads.pause();super.onPause()}
     override fun onDestroy(){if(::ads.isInitialized)ads.destroy();super.onDestroy()}
 }
