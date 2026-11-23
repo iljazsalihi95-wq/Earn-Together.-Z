@@ -98,7 +98,7 @@ class KnifeHitActivity:Activity(){
     }
 
     private fun dp(v:Int)=(v*resources.displayMetrics.density).toInt()
-    override fun onResume(){super.onResume();if(::game.isInitialized)game.setRunning(true)};override fun onPause(){if(::game.isInitialized)game.setRunning(false);super.onPause()}
+    override fun onResume(){super.onResume();if(::game.isInitialized)game.setRunning(!(BuildConfig.DEBUG && intent.getBooleanExtra("qa_static_launch",false)))};override fun onPause(){if(::game.isInitialized)game.setRunning(false);super.onPause()}
 }
 
 class KnifeHitView(context:android.content.Context):View(context){
