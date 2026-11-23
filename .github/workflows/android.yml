@@ -46,14 +46,26 @@ jobs:
         # Catch Kotlin/Android API regressions in the puzzle persistence and touch QA suite.
         # Compilation is not equivalent to executing tests on an emulator.
         run: gradle --no-daemon assembleDebugAndroidTest
+      - name: Enable Android emulator acceleration when available
+        shell: bash
+        run: |
+          if [ -e /dev/kvm ]; then
+            sudo chmod 666 /dev/kvm
+            echo "KVM device available for Android emulator"
+          else
+            echo "::warning::KVM unavailable; Android emulator will use slower software CPU emulation"
+          fi
       - name: Execute native puzzle persistence and gameplay tests on emulator
+        env:
+          # Android Emulator 36+ refuses -accel off without this explicit fallback.
+          ANDROID_I_WANT_MY_TCG: "yes"
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
           arch: x86_64
           profile: pixel_2
           disable-animations: true
-          emulator-boot-timeout: 600
+          emulator-boot-timeout: 1200
           script: gradle --no-daemon connectedDebugAndroidTest
 
       - name: Test bundled HTML5 game mechanics
