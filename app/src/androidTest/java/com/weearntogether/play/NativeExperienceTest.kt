@@ -15,8 +15,8 @@ import org.junit.Assert.*
 /** Runs the actual Android screens, not an HTML reproduction. */
 class NativeExperienceTest {
     private val inst get()=InstrumentationRegistry.getInstrumentation()
-    private fun launch(type:Class<out Activity>):Activity {
-        val intent=Intent(inst.targetContext,type).putExtra("native_qa",true).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    private fun launch(type:Class<out Activity>, staticLaunch:Boolean=false):Activity {
+        val intent=Intent(inst.targetContext,type).putExtra("native_qa",true).putExtra("qa_static_launch",staticLaunch).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return inst.startActivitySync(intent).also { inst.waitForIdleSync() }
     }
     private fun views(v:View):List<View> = listOf(v)+if(v is ViewGroup)(0 until v.childCount).flatMap{views(v.getChildAt(it))} else emptyList()
@@ -44,7 +44,7 @@ class NativeExperienceTest {
             MainActivity::class.java
         )
         destinations.forEach { type ->
-            val a=launch(type)
+            val a=launch(type,staticLaunch=type==KnifeHitActivity::class.java)
             try {
                 val requiresAccount=type==Html5GamesActivity::class.java||type==WalletActivity::class.java
                 if(requiresAccount&&!AccountStore(inst.targetContext).isSignedIn()){
