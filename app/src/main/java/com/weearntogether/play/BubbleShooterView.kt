@@ -52,7 +52,7 @@ class BubbleShooterView(context: Context, private val onLevelComplete: (() -> Un
         for(r in 0..11)for(c in 0..7)if(grid[r][c]>=0&&hypot(px-centerX(c,r),py-centerY(r))<=rad*2.15f)impact.add(r to c)
         val local=linkedSetOf<Pair<Int,Int>>()
         if(py<=rad*1.35f){for(c in 0..7)if(grid[0][c]<0)local.add(0 to c)}
-        impact.sortedBy{(r,c)->hypot(px-centerX(c,r),py-centerY(r))}.take(3).forEach{(r,c)->neighbors(r,c).filterTo(local){(rr,cc)->grid[rr][cc]<0}}
+        impact.sortedBy{(r,c)->hypot(px-centerX(c,r),py-centerY(r))}.forEach{(r,c)->neighbors(r,c).filterTo(local){(rr,cc)->grid[rr][cc]<0}}
         val candidates=local.map{(r,c)->Triple(r,c,hypot(px-centerX(c,r),py-centerY(r)))}.filter{it.third<=rad*2.65f}.toMutableList()
         if(candidates.isEmpty()){
             for(r in 0..11)for(c in 0..7)if(grid[r][c]<0){
