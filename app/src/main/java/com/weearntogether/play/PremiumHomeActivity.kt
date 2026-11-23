@@ -117,7 +117,31 @@ class PremiumHomeActivity : Activity() {
     private fun rewardCard(){val card=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(14),dp(12),dp(14),dp(10));background=round(0xfffff8e8.toInt(),18)};val row=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL};row.addView(text("★",30,gold,true),LinearLayout.LayoutParams(dp(42),-2));val words=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL};words.addView(text("Bonus me video",15,ink,true));words.addView(text("Vetëm pas verifikimit",12,muted));row.addView(words,LinearLayout.LayoutParams(0,-2,1f));rewardButton=Button(this).apply{text="Shiko";isAllCaps=false;textSize=14f;setTextColor(Color.WHITE);background=round(purple,14);setOnClickListener{showRewarded()}};row.addView(rewardButton,LinearLayout.LayoutParams(dp(82),dp(44)));card.addView(row);card.addView(text("Bonusi regjistrohet vetëm pas përfundimit dhe verifikimit të videos; nuk premtohet shpërblim monetar.",10,muted),LinearLayout.LayoutParams(-1,-2).apply{topMargin=dp(6)});root.addView(card,LinearLayout.LayoutParams(-1,-2).apply{bottomMargin=dp(16)})}
     private fun bottomNav(){val bar=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER;background=premiumGradient(26);elevation=dp(14).toFloat();setPadding(dp(8),dp(6),dp(8),dp(6))};fun nav(icon:String,label:String,go:()->Unit){val v=text("$icon\n$label",12,Color.WHITE,true).apply{gravity=Gravity.CENTER;setOnClickListener{go()}};bar.addView(v,LinearLayout.LayoutParams(0,dp(60),1f))};nav("◉","Lojëra"){};nav("✦","Oferta"){startActivity(Intent(this,AyetOfferwallActivity::class.java))};nav("▣","Portofoli"){startActivity(Intent(this,WalletActivity::class.java))};nav("☺","Profili"){startActivity(Intent(this,MainActivity::class.java).putExtra("open_profile",true))};host.addView(bar,FrameLayout.LayoutParams(-1,dp(78),Gravity.BOTTOM).apply{leftMargin=dp(10);rightMargin=dp(10);bottomMargin=dp(10)})}
     private fun showRewarded(){ads.rewarded(onGameplayReward={coinText.text="★ Në pritje";refreshBalance()})}
-    private fun refreshBalance(){if(!accounts.isSignedIn()||!::coinText.isInitialized)return;CloudWorker.executor.execute{val balance=runCatching{BackendClient().request("getBalance",org.json.JSONObject().put("session_token",accounts.requireToken()))}.getOrNull();runOnUiThread{if(!isFinishing&&!isDestroyed&&balance!=null){val pending=balance.optLong("pending_coins");coinText.text="★ ${balance.optLong("verified_coins")}"+if(pending>0)" (+$pending)" else ""}}}}
+    private fun refreshBalance(){
+        if(!::coinText.isInitialized)return
+        coinText.text="★ —"
+        if(!accounts.isSignedIn())return
+        val session=runCatching{accounts.requireToken()}.getOrNull()?:return
+        CloudWorker.executor.execute{
+            val balance=runCatching{
+                BackendClient().request("getBalance",org.json.JSONObject().put("session_token",session))
+            }.getOrNull()
+            runOnUiThread{
+                if(isFinishing||isDestroyed||!accounts.isSignedIn()||
+                    runCatching{accounts.requireToken()}.getOrNull()!=session)return@runOnUiThread
+                val verified=balance?.opt("verified_coins")
+                val coins=when(verified){
+                    is Number->verified.toLong().takeIf{it>=0}
+                    is String->verified.toLongOrNull()?.takeIf{it>=0}
+                    else->null
+                }
+                if(coins!=null){
+                    val pending=balance.optLong("pending_coins").coerceAtLeast(0)
+                    coinText.text="★ $coins"+if(pending>0)" (+$pending)" else ""
+                }
+            }
+        }
+    }
     override fun onResume(){super.onResume();if(::ads.isInitialized)ads.resume();if(::host.isInitialized)refreshPuzzleProgress();refreshBalance()}
     override fun onPause(){if(::ads.isInitialized)ads.pause();super.onPause()}
     override fun onDestroy(){if(::ads.isInitialized)ads.destroy();super.onDestroy()}
