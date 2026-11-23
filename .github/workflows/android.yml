@@ -46,6 +46,16 @@ jobs:
         # Catch Kotlin/Android API regressions in the puzzle persistence and touch QA suite.
         # Compilation is not equivalent to executing tests on an emulator.
         run: gradle --no-daemon assembleDebugAndroidTest
+      - name: Execute native puzzle persistence and gameplay tests on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          emulator-boot-timeout: 600
+          script: gradle --no-daemon connectedDebugAndroidTest
+
       - name: Test bundled HTML5 game mechanics
         run: node --test tests/html5-games.test.cjs tests/html5-arcade.test.cjs
       - name: Test HTML5 interface in Chromium
