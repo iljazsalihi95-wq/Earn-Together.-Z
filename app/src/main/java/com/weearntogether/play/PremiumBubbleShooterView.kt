@@ -212,11 +212,16 @@ class PremiumBubbleShooterView(context: Context, private val onLevelComplete: (I
    hitX=px;hitY=py
    if(py<=field.top+fieldTop+radius){hit=true;break}
    var collision=false
+   var closestDistance=Float.MAX_VALUE
    for((r,c,center) in occupied){
     val xx=px-center.first;val yy=py-center.second
-    if(xx*xx+yy*yy<=(cell*.88f)*(cell*.88f)){
+    val distance=xx*xx+yy*yy
+    if(distance<=(cell*.88f)*(cell*.88f) && distance<closestDistance){
+     // Two bubbles can be contacted on the same trajectory step.
+     // Choose the closest physical collision, not the first grid entry.
+     closestDistance=distance
      collided=r to c
-     collision=true;break
+     collision=true
     }
    }
    if(collision){hit=true;break}
