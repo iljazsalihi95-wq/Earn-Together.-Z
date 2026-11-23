@@ -136,7 +136,7 @@ class PremiumHomeActivity : Activity() {
                     else->null
                 }
                 if(coins!=null){
-                    val pending=balance.optLong("pending_coins").coerceAtLeast(0)
+                    val pending=(balance?.optLong("pending_coins")?:0L).coerceAtLeast(0L)
                     coinText.text="★ $coins"+if(pending>0)" (+$pending)" else ""
                 }
             }
