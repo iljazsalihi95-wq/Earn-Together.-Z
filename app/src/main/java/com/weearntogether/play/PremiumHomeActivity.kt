@@ -46,7 +46,14 @@ class PremiumHomeActivity : Activity() {
             "bubble"->"bubble_shooter_hd2d"
             else->return null
         }
-        val level=ProgressPreferences.open(this,store).getInt("level",1).coerceIn(1,250)
+        val saved=ProgressPreferences.open(this,store).all["level"]
+        // Legacy saves may contain a numeric string or Long instead of Int.
+        val level=when(saved){
+            is Int->saved
+            is Long->saved.coerceIn(1L,250L).toInt()
+            is String->saved.trim().toIntOrNull()?:1
+            else->1
+        }.coerceIn(1,250)
         return "NIVELI $level / 250"
     }
     private fun refreshPuzzleProgress(){
